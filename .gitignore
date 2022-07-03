@@ -363,4 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 !NewEngine/assets/models/*
-!NewEngine/lib/*
+!NewEngine/lib/Debug/x64/*
