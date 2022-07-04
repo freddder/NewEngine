@@ -108,7 +108,8 @@ void cShaderManager::setFloat(const std::string& name, float value) const
 
 void cShaderManager::setMat4(const std::string& name, const glm::mat4& mat) const
 {
-    glUniformMatrix4fv(glGetUniformLocation(currentProgramID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+    int i = glGetUniformLocation(currentProgramID, name.c_str());
+    glUniformMatrix4fv(i, 1, GL_FALSE, &mat[0][0]);
 }
 
 void cShaderManager::setVec3(const std::string& name, const glm::vec3& value) const

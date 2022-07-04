@@ -183,6 +183,8 @@
     <ClInclude Include="include\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\DebugFragShader.glsl" />
+    <None Include="assets\shaders\DebugVertShader.glsl" />
     <None Include="assets\shaders\DepthFragShader.glsl" />
     <None Include="assets\shaders\DepthVertShader.glsl" />
     <None Include="assets\shaders\FragShader1.glsl" />

@@ -20,7 +20,7 @@ struct sLight
 uniform sLight theLights[20];
 
 // texture samplers
-uniform sampler2D shadowMap;
+//uniform sampler2D shadowMap;
 uniform sampler2D texture_00;
 
 uniform bool useWholeColor;
@@ -46,18 +46,19 @@ void main()
 	}
 
 	// ambient
-    vec3 ambient = vec3(0.3f, 0.3f, 0.3f) * vertColor.rgb;
+    vec3 ambient = 0.3 * vertColor.rgb;
 
 	vec3 norm = normalize(fNormal);
 
 	// diffuse 
     vec3 lightDir = normalize(-theLights[0].direction.xyz);
-    float diff = max(dot(norm, lightDir), 0.0);
+    float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = theLights[0].diffuse.rgb * diff * vertColor.rgb;
 
 	vec4 pixelColor = vec4(ambient + diffuse, 1.f);
 
-	gl_FragColor = pixelColor;
+	//gl_FragColor = pixelColor;
+	gl_FragColor = vec4(fNormal, 1.f);
 }
 
 //float ShadowCalculation(vec4 fragPosLightSpace)

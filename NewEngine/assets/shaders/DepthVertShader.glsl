@@ -1,8 +1,8 @@
 #version 330 core
 
 in vec4 vPosition;
-in vec4 vNormal;
-in vec4 vUVx2;
+//in vec4 vNormal;
+//in vec4 vUVx2;
 in vec4 oOffset;
 
 uniform mat4 lightSpaceMatrix;

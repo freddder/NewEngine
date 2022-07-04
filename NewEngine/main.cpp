@@ -73,6 +73,8 @@ int main()
     // Setup shader programs
     g_ShaderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
     g_ShaderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
+    g_ShaderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
+    g_ShaderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
     g_ShaderManager->use("scene");
 
     // configure global opengl state
@@ -85,6 +87,7 @@ int main()
     g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
     g_LightManager->lights[0].extraParam.w = 1.f; // turn on
 
+    g_ShaderManager->use("scene");
     g_LightManager->SetupUniformLocations(g_ShaderManager->currentProgramID);
 
     //********************** Load models ****************************************
@@ -98,6 +101,13 @@ int main()
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->currentProgramID);
 
+    cModel* debugSphere = new cModel();
+    debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
+    debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
+    debugSphere->useWholeColor = true;
+    debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
+    g_vec_pModels.push_back(debugSphere);
+
     cModel* map = new cModel();
     map->meshName = "TestMap1.obj";
     //map->scale = glm::vec3(0.07f);
@@ -107,13 +117,6 @@ int main()
     cModel* tree = new cModel();
     tree->meshName = "r0_treePine.obj";
     g_vec_pModels.push_back(tree);
-
-    cModel* debugSphere = new cModel();
-    debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
-    debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
-    debugSphere->useWholeColor = true;
-    debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
-    g_vec_pModels.push_back(debugSphere);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -220,7 +223,57 @@ int main()
 
     //********************** Setup depth map FBO ********************************
 
-    
+    const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
+    unsigned int depthMapFBO;
+    glGenFramebuffers(1, &depthMapFBO);
+
+    // create depth texture
+    unsigned int depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    // attach depth texture as FBO's depth buffer
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    g_ShaderManager->use("scene");
+    g_ShaderManager->setInt("shadowMap", 1);
+    g_ShaderManager->use("debug");
+    g_ShaderManager->setInt("depthMap", 0);
+
+    //********************** Setup on screen texture*****************************
+
+    unsigned int quadVAO;
+    unsigned int quadVBO;
+
+    float quadVertices[] = {
+        // positions        // texture Coords
+        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+         1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+    };
+
+    // setup plane VAO
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
     //***************************************************************************
 
@@ -251,7 +304,43 @@ int main()
 
         //********************** Shadow pass ********************************
 
+        glm::mat4 lightProjection, lightView;
+        glm::mat4 lightSpaceMatrix;
+        float near_plane = 1.f, far_plane = 100.f;
+
+        glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
+        glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
         
+        //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
+        lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
+        lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
+
+        // render scene from light's point of view
+        g_ShaderManager->use("depth");
+        g_ShaderManager->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glActiveTexture(GL_TEXTURE0);
+
+        //Draw scene
+        //for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
+        //{
+        //    DrawObject(g_vec_pModels[i]);
+        //}
+
+        DrawObject(debugSphere);
+        //DrawObject(tree);
+
+        //debugSphere->position.y -= 10.f;
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        // reset viewport
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         //*********************** Regular pass ******************************
 
@@ -266,11 +355,15 @@ int main()
         glm::mat4 view = g_Camera->GetViewMatrix();
         g_ShaderManager->setMat4("view", view);
 
+        //g_ShaderManager->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+
         // Draw scene
         for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
         {
             DrawObject(g_vec_pModels[i]);
         }
+
+        //debugSphere->position.y += 10.f;
 
         // Draw skybox
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -278,6 +371,7 @@ int main()
         view = glm::mat4(glm::mat3(g_Camera->GetViewMatrix())); // remove translation from the view matrix
         g_ShaderManager->setMat4("view", view);
         g_ShaderManager->setMat4("projection", projection);
+
         // skybox cube
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);
@@ -285,6 +379,18 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS); // set depth function back to default
+
+        //****************** Render debug quad ******************************
+
+        //g_ShaderManager->use("debug");
+        //g_ShaderManager->setFloat("near_plane", near_plane);
+        //g_ShaderManager->setFloat("far_plane", far_plane);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, depthMap);
+
+        //glBindVertexArray(quadVAO);
+        //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        //glBindVertexArray(0);
 
         //*******************************************************************
 
@@ -312,7 +418,7 @@ int main()
         ImGui::DragFloat3("Position", *position);
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
-        //ImGui::Image((void*)(intptr_t)depthMap, ImVec2(200, 200));
+        ImGui::Image((void*)(intptr_t)depthMap, ImVec2(200, 200));
         ImGui::End();
 
         ImGui::Render();

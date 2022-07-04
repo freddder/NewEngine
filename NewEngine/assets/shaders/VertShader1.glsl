@@ -48,5 +48,6 @@ void main()
 	gl_Position = MVP * vPosition;
 
 	fUVx2 = vUVx2;
-	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	//fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	fNormal = vNormal.xyz;
 }
