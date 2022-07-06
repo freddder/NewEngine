@@ -79,7 +79,15 @@ void cShaderManager::CreateShadderProgram(std::string programName, const char* v
     glDeleteShader(vertex);
     glDeleteShader(fragment);
 
-    programMap.insert(std::pair<std::string, unsigned int>(programName, ID));
+    sShader newShader;
+    newShader.ID = ID;
+
+    programMap.insert(std::pair<std::string, sShader>(programName, newShader));
+}
+
+unsigned int cShaderManager::GetCurrentShaderId()
+{
+    return programMap[currShader].ID;
 }
 
 void cShaderManager::use(std::string programName)
@@ -87,39 +95,75 @@ void cShaderManager::use(std::string programName)
     if (programMap.count(programName) == 0) // doesnt exists
         return;
 
-    currentProgramID = programMap[programName];
-    glUseProgram(currentProgramID);
+    //currentProgramID = programMap[programName].ID;
+    currShader = programName;
+    glUseProgram(programMap[currShader].ID);
 }
 
-void cShaderManager::setBool(const std::string& name, bool value) const
+void cShaderManager::setBool(const std::string& name, bool value)
 {
-    glUniform1i(glGetUniformLocation(currentProgramID, name.c_str()), (int)value);
+    if(programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniform1i(programMap[currShader].uniformLocations[name], (int)value);
 }
 
-void cShaderManager::setInt(const std::string& name, int value) const
+void cShaderManager::setInt(const std::string& name, int value)
 {
-    glUniform1i(glGetUniformLocation(currentProgramID, name.c_str()), value);
+    if (programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniform1i(programMap[currShader].uniformLocations[name], value);
 }
 
-void cShaderManager::setFloat(const std::string& name, float value) const
+void cShaderManager::setFloat(const std::string& name, float value)
 {
-    glUniform1f(glGetUniformLocation(currentProgramID, name.c_str()), value);
+    if (programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniform1f(programMap[currShader].uniformLocations[name], value);
 }
 
-void cShaderManager::setMat4(const std::string& name, const glm::mat4& mat) const
+void cShaderManager::setMat4(const std::string& name, const glm::mat4& mat)
 {
-    int i = glGetUniformLocation(currentProgramID, name.c_str());
-    glUniformMatrix4fv(i, 1, GL_FALSE, &mat[0][0]);
+    if (programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniformMatrix4fv(programMap[currShader].uniformLocations[name], 1, GL_FALSE, &mat[0][0]);
 }
 
-void cShaderManager::setVec3(const std::string& name, const glm::vec3& value) const
+void cShaderManager::setVec3(const std::string& name, const glm::vec3& value)
 {
-    glUniform3fv(glGetUniformLocation(currentProgramID, name.c_str()), 1, &value[0]);
+    if (programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniform3fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
 }
 
-void cShaderManager::setVec4(const std::string& name, const glm::vec4& value) const
+void cShaderManager::setVec4(const std::string& name, const glm::vec4& value)
 {
-    glUniform4fv(glGetUniformLocation(currentProgramID, name.c_str()), 1, &value[0]);
+    if (programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniform4fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
 }
 
 void cShaderManager::checkCompileErrors(unsigned int shader, std::string type)

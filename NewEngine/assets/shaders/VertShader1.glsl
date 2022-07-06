@@ -14,9 +14,13 @@ uniform mat4 modelOrientationX;
 uniform mat4 modelOrientationY;
 uniform mat4 modelOrientationZ;
 uniform mat4 modelScale;
+uniform mat4 lightSpaceMatrix;
+
+uniform bool isShadowPass;
 
 out vec4 fUVx2;
 out vec3 fNormal;
+out vec4 fVertPosLightSpace;
 
 void main()
 {
@@ -45,9 +49,19 @@ void main()
 
 	mat4 MVP = projection * view * model;
 
-	gl_Position = MVP * vPosition;
+	if(isShadowPass)
+	{
+		gl_Position = lightSpaceMatrix * model * vPosition;
+	}
+	else
+	{
+		gl_Position = MVP * vPosition;
+	}
+
+	vec3 fragPos = vec3(model * vPosition);
 
 	fUVx2 = vUVx2;
-	//fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	fNormal = vNormal.xyz;
+	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	//fVertPosLightSpace = lightSpaceMatrix * model * vPosition;
+	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);
 }

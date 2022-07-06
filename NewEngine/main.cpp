@@ -73,8 +73,8 @@ int main()
     // Setup shader programs
     g_ShaderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
     g_ShaderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
-    g_ShaderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
-    g_ShaderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
+    //g_ShaderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
+    //g_ShaderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
     g_ShaderManager->use("scene");
 
     // configure global opengl state
@@ -88,7 +88,7 @@ int main()
     g_LightManager->lights[0].extraParam.w = 1.f; // turn on
 
     g_ShaderManager->use("scene");
-    g_LightManager->SetupUniformLocations(g_ShaderManager->currentProgramID);
+    g_LightManager->SetupUniformLocations(g_ShaderManager->GetCurrentShaderId());
 
     //********************** Load models ****************************************
 
@@ -99,7 +99,7 @@ int main()
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
-        g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->currentProgramID);
+        g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
 
     cModel* debugSphere = new cModel();
     debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
@@ -128,7 +128,7 @@ int main()
     //{
     //    offsets.push_back(glm::vec4(i));
     //}
-    //tree->InstanceObject(offsets, g_ShaderManager->currentProgramID);
+    //tree->InstanceObject(offsets, g_ShaderManager->GetCurrentShaderId());
 
 
     //******* Create origin offset buffer for non instanced objects *************
@@ -142,7 +142,7 @@ int main()
         (GLvoid*)&originOffset,
         GL_STATIC_DRAW);
 
-    GLint offset_location = glGetAttribLocation(g_ShaderManager->currentProgramID, "oOffset");	    // program
+    GLint offset_location = glGetAttribLocation(g_ShaderManager->GetCurrentShaderId(), "oOffset");	    // program
     glEnableVertexAttribArray(offset_location);
     glVertexAttribPointer(offset_location, 4,
         GL_FLOAT, GL_FALSE,
@@ -248,32 +248,30 @@ int main()
 
     g_ShaderManager->use("scene");
     g_ShaderManager->setInt("shadowMap", 1);
-    g_ShaderManager->use("debug");
-    g_ShaderManager->setInt("depthMap", 0);
 
-    //********************** Setup on screen texture*****************************
+    //********************** Setup on screen texture ****************************
 
-    unsigned int quadVAO;
-    unsigned int quadVBO;
+    //unsigned int quadVAO;
+    //unsigned int quadVBO;
 
-    float quadVertices[] = {
-        // positions        // texture Coords
-        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-         1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-    };
+    //float quadVertices[] = {
+    //    // positions        // texture Coords
+    //    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+    //    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    //     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+    //     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+    //};
 
-    // setup plane VAO
-    glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
-    glBindVertexArray(quadVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    //// setup plane VAO
+    //glGenVertexArrays(1, &quadVAO);
+    //glGenBuffers(1, &quadVBO);
+    //glBindVertexArray(quadVAO);
+    //glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    //glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(1);
+    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
     //***************************************************************************
 
@@ -296,13 +294,15 @@ int main()
         // input
         processInput(window);
 
-        // clear screen
-        glClearColor(0.f, 0.8f, 1.f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
 
         //********************** Shadow pass ********************************
+
+        g_ShaderManager->use("scene");
+
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+        glClear(GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 lightProjection, lightView;
         glm::mat4 lightSpaceMatrix;
@@ -317,35 +317,27 @@ int main()
         lightSpaceMatrix = lightProjection * lightView;
 
         // render scene from light's point of view
-        g_ShaderManager->use("depth");
+        //g_ShaderManager->use("depth");
         g_ShaderManager->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-        glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-        glClear(GL_DEPTH_BUFFER_BIT);
-        glActiveTexture(GL_TEXTURE0);
+        g_ShaderManager->setBool("isShadowPass", true);
 
         //Draw scene
-        //for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
-        //{
-        //    DrawObject(g_vec_pModels[i]);
-        //}
-
-        DrawObject(debugSphere);
-        //DrawObject(tree);
-
-        //debugSphere->position.y -= 10.f;
+        for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
+        {
+            DrawObject(g_vec_pModels[i]);
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        // reset viewport
-        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         //*********************** Regular pass ******************************
 
-        g_ShaderManager->use("scene");
-        g_LightManager->SetUnimormValues(g_ShaderManager->currentProgramID);
+        // reset viewport
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+        glClearColor(0.f, 0.8f, 1.f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        g_LightManager->SetUnimormValues(g_ShaderManager->GetCurrentShaderId());
 
         // pass projection matrix to shader (note that in this case it could change every frame)
         glm::mat4 projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
@@ -355,7 +347,11 @@ int main()
         glm::mat4 view = g_Camera->GetViewMatrix();
         g_ShaderManager->setMat4("view", view);
 
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, depthMap);
+
         //g_ShaderManager->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+        g_ShaderManager->setBool("isShadowPass", false);
 
         // Draw scene
         for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
@@ -433,6 +429,9 @@ int main()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+
+    glDeleteVertexArrays(1, &skyboxVAO);
+    glDeleteBuffers(1, &skyboxVBO);
 
     Shutdown();
 
@@ -568,7 +567,7 @@ void DrawObject(cModel* model)
             {
                 glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
 
-                GLint offset_location = glGetAttribLocation(g_ShaderManager->currentProgramID, "oOffset");
+                GLint offset_location = glGetAttribLocation(g_ShaderManager->GetCurrentShaderId(), "oOffset");
                 glEnableVertexAttribArray(offset_location);
                 glVertexAttribPointer(offset_location, 4,
                     GL_FLOAT, GL_FALSE,
@@ -586,7 +585,7 @@ void DrawObject(cModel* model)
             {
                 glBindBuffer(GL_ARRAY_BUFFER, notInstancedOffsetBufferId);
 
-                GLint offset_location = glGetAttribLocation(g_ShaderManager->currentProgramID, "oOffset");
+                GLint offset_location = glGetAttribLocation(g_ShaderManager->GetCurrentShaderId(), "oOffset");
                 glEnableVertexAttribArray(offset_location);
                 glVertexAttribPointer(offset_location, 4,
                     GL_FLOAT, GL_FALSE,
