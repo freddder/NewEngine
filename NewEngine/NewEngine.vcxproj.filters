@@ -96,6 +96,15 @@
     <ClCompile Include="cLightManager.cpp">
       <Filter>Light</Filter>
     </ClCompile>
+    <ClCompile Include="cModelAnimation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="cSpriteAnimation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimationManager.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -155,10 +164,13 @@
     <ClInclude Include="cAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cSpriteAnimaiton.h">
+    <ClInclude Include="cSpriteAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="cModelAnimation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimationManager.h">
       <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>

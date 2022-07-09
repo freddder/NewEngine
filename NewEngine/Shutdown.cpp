@@ -11,4 +11,6 @@ void Shutdown()
 	delete g_TextureManager;
 
 	delete g_LightManager;
+
+	delete g_AnimationManager;
 }

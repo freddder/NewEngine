@@ -11,4 +11,6 @@ void StartUp()
 	g_TextureManager = new cTextureManager();
 
 	g_LightManager = new cLightManager();
+
+	g_AnimationManager = new cAnimationManager();
 }

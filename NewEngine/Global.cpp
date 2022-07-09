@@ -10,4 +10,6 @@ cTextureManager* g_TextureManager = NULL;
 
 cLightManager* g_LightManager = NULL;
 
+cAnimationManager* g_AnimationManager = NULL;
+
 std::vector< cModel* > g_vec_pModels;

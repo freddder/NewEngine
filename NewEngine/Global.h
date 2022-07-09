@@ -9,6 +9,7 @@
 #include "cModelManager.h"
 #include "cTextureManager.h"
 #include "cLightManager.h"
+#include "cAnimationManager.h"
 
 void StartUp();
 void Shutdown();
@@ -23,6 +24,8 @@ extern cModelManager* g_ModelManager;
 extern cTextureManager* g_TextureManager;
 
 extern cLightManager* g_LightManager;
+
+extern cAnimationManager* g_AnimationManager;
 
 extern std::vector< cModel* > g_vec_pModels;
 
