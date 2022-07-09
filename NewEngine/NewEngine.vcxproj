@@ -164,12 +164,15 @@
     <ClCompile Include="StartUp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cAnimation.h" />
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cModel.h" />
+    <ClInclude Include="cModelAnimation.h" />
     <ClInclude Include="cModelManager.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cShaderManager.h" />
+    <ClInclude Include="cSpriteAnimaiton.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="Global.h" />

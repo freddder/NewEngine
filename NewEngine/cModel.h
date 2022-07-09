@@ -16,11 +16,12 @@ public:
 	glm::vec3 scale;
 
 	bool isWireframe;
-	bool isInstanced;
-	bool useWholeColor;
 
+	bool isInstanced;
 	unsigned int instanceOffsetsBufferId;
 	unsigned int instancedNum;
+
+	bool useWholeColor;
 	glm::vec4 wholeColor;
 
 	std::string textureName;

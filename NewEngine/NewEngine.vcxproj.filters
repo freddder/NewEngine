@@ -37,6 +37,9 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{fd6bf510-492b-421a-b828-58ab23b0b5ae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{dccddf09-2992-4ad2-956e-7a568a22d87d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -148,6 +151,15 @@
     </ClInclude>
     <ClInclude Include="cSceneManager.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="cSpriteAnimaiton.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="cModelAnimation.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
