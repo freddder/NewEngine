@@ -520,33 +520,6 @@ void DrawObject(cModel* model)
         g_ShaderManager->setBool("useWholeColor", model->useWholeColor);
         g_ShaderManager->setVec4("wholeColor", model->wholeColor);
 
-        //glm::mat4 matTranslate = glm::translate(glm::mat4(1.0f),
-        //    model->position);
-
-        //glm::mat4 rotateZ = glm::rotate(glm::mat4(1.0f),
-        //    model->orientation.z,
-        //    glm::vec3(0.0f, 0.0f, 1.0f));
-
-        //glm::mat4 rotateY = glm::rotate(glm::mat4(1.0f),
-        //    model->orientation.y,
-        //    glm::vec3(0.0f, 1.0f, 0.0f));
-
-        //glm::mat4 rotateX = glm::rotate(glm::mat4(1.0f),
-        //    model->orientation.x,
-        //    glm::vec3(1.0f, 0.0f, 0.0f));
-
-        //glm::mat4 matScale = glm::scale(glm::mat4(1.0f),
-        //    model->scale);
-
-        //glm::mat4 matModel = glm::mat4(1.0f);
-        //matModel = matModel * matTranslate;
-        //matModel = matModel * rotateZ;
-        //matModel = matModel * rotateY;
-        //matModel = matModel * rotateX;
-        //matModel = matModel * matScale;
-
-        //g_Shader->setMat4("model", matModel);
-
         for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
         {
             // Setup texture

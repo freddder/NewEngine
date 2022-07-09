@@ -168,6 +168,7 @@
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cModel.h" />
     <ClInclude Include="cModelManager.h" />
+    <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cShaderManager.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="DrawInfo.h" />
