@@ -14,6 +14,8 @@
 #include "Global.h"
 
 #include <iostream>
+#include "cSpriteAnimation.h"
+#include "cModelAnimation.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -126,7 +128,24 @@ int main()
     sprite->textureName = "Nate.png";
     g_TextureManager->CreateTexture("Nate.png");
     sprite->isAnimated = true;
+    sprite->currSpriteId = 3;
     g_vec_pModels.push_back(sprite);
+
+    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId);
+    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.01f, 4));
+    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
+    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 3));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.1f, 4));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 5));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.4f, 3));
+    spriteAnimation->isRepeat = true;
+    g_AnimationManager->AddAnimation(spriteAnimation);
+
+    cModelAnimation* modelAnimation = new cModelAnimation(sprite->position, sprite->orientation, sprite->scale);
+    modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.4f, glm::vec3(0, 0, 1)));
+    modelAnimation->isRepeat = true;
+    g_AnimationManager->AddAnimation(modelAnimation);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -309,6 +328,8 @@ int main()
         processInput(window);
 
         g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
+
+        g_AnimationManager->Update(deltaTime);
 
         //********************** Shadow pass ********************************
 
@@ -535,10 +556,9 @@ void DrawObject(cModel* model)
         g_ShaderManager->setVec4("wholeColor", model->wholeColor);
 
         g_ShaderManager->setBool("isSpriteAnimated", model->isAnimated);
-
         g_ShaderManager->setInt("numCols", 3);
         g_ShaderManager->setInt("numRows", 8);
-        g_ShaderManager->setInt("spriteId", 3);
+        g_ShaderManager->setInt("spriteId", model->currSpriteId);
 
         for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
         {

@@ -27,6 +27,7 @@ public:
 	std::string textureName;
 
 	bool isAnimated;
+	int currSpriteId;
 
 	cModel();
 

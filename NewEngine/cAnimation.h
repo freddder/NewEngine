@@ -5,6 +5,11 @@
 
 struct sKeyFrameVec3 // rgb
 {
+	sKeyFrameVec3() {}
+	sKeyFrameVec3(float _time, glm::vec3 _value) :
+		time(_time),
+		value(_value) {}
+
 	glm::vec3 value;
 	float time;
 };
@@ -31,6 +36,10 @@ struct sKeyFrameFloat // who knows
 
 struct sKeyFrameInt // sprite
 {
+	sKeyFrameInt(float _time, int _value) : 
+		time(_time), 
+		value(_value) {}
+
 	unsigned int value;
 	float time;
 };
