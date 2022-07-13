@@ -17,8 +17,8 @@ uniform mat4 modelScale;
 uniform mat4 lightSpaceMatrix;
 
 uniform bool isShadowPass;
-uniform bool isSpriteAnimated;
 
+uniform bool isSpriteAnimated;
 uniform int numCols;
 uniform int numRows;
 uniform int spriteId;

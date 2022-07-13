@@ -129,23 +129,21 @@ int main()
     g_TextureManager->CreateTexture("Nate.png");
     sprite->isAnimated = true;
     sprite->currSpriteId = 3;
+    //sprite->scale.x *= -1;
     g_vec_pModels.push_back(sprite);
 
-    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId);
-    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.01f, 4));
+    //cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId);
+    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.1f, 4));
     //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
-    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 3));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.1f, 4));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 5));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.4f, 3));
-    spriteAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(spriteAnimation);
+    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 5));
+    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.4f, 3));
+    //spriteAnimation->isRepeat = true;
+    //g_AnimationManager->AddAnimation(spriteAnimation);
 
-    cModelAnimation* modelAnimation = new cModelAnimation(sprite->position, sprite->orientation, sprite->scale);
-    modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.4f, glm::vec3(0, 0, 1)));
-    modelAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(modelAnimation);
+    //cModelAnimation* modelAnimation = new cModelAnimation(sprite->position, sprite->orientation, sprite->scale);
+    //modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.4f, glm::vec3(0, 0, 1)));
+    //modelAnimation->isRepeat = true;
+    //g_AnimationManager->AddAnimation(modelAnimation);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
