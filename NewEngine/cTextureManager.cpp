@@ -8,9 +8,6 @@
 
 void cTextureManager::CreateTexture(std::string fileName)
 {
-    //if (std::find(texturesMap.begin(), texturesMap.end(), fileName) == texturesMap.end())
-    //    return;
-
     if (texturesMap.count(fileName) || fileName == "") // texture already created
         return;
 
@@ -46,6 +43,45 @@ void cTextureManager::CreateTexture(std::string fileName)
     stbi_image_free(data);
 }
 
+void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows)
+{
+    if (sheetsMap.count(spriteSheetName)) // texture already created
+        return;
+
+    sSpriteSheet newSheet;
+    newSheet.numCols = cols;
+    newSheet.numRows = rows;
+
+    CreateTexture(spriteSheetName);
+
+    sheetsMap[spriteSheetName] = newSheet;
+}
+
+void cTextureManager::SetupTexture(std::string textureToSetup)
+{
+    if (texturesMap.count(textureToSetup) == 0) // texture doesnt exists
+        return;
+
+    GLuint textureId = texturesMap[textureToSetup];
+
+    GLuint textureUnit = 0;			// Texture unit go from 0 to 79
+    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    g_ShaderManager->setInt("texture_00", textureUnit);
+}
+
+void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
+{
+    if (sheetsMap.count(spriteSheetName) == 0) // texture doesnt exists
+        return;
+
+    g_ShaderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
+    g_ShaderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
+
+    SetupTexture(spriteSheetName);
+}
+
 unsigned int cTextureManager::CreateCubemap(std::vector<std::string> faces)
 {
     unsigned int textureID;
@@ -75,18 +111,4 @@ unsigned int cTextureManager::CreateCubemap(std::vector<std::string> faces)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     return textureID;
-}
-
-void cTextureManager::SetupTexture(std::string textureToSetup)
-{
-    if (texturesMap.count(textureToSetup) == 0) // texture doesnt exists
-        return;
-
-    GLuint textureId = texturesMap[textureToSetup];
-
-    GLuint textureUnit = 0;			// Texture unit go from 0 to 79
-    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    g_ShaderManager->setInt("texture_00", textureUnit);
 }

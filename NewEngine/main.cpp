@@ -93,7 +93,7 @@ int main()
     g_ShaderManager->use("scene");
     g_LightManager->SetupUniformLocations(g_ShaderManager->GetCurrentShaderId());
 
-    //********************** Load models ****************************************
+    //********************** Load models and textures ***************************
 
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
@@ -104,6 +104,8 @@ int main()
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
+
+    g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8);
 
     cModel* debugSphere = new cModel();
     debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
@@ -126,19 +128,17 @@ int main()
     sprite->meshName = "SpriteHolder.obj";
     //sprite->position.z = 10;
     sprite->textureName = "Nate.png";
-    g_TextureManager->CreateTexture("Nate.png");
     sprite->isAnimated = true;
     sprite->currSpriteId = 3;
-    //sprite->scale.x *= -1;
     g_vec_pModels.push_back(sprite);
 
-    //cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId);
-    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.1f, 4));
-    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
-    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 5));
-    //spriteAnimation->AddKeyFrame(sKeyFrameInt(0.4f, 3));
-    //spriteAnimation->isRepeat = true;
-    //g_AnimationManager->AddAnimation(spriteAnimation);
+    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId);
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.1f, 4));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 5));
+    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.4f, 3));
+    spriteAnimation->isRepeat = true;
+    g_AnimationManager->AddAnimation(spriteAnimation);
 
     //cModelAnimation* modelAnimation = new cModelAnimation(sprite->position, sprite->orientation, sprite->scale);
     //modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.4f, glm::vec3(0, 0, 1)));
@@ -553,11 +553,6 @@ void DrawObject(cModel* model)
         g_ShaderManager->setBool("useWholeColor", model->useWholeColor);
         g_ShaderManager->setVec4("wholeColor", model->wholeColor);
 
-        g_ShaderManager->setBool("isSpriteAnimated", model->isAnimated);
-        g_ShaderManager->setInt("numCols", 3);
-        g_ShaderManager->setInt("numRows", 8);
-        g_ShaderManager->setInt("spriteId", model->currSpriteId);
-
         for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
         {
             // Setup texture
@@ -568,7 +563,17 @@ void DrawObject(cModel* model)
             else
                 textureToUse = model->textureName;
             
-            g_TextureManager->SetupTexture(textureToUse);
+            if (model->isAnimated)
+            {
+                g_ShaderManager->setBool("isSpriteAnimated", true);
+                g_ShaderManager->setInt("spriteId", model->currSpriteId);
+                g_TextureManager->SetupSpriteSheet(textureToUse);
+            }
+            else
+            {
+                g_ShaderManager->setBool("isSpriteAnimated", false);
+                g_TextureManager->SetupTexture(textureToUse);
+            }
 
             // Bind VAO
             glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
