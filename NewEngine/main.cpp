@@ -122,7 +122,7 @@ int main()
 
     cModel* sprite = new cModel();
     sprite->meshName = "SpriteHolder.obj";
-    sprite->position.z = 10;
+    //sprite->position.z = 10;
     sprite->textureName = "Nate.png";
     g_TextureManager->CreateTexture("Nate.png");
     sprite->isAnimated = true;
@@ -538,7 +538,7 @@ void DrawObject(cModel* model)
 
         g_ShaderManager->setInt("numCols", 3);
         g_ShaderManager->setInt("numRows", 8);
-        g_ShaderManager->setInt("spriteId", 0);
+        g_ShaderManager->setInt("spriteId", 3);
 
         for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
         {

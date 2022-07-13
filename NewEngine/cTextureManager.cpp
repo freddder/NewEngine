@@ -11,7 +11,7 @@ void cTextureManager::CreateTexture(std::string fileName)
     //if (std::find(texturesMap.begin(), texturesMap.end(), fileName) == texturesMap.end())
     //    return;
 
-    if (texturesMap.count(fileName)) // texture already created
+    if (texturesMap.count(fileName) || fileName == "") // texture already created
         return;
 
     unsigned int textureId;
@@ -40,7 +40,7 @@ void cTextureManager::CreateTexture(std::string fileName)
     }
     else
     {
-        std::cout << "Failed to load texture" << std::endl;
+        std::cout << "Failed to load texture " << fileName << std::endl;
     }
 
     stbi_image_free(data);

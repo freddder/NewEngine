@@ -69,11 +69,10 @@ void main()
 	{
 		vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
 
-		float addU = (float(1) / float(numCols)) * (numCols - (spriteId % numCols));
-		float addV = (float(1) / float(numRows)) * (numRows - (spriteId % numRows));
+		float addU = (float(1) / float(numCols)) * (spriteId % numCols);
+		float addV = (float(1) / float(numRows)) * (numRows - (spriteId / numCols));
 
-		//fUVx2 = vec4(vUVx2.x / float(numCols), vUVx2.y / float(numRows), 0, 0);
-		fUVx2 = vec4(newUV.x + addU, newUV.y + addV, 0, 0);
+		fUVx2 = vec4(newUV.x + addU, newUV.y - addV, 0, 0);
 	}
 	else
 	{
