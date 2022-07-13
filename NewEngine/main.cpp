@@ -73,6 +73,7 @@ int main()
     // Setup shader programs
     g_ShaderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
     g_ShaderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
+    //g_ShaderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
     //g_ShaderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
     //g_ShaderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
     g_ShaderManager->use("scene");
@@ -97,6 +98,7 @@ int main()
     modelsToLoad.push_back("r0_treePine.obj");
     modelsToLoad.push_back("TestMap1.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
+    modelsToLoad.push_back("SpriteHolder.obj");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
@@ -117,6 +119,14 @@ int main()
     cModel* tree = new cModel();
     tree->meshName = "r0_treePine.obj";
     g_vec_pModels.push_back(tree);
+
+    cModel* sprite = new cModel();
+    sprite->meshName = "SpriteHolder.obj";
+    sprite->position.z = 10;
+    sprite->textureName = "Nate.png";
+    g_TextureManager->CreateTexture("Nate.png");
+    sprite->isAnimated = true;
+    g_vec_pModels.push_back(sprite);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -523,6 +533,12 @@ void DrawObject(cModel* model)
 
         g_ShaderManager->setBool("useWholeColor", model->useWholeColor);
         g_ShaderManager->setVec4("wholeColor", model->wholeColor);
+
+        g_ShaderManager->setBool("isSpriteAnimated", model->isAnimated);
+
+        g_ShaderManager->setInt("numCols", 3);
+        g_ShaderManager->setInt("numRows", 8);
+        g_ShaderManager->setInt("spriteId", 0);
 
         for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
         {

@@ -17,7 +17,6 @@ uniform mat4 modelScale;
 uniform mat4 lightSpaceMatrix;
 
 uniform bool isShadowPass;
-uniform bool isSpriteAnimated;
 
 uniform int numCols;
 uniform int numRows;
@@ -29,7 +28,7 @@ out vec4 fVertPosLightSpace;
 
 void main()
 {
-	vec4 finalModelPosition = vec4(modelPosition, 1.0);
+    vec4 finalModelPosition = vec4(modelPosition, 1.0);
 	finalModelPosition.x += oOffset.x;
 	finalModelPosition.y += oOffset.y;
 	finalModelPosition.z += oOffset.z;
@@ -63,24 +62,15 @@ void main()
 		gl_Position = MVP * vPosition;
 	}
 
+	// 0.0f, 0.0f,  lower-left corner  
+    // 1.0f, 0.0f,  lower-right corner
+    // 0.5f, 1.0f   top-center corner
+
+	vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
+
 	vec3 fragPos = vec3(model * vPosition);
 
-	if(isSpriteAnimated)
-	{
-		vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
-
-		float addU = (float(1) / float(numCols)) * (numCols - (spriteId % numCols));
-		float addV = (float(1) / float(numRows)) * (numRows - (spriteId % numRows));
-
-		//fUVx2 = vec4(vUVx2.x / float(numCols), vUVx2.y / float(numRows), 0, 0);
-		fUVx2 = vec4(newUV.x + addU, newUV.y + addV, 0, 0);
-	}
-	else
-	{
-		fUVx2 = vUVx2;
-	}
-
+	fUVx2 = vec4(newUV, 0, 0);
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	//fVertPosLightSpace = lightSpaceMatrix * model * vPosition;
 	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);
 }

@@ -187,16 +187,16 @@
     <None Include="assets\shaders\SkyboxVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="assets\shaders\DepthFragShader.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="assets\shaders\DepthVertShader.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="assets\shaders\DebugFragShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\DebugVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SpriteFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SpriteVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

@@ -14,6 +14,8 @@ cModel::cModel()
 	wholeColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
 	textureName = "";
+
+	isAnimated = false;
 }
 
 void cModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)

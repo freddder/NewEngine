@@ -31,7 +31,7 @@ struct sKeyFrameFloat // who knows
 
 struct sKeyFrameInt // sprite
 {
-	int value;
+	unsigned int value;
 	float time;
 };
 

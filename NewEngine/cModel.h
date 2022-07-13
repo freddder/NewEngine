@@ -26,6 +26,8 @@ public:
 
 	std::string textureName;
 
+	bool isAnimated;
+
 	cModel();
 
 	void InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program);
