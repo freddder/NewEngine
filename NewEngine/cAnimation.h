@@ -34,13 +34,25 @@ struct sKeyFrameFloat // who knows
 	float time;
 };
 
-struct sKeyFrameInt // sprite
+struct sKeyFrameInt
 {
 	sKeyFrameInt(float _time, int _value) : 
 		time(_time), 
 		value(_value) {}
 
 	unsigned int value;
+	float time;
+};
+
+struct sKeyFrameSprite // sprite
+{
+	sKeyFrameSprite(float _time, int _value, bool _flip) :
+		time(_time),
+		value(_value),
+		flip(_flip) {}
+
+	unsigned int value;
+	bool flip;
 	float time;
 };
 

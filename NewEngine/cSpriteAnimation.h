@@ -7,13 +7,14 @@ class cSpriteAnimation : public cAnimation
 {
 public:
 	int& spritePosRef;
-
+	glm::vec3& modelScaleRef;
 	int initPos;
+	glm::vec3 initScale;
 
-	std::vector<sKeyFrameInt> keyframes;
+	std::vector<sKeyFrameSprite> keyframes;
 
-	cSpriteAnimation(int& _spriteRef);
-	void AddKeyFrame(sKeyFrameInt newKeyframe);
+	cSpriteAnimation(int& _spriteRef, glm::vec3& _modelScale);
+	void AddKeyFrame(sKeyFrameSprite newKeyframe);
 
 	virtual void Process(float deltaTime);
 };

@@ -106,6 +106,8 @@ int main()
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
 
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8);
+    g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4);
+    g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4);
 
     cModel* debugSphere = new cModel();
     debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
@@ -132,11 +134,27 @@ int main()
     sprite->currSpriteId = 3;
     g_vec_pModels.push_back(sprite);
 
-    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId);
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.1f, 4));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.2f, 3));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.3f, 5));
-    spriteAnimation->AddKeyFrame(sKeyFrameInt(0.4f, 3));
+    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId, sprite->scale);
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.1f, 4, false));
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.3f, 5, false));
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
+    spriteAnimation->isRepeat = true;
+    g_AnimationManager->AddAnimation(spriteAnimation);
+
+    cModel* spriteAsym = new cModel();
+    spriteAsym->meshName = "SpriteHolder.obj";
+    //sprite->position.z = 10;
+    spriteAsym->textureName = "AsymetricalNPC_1.png";
+    spriteAsym->isAnimated = true;
+    spriteAsym->currSpriteId = 3;
+    g_vec_pModels.push_back(spriteAsym);
+
+    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.1f, 4, false));
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.3f, 5, false));
+    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
     spriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(spriteAnimation);
 
