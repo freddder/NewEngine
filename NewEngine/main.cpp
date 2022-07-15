@@ -25,8 +25,8 @@ void processInput(GLFWwindow* window);
 void DrawObject(cModel* model);
 
 // settings
-const unsigned int SCR_WIDTH = 1200;
-const unsigned int SCR_HEIGHT = 640;
+unsigned int SCR_WIDTH = 1200;
+unsigned int SCR_HEIGHT = 640;
 
 unsigned int notInstancedOffsetBufferId;
 
@@ -371,10 +371,6 @@ int main()
     //glEnableVertexAttribArray(1);
     //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-    //******************** Animation testing ************************************
-
-
-
     //***************************************************************************
 
     IMGUI_CHECKVERSION();
@@ -572,7 +568,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     // make sure the viewport matches the new window dimensions; note that width and 
     // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
+    //glViewport(0, 0, width, height);
+    SCR_WIDTH = width;
+    SCR_HEIGHT = height;
 }
 
 
