@@ -41,6 +41,8 @@ float lastFrame = 0.0f;
 
 int main()
 {
+    // test
+
     // glfw: initialize and configure
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
