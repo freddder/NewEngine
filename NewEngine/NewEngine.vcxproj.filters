@@ -40,6 +40,9 @@
     <Filter Include="Animation">
       <UniqueIdentifier>{dccddf09-2992-4ad2-956e-7a568a22d87d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{2cda900d-6d06-49b2-916b-ee5c17f14b47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="cAnimationManager.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="cPlayerCharacter.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
