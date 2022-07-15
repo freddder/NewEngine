@@ -108,6 +108,12 @@
     <ClCompile Include="cAnimationManager.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
+    <ClCompile Include="cCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="cPlayerCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -177,6 +183,9 @@
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="cPlayerCharacter.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="cCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>

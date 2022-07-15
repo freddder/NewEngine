@@ -1,10 +1,10 @@
 #include "cSpriteAnimation.h"
 
 cSpriteAnimation::cSpriteAnimation(int& _spriteRef, glm::vec3& _modelScale) :
-	spritePosRef(_spriteRef),
+	spriteIdRef(_spriteRef),
 	modelScaleRef(_modelScale)
 {
-	initPos = _spriteRef;
+	initId = _spriteRef;
 }
 
 void cSpriteAnimation::AddKeyFrame(sKeyFrameSprite newKeyframe)
@@ -13,6 +13,20 @@ void cSpriteAnimation::AddKeyFrame(sKeyFrameSprite newKeyframe)
 		maxDuration = newKeyframe.time;
 
 	keyframes.push_back(newKeyframe);
+}
+
+void cSpriteAnimation::Reset()
+{
+	timer = 0.f;
+	isDone = false;
+	keyframes.clear();
+}
+
+void cSpriteAnimation::Reset(int newInitId, glm::vec3 newInitScale)
+{
+	this->Reset();
+	initId = newInitId;
+	initScale = newInitScale;
 }
 
 void cSpriteAnimation::Process(float deltaTime)
@@ -29,7 +43,7 @@ void cSpriteAnimation::Process(float deltaTime)
 			// no interpolation I guess
 			if (keyFrameIndex != 0)
 			{
-				spritePosRef = keyframes[keyFrameIndex - 1].value;
+				spriteIdRef = keyframes[keyFrameIndex - 1].value;
 
 				if ((keyframes[keyFrameIndex - 1].flip && modelScaleRef.x > 0) ||
 					!keyframes[keyFrameIndex - 1].flip && modelScaleRef.x < 0)
@@ -39,7 +53,7 @@ void cSpriteAnimation::Process(float deltaTime)
 			}
 			else
 			{
-				spritePosRef = initPos;
+				spriteIdRef = initId;
 			}
 
 			break;

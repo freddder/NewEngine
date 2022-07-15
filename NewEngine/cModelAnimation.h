@@ -25,4 +25,7 @@ public:
 	void AddScaleKeyFrame(sKeyFrameVec3 newKeyframe);
 
 	virtual void Process(float deltaTime);
+
+	virtual void Reset();
+	void Reset(glm::vec3 newInitPos, glm::vec3 newInitOri, glm::vec3 newInitScale);
 };

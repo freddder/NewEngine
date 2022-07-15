@@ -155,3 +155,20 @@ void cModelAnimation::Process(float deltaTime)
 			isDone = true;
 	}
 }
+
+void cModelAnimation::Reset()
+{
+	timer = 0.f;
+	isDone = false;
+	positionKeyframes.clear();
+	orientationKeyframes.clear();
+	scaleKeyframes.clear();
+}
+
+void cModelAnimation::Reset(glm::vec3 newInitPos, glm::vec3 newInitOri, glm::vec3 newInitScale)
+{
+	this->Reset();
+	initPosition = newInitPos;
+	initOrientation = newInitOri;
+	initScale = newInitScale;
+}

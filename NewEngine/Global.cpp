@@ -12,4 +12,4 @@ cLightManager* g_LightManager = NULL;
 
 cAnimationManager* g_AnimationManager = NULL;
 
-std::vector< cModel* > g_vec_pModels;
+std::set< cModel* > g_set_Models;

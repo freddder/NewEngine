@@ -107,26 +107,26 @@ int main()
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
 
-    g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8);
-    g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4);
-    g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4);
+    g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
+    g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
+    g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
 
     cModel* debugSphere = new cModel();
     debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
     debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
     debugSphere->useWholeColor = true;
     debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
-    g_vec_pModels.push_back(debugSphere);
+    g_set_Models.insert(debugSphere);
 
     cModel* map = new cModel();
     map->meshName = "TestMap1.obj";
     //map->scale = glm::vec3(0.07f);
     //map->orientation.x = glm::radians(-90.f);
-    g_vec_pModels.push_back(map);
+    g_set_Models.insert(map);
 
     cModel* tree = new cModel();
     tree->meshName = "r0_treePine.obj";
-    g_vec_pModels.push_back(tree);
+    g_set_Models.insert(tree);
 
     cModel* sprite = new cModel();
     sprite->meshName = "SpriteHolder.obj";
@@ -134,7 +134,7 @@ int main()
     sprite->textureName = "Nate.png";
     sprite->isAnimated = true;
     sprite->currSpriteId = 3;
-    g_vec_pModels.push_back(sprite);
+    g_set_Models.insert(sprite);
 
     cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId, sprite->scale);
     spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
@@ -163,7 +163,7 @@ int main()
     spriteAsym->textureName = "AsymetricalNPC_1.png";
     spriteAsym->isAnimated = true;
     spriteAsym->currSpriteId = 3;
-    g_vec_pModels.push_back(spriteAsym);
+    g_set_Models.insert(spriteAsym);
 
     cSpriteAnimation* asymSpriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
     asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
@@ -191,7 +191,7 @@ int main()
     spriteSym->textureName = "SymetricNPC_1.png";
     spriteSym->isAnimated = true;
     spriteSym->currSpriteId = 2;
-    g_vec_pModels.push_back(spriteSym);
+    g_set_Models.insert(spriteSym);
 
     cSpriteAnimation* symSpriteAnimation = new cSpriteAnimation(spriteSym->currSpriteId, spriteSym->scale);
     symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
@@ -425,9 +425,9 @@ int main()
         g_ShaderManager->setBool("isShadowPass", true);
 
         //Draw scene
-        for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
+        for (std::set<cModel*>::iterator it = g_set_Models.begin(); it != g_set_Models.end(); it++)
         {
-            DrawObject(g_vec_pModels[i]);
+            DrawObject(*it);
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -456,9 +456,9 @@ int main()
         g_ShaderManager->setBool("isShadowPass", false);
 
         // Draw scene
-        for (unsigned int i = 0; i < g_vec_pModels.size(); i++)
+        for (std::set<cModel*>::iterator it = g_set_Models.begin(); it != g_set_Models.end(); it++)
         {
-            DrawObject(g_vec_pModels[i]);
+            DrawObject(*it);
         }
 
         //debugSphere->position.y += 10.f;

@@ -2,13 +2,18 @@
 
 void cAnimationManager::Update(float deltaTime)
 {
-	for (unsigned int i = 0; i < animations.size(); i++)
+	for (std::set<cAnimation*>::iterator it = animations.begin(); it != animations.end(); it++)
 	{
-		animations[i]->Process(deltaTime);
+		(*it)->Process(deltaTime);
 	}
 }
 
 void cAnimationManager::AddAnimation(cAnimation* newAnimation)
 {
-	animations.push_back(newAnimation);
+	animations.insert(newAnimation);
+}
+
+void cAnimationManager::RemoveAnimation(cAnimation* animationToRemove)
+{
+	animations.erase(animationToRemove);
 }

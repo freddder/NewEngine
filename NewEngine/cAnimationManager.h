@@ -1,15 +1,15 @@
 #pragma once
 
 #include "cAnimation.h"
-#include <vector>
+#include <set>
 
 class cAnimationManager
 {
-	std::vector<cAnimation*> animations;
+	std::set<cAnimation*> animations;
 
 public:
 
 	void Update(float deltaTime);
 	void AddAnimation(cAnimation* newAnimation);
-	// void RemoveAnimation(cAnimation* animationToRemove);
+	void RemoveAnimation(cAnimation* animationToRemove);
 };

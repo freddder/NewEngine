@@ -1,17 +1,11 @@
 #pragma once
-#include "cModel.h"
-#include "cSpriteAnimation.h"
-#include "cModelAnimation.h"
+#include "cCharacter.h"
 
-class cPlayerCharacter
+class cPlayerCharacter : public cCharacter
 {
-	cModel* model;
-	cSpriteAnimation* spriteAnimation;
-	cModelAnimation* modelAnimation;
-
 public:
 	cPlayerCharacter();
 	~cPlayerCharacter();
 
-
+	void Run(eDirection dir);
 };

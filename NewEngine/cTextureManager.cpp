@@ -43,7 +43,7 @@ void cTextureManager::CreateTexture(std::string fileName)
     stbi_image_free(data);
 }
 
-void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows)
+void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym)
 {
     if (sheetsMap.count(spriteSheetName)) // texture already created
         return;
@@ -51,6 +51,7 @@ void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned in
     sSpriteSheet newSheet;
     newSheet.numCols = cols;
     newSheet.numRows = rows;
+    newSheet.isSymetrical = sym;
 
     CreateTexture(spriteSheetName);
 
@@ -111,4 +112,9 @@ unsigned int cTextureManager::CreateCubemap(std::vector<std::string> faces)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     return textureID;
+}
+
+bool cTextureManager::GetSpritesheetSymetry(std::string spriteSheetName)
+{
+    return sheetsMap[spriteSheetName].isSymetrical;
 }

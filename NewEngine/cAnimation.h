@@ -3,6 +3,14 @@
 #include <glm/glm.hpp>
 #include <string>
 
+enum eDirection
+{
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
 struct sKeyFrameVec3 // rgb
 {
 	sKeyFrameVec3() {}
@@ -77,7 +85,7 @@ public:
 
 	virtual void Process(float deltaTime) = 0;
 
-	void Reset()
+	virtual void Reset()
 	{
 		timer = 0.f;
 		isDone = false;

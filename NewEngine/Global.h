@@ -10,6 +10,7 @@
 #include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
+#include <set>
 
 void StartUp();
 void Shutdown();
@@ -27,6 +28,6 @@ extern cLightManager* g_LightManager;
 
 extern cAnimationManager* g_AnimationManager;
 
-extern std::vector< cModel* > g_vec_pModels;
+extern std::set< cModel* > g_set_Models;
 
 #endif // _globalThings_HG_
