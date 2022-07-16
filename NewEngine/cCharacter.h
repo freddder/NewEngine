@@ -8,9 +8,10 @@ class cCharacter
 	cModel* model;
 	cSpriteAnimation* spriteAnimation;
 	cModelAnimation* modelAnimation;
+	bool switchLeg;
 
 public:
-	cCharacter();
+	cCharacter(glm::vec3 position, std::string textureName);
 	~cCharacter();
 
 	void Walk(eDirection dir);

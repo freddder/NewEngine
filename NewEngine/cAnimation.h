@@ -89,5 +89,6 @@ public:
 	{
 		timer = 0.f;
 		isDone = false;
+		maxDuration = 0.f;
 	}
 };

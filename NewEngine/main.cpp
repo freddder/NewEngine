@@ -16,6 +16,7 @@
 #include <iostream>
 #include "cSpriteAnimation.h"
 #include "cModelAnimation.h"
+#include "cCharacter.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -39,6 +40,8 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
+
+cCharacter* asymCharacter;
 
 int main()
 {
@@ -157,33 +160,35 @@ int main()
     spriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(spriteAnimation);
 
-    cModel* spriteAsym = new cModel();
-    spriteAsym->meshName = "SpriteHolder.obj";
-    spriteAsym->position.x = 2.f;
-    spriteAsym->textureName = "AsymetricalNPC_1.png";
-    spriteAsym->isAnimated = true;
-    spriteAsym->currSpriteId = 3;
-    g_set_Models.insert(spriteAsym);
+    //cModel* spriteAsym = new cModel();
+    //spriteAsym->meshName = "SpriteHolder.obj";
+    //spriteAsym->position.x = 2.f;
+    //spriteAsym->textureName = "AsymetricalNPC_1.png";
+    //spriteAsym->isAnimated = true;
+    //spriteAsym->currSpriteId = 3;
+    //g_set_Models.insert(spriteAsym);
 
-    cSpriteAnimation* asymSpriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
-    asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
-    asymSpriteAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(asymSpriteAnimation);
+    //cSpriteAnimation* asymSpriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
+    //asymSpriteAnimation->isRepeat = true;
+    //g_AnimationManager->AddAnimation(asymSpriteAnimation);
+
+    asymCharacter = new cCharacter(glm::vec3(2.5f, 0.f, 0.5f), "SymetricNPC_1.png");
 
     cModel* spriteSym = new cModel();
     spriteSym->meshName = "SpriteHolder.obj";
@@ -563,7 +568,14 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         g_Camera->MoveDown(deltaTime);
 
-
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        asymCharacter->Walk(UP);
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        asymCharacter->Walk(DOWN);
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        asymCharacter->Walk(LEFT);
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        asymCharacter->Walk(RIGHT);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

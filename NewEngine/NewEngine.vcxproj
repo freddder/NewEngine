@@ -151,7 +151,7 @@
     <ClCompile Include="cModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
-    <ClCompile Include="cPlayerCharacter.cpp" />
+    <ClCompile Include="cSpecialCharacter.cpp" />
     <ClCompile Include="cShaderManager.cpp" />
     <ClCompile Include="cSpriteAnimation.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
@@ -177,7 +177,7 @@
     <ClInclude Include="cModel.h" />
     <ClInclude Include="cModelAnimation.h" />
     <ClInclude Include="cModelManager.h" />
-    <ClInclude Include="cPlayerCharacter.h" />
+    <ClInclude Include="cSpecialCharacter.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cShaderManager.h" />
     <ClInclude Include="cSpriteAnimation.h" />

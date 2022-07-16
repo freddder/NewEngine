@@ -111,7 +111,7 @@
     <ClCompile Include="cCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="cPlayerCharacter.cpp">
+    <ClCompile Include="cSpecialCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,7 +182,7 @@
     <ClInclude Include="cAnimationManager.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cPlayerCharacter.h">
+    <ClInclude Include="cSpecialCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="cCharacter.h">

@@ -18,6 +18,7 @@ void cSpriteAnimation::AddKeyFrame(sKeyFrameSprite newKeyframe)
 void cSpriteAnimation::Reset()
 {
 	timer = 0.f;
+	maxDuration = 0.f;
 	isDone = false;
 	keyframes.clear();
 }
