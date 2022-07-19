@@ -13,4 +13,6 @@ void StartUp()
 	g_LightManager = new cLightManager();
 
 	g_AnimationManager = new cAnimationManager();
+
+	g_MapManager = new cMapManager();
 }

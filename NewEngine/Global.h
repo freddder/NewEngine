@@ -10,6 +10,7 @@
 #include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
+#include "cMapManager.h"
 #include <set>
 
 void StartUp();
@@ -27,6 +28,8 @@ extern cTextureManager* g_TextureManager;
 extern cLightManager* g_LightManager;
 
 extern cAnimationManager* g_AnimationManager;
+
+extern cMapManager* g_MapManager;
 
 extern std::set< cModel* > g_set_Models;
 

@@ -13,4 +13,6 @@ void Shutdown()
 	delete g_LightManager;
 
 	delete g_AnimationManager;
+
+	delete g_MapManager;
 }

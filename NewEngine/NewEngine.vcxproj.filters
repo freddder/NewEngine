@@ -43,6 +43,9 @@
     <Filter Include="Character">
       <UniqueIdentifier>{2cda900d-6d06-49b2-916b-ee5c17f14b47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{766c04b9-247a-4af6-a2ce-ba43a5e1401b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="cSpecialCharacter.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="cMapManager.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="cCharacter.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="cMapManager.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -148,6 +148,7 @@
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cLightManager.cpp" />
+    <ClCompile Include="cMapManager.cpp" />
     <ClCompile Include="cModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cLightManager.h" />
+    <ClInclude Include="cMapManager.h" />
     <ClInclude Include="cModel.h" />
     <ClInclude Include="cModelAnimation.h" />
     <ClInclude Include="cModelManager.h" />

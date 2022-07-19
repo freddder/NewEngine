@@ -12,4 +12,6 @@ cLightManager* g_LightManager = NULL;
 
 cAnimationManager* g_AnimationManager = NULL;
 
+cMapManager* g_MapManager = NULL;
+
 std::set< cModel* > g_set_Models;
