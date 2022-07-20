@@ -8,6 +8,7 @@ struct sTile
 {
 	bool isWalkable;
 	//cEntity* entity;
+	bool isUnchangeable;
 };
 
 struct sQuadrant
@@ -21,6 +22,7 @@ struct sQuadrant
 class cMapManager
 {
 	std::set<sQuadrant> quads;
+	std::set<int> walkableTiles;
 	cModel* mapModel;
 
 public:
@@ -29,5 +31,5 @@ public:
 	~cMapManager();
 
 	void LoadMap(std::string mapModelName, std::string mapDescName);
-	//void MoveEntity(cEntity* entity, eDirection dir);
+	int MoveEntity(glm::vec3 currPosition, int direction);
 };

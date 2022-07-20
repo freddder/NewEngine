@@ -3,14 +3,6 @@
 #include <glm/glm.hpp>
 #include <string>
 
-enum eDirection
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
-
 struct sKeyFrameVec3 // rgb
 {
 	sKeyFrameVec3() {}

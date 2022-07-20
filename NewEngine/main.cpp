@@ -103,7 +103,7 @@ int main()
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
     modelsToLoad.push_back("r0_treePine.obj");
-    modelsToLoad.push_back("TestMap2.obj");
+    modelsToLoad.push_back("TestMap1.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
     modelsToLoad.push_back("SpriteHolder.obj");
 
