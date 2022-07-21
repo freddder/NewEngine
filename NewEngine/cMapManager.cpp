@@ -12,7 +12,32 @@ cMapManager::cMapManager()
 	mapModel->meshName = "TestMap1Again.obj";
 	g_set_Models.insert(mapModel);
 
-	walkableTiles.insert(100);
+	walkableTiles[100]; 
+	walkableTiles[101];
+	walkableTiles[52];
+	walkableTiles[53];
+	walkableTiles[54];
+	walkableTiles[55];
+	walkableTiles[56];
+	walkableTiles[57];
+	walkableTiles[58];
+	walkableTiles[59];
+	walkableTiles[92];
+	walkableTiles[95];
+
+	//walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 1.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(2.f, 2.f, 1.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(3.f, 3.f, 1.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(4.f, 4.f, 1.f));
+	//walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 2.f, 2.f));
+	//walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 3.f, 3.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 2.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 3.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 4.f));
 }
 
 cMapManager::~cMapManager()
@@ -88,10 +113,34 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 
 				currHeight += 15;
 
-				if (walkableTiles.find(tempLayers[x][z][layerId]) != walkableTiles.end()) // contains
+				int currTile = tempLayers[x][z][layerId];
+
+				if (walkableTiles.find(currTile) != walkableTiles.end()) // contains
 				{
-					if(!newQuad.quadData[x][z][currHeight].isUnchangeable)
+					if (!newQuad.quadData[x][z][currHeight].isUnchangeable)
+					{
 						newQuad.quadData[x][z][currHeight].isWalkable = true;
+
+						for (unsigned int i = 0; i < walkableTiles[currTile].walkableOffsets.size(); i++)
+						{
+							int newX = x + (int)walkableTiles[currTile].walkableOffsets[i].x;
+							int newZ = z + (int)walkableTiles[currTile].walkableOffsets[i].z;
+							int newY = currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y;
+
+							newQuad.quadData[newX][newZ][newY].isWalkable = true;
+						}
+
+						for (unsigned int i = 0; i < walkableTiles[currTile].unwalkableOffsets.size(); i++)
+						{
+							newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
+											[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+											[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
+
+							newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
+											[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+											[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
+						}
+					}
 				}
 				else if (tempLayers[x][z][layerId] != -1) // desn't contain
 				{
@@ -132,18 +181,22 @@ int cMapManager::MoveEntity(glm::vec3 currPosition, int direction)
 	if (desiredLocation.x + 15 < 0 || desiredLocation.z + 15 < 0)
 		return 0;
 
-	int quadXCoord = ((int)desiredLocation.x + 15) / 32;
-	int quadZCoord = ((int)desiredLocation.z + 15) / 32;
+	desiredLocation.x += 15;
+	desiredLocation.y += 15;
+	desiredLocation.z += 15;
+
+	int quadXCoord = ((int)desiredLocation.x) / 32;
+	int quadZCoord = ((int)desiredLocation.z) / 32;
 
 	for (std::vector<sQuadrant>::iterator it = quads.begin(); it != quads.end(); it++)
 	{
 		if (quadXCoord == it->quadX && quadZCoord == it->quadZ)
 		{
-			if (it->quadData[(int)desiredLocation.x + 15][(int)desiredLocation.z + 15][(int)desiredLocation.y].isWalkable)
+			if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y].isWalkable)
 				return 1; // same height
-			else if (it->quadData[(int)desiredLocation.x + 15][(int)desiredLocation.z + 15][(int)desiredLocation.y + 1].isWalkable)
+			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y + 1].isWalkable)
 				return 2; // go up
-			else if (it->quadData[(int)desiredLocation.x + 15][(int)desiredLocation.z + 15][(int)desiredLocation.y - 1].isWalkable)
+			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y - 1].isWalkable)
 				return 3; // go down
 
 			return 0;

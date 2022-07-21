@@ -1,8 +1,15 @@
 #pragma once
 
 #include <set>
+#include <map>
 #include <string>
 #include "cModel.h"
+
+struct sCorrectionTiles
+{
+	std::vector<glm::vec3> walkableOffsets;
+	std::vector<glm::vec3> unwalkableOffsets;
+};
 
 struct sTile
 {
@@ -22,7 +29,7 @@ struct sQuadrant
 class cMapManager
 {
 	std::vector<sQuadrant> quads;
-	std::set<int> walkableTiles;
+	std::map<int, sCorrectionTiles> walkableTiles;
 	cModel* mapModel;
 
 public:

@@ -136,7 +136,7 @@ void cCharacter::Walk(eDirection dir)
 	else if (dir == RIGHT)
 		newPosition.z += 1.f;
 
-	std::cout << "NewPosition: " << newPosition.x << " " << newPosition.y << " " << newPosition.z << std::endl;
+	std::cout << "NewPosition: " << newPosition.x + 15 << " " << newPosition.y + 15 << " " << newPosition.z + 15 << std::endl;
 
 	modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 }
