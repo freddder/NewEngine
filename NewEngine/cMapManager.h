@@ -6,9 +6,9 @@
 
 struct sTile
 {
-	bool isWalkable;
+	bool isWalkable = false;
 	//cEntity* entity;
-	bool isUnchangeable;
+	bool isUnchangeable = false;
 };
 
 struct sQuadrant
@@ -21,7 +21,7 @@ struct sQuadrant
 
 class cMapManager
 {
-	std::set<sQuadrant> quads;
+	std::vector<sQuadrant> quads;
 	std::set<int> walkableTiles;
 	cModel* mapModel;
 

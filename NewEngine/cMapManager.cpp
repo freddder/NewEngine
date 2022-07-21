@@ -9,7 +9,7 @@ cMapManager::cMapManager()
 {
 	mapModel = new cModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "TestMap1.obj";
+	mapModel->meshName = "TestMap1Again.obj";
 	g_set_Models.insert(mapModel);
 
 	walkableTiles.insert(100);
@@ -88,12 +88,12 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 
 				currHeight += 15;
 
-				if (walkableTiles.find(tempLayers[x][z][currHeight]) != walkableTiles.end()) // contains
+				if (walkableTiles.find(tempLayers[x][z][layerId]) != walkableTiles.end()) // contains
 				{
 					if(!newQuad.quadData[x][z][currHeight].isUnchangeable)
 						newQuad.quadData[x][z][currHeight].isWalkable = true;
 				}
-				else if (tempLayers[x][z][currHeight] != -1) // desn't contain
+				else if (tempLayers[x][z][layerId] != -1) // desn't contain
 				{
 					newQuad.quadData[x][z][currHeight].isWalkable = false;
 					newQuad.quadData[x][z][currHeight].isUnchangeable = true;
@@ -108,6 +108,8 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 	}
 
 	file.close();
+
+	quads.push_back(newQuad);
 }
 
 int cMapManager::MoveEntity(glm::vec3 currPosition, int direction)
@@ -118,6 +120,35 @@ int cMapManager::MoveEntity(glm::vec3 currPosition, int direction)
 	// direction = 1 -> DOWN
 	// direction = 2 -> LEFT
 	// direction = 3 -> RIGHT
-	if(direction == 0)
-		desiredLocation.
+	if (direction == 0)
+		desiredLocation.x += 1.f;
+	else if (direction == 1)
+		desiredLocation.x -= 1.f;
+	else if (direction == 2)
+		desiredLocation.z -= 1.f;
+	else if (direction == 3)
+		desiredLocation.z += 1.f;
+
+	if (desiredLocation.x + 15 < 0 || desiredLocation.z + 15 < 0)
+		return 0;
+
+	int quadXCoord = ((int)desiredLocation.x + 15) / 32;
+	int quadZCoord = ((int)desiredLocation.z + 15) / 32;
+
+	for (std::vector<sQuadrant>::iterator it = quads.begin(); it != quads.end(); it++)
+	{
+		if (quadXCoord == it->quadX && quadZCoord == it->quadZ)
+		{
+			if (it->quadData[(int)desiredLocation.x + 15][(int)desiredLocation.z + 15][(int)desiredLocation.y].isWalkable)
+				return 1; // same height
+			else if (it->quadData[(int)desiredLocation.x + 15][(int)desiredLocation.z + 15][(int)desiredLocation.y + 1].isWalkable)
+				return 2; // go up
+			else if (it->quadData[(int)desiredLocation.x + 15][(int)desiredLocation.z + 15][(int)desiredLocation.y - 1].isWalkable)
+				return 3; // go down
+
+			return 0;
+		}
+	}
+
+	return 0;
 }

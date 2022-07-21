@@ -102,10 +102,10 @@ int main()
 
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
-    modelsToLoad.push_back("r0_treePine.obj");
-    modelsToLoad.push_back("TestMap1.obj");
+    modelsToLoad.push_back("r0_treePineAgain.obj");
+    modelsToLoad.push_back("TestMap1Again.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
-    modelsToLoad.push_back("SpriteHolder.obj");
+    modelsToLoad.push_back("SpriteHolderAgain.obj");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
@@ -129,11 +129,11 @@ int main()
     //g_set_Models.insert(map);
 
     cModel* tree = new cModel();
-    tree->meshName = "r0_treePine.obj";
+    tree->meshName = "r0_treePineAgain.obj";
     g_set_Models.insert(tree);
 
     cModel* sprite = new cModel();
-    sprite->meshName = "SpriteHolder.obj";
+    sprite->meshName = "SpriteHolderAgain.obj";
     //sprite->position.x = 33;
     sprite->textureName = "Nate.png";
     sprite->isAnimated = true;
@@ -189,13 +189,13 @@ int main()
     //asymSpriteAnimation->isRepeat = true;
     //g_AnimationManager->AddAnimation(asymSpriteAnimation);
 
-    asymCharacter = new cCharacter(glm::vec3(32.f, 0.f, 0.f), "SymetricNPC_1.png");
+    asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
 
     g_MapManager->LoadMap("", "");
 
     cModel* spriteSym = new cModel();
-    spriteSym->meshName = "SpriteHolder.obj";
-    spriteSym->position.x = -2.f;
+    spriteSym->meshName = "SpriteHolderAgain.obj";
+    spriteSym->position.z = -2.f;
     spriteSym->textureName = "SymetricNPC_1.png";
     spriteSym->isAnimated = true;
     spriteSym->currSpriteId = 2;

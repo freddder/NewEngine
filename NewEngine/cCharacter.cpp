@@ -1,10 +1,11 @@
 #include "cCharacter.h"
 #include "Global.h"
+#include <iostream>
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
 	model = new cModel();
-	model->meshName = "SpriteHolder.obj";
+	model->meshName = "SpriteHolderAgain.obj";
 	model->position = position;
 	model->textureName = textureName;
 	model->isAnimated = true;
@@ -111,19 +112,31 @@ void cCharacter::Walk(eDirection dir)
 	if (!modelAnimation->isDone)
 		return;
 
+	int heightChange = g_MapManager->MoveEntity(model->position, dir);
+
+	if (heightChange == 0)
+		return;
+
 	// set up model animation
 	modelAnimation->Reset(model->position, model->orientation, model->scale);
 
 	glm::vec3 newPosition = model->position;
 
+	if (heightChange == 2)
+		newPosition.y += 1.f;
+	else if (heightChange == 3)
+		newPosition.y -= 1.f;
+
 	if (dir == UP)
-		newPosition.z -= 1.f;
-	else if (dir == DOWN)
-		newPosition.z += 1.f;
-	else if (dir == LEFT)
-		newPosition.x -= 1.f;
-	else if (dir == RIGHT)
 		newPosition.x += 1.f;
+	else if (dir == DOWN)
+		newPosition.x -= 1.f;
+	else if (dir == LEFT)
+		newPosition.z -= 1.f;
+	else if (dir == RIGHT)
+		newPosition.z += 1.f;
+
+	std::cout << "NewPosition: " << newPosition.x << " " << newPosition.y << " " << newPosition.z << std::endl;
 
 	modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 }

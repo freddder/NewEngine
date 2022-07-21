@@ -16,14 +16,6 @@
 void StartUp();
 void Shutdown();
 
-enum eDirection
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
-
 extern cCamera* g_Camera;
 
 extern cShaderManager* g_ShaderManager;

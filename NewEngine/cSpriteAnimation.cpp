@@ -46,10 +46,10 @@ void cSpriteAnimation::Process(float deltaTime)
 			{
 				spriteIdRef = keyframes[keyFrameIndex - 1].value;
 
-				if ((keyframes[keyFrameIndex - 1].flip && modelScaleRef.x > 0) ||
-					!keyframes[keyFrameIndex - 1].flip && modelScaleRef.x < 0)
+				if ((keyframes[keyFrameIndex - 1].flip && modelScaleRef.z > 0) ||
+					!keyframes[keyFrameIndex - 1].flip && modelScaleRef.z < 0)
 				{
-					modelScaleRef.x *= -1;
+					modelScaleRef.z *= -1;
 				}
 			}
 			else

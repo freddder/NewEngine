@@ -20,11 +20,11 @@ cCamera::cCamera()
 	nearPlane = 0.5f;
 	farPlane = 1'000'000.f;
 	cameraSpeed = 10.f;
-	yaw = -90.f;
+	yaw = 0.f;//-90.f;
 	pitch = 0.f;
 	mouseSensitivity = 0.1f;
 
-	position = glm::vec3(0.0f, 0.0f, 3.0f);
+	position = glm::vec3(-3.0f, 3.0f, 0.0f);
 
 	UpdateCameraVectors();
 }
