@@ -25,19 +25,41 @@ cMapManager::cMapManager()
 	walkableTiles[92];
 	walkableTiles[95];
 
-	//walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	//	^ x
+	//  > z
 	walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(2.f, 2.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(3.f, 3.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(4.f, 4.f, 1.f));
-	//walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 2.f, 2.f));
-	//walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 3.f, 3.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 1.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 1.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 1.f));
+	walkableTiles[135].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 1.f));
 	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
 	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
 	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 2.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 3.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 4.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
+	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(3.f, 0.f, 0.f));
+
+	walkableTiles[136].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[136].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 0.f));
+	walkableTiles[136].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 0.f));
+	walkableTiles[136].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 0.f));
+	walkableTiles[136].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 0.f));
+	walkableTiles[136].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+
+	walkableTiles[137].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[137].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 0.f));
+	walkableTiles[137].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 0.f));
+	walkableTiles[137].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 0.f));
+	walkableTiles[137].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 0.f));
+	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
+	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 1.f));
+	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(2.f, 0.f, 1.f));
+	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(3.f, 0.f, 1.f));
+	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(4.f, 0.f, 1.f));
+
+	walkableTiles[171].walkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
+	walkableTiles[171].walkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
 }
 
 cMapManager::~cMapManager()
@@ -55,6 +77,8 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
         return;
 
 	std::string currToken;
+
+	// start here
 
 	sQuadrant newQuad;
 	int tempLayers[32][32][8];
