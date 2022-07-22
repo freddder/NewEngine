@@ -9,11 +9,12 @@ cMapManager::cMapManager()
 {
 	mapModel = new cModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "TestMap1Again.obj";
+	mapModel->meshName = "TestMap2.obj";
 	g_set_Models.insert(mapModel);
 
 	walkableTiles[100]; 
 	walkableTiles[101];
+	walkableTiles[103];
 	walkableTiles[52];
 	walkableTiles[53];
 	walkableTiles[54];
@@ -71,118 +72,157 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 {
 	//g_set_Models.erase(mapModel);
 
-    std::ifstream file("assets/models/TestMap1.pdsmap");
+    std::ifstream file("assets/models/TestMap2.pdsmap");
 
     if (!file.is_open())
         return;
 
 	std::string currToken;
 
-	// start here
-
-	sQuadrant newQuad;
-	int tempLayers[32][32][8];
-
+	// make sure reader is at first mapstart
 	while (file >> currToken)
 	{
 		if (currToken == "mapstart")
-		{
-			file >> newQuad.quadX;
-			file >> newQuad.quadZ;
-
 			break;
-		}
 	}
 
-	// skip areaindex
-	file >> currToken;
-	file >> currToken;
-
-	for (int layerId = 0; layerId < 8; layerId++)
+	// start here
+	while (currToken == "mapstart")
 	{
+		sQuadrant newQuad;
+		int tempLayers[32][32][8];
+
+		//while (file >> currToken)
+		//{
+		//	if (currToken == "mapstart")
+		//	{
+		//		file >> newQuad.quadX;
+		//		file >> newQuad.quadZ;
+
+		//		break;
+		//	}
+		//}
+
+		// set quadrant coords
+		file >> newQuad.quadX;
+		file >> newQuad.quadZ;
+
+		// skip areaindex
+		file >> currToken;
 		file >> currToken;
 
-		if (currToken != "tilegrid")
-			break;
-
-		for (int x = 0; x < 32; x++)
+		for (int layerId = 0; layerId < 8; layerId++)
 		{
-			for (int z = 0; z < 32; z++)
-			{
-				file >> tempLayers[x][z][layerId];
+			file >> currToken;
 
-				//file >> currToken;
-				//std::cout << currToken << " ";
+			if (currToken != "tilegrid")
+				break;
+
+			for (int x = 0; x < 32; x++)
+			{
+				for (int z = 0; z < 32; z++)
+				{
+					int currTile;
+					file >> currTile;
+					tempLayers[x][z][layerId] = currTile;
+					
+					//file >> tempLayers[x][z][layerId];
+
+					//file >> currToken;
+					//std::cout << currToken << " ";
+				}
+
+				//std::cout << std::endl;
 			}
 
 			//std::cout << std::endl;
 		}
 
-		//std::cout << std::endl;
-	}
-
-	for (int layerId = 0; layerId < 8; layerId++)
-	{
-		file >> currToken;
-
-		if (currToken != "heightgrid")
-			break;
-
-		for (int x = 0; x < 32; x++)
+		for (int layerId = 0; layerId < 8; layerId++)
 		{
-			for (int z = 0; z < 32; z++)
+			file >> currToken;
+
+			if (currToken != "heightgrid")
+				break;
+
+			for (int x = 0; x < 32; x++)
 			{
-				int currHeight;
-				file >> currHeight;
-
-				currHeight += 15;
-
-				int currTile = tempLayers[x][z][layerId];
-
-				if (walkableTiles.find(currTile) != walkableTiles.end()) // contains
+				for (int z = 0; z < 32; z++)
 				{
-					if (!newQuad.quadData[x][z][currHeight].isUnchangeable)
+					int currHeight;
+					file >> currHeight;
+
+					//currHeight += 15;
+
+					int currTile = tempLayers[x][z][layerId];
+
+					if (walkableTiles.find(currTile) != walkableTiles.end()) // contains
 					{
-						newQuad.quadData[x][z][currHeight].isWalkable = true;
-
-						for (unsigned int i = 0; i < walkableTiles[currTile].walkableOffsets.size(); i++)
+						if (!newQuad.quadData[x][z][currHeight].isUnchangeable)
 						{
-							int newX = x + (int)walkableTiles[currTile].walkableOffsets[i].x;
-							int newZ = z + (int)walkableTiles[currTile].walkableOffsets[i].z;
-							int newY = currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y;
+							newQuad.quadData[x][z][currHeight].isWalkable = true;
+							//newQuad.quadMapData[x][z][currHeight].isWalkable = true;
 
-							newQuad.quadData[newX][newZ][newY].isWalkable = true;
-						}
+							for (unsigned int i = 0; i < walkableTiles[currTile].walkableOffsets.size(); i++)
+							{
+								//int newX = x + (int)walkableTiles[currTile].walkableOffsets[i].x;
+								//int newZ = z + (int)walkableTiles[currTile].walkableOffsets[i].z;
+								//int newY = currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y;
 
-						for (unsigned int i = 0; i < walkableTiles[currTile].unwalkableOffsets.size(); i++)
-						{
-							newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
-											[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
-											[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
+								newQuad.quadData[x + (int)walkableTiles[currTile].walkableOffsets[i].x]
+												[z + (int)walkableTiles[currTile].walkableOffsets[i].z]
+												[currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y].isWalkable = true;
 
-							newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
-											[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
-											[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
+								//newQuad.quadMapData[x + (int)walkableTiles[currTile].walkableOffsets[i].x]
+								//				   [z + (int)walkableTiles[currTile].walkableOffsets[i].z]
+								//				   [currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y].isWalkable = true;
+							}
+
+							for (unsigned int i = 0; i < walkableTiles[currTile].unwalkableOffsets.size(); i++)
+							{
+								newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
+												[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+												[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
+
+								newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
+												[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+												[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
+
+								//newQuad.quadMapData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
+								//				   [(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+								//				   [(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
+
+								//newQuad.quadMapData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
+								//				   [(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+								//				   [(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
+							}
 						}
 					}
+					else if (tempLayers[x][z][layerId] != -1) // desn't contain
+					{
+						newQuad.quadData[x][z][currHeight].isWalkable = false;
+						newQuad.quadData[x][z][currHeight].isUnchangeable = true;
+
+						//newQuad.quadMapData[x][z][currHeight].isWalkable = false;
+						//newQuad.quadMapData[x][z][currHeight].isUnchangeable = true;
+					}
+					//std::cout << currToken << " ";
 				}
-				else if (tempLayers[x][z][layerId] != -1) // desn't contain
-				{
-					newQuad.quadData[x][z][currHeight].isWalkable = false;
-					newQuad.quadData[x][z][currHeight].isUnchangeable = true;
-				}
-				//std::cout << currToken << " ";
+
+				//std::cout << std::endl;
 			}
 
 			//std::cout << std::endl;
 		}
 
-		//std::cout << std::endl;
+		quads.push_back(newQuad);
+
+		file >> currToken; // this should be mapend
+		file >> currToken; // if there is another map, this will be mapstart
 	}
+	// end here
 
 	file.close();
-
-	quads.push_back(newQuad);
 }
 
 int cMapManager::MoveEntity(glm::vec3 currPosition, int direction)
@@ -206,16 +246,19 @@ int cMapManager::MoveEntity(glm::vec3 currPosition, int direction)
 		return 0;
 
 	desiredLocation.x += 15;
-	desiredLocation.y += 15;
+	//desiredLocation.y += 15;
 	desiredLocation.z += 15;
 
-	int quadXCoord = ((int)desiredLocation.x) / 32;
-	int quadZCoord = ((int)desiredLocation.z) / 32;
+	int quadXCoord = ((int)desiredLocation.z) / 32;
+	int quadZCoord = ((int)desiredLocation.x) / 32;
 
 	for (std::vector<sQuadrant>::iterator it = quads.begin(); it != quads.end(); it++)
 	{
 		if (quadXCoord == it->quadX && quadZCoord == it->quadZ)
 		{
+			desiredLocation.z -= 32 * quadXCoord;
+			desiredLocation.x -= 32 * quadZCoord;
+
 			if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y].isWalkable)
 				return 1; // same height
 			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y + 1].isWalkable)

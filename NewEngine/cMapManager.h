@@ -20,10 +20,14 @@ struct sTile
 
 struct sQuadrant
 {
-	sTile quadData[32][32][31];
+	//sTile quadData[32][32][31];
 
 	int quadX;
 	int quadZ;
+
+	std::map<int, std::map<
+		int, std::map<
+		int, sTile>>> quadData;
 };
 
 class cMapManager

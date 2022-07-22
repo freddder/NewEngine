@@ -103,7 +103,7 @@ int main()
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
     modelsToLoad.push_back("r0_treePineAgain.obj");
-    modelsToLoad.push_back("TestMap1Again.obj");
+    modelsToLoad.push_back("TestMap2.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
     modelsToLoad.push_back("SpriteHolderAgain.obj");
 
@@ -189,7 +189,7 @@ int main()
     //asymSpriteAnimation->isRepeat = true;
     //g_AnimationManager->AddAnimation(asymSpriteAnimation);
 
-    asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
+    asymCharacter = new cCharacter(glm::vec3(64.f, 0.f, 32.f), "SymetricNPC_1.png");
 
     g_MapManager->LoadMap("", "");
 
