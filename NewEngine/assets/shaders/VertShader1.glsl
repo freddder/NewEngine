@@ -80,6 +80,5 @@ void main()
 	}
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	//fVertPosLightSpace = lightSpaceMatrix * model * vPosition;
 	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);
 }

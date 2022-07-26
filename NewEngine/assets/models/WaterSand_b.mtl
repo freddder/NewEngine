@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
-# Material Count: 4
+# Material Count: 3
 
-newmtl ki02ax
+newmtl sea_simi_1
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -10,10 +10,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd ki02ax.png
-map_d ki02ax.png
+map_Kd sea_simi_1.png
+map_d sea_simi_1.png
 
-newmtl ki02bx
+newmtl sea_zanami
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -22,10 +22,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd ki02bx.png
-map_d ki02bx.png
+map_Kd sea_zanami.png
+map_d sea_zanami.png
 
-newmtl ki02c
+newmtl sea_zanami2
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -34,17 +34,5 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd ki02c.png
-map_d ki02c.png
-
-newmtl ki02dx
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd ki02dx.png
-map_d ki02dx.png
+map_Kd sea_zanami2.png
+map_d sea_zanami2.png

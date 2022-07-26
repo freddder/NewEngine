@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
-# Material Count: 12
+# Material Count: 9
 
-newmtl gake01
+newmtl gake01a2
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -10,20 +10,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd gake01.png
-map_d gake01.png
-
-newmtl gake1_0
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd gake1_0.png
-map_d gake1_0.png
+map_Kd gake01a2.png
+map_d gake01a2.png
 
 newmtl gake1_1
 Ns 0.000000
@@ -49,7 +37,7 @@ illum 1
 map_Kd grass01ax.png
 map_d grass01ax.png
 
-newmtl hashi01a
+newmtl kawa_fuchi_1
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -58,10 +46,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd hashi01a.png
-map_d hashi01a.png
+map_Kd kawa_fuchi_1.png
+map_d kawa_fuchi_1.png
 
-newmtl kaidan01a
+newmtl kawa_soko
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -70,10 +58,10 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd kaidan01a.png
-map_d kaidan01a.png
+map_Kd kawa_soko.png
+map_d kawa_soko.png
 
-newmtl michi01a
+newmtl sea_mizu1
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -82,20 +70,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd michi01a.png
-map_d michi01a.png
-
-newmtl michi01b
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd michi01b.png
-map_d michi01b.png
+map_Kd sea_mizu1.png
+map_d sea_mizu1.png
 
 newmtl sea_simi_1
 Ns 0.000000
@@ -132,15 +108,3 @@ d 1.000000
 illum 1
 map_Kd sea_zanami2.png
 map_d sea_zanami2.png
-
-newmtl yamagake01
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd yamagake01.png
-map_d yamagake01.png

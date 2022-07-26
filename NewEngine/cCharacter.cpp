@@ -5,7 +5,7 @@
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
 	model = new cModel();
-	model->meshName = "SpriteHolderAgain.obj";
+	model->meshName = "SpriteHolder.obj";
 	model->position = position;
 	model->textureName = textureName;
 	model->isAnimated = true;

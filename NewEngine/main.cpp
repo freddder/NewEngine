@@ -102,10 +102,11 @@ int main()
 
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
-    modelsToLoad.push_back("r0_treePineAgain.obj");
-    modelsToLoad.push_back("TestMap2.obj");
+    modelsToLoad.push_back("r0_treePine.obj");
+    modelsToLoad.push_back("TestWater.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
-    modelsToLoad.push_back("SpriteHolderAgain.obj");
+    modelsToLoad.push_back("SpriteHolder.obj");
+    modelsToLoad.push_back("WaterSand_b.obj");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
@@ -121,19 +122,22 @@ int main()
     debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
     g_set_Models.insert(debugSphere);
 
-    //cModel* map = new cModel();
-    //map->meshName = "TestMap2.obj";
-    //map->position = glm::vec3(0.5f, 0.f, 0.5f);
-    //map->scale = glm::vec3(0.07f);
-    //map->orientation.x = glm::radians(-90.f);
-    //g_set_Models.insert(map);
+    float textureOffsetU = 0.f;
+    float textureOffsetV = 0.f;
+
+    // make this part of sprite animation
+    cModel* sand = new cModel();
+    sand->meshName = "WaterSand_b.obj";
+    sand->position = glm::vec3(0.f, 10.f, 10.f);
+    sand->orientation.y = glm::radians(-90.f);
+    g_set_Models.insert(sand);
 
     cModel* tree = new cModel();
-    tree->meshName = "r0_treePineAgain.obj";
+    tree->meshName = "r0_treePine.obj";
     g_set_Models.insert(tree);
 
     cModel* sprite = new cModel();
-    sprite->meshName = "SpriteHolderAgain.obj";
+    sprite->meshName = "SpriteHolder.obj";
     //sprite->position.x = 33;
     sprite->textureName = "Nate.png";
     sprite->isAnimated = true;
@@ -159,42 +163,14 @@ int main()
     spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
 
     spriteAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(spriteAnimation);
+    g_AnimationManager->AddAnimation(spriteAnimation);    
 
-    //cModel* spriteAsym = new cModel();
-    //spriteAsym->meshName = "SpriteHolder.obj";
-    //spriteAsym->position.x = 2.f;
-    //spriteAsym->textureName = "AsymetricalNPC_1.png";
-    //spriteAsym->isAnimated = true;
-    //spriteAsym->currSpriteId = 3;
-    //g_set_Models.insert(spriteAsym);
-
-    //cSpriteAnimation* asymSpriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
-    //asymSpriteAnimation->isRepeat = true;
-    //g_AnimationManager->AddAnimation(asymSpriteAnimation);
-
-    asymCharacter = new cCharacter(glm::vec3(64.f, 0.f, 32.f), "SymetricNPC_1.png");
+    asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
 
     g_MapManager->LoadMap("", "");
 
     cModel* spriteSym = new cModel();
-    spriteSym->meshName = "SpriteHolderAgain.obj";
+    spriteSym->meshName = "SpriteHolder.obj";
     spriteSym->position.z = -2.f;
     spriteSym->textureName = "SymetricNPC_1.png";
     spriteSym->isAnimated = true;
@@ -432,6 +408,9 @@ int main()
 
         g_ShaderManager->setBool("isShadowPass", true);
 
+        g_ShaderManager->setFloat("textureOffsetU", textureOffsetU);
+        g_ShaderManager->setFloat("textureOffsetV", textureOffsetV);
+
         //Draw scene
         for (std::set<cModel*>::iterator it = g_set_Models.begin(); it != g_set_Models.end(); it++)
         {
@@ -525,6 +504,11 @@ int main()
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
         ImGui::Image((void*)(intptr_t)depthMap, ImVec2(200, 200));
+        ImGui::End();
+
+        ImGui::Begin("Offset UV");
+        ImGui::DragFloat("U", &textureOffsetU, 0.1f, 0.f, 1.f);
+        ImGui::DragFloat("V", &textureOffsetV, 0.1f, 0.f, 1.f);
         ImGui::End();
 
         ImGui::Render();

@@ -8,7 +8,7 @@ cMapManager::cMapManager()
 {
 	mapModel = new cModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "TestMap2.obj";
+	mapModel->meshName = "TestWater.obj";
 	g_set_Models.insert(mapModel);
 
 	walkableTiles[100]; 
@@ -71,7 +71,7 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 {
 	//g_set_Models.erase(mapModel);
 
-    std::ifstream file("assets/models/TestMap2.pdsmap");
+    std::ifstream file("assets/models/TestMap1.pdsmap");
 
     if (!file.is_open())
         return;

@@ -27,6 +27,9 @@ uniform sampler2D shadowMap;
 uniform bool useWholeColor;
 uniform vec4 wholeColor;
 
+uniform float textureOffsetU;
+uniform float textureOffsetV;
+
 float ShadowCalculation(vec4 fragPosLightSpace);
 
 void main()
@@ -40,7 +43,7 @@ void main()
 	}
 	else
 	{
-		vertColor = texture(texture_00, fUVx2.xy);
+		vertColor = texture(texture_00, vec2(fUVx2.x + textureOffsetU, fUVx2.y + textureOffsetV));
 
 		if(vertColor.a < 0.1)
 			discard;
