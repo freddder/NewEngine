@@ -18,10 +18,11 @@ uniform mat4 lightSpaceMatrix;
 
 uniform bool isShadowPass;
 
-uniform bool isSpriteAnimated;
+uniform int isTextureAnimated;
 uniform int numCols;
 uniform int numRows;
 uniform int spriteId;
+uniform vec2 UVoffset;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -65,7 +66,7 @@ void main()
 
 	vec3 fragPos = vec3(model * vPosition);
 
-	if(isSpriteAnimated)
+	if(isTextureAnimated == 1)
 	{
 		vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
 
@@ -73,6 +74,10 @@ void main()
 		float addV = (float(1) / float(numRows)) * (numRows - (spriteId / numCols));
 
 		fUVx2 = vec4(newUV.x + addU, newUV.y - addV, 0, 0);
+	}
+	else if(isTextureAnimated == 2)
+	{
+		fUVx2 = vec4(vUVx2.x + UVoffset.x, vUVx2.y + UVoffset.y, vUVx2.z, vUVx2.w);
 	}
 	else
 	{

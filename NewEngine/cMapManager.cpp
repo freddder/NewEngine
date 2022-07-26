@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <fstream>
+#include "cTextureOffsetAnimation.h"
 
 cMapManager::cMapManager()
 {
@@ -10,6 +11,13 @@ cMapManager::cMapManager()
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 	mapModel->meshName = "TestMap2.obj";
 	g_set_Models.insert(mapModel);
+
+	cTextureOffsetAnimation* mapAnimation = new cTextureOffsetAnimation(mapModel->textureOffset);
+	mapAnimation->AddKeyFrame(sKeyFrameVec3(10.0f, glm::vec3(360.f, 180.f, 0.f)));
+	mapAnimation->AddKeyFrame(sKeyFrameVec3(20.0f, glm::vec3(720.f, 360.f, 0.f)));
+	mapAnimation->isRepeat = true;
+	g_AnimationManager->AddAnimation(mapAnimation);
+	mapModel->textureAnimationType = UVShifting;
 
 	walkableTiles[100]; 
 	walkableTiles[101];
@@ -71,7 +79,7 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 {
 	//g_set_Models.erase(mapModel);
 
-    std::ifstream file("assets/models/TestMap2.pdsmap");
+    std::ifstream file("assets/models/TestMap1.pdsmap");
 
     if (!file.is_open())
         return;

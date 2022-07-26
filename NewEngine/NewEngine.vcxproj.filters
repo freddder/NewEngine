@@ -120,6 +120,9 @@
     <ClCompile Include="cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="cTextureOffsetAnimation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -196,6 +199,9 @@
     </ClInclude>
     <ClInclude Include="cMapManager.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cTextureOffsetAnimation.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -102,10 +102,10 @@ int main()
 
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
-    modelsToLoad.push_back("r0_treePineAgain.obj");
+    modelsToLoad.push_back("r0_treePine.obj");
     modelsToLoad.push_back("TestMap2.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
-    modelsToLoad.push_back("SpriteHolderAgain.obj");
+    modelsToLoad.push_back("SpriteHolder.obj");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
@@ -121,22 +121,14 @@ int main()
     debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
     g_set_Models.insert(debugSphere);
 
-    //cModel* map = new cModel();
-    //map->meshName = "TestMap2.obj";
-    //map->position = glm::vec3(0.5f, 0.f, 0.5f);
-    //map->scale = glm::vec3(0.07f);
-    //map->orientation.x = glm::radians(-90.f);
-    //g_set_Models.insert(map);
-
     cModel* tree = new cModel();
-    tree->meshName = "r0_treePineAgain.obj";
+    tree->meshName = "r0_treePine.obj";
     g_set_Models.insert(tree);
 
     cModel* sprite = new cModel();
-    sprite->meshName = "SpriteHolderAgain.obj";
-    //sprite->position.x = 33;
+    sprite->meshName = "SpriteHolder.obj";
     sprite->textureName = "Nate.png";
-    sprite->isAnimated = true;
+    sprite->textureAnimationType = Sprite;
     sprite->currSpriteId = 3;
     g_set_Models.insert(sprite);
 
@@ -189,15 +181,15 @@ int main()
     //asymSpriteAnimation->isRepeat = true;
     //g_AnimationManager->AddAnimation(asymSpriteAnimation);
 
-    asymCharacter = new cCharacter(glm::vec3(64.f, 0.f, 32.f), "SymetricNPC_1.png");
+    asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
 
     g_MapManager->LoadMap("", "");
 
     cModel* spriteSym = new cModel();
-    spriteSym->meshName = "SpriteHolderAgain.obj";
+    spriteSym->meshName = "SpriteHolder.obj";
     spriteSym->position.z = -2.f;
     spriteSym->textureName = "SymetricNPC_1.png";
-    spriteSym->isAnimated = true;
+    spriteSym->textureAnimationType = Sprite;
     spriteSym->currSpriteId = 2;
     g_set_Models.insert(spriteSym);
 
@@ -469,8 +461,6 @@ int main()
             DrawObject(*it);
         }
 
-        //debugSphere->position.y += 10.f;
-
         // Draw skybox
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         g_ShaderManager->use("skybox");
@@ -655,16 +645,21 @@ void DrawObject(cModel* model)
                 textureToUse = drawInfo.allMeshesData[i].textureName;
             else
                 textureToUse = model->textureName;
+
+            g_ShaderManager->setInt("isTextureAnimated", model->textureAnimationType);
             
-            if (model->isAnimated)
+            if (model->textureAnimationType == Sprite)
             {
-                g_ShaderManager->setBool("isSpriteAnimated", true);
                 g_ShaderManager->setInt("spriteId", model->currSpriteId);
                 g_TextureManager->SetupSpriteSheet(textureToUse);
             }
+            else if (model->textureAnimationType == UVShifting)
+            {
+                g_ShaderManager->setVec2("UVoffset", model->textureOffset);
+                g_TextureManager->SetupTexture(textureToUse);
+            }
             else
             {
-                g_ShaderManager->setBool("isSpriteAnimated", false);
                 g_TextureManager->SetupTexture(textureToUse);
             }
 

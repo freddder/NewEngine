@@ -156,6 +156,7 @@
     <ClCompile Include="cShaderManager.cpp" />
     <ClCompile Include="cSpriteAnimation.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
+    <ClCompile Include="cTextureOffsetAnimation.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="cShaderManager.h" />
     <ClInclude Include="cSpriteAnimation.h" />
     <ClInclude Include="cTextureManager.h" />
+    <ClInclude Include="cTextureOffsetAnimation.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
