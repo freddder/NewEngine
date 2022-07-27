@@ -103,9 +103,12 @@ int main()
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
     modelsToLoad.push_back("r0_treePine.obj");
-    modelsToLoad.push_back("TestMap2.obj");
+    modelsToLoad.push_back("TestWater.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
     modelsToLoad.push_back("SpriteHolder.obj");
+    modelsToLoad.push_back("Water_c2.obj");
+    modelsToLoad.push_back("Water_b2.obj");
+    modelsToLoad.push_back("Water_bl2.obj");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
@@ -114,16 +117,44 @@ int main()
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
 
-    cModel* debugSphere = new cModel();
-    debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
-    debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
-    debugSphere->useWholeColor = true;
-    debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
-    g_set_Models.insert(debugSphere);
+    //cModel* debugSphere = new cModel();
+    //debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
+    //debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
+    //debugSphere->useWholeColor = true;
+    //debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
+    //g_set_Models.insert(debugSphere);
 
     cModel* tree = new cModel();
     tree->meshName = "r0_treePine.obj";
     g_set_Models.insert(tree);
+
+    cModel* waterB = new cModel();
+    waterB->meshName = "Water_b2.obj";
+    waterB->position = glm::vec3(0.f, 10.f, 0.f);
+    g_set_Models.insert(waterB);
+
+    cModel* waterC = new cModel();
+    waterC->meshName = "Water_c2.obj";
+    waterC->position = glm::vec3(0.f, 10.f, 5.f);
+    g_set_Models.insert(waterC);
+
+    cModel* waterBL = new cModel();
+    waterBL->meshName = "Water_bl2.obj";
+    waterBL->position = glm::vec3(0.f, 10.f, 10.f);
+    g_set_Models.insert(waterBL);
+
+    cModelAnimation* waterBAnimation = new cModelAnimation(waterBL->position, waterBL->orientation, waterC->scale);
+    //waterBAnimation->AddScaleKeyFrame(sKeyFrameVec3(2.f, glm::vec3(0.5f, 1.f, 0.5f)));
+    waterBAnimation->AddScaleKeyFrame(sKeyFrameVec3(2.f, glm::vec3(0.5f, 1.f, 0.5f)));
+    //waterBAnimation->AddPositionKeyFrame(sKeyFrameVec3(2.f, glm::vec3(1.5f, 10.f, 11.5f)));
+    waterBAnimation->isRepeat = true;
+    g_AnimationManager->AddAnimation(waterBAnimation);
+
+    cSinAnimation* waterAnimation = new cSinAnimation(waterBL->textureOffset, 0.9, 0);
+    waterBL->textureAnimationType = UVShifting;
+    waterAnimation->AddKeyFrame(sKeyFrameVec3(2.f, glm::vec3(-360.f, 0.f, 0.f)));
+    waterAnimation->isRepeat = true;
+    g_AnimationManager->AddAnimation(waterAnimation);
 
     cModel* sprite = new cModel();
     sprite->meshName = "SpriteHolder.obj";
@@ -515,6 +546,15 @@ int main()
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
         ImGui::Image((void*)(intptr_t)depthMap, ImVec2(200, 200));
+        ImGui::End();
+
+        float* scales[3];
+        scales[0] = &waterB->scale.x;
+        scales[1] = &waterB->scale.y;
+        scales[2] = &waterB->scale.z;
+
+        ImGui::Begin("Water");
+        ImGui::DragFloat3("Scale", *scales);
         ImGui::End();
 
         ImGui::Render();

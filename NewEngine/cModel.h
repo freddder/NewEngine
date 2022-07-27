@@ -35,7 +35,7 @@ public:
 
 	eAnimationType textureAnimationType;
 	int currSpriteId;
-	glm::vec2 textureOffset;
+	glm::vec3 textureOffset;
 
 	cModel();
 

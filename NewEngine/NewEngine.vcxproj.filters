@@ -120,7 +120,7 @@
     <ClCompile Include="cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="cTextureOffsetAnimation.cpp">
+    <ClCompile Include="cSinAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,7 +200,7 @@
     <ClInclude Include="cMapManager.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="cTextureOffsetAnimation.h">
+    <ClInclude Include="cSinAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,21 +3,45 @@
 
 #include <sstream>
 #include <fstream>
-#include "cTextureOffsetAnimation.h"
 
 cMapManager::cMapManager()
 {
 	mapModel = new cModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "TestMap2.obj";
+	mapModel->meshName = "TestWater.obj";
 	g_set_Models.insert(mapModel);
 
-	cTextureOffsetAnimation* mapAnimation = new cTextureOffsetAnimation(mapModel->textureOffset);
-	mapAnimation->AddKeyFrame(sKeyFrameVec3(10.0f, glm::vec3(360.f, 180.f, 0.f)));
-	mapAnimation->AddKeyFrame(sKeyFrameVec3(20.0f, glm::vec3(720.f, 360.f, 0.f)));
-	mapAnimation->isRepeat = true;
-	g_AnimationManager->AddAnimation(mapAnimation);
-	mapModel->textureAnimationType = UVShifting;
+	//cSinAnimation* mapAnimation = new cSinAnimation(mapModel->textureOffset, 2, 0);
+	////mapAnimation->AddKeyFrame(sKeyFrameVec3(10.0f, glm::vec3(360.f, 0.f, 0.f)));
+	//mapAnimation->AddKeyFrame(sKeyFrameVec3(10.0f, glm::vec3(360.f, 180.f, 0.f)));
+	//mapAnimation->AddKeyFrame(sKeyFrameVec3(20.0f, glm::vec3(720.f, 360.f, 0.f)));
+	//mapAnimation->isRepeat = true;
+	//g_AnimationManager->AddAnimation(mapAnimation);
+	//mapModel->textureAnimationType = UVShifting;
+
+	Water_b = new cModel();
+	Water_b->meshName = "Water_b2.obj";
+	Water_b->textureAnimationType = UVShifting;
+
+	Water_c = new cModel();
+	Water_c->meshName = "Water_c2.obj";
+	Water_c->textureAnimationType = UVShifting;
+
+	Water_bl = new cModel();
+	Water_bl->meshName = "Water_bl2.obj";
+	Water_bl->textureAnimationType = UVShifting;
+
+	water_b_animation = new cSinAnimation(Water_b->textureOffset, 2, 0);
+	water_b_animation->AddKeyFrame(sKeyFrameVec3(5.f, glm::vec3(360.f, 0.f, 0.f)));
+	water_b_animation->isRepeat = true;
+
+	water_c_animation = new cSinAnimation(Water_c->textureOffset, 2, 0);
+	water_c_animation->AddKeyFrame(sKeyFrameVec3(5.f, glm::vec3(360.f, 0.f, 0.f)));
+	water_c_animation->isRepeat = true;
+
+	water_bl_animation = new cSinAnimation(Water_bl->textureOffset, 2, 0);
+	water_bl_animation->AddKeyFrame(sKeyFrameVec3(5.f, glm::vec3(360.f, 0.f, 0.f)));
+	water_bl_animation->isRepeat = true;
 
 	walkableTiles[100]; 
 	walkableTiles[101];
@@ -71,8 +95,15 @@ cMapManager::cMapManager()
 }
 
 cMapManager::~cMapManager()
-{
+{	
 	delete mapModel;
+	delete Water_b;
+	delete Water_c;
+	delete Water_bl;
+
+	delete water_b_animation;
+	delete water_bl_animation;
+	delete water_c_animation;
 }
 
 void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
