@@ -18,6 +18,7 @@ cModel::cModel()
 	textureAnimationType = None;
 	currSpriteId = 0;
 	textureOffset = glm::vec3(0.f);
+	globalShiftingRatios = glm::vec3(0.f);
 }
 
 void cModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)

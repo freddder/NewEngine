@@ -23,6 +23,7 @@ uniform int numCols;
 uniform int numRows;
 uniform int spriteId;
 uniform vec2 UVoffset;
+uniform vec3 globalShiftingRatios;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -78,6 +79,11 @@ void main()
 	else if(isTextureAnimated == 2)
 	{
 		fUVx2 = vec4(vUVx2.x + UVoffset.x, vUVx2.y + UVoffset.y, vUVx2.z, vUVx2.w);
+		//fUVx2 = vec4((model * vPosition).x * 0.35 + UVoffset.x, (model * vPosition).z * 0.35 + UVoffset.y, vUVx2.z, vUVx2.w);
+	}
+	else if(isTextureAnimated == 3)
+	{
+		fUVx2 = vec4((model * vPosition).x * globalShiftingRatios.x + UVoffset.x, (model * vPosition).z * globalShiftingRatios.z + UVoffset.y, vUVx2.z, vUVx2.w);
 	}
 	else
 	{
