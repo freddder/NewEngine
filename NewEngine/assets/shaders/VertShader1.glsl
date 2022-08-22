@@ -22,8 +22,9 @@ uniform int isTextureAnimated;
 uniform int numCols;
 uniform int numRows;
 uniform int spriteId;
+uniform bool useGlobalPositionUV;
+uniform vec2 globalUVRatios;
 uniform vec2 UVoffset;
-uniform vec3 globalShiftingRatios;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -66,8 +67,15 @@ void main()
 	}
 
 	vec3 fragPos = vec3(model * vPosition);
+	fUVx2 = vUVx2;
 
-	if(isTextureAnimated == 1)
+	if(useGlobalPositionUV)
+	{
+		fUVx2.x = fragPos.z * globalUVRatios.x;
+		fUVx2.y = fragPos.x * globalUVRatios.y;
+	}
+
+	if(isTextureAnimated == 1) // sprite animation
 	{
 		vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
 
@@ -76,21 +84,12 @@ void main()
 
 		fUVx2 = vec4(newUV.x + addU, newUV.y - addV, 0, 0);
 	}
-	else if(isTextureAnimated == 2)
+	else if(isTextureAnimated == 2) // UV shifting
 	{
-		fUVx2 = vec4(vUVx2.x + UVoffset.x, vUVx2.y + UVoffset.y, vUVx2.z, vUVx2.w);
-		//fUVx2 = vec4((model * vPosition).x * 0.35 + UVoffset.x, (model * vPosition).z * 0.35 + UVoffset.y, vUVx2.z, vUVx2.w);
-	}
-	else if(isTextureAnimated == 3)
-	{
-		fUVx2 = vec4((model * vPosition).x * globalShiftingRatios.x + UVoffset.x, (model * vPosition).z * globalShiftingRatios.z + UVoffset.y, vUVx2.z, vUVx2.w);
-	}
-	else
-	{
-		fUVx2 = vUVx2;
+		fUVx2.x += UVoffset.x;
+		fUVx2.y += UVoffset.y;
 	}
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	//fVertPosLightSpace = lightSpaceMatrix * model * vPosition;
 	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);
 }

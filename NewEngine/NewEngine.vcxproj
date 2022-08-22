@@ -204,8 +204,6 @@
     <None Include="assets\shaders\FragShader1.glsl" />
     <None Include="assets\shaders\SkyboxFragShader.glsl" />
     <None Include="assets\shaders\SkyboxVertShader.glsl" />
-    <None Include="assets\shaders\SpriteFragShader.glsl" />
-    <None Include="assets\shaders\SpriteVertShader.glsl" />
     <None Include="assets\shaders\VertShader1.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

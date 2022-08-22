@@ -9,8 +9,7 @@ enum eAnimationType
 {
 	None,
 	Sprite,
-	UVShifting,
-	GlobalUVShifting
+	UVShifting
 };
 
 class cModel
@@ -36,8 +35,9 @@ public:
 
 	eAnimationType textureAnimationType;
 	int currSpriteId;
+	bool useGlobalPosForUV;
+	glm::vec2 globalUVRatios;
 	glm::vec3 textureOffset;
-	glm::vec3 globalShiftingRatios;
 
 	cModel();
 

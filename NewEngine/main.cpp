@@ -88,6 +88,7 @@ int main()
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
+
     //********************** Prepare Light **************************************
 
     g_LightManager->lights[0].extraParam.x = 2.f; // directional light
@@ -651,6 +652,8 @@ void DrawObject(cModel* model)
                 textureToUse = model->textureName;
 
             g_ShaderManager->setInt("isTextureAnimated", model->textureAnimationType);
+            g_ShaderManager->setBool("useGlobalPositionUV", model->useGlobalPosForUV);
+            g_ShaderManager->setVec2("globalUVRatios", model->globalUVRatios);
             
             if (model->textureAnimationType == Sprite)
             {
@@ -660,12 +663,6 @@ void DrawObject(cModel* model)
             else if (model->textureAnimationType == UVShifting)
             {
                 g_ShaderManager->setVec2("UVoffset", model->textureOffset);
-                g_TextureManager->SetupTexture(textureToUse);
-            }
-            else if (model->textureAnimationType == GlobalUVShifting)
-            {
-                g_ShaderManager->setVec2("UVoffset", model->textureOffset);
-                g_ShaderManager->setVec3("globalShiftingRatios", model->globalShiftingRatios);
                 g_TextureManager->SetupTexture(textureToUse);
             }
             else

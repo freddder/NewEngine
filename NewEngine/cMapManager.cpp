@@ -126,8 +126,9 @@ cMapManager::cMapManager()
 
 	instancedTiles[130].instancedModel = new cModel();
 	instancedTiles[130].instancedModel->meshName = "sea_water2.obj";
-	instancedTiles[130].instancedModel->textureAnimationType = GlobalUVShifting;
-	instancedTiles[130].instancedModel->globalShiftingRatios = glm::vec3(0.35f, 0.f, 0.35f);
+	instancedTiles[130].instancedModel->textureAnimationType = UVShifting;
+	instancedTiles[130].instancedModel->useGlobalPosForUV = true;
+	instancedTiles[130].instancedModel->globalUVRatios = glm::vec2(0.35f, 0.35f);
 	instancedTiles[130].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
 	instancedTiles[130].animation = new cSinAnimation(instancedTiles[130].instancedModel->textureOffset, 0.5f, 0);
 	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 180.f, 0.f)));
