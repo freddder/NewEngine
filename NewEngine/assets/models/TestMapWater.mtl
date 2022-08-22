@@ -1,5 +1,5 @@
 # Blender MTL File: 'None'
-# Material Count: 10
+# Material Count: 7
 
 newmtl gake01
 Ns 0.000000
@@ -73,19 +73,7 @@ illum 1
 map_Kd kawa_soko.png
 map_d kawa_soko.png
 
-newmtl sea_mizu1
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sea_mizu1.png
-map_d sea_mizu1.png
-
-newmtl sea_simi_1.001
+newmtl sea_simi_1
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -96,27 +84,3 @@ d 1.000000
 illum 1
 map_Kd sea_simi_1.png
 map_d sea_simi_1.png
-
-newmtl sea_zanami.003
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sea_zanami.png
-map_d sea_zanami.png
-
-newmtl sea_zanami2.003
-Ns 0.000000
-Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.000000 0.000000 0.000000
-Ke 0.000000 0.000000 0.000000
-Ni 1.450000
-d 1.000000
-illum 1
-map_Kd sea_zanami2.png
-map_d sea_zanami2.png

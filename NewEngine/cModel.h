@@ -5,6 +5,13 @@
 
 //static const unsigned int MAX_TEXTURES = 5;
 
+enum eAnimationType
+{
+	None,
+	Sprite,
+	UVShifting
+};
+
 class cModel
 {
 public:
@@ -26,8 +33,11 @@ public:
 
 	std::string textureName;
 
-	bool isAnimated;
+	eAnimationType textureAnimationType;
 	int currSpriteId;
+	bool useGlobalPosForUV;
+	glm::vec2 globalUVRatios;
+	glm::vec3 textureOffset;
 
 	cModel();
 

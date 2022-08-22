@@ -156,6 +156,7 @@
     <ClCompile Include="cShaderManager.cpp" />
     <ClCompile Include="cSpriteAnimation.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
+    <ClCompile Include="cSinAnimation.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="cShaderManager.h" />
     <ClInclude Include="cSpriteAnimation.h" />
     <ClInclude Include="cTextureManager.h" />
+    <ClInclude Include="cSinAnimation.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
@@ -202,8 +204,6 @@
     <None Include="assets\shaders\FragShader1.glsl" />
     <None Include="assets\shaders\SkyboxFragShader.glsl" />
     <None Include="assets\shaders\SkyboxVertShader.glsl" />
-    <None Include="assets\shaders\SpriteFragShader.glsl" />
-    <None Include="assets\shaders\SpriteVertShader.glsl" />
     <None Include="assets\shaders\VertShader1.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

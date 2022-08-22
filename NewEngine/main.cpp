@@ -88,6 +88,7 @@ int main()
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
+
     //********************** Prepare Light **************************************
 
     g_LightManager->lights[0].extraParam.x = 2.f; // directional light
@@ -103,10 +104,13 @@ int main()
     std::vector<std::string> modelsToLoad;
     //modelsToLoad.push_back("Mistralton City House.obj");
     modelsToLoad.push_back("r0_treePine.obj");
-    modelsToLoad.push_back("TestWater.obj");
+    modelsToLoad.push_back("TestMapWater.obj");
     modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
     modelsToLoad.push_back("SpriteHolder.obj");
-    modelsToLoad.push_back("WaterSand_b.obj");
+    modelsToLoad.push_back("Water_c2.obj");
+    modelsToLoad.push_back("Water_b2.obj");
+    modelsToLoad.push_back("Water_bl2.obj");
+    modelsToLoad.push_back("sea_water2.obj");
 
     for (unsigned int i = 0; i < modelsToLoad.size(); i++)
         g_ModelManager->LoadModel(modelsToLoad[i], g_ShaderManager->GetCurrentShaderId());
@@ -115,15 +119,12 @@ int main()
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
 
-    cModel* debugSphere = new cModel();
-    debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
-    debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
-    debugSphere->useWholeColor = true;
-    debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
-    g_set_Models.insert(debugSphere);
-
-    float textureOffsetU = 0.f;
-    float textureOffsetV = 0.f;
+    //cModel* debugSphere = new cModel();
+    //debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
+    //debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
+    //debugSphere->useWholeColor = true;
+    //debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
+    //g_set_Models.insert(debugSphere);
 
     // make this part of sprite animation
     cModel* sand = new cModel();
@@ -138,9 +139,8 @@ int main()
 
     cModel* sprite = new cModel();
     sprite->meshName = "SpriteHolder.obj";
-    //sprite->position.x = 33;
     sprite->textureName = "Nate.png";
-    sprite->isAnimated = true;
+    sprite->textureAnimationType = Sprite;
     sprite->currSpriteId = 3;
     g_set_Models.insert(sprite);
 
@@ -165,6 +165,34 @@ int main()
     spriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(spriteAnimation);    
 
+    //cModel* spriteAsym = new cModel();
+    //spriteAsym->meshName = "SpriteHolder.obj";
+    //spriteAsym->position.x = 2.f;
+    //spriteAsym->textureName = "AsymetricalNPC_1.png";
+    //spriteAsym->isAnimated = true;
+    //spriteAsym->currSpriteId = 3;
+    //g_set_Models.insert(spriteAsym);
+
+    //cSpriteAnimation* asymSpriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
+    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
+    //asymSpriteAnimation->isRepeat = true;
+    //g_AnimationManager->AddAnimation(asymSpriteAnimation);
+
     asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
 
     g_MapManager->LoadMap("", "");
@@ -173,7 +201,7 @@ int main()
     spriteSym->meshName = "SpriteHolder.obj";
     spriteSym->position.z = -2.f;
     spriteSym->textureName = "SymetricNPC_1.png";
-    spriteSym->isAnimated = true;
+    spriteSym->textureAnimationType = Sprite;
     spriteSym->currSpriteId = 2;
     g_set_Models.insert(spriteSym);
 
@@ -448,8 +476,6 @@ int main()
             DrawObject(*it);
         }
 
-        //debugSphere->position.y += 10.f;
-
         // Draw skybox
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
         g_ShaderManager->use("skybox");
@@ -639,16 +665,23 @@ void DrawObject(cModel* model)
                 textureToUse = drawInfo.allMeshesData[i].textureName;
             else
                 textureToUse = model->textureName;
+
+            g_ShaderManager->setInt("isTextureAnimated", model->textureAnimationType);
+            g_ShaderManager->setBool("useGlobalPositionUV", model->useGlobalPosForUV);
+            g_ShaderManager->setVec2("globalUVRatios", model->globalUVRatios);
             
-            if (model->isAnimated)
+            if (model->textureAnimationType == Sprite)
             {
-                g_ShaderManager->setBool("isSpriteAnimated", true);
                 g_ShaderManager->setInt("spriteId", model->currSpriteId);
                 g_TextureManager->SetupSpriteSheet(textureToUse);
             }
+            else if (model->textureAnimationType == UVShifting)
+            {
+                g_ShaderManager->setVec2("UVoffset", model->textureOffset);
+                g_TextureManager->SetupTexture(textureToUse);
+            }
             else
             {
-                g_ShaderManager->setBool("isSpriteAnimated", false);
                 g_TextureManager->SetupTexture(textureToUse);
             }
 

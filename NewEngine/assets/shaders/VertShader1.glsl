@@ -18,10 +18,13 @@ uniform mat4 lightSpaceMatrix;
 
 uniform bool isShadowPass;
 
-uniform bool isSpriteAnimated;
+uniform int isTextureAnimated;
 uniform int numCols;
 uniform int numRows;
 uniform int spriteId;
+uniform bool useGlobalPositionUV;
+uniform vec2 globalUVRatios;
+uniform vec2 UVoffset;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -64,8 +67,15 @@ void main()
 	}
 
 	vec3 fragPos = vec3(model * vPosition);
+	fUVx2 = vUVx2;
 
-	if(isSpriteAnimated)
+	if(useGlobalPositionUV)
+	{
+		fUVx2.x = fragPos.z * globalUVRatios.x;
+		fUVx2.y = fragPos.x * globalUVRatios.y;
+	}
+
+	if(isTextureAnimated == 1) // sprite animation
 	{
 		vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
 
@@ -74,9 +84,10 @@ void main()
 
 		fUVx2 = vec4(newUV.x + addU, newUV.y - addV, 0, 0);
 	}
-	else
+	else if(isTextureAnimated == 2) // UV shifting
 	{
-		fUVx2 = vUVx2;
+		fUVx2.x += UVoffset.x;
+		fUVx2.y += UVoffset.y;
 	}
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;

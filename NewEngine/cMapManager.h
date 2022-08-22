@@ -4,6 +4,15 @@
 #include <map>
 #include <string>
 #include "cModel.h"
+#include "cSinAnimation.h"
+
+struct sInstancedTile
+{
+	cModel* instancedModel;
+	std::vector<glm::vec4> instanceOffsets;
+	glm::vec3 modelOffset;
+	cAnimation* animation;
+};
 
 struct sCorrectionTiles
 {
@@ -35,6 +44,15 @@ class cMapManager
 	std::vector<sQuadrant> quads;
 	std::map<int, sCorrectionTiles> walkableTiles;
 	cModel* mapModel;
+
+	std::map<int, sInstancedTile> instancedTiles;
+	//cModel* Water_b;
+	//cModel* Water_c;
+	//cModel* Water_bl;
+
+	//cSinAnimation* water_b_animation;
+	//cSinAnimation* water_c_animation;
+	//cSinAnimation* water_bl_animation;
 
 public:
 

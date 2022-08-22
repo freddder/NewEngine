@@ -120,6 +120,9 @@
     <ClCompile Include="cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
+    <ClCompile Include="cSinAnimation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -197,6 +200,9 @@
     <ClInclude Include="cMapManager.h">
       <Filter>Map</Filter>
     </ClInclude>
+    <ClInclude Include="cSinAnimation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\FragShader1.glsl">
@@ -215,12 +221,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\DebugVertShader.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="assets\shaders\SpriteFragShader.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="assets\shaders\SpriteVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

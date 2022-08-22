@@ -15,8 +15,11 @@ cModel::cModel()
 
 	textureName = "";
 
-	isAnimated = false;
+	textureAnimationType = None;
 	currSpriteId = 0;
+	useGlobalPosForUV = false;
+	globalUVRatios = glm::vec2(1.f);
+	textureOffset = glm::vec3(0.f);
 }
 
 void cModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)

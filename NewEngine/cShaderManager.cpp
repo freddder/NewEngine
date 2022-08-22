@@ -144,6 +144,17 @@ void cShaderManager::setMat4(const std::string& name, const glm::mat4& mat)
     glUniformMatrix4fv(programMap[currShader].uniformLocations[name], 1, GL_FALSE, &mat[0][0]);
 }
 
+void cShaderManager::setVec2(const std::string& name, const glm::vec2& value)
+{
+    if (programMap[currShader].uniformLocations.count(name) == 0)
+    {
+        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
+        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+    }
+
+    glUniform2fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+}
+
 void cShaderManager::setVec3(const std::string& name, const glm::vec3& value)
 {
     if (programMap[currShader].uniformLocations.count(name) == 0)

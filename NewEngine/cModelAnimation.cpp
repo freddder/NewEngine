@@ -131,7 +131,7 @@ void cModelAnimation::Process(float deltaTime)
 			//}
 
 			glm::vec3 newScale = currScaleKeyframe.value + (nextScaleKeyframe.value - currScaleKeyframe.value) * scaleFraction;
-			orintationRef = newScale;
+			scaleRef = newScale;
 
 			break;
 		}
@@ -142,7 +142,7 @@ void cModelAnimation::Process(float deltaTime)
 		if (timer >= maxDuration)
 		{
 			glm::vec3 finalScale = scaleKeyframes[scaleKeyframes.size() - 1].value;
-			orintationRef = finalScale;
+			scaleRef = finalScale;
 		}
 	}
 
