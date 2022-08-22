@@ -8,7 +8,7 @@ cMapManager::cMapManager()
 {
 	mapModel = new cModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "TestMap2.obj";
+	mapModel->meshName = "TestMapWater.obj";
 	g_set_Models.insert(mapModel);
 
 	instancedTiles[118].instancedModel = new cModel();
@@ -290,6 +290,16 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 					{
 						newQuad.quadData[x][z][currHeight].isWalkable = false;
 						newQuad.quadData[x][z][currHeight].isUnchangeable = true;
+					}
+
+					if (instancedTiles.find(currTile) != instancedTiles.end()) // it exists
+					{
+						glm::vec4 newOffset = glm::vec4((newQuad.quadX * 32 - 15 + x), currHeight, (newQuad.quadX * 32 - 15 + z), 1.f);
+						newOffset.x += instancedTiles[currTile].modelOffset.x;
+						newOffset.y += instancedTiles[currTile].modelOffset.y;
+						newOffset.z += instancedTiles[currTile].modelOffset.z;
+
+						instancedTiles[currTile].instanceOffsets.push_back(newOffset);
 					}
 				}
 			}

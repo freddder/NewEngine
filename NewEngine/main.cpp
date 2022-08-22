@@ -80,7 +80,6 @@ int main()
     // Setup shader programs
     g_ShaderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
     g_ShaderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
-    //g_ShaderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
     //g_ShaderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
     //g_ShaderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
     g_ShaderManager->use("scene");
@@ -118,13 +117,6 @@ int main()
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-
-    //cModel* debugSphere = new cModel();
-    //debugSphere->meshName = "ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply";
-    //debugSphere->position = glm::vec3(0.f, 10.f, 0.f);
-    //debugSphere->useWholeColor = true;
-    //debugSphere->wholeColor = glm::vec4(0.f, 1.f, 0.f, 1.f);
-    //g_set_Models.insert(debugSphere);
 
     // make this part of sprite animation
     cModel* sand = new cModel();
@@ -165,34 +157,6 @@ int main()
     spriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(spriteAnimation);    
 
-    //cModel* spriteAsym = new cModel();
-    //spriteAsym->meshName = "SpriteHolder.obj";
-    //spriteAsym->position.x = 2.f;
-    //spriteAsym->textureName = "AsymetricalNPC_1.png";
-    //spriteAsym->isAnimated = true;
-    //spriteAsym->currSpriteId = 3;
-    //g_set_Models.insert(spriteAsym);
-
-    //cSpriteAnimation* asymSpriteAnimation = new cSpriteAnimation(spriteAsym->currSpriteId, spriteAsym->scale);
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
-    //asymSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
-    //asymSpriteAnimation->isRepeat = true;
-    //g_AnimationManager->AddAnimation(asymSpriteAnimation);
-
     asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
 
     g_MapManager->LoadMap("", "");
@@ -224,11 +188,6 @@ int main()
     symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 4, true));
     symSpriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(symSpriteAnimation);
-
-    //cModelAnimation* modelAnimation = new cModelAnimation(sprite->position, sprite->orientation, sprite->scale);
-    //modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.4f, glm::vec3(0, 0, 1)));
-    //modelAnimation->isRepeat = true;
-    //g_AnimationManager->AddAnimation(modelAnimation);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -425,7 +384,6 @@ int main()
         glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
         glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
         
-        //lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
         lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
@@ -435,9 +393,6 @@ int main()
         g_ShaderManager->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
         g_ShaderManager->setBool("isShadowPass", true);
-
-        g_ShaderManager->setFloat("textureOffsetU", textureOffsetU);
-        g_ShaderManager->setFloat("textureOffsetV", textureOffsetV);
 
         //Draw scene
         for (std::set<cModel*>::iterator it = g_set_Models.begin(); it != g_set_Models.end(); it++)
@@ -530,11 +485,6 @@ int main()
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
         ImGui::Image((void*)(intptr_t)depthMap, ImVec2(200, 200));
-        ImGui::End();
-
-        ImGui::Begin("Offset UV");
-        ImGui::DragFloat("U", &textureOffsetU, 0.1f, 0.f, 1.f);
-        ImGui::DragFloat("V", &textureOffsetV, 0.1f, 0.f, 1.f);
         ImGui::End();
 
         ImGui::Render();
