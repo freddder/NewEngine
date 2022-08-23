@@ -4,13 +4,14 @@
 //#include <vector>
 
 #include "cCamera.h"
-#include "cModel.h"
-#include "cShaderManager.h"
+//#include "cModel.h"
+//#include "cShaderManager.h"
 #include "cModelManager.h"
 #include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
 #include "cMapManager.h"
+#include "cRenderManager.h"
 #include <set>
 
 void StartUp();
@@ -18,7 +19,7 @@ void Shutdown();
 
 extern cCamera* g_Camera;
 
-extern cShaderManager* g_ShaderManager;
+//extern cShaderManager* g_ShaderManager;
 
 extern cModelManager* g_ModelManager;
 
@@ -30,6 +31,8 @@ extern cAnimationManager* g_AnimationManager;
 
 extern cMapManager* g_MapManager;
 
-extern std::set< cModel* > g_set_Models;
+extern cRenderManager* g_RenderManager;
+
+//extern std::set< cModel* > g_set_Models;
 
 #endif // _globalThings_HG_

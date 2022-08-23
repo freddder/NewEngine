@@ -2,7 +2,7 @@
 
 cCamera* g_Camera = NULL;
 
-cShaderManager* g_ShaderManager = NULL;
+//cShaderManager* g_ShaderManager = NULL;
 
 cModelManager* g_ModelManager = NULL;
 
@@ -14,4 +14,6 @@ cAnimationManager* g_AnimationManager = NULL;
 
 cMapManager* g_MapManager = NULL;
 
-std::set< cModel* > g_set_Models;
+cRenderManager* g_RenderManager = NULL;
+
+//std::set< cModel* > g_set_Models;

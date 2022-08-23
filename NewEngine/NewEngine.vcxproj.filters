@@ -46,6 +46,9 @@
     <Filter Include="Map">
       <UniqueIdentifier>{766c04b9-247a-4af6-a2ce-ba43a5e1401b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render System">
+      <UniqueIdentifier>{d4746e6d-f728-402c-98e1-074f6728043c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -122,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="cSinAnimation.cpp">
       <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="cRenderManager.cpp">
+      <Filter>Render System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="cSinAnimation.h">
       <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="cRenderManager.h">
+      <Filter>Render System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

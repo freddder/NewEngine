@@ -69,7 +69,8 @@ void cTextureManager::SetupTexture(std::string textureToSetup)
     glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
     glBindTexture(GL_TEXTURE_2D, textureId);
 
-    g_ShaderManager->setInt("texture_00", textureUnit);
+    //g_ShaderManager->setInt("texture_00", textureUnit);
+    g_RenderManager->setInt("texture_00", textureUnit);
 }
 
 void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
@@ -77,8 +78,10 @@ void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
     if (sheetsMap.count(spriteSheetName) == 0) // texture doesnt exists
         return;
 
-    g_ShaderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
-    g_ShaderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
+    //g_ShaderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
+    //g_ShaderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
+    g_RenderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
+    g_RenderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
 
     SetupTexture(spriteSheetName);
 }

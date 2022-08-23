@@ -1,6 +1,6 @@
 #include "cCharacter.h"
 #include "Global.h"
-#include <iostream>
+//#include <iostream>
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
@@ -10,7 +10,8 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 	model->textureName = textureName;
 	model->textureAnimationType = Sprite;
 
-	g_set_Models.insert(model);
+	//g_set_Models.insert(model);
+	g_RenderManager->AddModel(model);
 
 	spriteAnimation = new cSpriteAnimation(model->currSpriteId, model->scale);
 	modelAnimation = new cModelAnimation(model->position, model->orientation, model->scale);
@@ -23,7 +24,7 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 
 cCharacter::~cCharacter()
 {
-	g_set_Models.erase(model);
+	//g_set_Models.erase(model);
 
 	g_AnimationManager->RemoveAnimation(spriteAnimation);
 	g_AnimationManager->RemoveAnimation(modelAnimation);
@@ -136,7 +137,7 @@ void cCharacter::Walk(eDirection dir)
 	else if (dir == RIGHT)
 		newPosition.z += 1.f;
 
-	std::cout << "NewPosition: " << newPosition.x + 15 << " " << newPosition.y + 15 << " " << newPosition.z + 15 << std::endl;
+	//std::cout << "NewPosition: " << newPosition.x + 15 << " " << newPosition.y + 15 << " " << newPosition.z + 15 << std::endl;
 
 	modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 }

@@ -9,7 +9,7 @@ cMapManager::cMapManager()
 	mapModel = new cModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 	mapModel->meshName = "TestMapWater.obj";
-	g_set_Models.insert(mapModel);
+	g_RenderManager->AddModel(mapModel);
 
 	instancedTiles[118].instancedModel = new cModel();
 	instancedTiles[118].instancedModel->meshName = "Water_b2.obj";
@@ -316,9 +316,10 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 	{
 		if (it->second.instanceOffsets.size() != 0)
 		{
-			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, g_ShaderManager->GetCurrentShaderId());
+			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, g_RenderManager->GetCurrentShaderId());
 			g_AnimationManager->AddAnimation(it->second.animation);
-			g_set_Models.insert(it->second.instancedModel);
+			//g_set_Models.insert(it->second.instancedModel);
+			g_RenderManager->AddModel(it->second.instancedModel);
 
 			it->second.instanceOffsets.clear();
 		}
