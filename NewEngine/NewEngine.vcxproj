@@ -156,6 +156,7 @@
     <ClCompile Include="cSpecialCharacter.cpp" />
     <ClCompile Include="cShaderManager.cpp" />
     <ClCompile Include="cSpriteAnimation.cpp" />
+    <ClCompile Include="cSpriteModel.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cSinAnimation.cpp" />
     <ClCompile Include="glad.c" />
@@ -186,6 +187,7 @@
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cShaderManager.h" />
     <ClInclude Include="cSpriteAnimation.h" />
+    <ClInclude Include="cSpriteModel.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cSinAnimation.h" />
     <ClInclude Include="DrawInfo.h" />

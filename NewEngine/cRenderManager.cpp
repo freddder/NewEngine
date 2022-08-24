@@ -357,12 +357,12 @@ void cRenderManager::DrawObject(cRenderModel* model)
             setBool("useGlobalPositionUV", model->useGlobalPosForUV);
             setVec2("globalUVRatios", model->globalUVRatios);
 
-            if (model->textureAnimationType == Sprite)
-            {
-                setInt("spriteId", model->currSpriteId);
-                g_TextureManager->SetupSpriteSheet(textureToUse);
-            }
-            else if (model->textureAnimationType == UVShifting)
+            //if (model->textureAnimationType == Sprite)
+            //{
+            //    setInt("spriteId", model->currSpriteId);
+            //    g_TextureManager->SetupSpriteSheet(textureToUse);
+            //}
+            if (model->textureAnimationType == UVShifting)
             {
                 setVec2("UVoffset", model->textureOffset);
                 g_TextureManager->SetupTexture(textureToUse);

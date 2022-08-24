@@ -129,6 +129,9 @@
     <ClCompile Include="cRenderManager.cpp">
       <Filter>Render System</Filter>
     </ClCompile>
+    <ClCompile Include="cSpriteModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -211,6 +214,9 @@
     </ClInclude>
     <ClInclude Include="cRenderManager.h">
       <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="cSpriteModel.h">
+      <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

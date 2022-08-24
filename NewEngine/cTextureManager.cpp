@@ -58,33 +58,50 @@ void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned in
     sheetsMap[spriteSheetName] = newSheet;
 }
 
-void cTextureManager::SetupTexture(std::string textureToSetup)
+bool cTextureManager::GetTexureId(std::string texture, unsigned int& textureID)
 {
-    if (texturesMap.count(textureToSetup) == 0) // texture doesnt exists
-        return;
+    if (texturesMap.find(texture) == texturesMap.end()) // texture doesnt exists
+        return false;
 
-    GLuint textureId = texturesMap[textureToSetup];
-
-    GLuint textureUnit = 0;			// Texture unit go from 0 to 79
-    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    //g_ShaderManager->setInt("texture_00", textureUnit);
-    g_RenderManager->setInt("texture_00", textureUnit);
+    textureID = texturesMap[texture];
+    return true;
 }
 
-void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
+bool cTextureManager::GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet)
 {
-    if (sheetsMap.count(spriteSheetName) == 0) // texture doesnt exists
-        return;
+    if (sheetsMap.find(sheetName) == sheetsMap.end()) // texture doesnt exists
+        return false;
 
-    //g_ShaderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
-    //g_ShaderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
-    g_RenderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
-    g_RenderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
-
-    SetupTexture(spriteSheetName);
+    sheet = sheetsMap[sheetName];
+    return true;
 }
+
+//void cTextureManager::SetupTexture(std::string textureToSetup)
+//{
+//    if (texturesMap.count(textureToSetup) == 0) // texture doesnt exists
+//        return;
+//
+//    unsigned int textureId = texturesMap[textureToSetup];
+//
+//    GLuint textureUnit = 0;			// Texture unit go from 0 to 79
+//    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+//    glBindTexture(GL_TEXTURE_2D, textureId);
+//
+//    g_RenderManager->setInt("texture_00", textureUnit);
+//}
+//
+//void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
+//{
+//    if (sheetsMap.count(spriteSheetName) == 0) // texture doesnt exists
+//        return;
+//
+//    //g_ShaderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
+//    //g_ShaderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
+//    g_RenderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
+//    g_RenderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
+//
+//    SetupTexture(spriteSheetName);
+//}
 
 unsigned int cTextureManager::CreateCubemap(std::vector<std::string> faces)
 {

@@ -33,8 +33,9 @@ public:
 
 	std::string textureName;
 
+	std::string shaderName;
 	eAnimationType textureAnimationType;
-	int currSpriteId;
+	//int currSpriteId;
 	bool useGlobalPosForUV;
 	glm::vec2 globalUVRatios;
 	glm::vec3 textureOffset;
@@ -42,6 +43,8 @@ public:
 	cRenderModel();
 
 	void InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program);
+
+	void SetUpUniforms();
 
 	//std::string textureNames[MAX_TEXTURES];
 	//float textureRatios[MAX_TEXTURES];
