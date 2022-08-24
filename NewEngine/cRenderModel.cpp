@@ -1,7 +1,7 @@
-#include "cModel.h"
+#include "cRenderModel.h"
 #include <glad/glad.h>
 
-cModel::cModel()
+cRenderModel::cRenderModel()
 {
 	position = glm::vec3(0.f);
 	orientation = glm::vec3(0.f);
@@ -22,7 +22,7 @@ cModel::cModel()
 	textureOffset = glm::vec3(0.f);
 }
 
-void cModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)
+void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)
 {
 	isInstanced = true;
 	instancedNum = offsets.size();

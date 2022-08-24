@@ -2,7 +2,7 @@
 
 #include <string>
 #include <map>
-#include "cModel.h"
+#include "cRenderModel.h"
 
 const std::string TEXTURE_PATH = "assets/textures/";
 

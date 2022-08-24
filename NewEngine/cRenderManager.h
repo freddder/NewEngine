@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 #include <set>
 #include <map>
-#include "cModel.h"
+#include "cRenderModel.h"
 
 const std::string SHADER_PATH = "assets/shaders/";
 
@@ -31,9 +31,9 @@ class cRenderManager
 
     void checkCompileErrors(unsigned int shader, std::string type);
 
-    std::set< cModel* > models;
+    std::set< cRenderModel* > models;
 
-    void DrawObject(cModel* model);
+    void DrawObject(cRenderModel* model);
 
 public:
 
@@ -55,6 +55,7 @@ public:
     void setVec3(const std::string& name, const glm::vec3& value);
     void setVec4(const std::string& name, const glm::vec4& value);
 
-    void AddModel(cModel* newModel);
+    void AddModel(cRenderModel* newModel);
+    void RemoveModel(cRenderModel* model);
     void DrawScene();
 };

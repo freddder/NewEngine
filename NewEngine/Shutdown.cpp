@@ -4,8 +4,6 @@ void Shutdown()
 {
 	delete g_Camera;
 
-	//delete g_ShaderManager;
-
 	delete g_ModelManager;
 
 	delete g_TextureManager;

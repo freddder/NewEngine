@@ -3,12 +3,12 @@
 #include <set>
 #include <map>
 #include <string>
-#include "cModel.h"
+#include "cRenderModel.h"
 #include "cSinAnimation.h"
 
 struct sInstancedTile
 {
-	cModel* instancedModel;
+	cRenderModel* instancedModel;
 	std::vector<glm::vec4> instanceOffsets;
 	glm::vec3 modelOffset;
 	cAnimation* animation;
@@ -43,7 +43,7 @@ class cMapManager
 {
 	std::vector<sQuadrant> quads;
 	std::map<int, sCorrectionTiles> walkableTiles;
-	cModel* mapModel;
+	cRenderModel* mapModel;
 
 	std::map<int, sInstancedTile> instancedTiles;
 	//cModel* Water_b;

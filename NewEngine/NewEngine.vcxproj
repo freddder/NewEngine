@@ -149,7 +149,7 @@
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="cMapManager.cpp" />
-    <ClCompile Include="cModel.cpp" />
+    <ClCompile Include="cRenderModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
     <ClCompile Include="cRenderManager.cpp" />
@@ -178,7 +178,7 @@
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cMapManager.h" />
-    <ClInclude Include="cModel.h" />
+    <ClInclude Include="cRenderModel.h" />
     <ClInclude Include="cModelAnimation.h" />
     <ClInclude Include="cModelManager.h" />
     <ClInclude Include="cRenderManager.h" />

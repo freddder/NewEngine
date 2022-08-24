@@ -4,13 +4,12 @@
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
-	model = new cModel();
+	model = new cRenderModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = position;
 	model->textureName = textureName;
 	model->textureAnimationType = Sprite;
 
-	//g_set_Models.insert(model);
 	g_RenderManager->AddModel(model);
 
 	spriteAnimation = new cSpriteAnimation(model->currSpriteId, model->scale);
@@ -24,7 +23,7 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 
 cCharacter::~cCharacter()
 {
-	//g_set_Models.erase(model);
+	g_RenderManager->RemoveModel(model);
 
 	g_AnimationManager->RemoveAnimation(spriteAnimation);
 	g_AnimationManager->RemoveAnimation(modelAnimation);

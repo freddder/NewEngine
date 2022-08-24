@@ -319,12 +319,17 @@ void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
     glUniform4fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
 }
 
-void cRenderManager::AddModel(cModel* newModel)
+void cRenderManager::AddModel(cRenderModel* newModel)
 {
     models.insert(newModel);
 }
 
-void cRenderManager::DrawObject(cModel* model)
+void cRenderManager::RemoveModel(cRenderModel* model)
+{
+    models.erase(model);
+}
+
+void cRenderManager::DrawObject(cRenderModel* model)
 {
     sModelDrawInfo drawInfo;
     if (g_ModelManager->FindModelByName(model->meshName, drawInfo))
@@ -438,7 +443,7 @@ void cRenderManager::DrawScene()
     setBool("isShadowPass", true);
 
     //Draw scene
-    for (std::set<cModel*>::iterator it = models.begin(); it != models.end(); it++)
+    for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
     {
         DrawObject(*it);
     }
@@ -468,7 +473,7 @@ void cRenderManager::DrawScene()
     setBool("isShadowPass", false);
 
     // Draw scene
-    for (std::set<cModel*>::iterator it = models.begin(); it != models.end(); it++)
+    for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
     {
         DrawObject(*it);
     }

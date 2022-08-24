@@ -1,11 +1,11 @@
 #pragma once
-#include "cModel.h"
+#include "cRenderModel.h"
 #include "cSpriteAnimation.h"
 #include "cModelAnimation.h"
 
 class cCharacter
 {
-	cModel* model;
+	cRenderModel* model;
 	cSpriteAnimation* spriteAnimation;
 	cModelAnimation* modelAnimation;
 	bool switchLeg;

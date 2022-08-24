@@ -12,7 +12,7 @@ enum eAnimationType
 	UVShifting
 };
 
-class cModel
+class cRenderModel
 {
 public:
 
@@ -39,7 +39,7 @@ public:
 	glm::vec2 globalUVRatios;
 	glm::vec3 textureOffset;
 
-	cModel();
+	cRenderModel();
 
 	void InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program);
 

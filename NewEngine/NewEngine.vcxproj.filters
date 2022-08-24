@@ -78,7 +78,7 @@
     <ClCompile Include="cModelManager.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="cModel.cpp">
+    <ClCompile Include="cRenderModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="include\imgui\imgui.cpp">
@@ -140,7 +140,7 @@
     <ClInclude Include="cTextureManager.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="cModel.h">
+    <ClInclude Include="cRenderModel.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="cCamera.h">
