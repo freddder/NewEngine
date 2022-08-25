@@ -76,20 +76,22 @@ bool cTextureManager::GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet)
     return true;
 }
 
-//void cTextureManager::SetupTexture(std::string textureToSetup)
-//{
-//    if (texturesMap.count(textureToSetup) == 0) // texture doesnt exists
-//        return;
-//
-//    unsigned int textureId = texturesMap[textureToSetup];
-//
-//    GLuint textureUnit = 0;			// Texture unit go from 0 to 79
-//    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-//    glBindTexture(GL_TEXTURE_2D, textureId);
-//
-//    g_RenderManager->setInt("texture_00", textureUnit);
-//}
-//
+void cTextureManager::SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit)
+{
+    if (texturesMap.find(textureToSetup) == texturesMap.end()) // texture doesnt exists
+        return;
+
+    unsigned int textureId = texturesMap[textureToSetup];
+
+    std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
+
+    //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
+    glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    g_RenderManager->setInt(shaderVariable, shaderTextureUnit);
+}
+
 //void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
 //{
 //    if (sheetsMap.count(spriteSheetName) == 0) // texture doesnt exists

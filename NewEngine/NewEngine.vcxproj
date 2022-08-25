@@ -149,6 +149,7 @@
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="cMapManager.cpp" />
+    <ClCompile Include="cOceanModel.cpp" />
     <ClCompile Include="cRenderModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="cSpriteModel.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cSinAnimation.cpp" />
+    <ClCompile Include="cWaveModel.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
@@ -179,6 +181,7 @@
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cMapManager.h" />
+    <ClInclude Include="cOceanModel.h" />
     <ClInclude Include="cRenderModel.h" />
     <ClInclude Include="cModelAnimation.h" />
     <ClInclude Include="cModelManager.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="cSpriteModel.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cSinAnimation.h" />
+    <ClInclude Include="cWaveModel.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
@@ -206,9 +210,15 @@
     <None Include="assets\shaders\DebugFragShader.glsl" />
     <None Include="assets\shaders\DebugVertShader.glsl" />
     <None Include="assets\shaders\FragShader1.glsl" />
+    <None Include="assets\shaders\OceanFragShader.glsl" />
+    <None Include="assets\shaders\OceanVertShader.glsl" />
     <None Include="assets\shaders\SkyboxFragShader.glsl" />
     <None Include="assets\shaders\SkyboxVertShader.glsl" />
+    <None Include="assets\shaders\SpriteFragShader.glsl" />
+    <None Include="assets\shaders\SpriteVertShader.glsl" />
     <None Include="assets\shaders\VertShader1.glsl" />
+    <None Include="assets\shaders\WaveFragShader.glsl" />
+    <None Include="assets\shaders\WaveVertShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

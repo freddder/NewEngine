@@ -29,7 +29,7 @@ cModelManager::~cModelManager()
     }
 }
 
-bool cModelManager::LoadModel(std::string fileName, unsigned int program)
+bool cModelManager::LoadModel(std::string fileName, std::string programName)
 {
     std::map< std::string, sModelDrawInfo>::iterator itDrawInfo = modelMap.find(fileName);
 
@@ -137,7 +137,9 @@ bool cModelManager::LoadModel(std::string fileName, unsigned int program)
             newModel.allMeshesData.push_back(newMeshInfo);
         } // end of per mesh
 
-        CreateModelVAOs(newModel, program);
+        g_RenderManager->use(programName);
+
+        CreateModelVAOs(newModel, g_RenderManager->GetCurrentShaderId());
         modelMap.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
 
         return true;

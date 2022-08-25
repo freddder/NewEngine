@@ -332,89 +332,95 @@ void cRenderManager::RemoveModel(cRenderModel* model)
 void cRenderManager::DrawObject(cRenderModel* model)
 {
     sModelDrawInfo drawInfo;
-    if (g_ModelManager->FindModelByName(model->meshName, drawInfo))
+    if (!g_ModelManager->FindModelByName(model->meshName, drawInfo))
+        return;
+
+    //use(model->shaderName);
+    
+    setVec3("modelPosition", model->position);
+    setMat4("modelOrientationX", glm::rotate(glm::mat4(1.0f), model->orientation.x, glm::vec3(1.f, 0.f, 0.f)));
+    setMat4("modelOrientationY", glm::rotate(glm::mat4(1.0f), model->orientation.y, glm::vec3(0.f, 1.f, 0.f)));
+    setMat4("modelOrientationZ", glm::rotate(glm::mat4(1.0f), model->orientation.z, glm::vec3(0.f, 0.f, 1.f)));
+    setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
+
+    setBool("useWholeColor", model->useWholeColor);
+    setVec4("wholeColor", model->wholeColor);
+
+    model->SetUpUniforms();
+
+    for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
-        setVec3("modelPosition", model->position);
-        setMat4("modelOrientationX", glm::rotate(glm::mat4(1.0f), model->orientation.x, glm::vec3(1.f, 0.f, 0.f)));
-        setMat4("modelOrientationY", glm::rotate(glm::mat4(1.0f), model->orientation.y, glm::vec3(0.f, 1.f, 0.f)));
-        setMat4("modelOrientationZ", glm::rotate(glm::mat4(1.0f), model->orientation.z, glm::vec3(0.f, 0.f, 1.f)));
-        setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
+        // Setup texture
+        std::string textureToUse;
 
-        setBool("useWholeColor", model->useWholeColor);
-        setVec4("wholeColor", model->wholeColor);
+        if (model->textureName == "")
+            textureToUse = drawInfo.allMeshesData[i].textureName;
+        else
+            textureToUse = model->textureName;
 
-        for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
+        g_TextureManager->SetupTexture(textureToUse, 0);
+
+        //setInt("isTextureAnimated", model->textureAnimationType);
+        //setBool("useGlobalPositionUV", model->useGlobalPosForUV);
+        //setVec2("globalUVRatios", model->globalUVRatios);
+
+        //if (model->textureAnimationType == Sprite)
+        //{
+        //    setInt("spriteId", model->currSpriteId);
+        //    g_TextureManager->SetupSpriteSheet(textureToUse);
+        //}
+        //else if (model->textureAnimationType == UVShifting)
+        //{
+        //    setVec2("UVoffset", model->textureOffset);
+        //    g_TextureManager->SetupTexture(textureToUse, 0);
+        //}
+        //else
+        //{
+        //    g_TextureManager->SetupTexture(textureToUse, 0);
+        //}
+
+        // Bind VAO
+        glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
+
+        // Check for instanced
+        if (model->isInstanced)
         {
-            // Setup texture
-            std::string textureToUse;
+            glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
 
-            if (model->textureName == "")
-                textureToUse = drawInfo.allMeshesData[i].textureName;
-            else
-                textureToUse = model->textureName;
+            GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+            glEnableVertexAttribArray(offset_location);
+            glVertexAttribPointer(offset_location, 4,
+                GL_FLOAT, GL_FALSE,
+                sizeof(glm::vec4),
+                (void*)0);
+            glVertexAttribDivisor(offset_location, 1);
 
-            setInt("isTextureAnimated", model->textureAnimationType);
-            setBool("useGlobalPositionUV", model->useGlobalPosForUV);
-            setVec2("globalUVRatios", model->globalUVRatios);
-
-            //if (model->textureAnimationType == Sprite)
-            //{
-            //    setInt("spriteId", model->currSpriteId);
-            //    g_TextureManager->SetupSpriteSheet(textureToUse);
-            //}
-            if (model->textureAnimationType == UVShifting)
-            {
-                setVec2("UVoffset", model->textureOffset);
-                g_TextureManager->SetupTexture(textureToUse);
-            }
-            else
-            {
-                g_TextureManager->SetupTexture(textureToUse);
-            }
-
-            // Bind VAO
-            glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
-
-            // Check for instanced
-            if (model->isInstanced)
-            {
-                glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
-
-                GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
-                glEnableVertexAttribArray(offset_location);
-                glVertexAttribPointer(offset_location, 4,
-                    GL_FLOAT, GL_FALSE,
-                    sizeof(glm::vec4),
-                    (void*)0);
-                glVertexAttribDivisor(offset_location, 1);
-
-                glDrawElementsInstanced(GL_TRIANGLES,
-                    drawInfo.allMeshesData[i].numberOfIndices,
-                    GL_UNSIGNED_INT,
-                    (void*)0,
-                    model->instancedNum);
-            }
-            else
-            {
-                glBindBuffer(GL_ARRAY_BUFFER, notInstancedOffsetBufferId);
-
-                GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
-                glEnableVertexAttribArray(offset_location);
-                glVertexAttribPointer(offset_location, 4,
-                    GL_FLOAT, GL_FALSE,
-                    sizeof(glm::vec4),
-                    (void*)0);
-                glVertexAttribDivisor(offset_location, 1);
-
-                glDrawElements(GL_TRIANGLES,
-                    drawInfo.allMeshesData[i].numberOfIndices,
-                    GL_UNSIGNED_INT,
-                    (void*)0);
-            }
-
-            glBindVertexArray(0);
+            glDrawElementsInstanced(GL_TRIANGLES,
+                drawInfo.allMeshesData[i].numberOfIndices,
+                GL_UNSIGNED_INT,
+                (void*)0,
+                model->instancedNum);
         }
-    }
+        else
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, notInstancedOffsetBufferId);
+
+            GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+            glEnableVertexAttribArray(offset_location);
+            glVertexAttribPointer(offset_location, 4,
+                GL_FLOAT, GL_FALSE,
+                sizeof(glm::vec4),
+                (void*)0);
+            glVertexAttribDivisor(offset_location, 1);
+
+            glDrawElements(GL_TRIANGLES,
+                drawInfo.allMeshesData[i].numberOfIndices,
+                GL_UNSIGNED_INT,
+                (void*)0);
+        }
+
+        glBindVertexArray(0);
+    }    
 }
 
 void cRenderManager::DrawScene()
@@ -437,6 +443,8 @@ void cRenderManager::DrawScene()
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
     lightSpaceMatrix = lightProjection * lightView;
+
+    // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
 
     // render scene from light's point of view
     setMat4("lightSpaceMatrix", lightSpaceMatrix);

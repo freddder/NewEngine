@@ -24,7 +24,7 @@ public:
 	void CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym);
 	bool GetTexureId(std::string texture, unsigned int& textureID);
 	bool GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet);
-	void SetupTexture(std::string textureToSetup);
+	void SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit);
 	//void SetupSpriteSheet(std::string spriteSheetName);
 	unsigned int CreateCubemap(std::vector<std::string> faces);
 

@@ -1,18 +1,19 @@
 #include "cCharacter.h"
 #include "Global.h"
+#include "cSpriteModel.h"
 //#include <iostream>
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
-	model = new cRenderModel();
+	model = new cSpriteModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = position;
 	model->textureName = textureName;
-	model->textureAnimationType = Sprite;
+	//model->textureAnimationType = Sprite;
 
 	g_RenderManager->AddModel(model);
 
-	spriteAnimation = new cSpriteAnimation(model->currSpriteId, model->scale);
+	spriteAnimation = new cSpriteAnimation(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
 	modelAnimation = new cModelAnimation(model->position, model->orientation, model->scale);
 
 	g_AnimationManager->AddAnimation(spriteAnimation);
@@ -41,7 +42,7 @@ void cCharacter::Walk(eDirection dir)
 		return;
 
 	// setup sprite animation into specific direction
-	spriteAnimation->Reset(model->currSpriteId, model->scale);
+	spriteAnimation->Reset(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
 
 	if (g_TextureManager->GetSpritesheetSymetry(model->textureName)) // is symetrical
 	{

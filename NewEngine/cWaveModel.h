@@ -1,14 +1,13 @@
 #pragma once
-
 #include "cRenderModel.h"
 
-class cSpriteModel : public cRenderModel
+class cWaveModel : public cRenderModel
 {
 public:
 
-	cSpriteModel();
+	glm::vec3 textureOffset;
 
-	int currSpriteId;
+	cWaveModel();
 
 	virtual void SetUpUniforms();
 };

@@ -17,6 +17,7 @@
 #include "cSpriteAnimation.h"
 #include "cModelAnimation.h"
 #include "cCharacter.h"
+#include "cSpriteModel.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -72,6 +73,9 @@ int main()
     // Setup shader programs
     g_RenderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
     g_RenderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
     //g_RenderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
     //g_RenderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
     //g_RenderManager.use
@@ -92,41 +96,40 @@ int main()
 
     //********************** Load models and textures ***************************
 
-    std::vector<std::string> modelsToLoad;
-    //modelsToLoad.push_back("Mistralton City House.obj");
-    modelsToLoad.push_back("r0_treePine.obj");
-    modelsToLoad.push_back("TestMapWater.obj");
-    modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
-    modelsToLoad.push_back("SpriteHolder.obj");
-    modelsToLoad.push_back("Water_c2.obj");
-    modelsToLoad.push_back("Water_b2.obj");
-    modelsToLoad.push_back("Water_bl2.obj");
-    modelsToLoad.push_back("sea_water2.obj");
+    //std::vector<std::string> modelsToLoad;
+    ////modelsToLoad.push_back("Mistralton City House.obj");
+    //modelsToLoad.push_back("r0_treePine.obj");
+    //modelsToLoad.push_back("TestMapWater.obj");
+    //modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
+    //modelsToLoad.push_back("SpriteHolder.obj");
+    //modelsToLoad.push_back("Water_c2.obj");
+    //modelsToLoad.push_back("Water_b2.obj");
+    //modelsToLoad.push_back("Water_bl2.obj");
+    //modelsToLoad.push_back("sea_water2.obj");
 
-    for (unsigned int i = 0; i < modelsToLoad.size(); i++)
-        g_ModelManager->LoadModel(modelsToLoad[i], g_RenderManager->GetCurrentShaderId());
+    //for (unsigned int i = 0; i < modelsToLoad.size(); i++)
+    //    g_ModelManager->LoadModel(modelsToLoad[i], g_RenderManager->GetCurrentShaderId());
+
+    g_ModelManager->LoadModel("r0_treePine.obj", "scene");
+    g_ModelManager->LoadModel("TestMapWater.obj", "scene");
+    g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
+    g_ModelManager->LoadModel("Water_c2.obj", "wave");
+    g_ModelManager->LoadModel("Water_b2.obj", "wave");
+    g_ModelManager->LoadModel("Water_bl2.obj", "wave");
+    g_ModelManager->LoadModel("sea_water2.obj", "ocean");
 
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-
-    // make this part of sprite animation
-    cRenderModel* sand = new cRenderModel();
-    sand->meshName = "WaterSand_b.obj";
-    sand->position = glm::vec3(0.f, 10.f, 10.f);
-    sand->orientation.y = glm::radians(-90.f);
-    //g_set_Models.insert(sand);
-    g_RenderManager->AddModel(sand);
 
     cRenderModel* tree = new cRenderModel();
     tree->meshName = "r0_treePine.obj";
     //g_set_Models.insert(tree);
     g_RenderManager->AddModel(tree);
 
-    cRenderModel* sprite = new cRenderModel();
+    cSpriteModel* sprite = new cSpriteModel();
     sprite->meshName = "SpriteHolder.obj";
     sprite->textureName = "Nate.png";
-    sprite->textureAnimationType = Sprite;
     sprite->currSpriteId = 3;
     //g_set_Models.insert(sprite);
     g_RenderManager->AddModel(sprite);
@@ -156,11 +159,10 @@ int main()
 
     g_MapManager->LoadMap("", "");
 
-    cRenderModel* spriteSym = new cRenderModel();
+    cSpriteModel* spriteSym = new cSpriteModel();
     spriteSym->meshName = "SpriteHolder.obj";
     spriteSym->position.z = -2.f;
     spriteSym->textureName = "SymetricNPC_1.png";
-    spriteSym->textureAnimationType = Sprite;
     spriteSym->currSpriteId = 2;
     g_RenderManager->AddModel(spriteSym);
 

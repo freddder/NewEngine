@@ -132,6 +132,12 @@
     <ClCompile Include="cSpriteModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="cWaveModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="cOceanModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cShaderManager.h">
@@ -218,6 +224,12 @@
     <ClInclude Include="cSpriteModel.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="cWaveModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="cOceanModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\FragShader1.glsl">
@@ -236,6 +248,24 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\DebugVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SpriteFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SpriteVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\WaveFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\WaveVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\OceanFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\OceanVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

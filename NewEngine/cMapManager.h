@@ -3,7 +3,8 @@
 #include <set>
 #include <map>
 #include <string>
-#include "cRenderModel.h"
+#include "cWaveModel.h"
+#include "cOceanModel.h"
 #include "cSinAnimation.h"
 
 struct sInstancedTile

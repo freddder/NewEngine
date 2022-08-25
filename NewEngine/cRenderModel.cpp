@@ -17,11 +17,11 @@ cRenderModel::cRenderModel()
 	textureName = "";
 
 	shaderName = "scene";
-	textureAnimationType = None;
+	//textureAnimationType = None;
 	//currSpriteId = 0;
-	useGlobalPosForUV = false;
-	globalUVRatios = glm::vec2(1.f);
-	textureOffset = glm::vec3(0.f);
+	//useGlobalPosForUV = false;
+	//globalUVRatios = glm::vec2(1.f);
+	//textureOffset = glm::vec3(0.f);
 }
 
 void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)
@@ -54,12 +54,5 @@ void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int 
 
 void cRenderModel::SetUpUniforms()
 {
-	unsigned int textureId;
-	g_TextureManager->GetTexureId(textureName, textureId);
-
-	GLuint textureUnit = 0;			// Texture unit go from 0 to 79
-    glActiveTexture(textureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    g_RenderManager->setInt("texture_00", textureUnit);
+	
 }

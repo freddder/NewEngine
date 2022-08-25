@@ -11,7 +11,7 @@ public:
 	cModelManager();
 	~cModelManager();
 
-	bool LoadModel(std::string fileName, unsigned int program);
+	bool LoadModel(std::string fileName, std::string programName);
 	bool FindModelByName(std::string fileName, sModelDrawInfo& modelInfo);
 	std::string GetLastError(bool clear);
 
