@@ -50,6 +50,7 @@ void main()
 	model = model * modelScale;
 
 	mat4 MVP = projection * view * model;
+	fUVx2 = vUVx2;
 
 	if(isShadowPass)
 	{

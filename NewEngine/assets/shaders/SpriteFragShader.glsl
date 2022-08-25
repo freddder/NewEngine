@@ -64,6 +64,7 @@ void main()
 	float shadow = ShadowCalculation(fVertPosLightSpace);
 
 	vec3 pixelColor = (ambient + (1.0 - shadow) * (diffuse)) * vertColor.xyz;
+	//vec3 pixelColor = (ambient * (diffuse)) * vertColor.xyz;
 
 	gl_FragColor = vec4(pixelColor, 1.f);
 }

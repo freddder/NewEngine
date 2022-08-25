@@ -94,6 +94,9 @@ int main()
     g_RenderManager->use("scene");
     g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
 
+    g_RenderManager->use("sprite");
+    g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
+
     //********************** Load models and textures ***************************
 
     //std::vector<std::string> modelsToLoad;

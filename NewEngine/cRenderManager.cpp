@@ -335,7 +335,7 @@ void cRenderManager::DrawObject(cRenderModel* model)
     if (!g_ModelManager->FindModelByName(model->meshName, drawInfo))
         return;
 
-    //use(model->shaderName);
+    use(model->shaderName);
     
     setVec3("modelPosition", model->position);
     setMat4("modelOrientationX", glm::rotate(glm::mat4(1.0f), model->orientation.x, glm::vec3(1.f, 0.f, 0.f)));
@@ -433,22 +433,45 @@ void cRenderManager::DrawScene()
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    glm::mat4 lightProjection, lightView;
-    glm::mat4 lightSpaceMatrix;
-    float near_plane = 1.f, far_plane = 100.f;
+    {
+        glm::mat4 lightProjection, lightView;
+        glm::mat4 lightSpaceMatrix;
+        float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
-    glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
+        glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
+        glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
 
-    lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
-    lightSpaceMatrix = lightProjection * lightView;
+        lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
+        lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
 
-    // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
+        // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
 
-    // render scene from light's point of view
-    setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    setBool("isShadowPass", true);
+        // render scene from light's point of view
+        setMat4("lightSpaceMatrix", lightSpaceMatrix);
+        setBool("isShadowPass", true);
+    }
+
+    {
+        use("sprite");
+
+        glm::mat4 lightProjection, lightView;
+        glm::mat4 lightSpaceMatrix;
+        float near_plane = 1.f, far_plane = 100.f;
+
+        glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
+        glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
+
+        lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
+        lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
+
+        // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
+
+        // render scene from light's point of view
+        setMat4("lightSpaceMatrix", lightSpaceMatrix);
+        setBool("isShadowPass", true);
+    }
 
     //Draw scene
     for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
@@ -463,6 +486,8 @@ void cRenderManager::DrawScene()
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glClearColor(0.f, 0.8f, 1.f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    use("scene");
 
     g_LightManager->SetUnimormValues(programMap[currShader].ID);
 
@@ -479,6 +504,66 @@ void cRenderManager::DrawScene()
     setInt("shadowMap", 1);
 
     setBool("isShadowPass", false);
+
+    {
+        use("sprite");
+
+        g_LightManager->SetUnimormValues(programMap[currShader].ID);
+
+        // pass projection matrix to shader (note that in this case it could change every frame)
+        projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
+        setMat4("projection", projection);
+
+        // camera/view transformation
+        view = g_Camera->GetViewMatrix();
+        setMat4("view", view);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, depthMapID);
+        setInt("shadowMap", 1);
+
+        setBool("isShadowPass", false);
+    }
+
+    {
+        use("ocean");
+
+        g_LightManager->SetUnimormValues(programMap[currShader].ID);
+
+        // pass projection matrix to shader (note that in this case it could change every frame)
+        projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
+        setMat4("projection", projection);
+
+        // camera/view transformation
+        view = g_Camera->GetViewMatrix();
+        setMat4("view", view);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, depthMapID);
+        setInt("shadowMap", 1);
+
+        setBool("isShadowPass", false);
+    }
+
+    {
+        use("wave");
+
+        g_LightManager->SetUnimormValues(programMap[currShader].ID);
+
+        // pass projection matrix to shader (note that in this case it could change every frame)
+        projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
+        setMat4("projection", projection);
+
+        // camera/view transformation
+        view = g_Camera->GetViewMatrix();
+        setMat4("view", view);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, depthMapID);
+        setInt("shadowMap", 1);
+
+        setBool("isShadowPass", false);
+    }
 
     // Draw scene
     for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
