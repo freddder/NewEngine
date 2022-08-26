@@ -125,8 +125,6 @@ int main()
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
 
-    g_RenderManager->SetUniformObjectBuffer();
-
     cRenderModel* tree = new cRenderModel();
     tree->meshName = "r0_treePine.obj";
     //g_set_Models.insert(tree);
@@ -278,7 +276,7 @@ int main()
         ImGui::DragFloat3("Position", *position);
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
-        //ImGui::Image((void*)(intptr_t)depthMap, ImVec2(200, 200));
+        ImGui::Image((void*)(intptr_t)g_RenderManager->GetDepthMapId(), ImVec2(200, 200));
         ImGui::End();
 
         ImGui::Render();
@@ -293,9 +291,6 @@ int main()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-
-    //glDeleteVertexArrays(1, &skyboxVAO);
-    //glDeleteBuffers(1, &skyboxVBO);
 
     Shutdown();
 

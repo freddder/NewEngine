@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{3fe8cf80-e88a-44cd-a026-d07fc9becb4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Globals">
       <UniqueIdentifier>{b7be64d0-52aa-426e-aa16-5f7ce6c06a9d}</UniqueIdentifier>
     </Filter>
@@ -56,9 +53,6 @@
     </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cShaderManager.cpp">
-      <Filter>Shader</Filter>
     </ClCompile>
     <ClCompile Include="Global.cpp">
       <Filter>Globals</Filter>
@@ -140,9 +134,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cShaderManager.h">
-      <Filter>Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Global.h">
       <Filter>Globals</Filter>
     </ClInclude>

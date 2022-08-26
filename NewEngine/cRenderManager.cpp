@@ -123,12 +123,23 @@ cRenderManager::cRenderManager()
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // setup matrices uniform block
+    glGenBuffers(1, &uboMatricesID);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
+    glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4) + sizeof(int), NULL, GL_DYNAMIC_DRAW); // maybe change GL_STATIC_DRAW to dynamic
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatricesID, 0, 3 * sizeof(glm::mat4) + sizeof(int));
 }
 
 cRenderManager::~cRenderManager()
 {
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVBO);
+    glDeleteBuffers(1, &uboMatricesID);
+    glDeleteBuffers(1, &notInstancedOffsetBufferId);
 }
 
 void cRenderManager::CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
@@ -203,6 +214,12 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
     newShader.ID = ID;
 
     programMap.insert(std::pair<std::string, sShaderProgram>(programName, newShader));
+
+    unsigned int uniformBlockIndex = glGetUniformBlockIndex(newShader.ID, "Matrices");
+
+    glUniformBlockBinding(newShader.ID, uniformBlockIndex, 0);
+
+    g_LightManager->AddProgramToBlock(newShader.ID);
 }
 
 unsigned int cRenderManager::GetCurrentShaderId()
@@ -210,28 +227,9 @@ unsigned int cRenderManager::GetCurrentShaderId()
     return programMap[currShader].ID;
 }
 
-void cRenderManager::SetUniformObjectBuffer()
+unsigned int cRenderManager::GetDepthMapId()
 {
-    std::vector<unsigned int> programs;
-
-    for (std::map<std::string, sShaderProgram>::iterator it = programMap.begin(); it != programMap.end(); it++)
-    {
-        programs.push_back(it->second.ID);
-
-        unsigned int uniformBlockIndex = glGetUniformBlockIndex(it->second.ID, "Matrices");
-
-        glUniformBlockBinding(it->second.ID, uniformBlockIndex, 0);
-    }
-
-    glGenBuffers(1, &uboMatricesID);
-
-    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
-    glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4) + sizeof(int), NULL, GL_DYNAMIC_DRAW); // maybe change GL_STATIC_DRAW to dynamic
-    glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatricesID, 0, 3 * sizeof(glm::mat4) + sizeof(int));
-
-    g_LightManager->SetupUniformLocations(programs);
+    return depthMapID;
 }
 
 void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)

@@ -29,9 +29,12 @@ class cLightManager
 
 public:
 
+	cLightManager();
+	~cLightManager();
+
 	const static unsigned int NUMBER_OF_LIGHTS = 20;
 	sLight lights[NUMBER_OF_LIGHTS];
 
-	void SetupUniformLocations(std::vector<unsigned int> programs); // called once
+	void AddProgramToBlock(unsigned int newProgram); // called everytime a new program is created
 	void SetUnimormValues(); // called every frame
 };
