@@ -26,6 +26,8 @@ class cRenderManager
 
     unsigned int cubemapTextureID;
 
+    unsigned int uboMatricesID;
+
     std::string currShader;
 	std::map<std::string, sShaderProgram> programMap;
 
@@ -46,6 +48,8 @@ public:
 	void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
     void use(std::string programName);
     unsigned int GetCurrentShaderId();
+
+    void SetUniformObjectBuffer();
 
     void setBool(const std::string& name, bool value);
     void setInt(const std::string& name, int value);

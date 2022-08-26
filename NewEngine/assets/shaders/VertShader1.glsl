@@ -5,26 +5,24 @@ in vec4 vNormal;
 in vec4 vUVx2;
 in vec4 oOffset;
 
-uniform mat4 view;
-uniform mat4 projection;
-//uniform mat4 model;
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+	bool isShadowPass;
+};
+
+//uniform mat4 view;
+//uniform mat4 projection;
 
 uniform vec3 modelPosition;
 uniform mat4 modelOrientationX;
 uniform mat4 modelOrientationY;
 uniform mat4 modelOrientationZ;
 uniform mat4 modelScale;
-uniform mat4 lightSpaceMatrix;
+//uniform mat4 lightSpaceMatrix;
 
-uniform bool isShadowPass;
-
-uniform int isTextureAnimated;
-uniform int numCols;
-uniform int numRows;
-uniform int spriteId;
-uniform bool useGlobalPositionUV;
-uniform vec2 globalUVRatios;
-uniform vec2 UVoffset;
+//uniform bool isShadowPass;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -57,8 +55,11 @@ void main()
 
 	mat4 MVP = projection * view * model;
 
+	mat4 lightSpaceMatrix;
+
 	if(isShadowPass)
 	{
+		lightSpaceMatrix = projection * view;
 		gl_Position = lightSpaceMatrix * model * vPosition;
 	}
 	else
@@ -68,27 +69,6 @@ void main()
 
 	vec3 fragPos = vec3(model * vPosition);
 	fUVx2 = vUVx2;
-
-	if(useGlobalPositionUV)
-	{
-		fUVx2.x = fragPos.z * globalUVRatios.x;
-		fUVx2.y = fragPos.x * globalUVRatios.y;
-	}
-
-	if(isTextureAnimated == 1) // sprite animation
-	{
-		vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
-
-		float addU = (float(1) / float(numCols)) * (spriteId % numCols);
-		float addV = (float(1) / float(numRows)) * (numRows - (spriteId / numCols));
-
-		fUVx2 = vec4(newUV.x + addU, newUV.y - addV, 0, 0);
-	}
-	else if(isTextureAnimated == 2) // UV shifting
-	{
-		fUVx2.x += UVoffset.x;
-		fUVx2.y += UVoffset.y;
-	}
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
 	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);

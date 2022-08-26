@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "cRenderManager.h"
 #include "Global.h"
@@ -209,6 +210,24 @@ unsigned int cRenderManager::GetCurrentShaderId()
     return programMap[currShader].ID;
 }
 
+void cRenderManager::SetUniformObjectBuffer()
+{
+    for (std::map<std::string, sShaderProgram>::iterator it = programMap.begin(); it != programMap.end(); it++)
+    {
+        unsigned int uniformBlockIndex = glGetUniformBlockIndex(it->second.ID, "Matrices");
+
+        glUniformBlockBinding(it->second.ID, uniformBlockIndex, 0);
+    }
+
+    glGenBuffers(1, &uboMatricesID);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(bool), NULL, GL_DYNAMIC_DRAW); // maybe change GL_STATIC_DRAW to dynamic
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatricesID, 0, 2 * sizeof(glm::mat4) + sizeof(bool));
+}
+
 void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)
 {
     int success;
@@ -348,6 +367,10 @@ void cRenderManager::DrawObject(cRenderModel* model)
 
     model->SetUpUniforms();
 
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, depthMapID);
+    setInt("shadowMap", 1);
+
     for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
         // Setup texture
@@ -427,51 +450,55 @@ void cRenderManager::DrawScene()
 {
     //********************** Shadow pass ********************************
 
-    use("scene");
+    //use("scene");
 
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
 
-    {
-        glm::mat4 lightProjection, lightView;
-        glm::mat4 lightSpaceMatrix;
-        float near_plane = 1.f, far_plane = 100.f;
+    
+    glm::mat4 lightProjection, lightView;
+    float near_plane = 1.f, far_plane = 100.f;
 
-        glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
-        glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
+    glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
+    glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
 
-        lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
-        lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
-        lightSpaceMatrix = lightProjection * lightView;
+    lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
 
-        // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
+    // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
 
-        // render scene from light's point of view
-        setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        setBool("isShadowPass", true);
-    }
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(lightProjection));
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightView));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(bool), (void*)true);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    {
-        use("sprite");
+    // render scene from light's point of view
+    //setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    //setBool("isShadowPass", true);
+    
 
-        glm::mat4 lightProjection, lightView;
-        glm::mat4 lightSpaceMatrix;
-        float near_plane = 1.f, far_plane = 100.f;
+    //{
+    //    use("sprite");
 
-        glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
-        glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
+    //    glm::mat4 lightProjection, lightView;
+    //    glm::mat4 lightSpaceMatrix;
+    //    float near_plane = 1.f, far_plane = 100.f;
 
-        lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
-        lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
-        lightSpaceMatrix = lightProjection * lightView;
+    //    glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
+    //    glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
 
-        // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
+    //    lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
+    //    lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
+    //    lightSpaceMatrix = lightProjection * lightView;
 
-        // render scene from light's point of view
-        setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        setBool("isShadowPass", true);
-    }
+    //    // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
+
+    //    // render scene from light's point of view
+    //    setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    //    setBool("isShadowPass", true);
+    //}
 
     //Draw scene
     for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
@@ -487,83 +514,19 @@ void cRenderManager::DrawScene()
     glClearColor(0.f, 0.8f, 1.f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    use("scene");
-
-    g_LightManager->SetUnimormValues(programMap[currShader].ID);
+    //g_LightManager->SetUnimormValues(programMap[currShader].ID);
 
     // pass projection matrix to shader (note that in this case it could change every frame)
     glm::mat4 projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
-    setMat4("projection", projection);
 
     // camera/view transformation
     glm::mat4 view = g_Camera->GetViewMatrix();
-    setMat4("view", view);
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, depthMapID);
-    setInt("shadowMap", 1);
-
-    setBool("isShadowPass", false);
-
-    {
-        use("sprite");
-
-        g_LightManager->SetUnimormValues(programMap[currShader].ID);
-
-        // pass projection matrix to shader (note that in this case it could change every frame)
-        projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
-        setMat4("projection", projection);
-
-        // camera/view transformation
-        view = g_Camera->GetViewMatrix();
-        setMat4("view", view);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, depthMapID);
-        setInt("shadowMap", 1);
-
-        setBool("isShadowPass", false);
-    }
-
-    {
-        use("ocean");
-
-        g_LightManager->SetUnimormValues(programMap[currShader].ID);
-
-        // pass projection matrix to shader (note that in this case it could change every frame)
-        projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
-        setMat4("projection", projection);
-
-        // camera/view transformation
-        view = g_Camera->GetViewMatrix();
-        setMat4("view", view);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, depthMapID);
-        setInt("shadowMap", 1);
-
-        setBool("isShadowPass", false);
-    }
-
-    {
-        use("wave");
-
-        g_LightManager->SetUnimormValues(programMap[currShader].ID);
-
-        // pass projection matrix to shader (note that in this case it could change every frame)
-        projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
-        setMat4("projection", projection);
-
-        // camera/view transformation
-        view = g_Camera->GetViewMatrix();
-        setMat4("view", view);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, depthMapID);
-        setInt("shadowMap", 1);
-
-        setBool("isShadowPass", false);
-    }
+    glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(bool), (void*)false);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
     for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
