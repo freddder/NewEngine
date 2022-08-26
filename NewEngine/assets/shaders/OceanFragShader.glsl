@@ -17,8 +17,12 @@ struct sLight
 							// 2 = directional light
 };
 
+//uniform sLight theLights[20];
 
-uniform sLight theLights[20];
+layout (std140) uniform Lights
+{
+    sLight theLights[20];
+};
 
 // texture samplers
 uniform sampler2D texture_0;

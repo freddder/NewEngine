@@ -212,8 +212,12 @@ unsigned int cRenderManager::GetCurrentShaderId()
 
 void cRenderManager::SetUniformObjectBuffer()
 {
+    std::vector<unsigned int> programs;
+
     for (std::map<std::string, sShaderProgram>::iterator it = programMap.begin(); it != programMap.end(); it++)
     {
+        programs.push_back(it->second.ID);
+
         unsigned int uniformBlockIndex = glGetUniformBlockIndex(it->second.ID, "Matrices");
 
         glUniformBlockBinding(it->second.ID, uniformBlockIndex, 0);
@@ -222,10 +226,12 @@ void cRenderManager::SetUniformObjectBuffer()
     glGenBuffers(1, &uboMatricesID);
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4) + sizeof(bool), NULL, GL_DYNAMIC_DRAW); // maybe change GL_STATIC_DRAW to dynamic
+    glBufferData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4) + sizeof(int), NULL, GL_DYNAMIC_DRAW); // maybe change GL_STATIC_DRAW to dynamic
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatricesID, 0, 2 * sizeof(glm::mat4) + sizeof(bool));
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatricesID, 0, 3 * sizeof(glm::mat4) + sizeof(int));
+
+    g_LightManager->SetupUniformLocations(programs);
 }
 
 void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)
@@ -383,25 +389,6 @@ void cRenderManager::DrawObject(cRenderModel* model)
 
         g_TextureManager->SetupTexture(textureToUse, 0);
 
-        //setInt("isTextureAnimated", model->textureAnimationType);
-        //setBool("useGlobalPositionUV", model->useGlobalPosForUV);
-        //setVec2("globalUVRatios", model->globalUVRatios);
-
-        //if (model->textureAnimationType == Sprite)
-        //{
-        //    setInt("spriteId", model->currSpriteId);
-        //    g_TextureManager->SetupSpriteSheet(textureToUse);
-        //}
-        //else if (model->textureAnimationType == UVShifting)
-        //{
-        //    setVec2("UVoffset", model->textureOffset);
-        //    g_TextureManager->SetupTexture(textureToUse, 0);
-        //}
-        //else
-        //{
-        //    g_TextureManager->SetupTexture(textureToUse, 0);
-        //}
-
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
 
@@ -450,8 +437,6 @@ void cRenderManager::DrawScene()
 {
     //********************** Shadow pass ********************************
 
-    //use("scene");
-
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
@@ -465,40 +450,17 @@ void cRenderManager::DrawScene()
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
+    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
 
-    // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
+    int bruh = 1; // B R U H
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(lightProjection));
     glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightView));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(bool), (void*)true);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightSpaceMatrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    // render scene from light's point of view
-    //setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    //setBool("isShadowPass", true);
-    
-
-    //{
-    //    use("sprite");
-
-    //    glm::mat4 lightProjection, lightView;
-    //    glm::mat4 lightSpaceMatrix;
-    //    float near_plane = 1.f, far_plane = 100.f;
-
-    //    glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
-    //    glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
-
-    //    lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
-    //    lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
-    //    lightSpaceMatrix = lightProjection * lightView;
-
-    //    // SET UP UNIFORM BLOCKS (lights, lightSpaceMatrix, isShadowPass)
-
-    //    // render scene from light's point of view
-    //    setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    //    setBool("isShadowPass", true);
-    //}
 
     //Draw scene
     for (std::set<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
@@ -515,6 +477,7 @@ void cRenderManager::DrawScene()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //g_LightManager->SetUnimormValues(programMap[currShader].ID);
+    g_LightManager->SetUnimormValues();
 
     // pass projection matrix to shader (note that in this case it could change every frame)
     glm::mat4 projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
@@ -522,10 +485,13 @@ void cRenderManager::DrawScene()
     // camera/view transformation
     glm::mat4 view = g_Camera->GetViewMatrix();
 
+    bruh = 0;
+
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(bool), (void*)false);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightSpaceMatrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene

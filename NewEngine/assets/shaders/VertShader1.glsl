@@ -9,7 +9,8 @@ layout (std140) uniform Matrices
 {
     mat4 projection;
     mat4 view;
-	bool isShadowPass;
+	mat4 lightSpace;
+	int isShadowPass;
 };
 
 //uniform mat4 view;
@@ -55,12 +56,9 @@ void main()
 
 	mat4 MVP = projection * view * model;
 
-	mat4 lightSpaceMatrix;
-
-	if(isShadowPass)
+	if(isShadowPass == 1)
 	{
-		lightSpaceMatrix = projection * view;
-		gl_Position = lightSpaceMatrix * model * vPosition;
+		gl_Position = lightSpace * model * vPosition;
 	}
 	else
 	{
@@ -71,5 +69,5 @@ void main()
 	fUVx2 = vUVx2;
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);
+	fVertPosLightSpace = lightSpace * vec4(fragPos, 1.f);
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include <vector>
 
 struct sLight
 {
@@ -13,36 +14,24 @@ struct sLight
 					// 1 = spot light
 					// 2 = directional light
 
-	int position_uniform_location;
-	int diffuse_uniform_location;
-	int direction_uniform_location;
-	//int specular_uniform_location;
-	//int atten_uniform_location;
-	int extraParam_uniform_location;
-
 	sLight()
 	{
 		position = glm::vec4(0.f, 50.f, 0.f, 1.f);
 		diffuse = glm::vec4(1.f, 1.f, 1.f, 1.f);
 		direction = glm::vec4(0.f, -1.f, 0.f, 1.f);
 		extraParam = glm::vec4(0.f, glm::radians(30.f), glm::radians(30.f), 0.f);
-
-		position_uniform_location = -1;
-		diffuse_uniform_location = -1;
-		direction_uniform_location = -1;
-		//specular_uniform_location = -1;
-		//atten_uniform_location = -1;
-		extraParam_uniform_location = -1;
 	};
 };
 
 class cLightManager
 {
+	unsigned int uboLights;
+
 public:
 
 	const static unsigned int NUMBER_OF_LIGHTS = 20;
 	sLight lights[NUMBER_OF_LIGHTS];
 
-	void SetupUniformLocations(unsigned int program); // called once
-	void SetUnimormValues(unsigned int program); // called every frame
+	void SetupUniformLocations(std::vector<unsigned int> programs); // called once
+	void SetUnimormValues(); // called every frame
 };

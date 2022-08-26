@@ -5,18 +5,22 @@ in vec4 vNormal;
 in vec4 vUVx2;
 in vec4 oOffset;
 
-uniform mat4 view;
-uniform mat4 projection;
-//uniform mat4 model;
+layout (std140) uniform Matrices
+{
+    mat4 projection;
+    mat4 view;
+	mat4 lightSpace;
+	int isShadowPass;
+};
 
 uniform vec3 modelPosition;
 uniform mat4 modelOrientationX;
 uniform mat4 modelOrientationY;
 uniform mat4 modelOrientationZ;
 uniform mat4 modelScale;
-uniform mat4 lightSpaceMatrix;
+//uniform mat4 lightSpaceMatrix;
 
-uniform bool isShadowPass;
+//uniform bool isShadowPass;
 
 uniform int numCols;
 uniform int numRows;
@@ -53,9 +57,9 @@ void main()
 
 	mat4 MVP = projection * view * model;
 
-	if(isShadowPass)
+	if(isShadowPass == 1)
 	{
-		gl_Position = lightSpaceMatrix * model * vPosition;
+		gl_Position = lightSpace * model * vPosition;
 	}
 	else
 	{
@@ -73,5 +77,5 @@ void main()
 
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	fVertPosLightSpace = lightSpaceMatrix * vec4(fragPos, 1.f);
+	fVertPosLightSpace = lightSpace * vec4(fragPos, 1.f);
 }

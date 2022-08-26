@@ -91,11 +91,11 @@ int main()
     g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
     g_LightManager->lights[0].extraParam.w = 1.f; // turn on
 
-    g_RenderManager->use("scene");
-    g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
+    //g_RenderManager->use("scene");
+    //g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
 
-    g_RenderManager->use("sprite");
-    g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
+    //g_RenderManager->use("sprite");
+    //g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
 
     //********************** Load models and textures ***************************
 
@@ -124,6 +124,8 @@ int main()
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+
+    g_RenderManager->SetUniformObjectBuffer();
 
     cRenderModel* tree = new cRenderModel();
     tree->meshName = "r0_treePine.obj";
