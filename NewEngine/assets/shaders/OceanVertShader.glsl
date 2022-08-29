@@ -23,7 +23,7 @@ uniform mat4 modelScale;
 //uniform bool isShadowPass;
 
 uniform vec2 globalUVRatios;
-uniform vec2 UVoffset;
+//uniform vec2 UVoffset;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -71,8 +71,8 @@ void main()
 	fUVx2.x = fragPos.z * globalUVRatios.x;
 	fUVx2.y = fragPos.x * globalUVRatios.y;
 
-	fUVx2.x += UVoffset.x;
-	fUVx2.y += UVoffset.y;
+//	fUVx2.x += UVoffset.x;
+//	fUVx2.y += UVoffset.y;
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
 	fVertPosLightSpace = lightSpace * vec4(fragPos, 1.f);

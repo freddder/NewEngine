@@ -13,7 +13,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[118].instancedModel = new cWaveModel();
 	instancedTiles[118].instancedModel->meshName = "Water_b2.obj";
-	//instancedTiles[118].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[118].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
 	instancedTiles[118].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[118].instancedModel)->textureOffset, 2, 0);
 	static_cast<cSinAnimation*>(instancedTiles[118].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
@@ -21,7 +20,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[120].instancedModel = new cWaveModel();
 	instancedTiles[120].instancedModel->meshName = "Water_b2.obj";
-	//instancedTiles[120].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[120].instancedModel->orientation.y = glm::radians(90.f);
 	instancedTiles[120].modelOffset = glm::vec3(-0.5f, 0.f, 2.5f);
 	instancedTiles[120].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[120].instancedModel)->textureOffset, 2, 0);
@@ -30,7 +28,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[122].instancedModel = new cWaveModel();
 	instancedTiles[122].instancedModel->meshName = "Water_b2.obj";
-	//instancedTiles[122].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[122].instancedModel->orientation.y = glm::radians(-90.f);
 	instancedTiles[122].modelOffset = glm::vec3(0.5f, 0.f, -0.5f);
 	instancedTiles[122].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[122].instancedModel)->textureOffset, 2, 0);
@@ -39,7 +36,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[124].instancedModel = new cWaveModel();
 	instancedTiles[124].instancedModel->meshName = "Water_b2.obj";
-	//instancedTiles[124].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[124].instancedModel->orientation.y = glm::radians(180.f);
 	instancedTiles[124].modelOffset = glm::vec3(2.5f, 0.f, 0.5f);
 	instancedTiles[124].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[124].instancedModel)->textureOffset, 2, 0);
@@ -48,7 +44,6 @@ cMapManager::cMapManager()
 	
 	instancedTiles[119].instancedModel = new cWaveModel();
 	instancedTiles[119].instancedModel->meshName = "Water_c2.obj";
-	//instancedTiles[119].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[119].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
 	instancedTiles[119].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[119].instancedModel)->textureOffset, 2, 0);
 	static_cast<cSinAnimation*>(instancedTiles[119].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
@@ -56,7 +51,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[117].instancedModel = new cWaveModel();
 	instancedTiles[117].instancedModel->meshName = "Water_c2.obj";
-	//instancedTiles[117].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[117].instancedModel->orientation.y = glm::radians(90.f);
 	instancedTiles[117].modelOffset = glm::vec3(-0.5f, 0.f, 2.5f);
 	instancedTiles[117].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[117].instancedModel)->textureOffset, 2, 0);
@@ -65,7 +59,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[123].instancedModel = new cWaveModel();
 	instancedTiles[123].instancedModel->meshName = "Water_c2.obj";
-	//instancedTiles[123].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[123].instancedModel->orientation.y = glm::radians(180.f);
 	instancedTiles[123].modelOffset = glm::vec3(2.5f, 0.f, 2.5f);
 	instancedTiles[123].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[123].instancedModel)->textureOffset, 2, 0);
@@ -74,7 +67,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[125].instancedModel = new cWaveModel();
 	instancedTiles[125].instancedModel->meshName = "Water_c2.obj";
-	//instancedTiles[125].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[125].instancedModel->orientation.y = glm::radians(270.f);
 	instancedTiles[125].modelOffset = glm::vec3(2.5f, 0.f, -0.5f);
 	instancedTiles[125].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[125].instancedModel)->textureOffset, 2, 0);
@@ -83,23 +75,13 @@ cMapManager::cMapManager()
 
 	instancedTiles[138].instancedModel = new cWaveModel();
 	instancedTiles[138].instancedModel->meshName = "Water_bl2.obj";
-	//instancedTiles[138].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[138].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
 	instancedTiles[138].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[138].instancedModel)->textureOffset, 2, 0);
 	static_cast<cSinAnimation*>(instancedTiles[138].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
 	instancedTiles[138].animation->isRepeat = true;
 
-	//instancedTiles[138].instancedModel = new cWaveModel();
-	//instancedTiles[138].instancedModel->meshName = "Water_bl2.obj";
-	////instancedTiles[138].instancedModel->textureAnimationType = UVShifting;
-	//instancedTiles[138].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
-	//instancedTiles[138].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[138].instancedModel)->textureOffset, 2, 0);
-	//static_cast<cSinAnimation*>(instancedTiles[138].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
-	//instancedTiles[138].animation->isRepeat = true;
-
 	instancedTiles[136].instancedModel = new cWaveModel();
 	instancedTiles[136].instancedModel->meshName = "Water_bl2.obj";
-	//instancedTiles[136].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[136].instancedModel->orientation.y = glm::radians(270.f);
 	instancedTiles[136].modelOffset = glm::vec3(2.5f, 0.f, -0.5f);
 	instancedTiles[136].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[136].instancedModel)->textureOffset, 2, 0);
@@ -108,7 +90,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[137].instancedModel = new cWaveModel();
 	instancedTiles[137].instancedModel->meshName = "Water_bl2.obj";
-	//instancedTiles[137].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[137].instancedModel->orientation.y = glm::radians(180.f);
 	instancedTiles[137].modelOffset = glm::vec3(2.5f, 0.f, 2.5f);
 	instancedTiles[137].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[137].instancedModel)->textureOffset, 2, 0);
@@ -117,7 +98,6 @@ cMapManager::cMapManager()
 
 	instancedTiles[139].instancedModel = new cWaveModel();
 	instancedTiles[139].instancedModel->meshName = "Water_bl2.obj";
-	//instancedTiles[139].instancedModel->textureAnimationType = UVShifting;
 	instancedTiles[139].instancedModel->orientation.y = glm::radians(90.f);
 	instancedTiles[139].modelOffset = glm::vec3(-0.5f, 0.f, 2.5f);
 	instancedTiles[139].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[139].instancedModel)->textureOffset, 2, 0);
@@ -126,13 +106,11 @@ cMapManager::cMapManager()
 
 	instancedTiles[130].instancedModel = new cOceanModel();
 	instancedTiles[130].instancedModel->meshName = "sea_water2.obj";
-	//instancedTiles[130].instancedModel->textureAnimationType = UVShifting;
-	//instancedTiles[130].instancedModel->useGlobalPosForUV = true;
 	static_cast<cOceanModel*>(instancedTiles[130].instancedModel)->globalUVRatios = glm::vec2(0.35f, 0.35f);
 	instancedTiles[130].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
 	instancedTiles[130].animation = new cSinAnimation(static_cast<cOceanModel*>(instancedTiles[130].instancedModel)->textureOffset, 0.5f, 0);
-	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 180.f, 0.f)));
-	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(14.f, glm::vec3(720.f, 360.f, 0.f)));
+	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(6.f, glm::vec3(360.f, 180.f, 0.f)));
+	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(12.f, glm::vec3(720.f, 360.f, 0.f)));
 	instancedTiles[130].animation->isRepeat = true;
 
 	walkableTiles[100]; 

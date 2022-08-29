@@ -28,11 +28,11 @@ layout (std140) uniform Lights
 uniform sampler2D texture_0;
 uniform sampler2D shadowMap;
 
+//uniform vec2 globalUVRatios;
+uniform vec2 UVoffset;
+
 uniform bool useWholeColor;
 uniform vec4 wholeColor;
-
-uniform float textureOffsetU;
-uniform float textureOffsetV;
 
 float ShadowCalculation(vec4 fragPosLightSpace);
 
@@ -47,26 +47,25 @@ void main()
 	}
 	else
 	{
-		vertColor = texture(texture_0, vec2(fUVx2.x + textureOffsetU, fUVx2.y + textureOffsetV));
+		vec2 newUV1 = vec2(fUVx2.x + UVoffset.x, fUVx2.y + UVoffset.y);
+		vec2 newUV2 = vec2(fUVx2.x - UVoffset.y, fUVx2.y - UVoffset.y);
+
+		vertColor = texture(texture_0, vec2(newUV1.x, newUV1.y)) * 0.5f + 
+					texture(texture_0, vec2(newUV2.y, newUV2.x)) * 0.5f;
 
 		if(vertColor.a < 0.1)
 			discard;
 	}
 
 	// ambient
-    vec3 ambient = 0.3 * vertColor.rgb;
+    vec3 ambient = 0.4 * vertColor.rgb;
 
 	vec3 norm = normalize(fNormal);
 
 	// diffuse 
     vec3 lightDir = normalize(-theLights[0].direction.xyz);
     float diff = max(dot(lightDir, norm), 0.0);
-    //vec3 diffuse = theLights[0].diffuse.rgb * diff * vertColor.rgb;
     vec3 diffuse = diff * theLights[0].diffuse.rgb;
-
-	//vec4 pixelColor = vec4(ambient + diffuse, 1.f);
-
-	//gl_FragColor = pixelColor;
 
 	float shadow = ShadowCalculation(fVertPosLightSpace);
 

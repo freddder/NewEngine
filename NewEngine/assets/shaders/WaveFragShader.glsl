@@ -55,7 +55,7 @@ void main()
 	}
 
 	// ambient
-    vec3 ambient = 0.3 * vertColor.rgb;
+    vec3 ambient = 0.4 * vertColor.rgb;
 
 	vec3 norm = normalize(fNormal);
 
@@ -64,10 +64,6 @@ void main()
     float diff = max(dot(lightDir, norm), 0.0);
     //vec3 diffuse = theLights[0].diffuse.rgb * diff * vertColor.rgb;
     vec3 diffuse = diff * theLights[0].diffuse.rgb;
-
-	//vec4 pixelColor = vec4(ambient + diffuse, 1.f);
-
-	//gl_FragColor = pixelColor;
 
 	float shadow = ShadowCalculation(fVertPosLightSpace);
 
