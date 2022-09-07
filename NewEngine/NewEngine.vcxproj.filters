@@ -259,5 +259,11 @@
     <None Include="assets\shaders\OceanVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="assets\shaders\SnowFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SnowVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

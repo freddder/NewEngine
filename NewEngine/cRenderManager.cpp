@@ -11,8 +11,8 @@
 
 cRenderManager::cRenderManager()
 {
-    SCR_WIDTH = 1200;
-    SCR_HEIGHT = 640;
+    g_Camera->SCR_WIDTH = 1200;
+    g_Camera->SCR_HEIGHT = 640;
 
     //******* Create origin offset buffer for non instanced objects *************
     glm::vec4 originOffset = glm::vec4(0.f);
@@ -470,7 +470,7 @@ void cRenderManager::DrawScene()
 
     //*********************** Regular pass ******************************
     // reset viewport
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glViewport(0, 0, g_Camera->SCR_WIDTH, g_Camera->SCR_HEIGHT);
     glClearColor(0.f, 0.8f, 1.f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -478,7 +478,7 @@ void cRenderManager::DrawScene()
     g_LightManager->SetUnimormValues();
 
     // pass projection matrix to shader (note that in this case it could change every frame)
-    glm::mat4 projection = glm::perspective(g_Camera->FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, g_Camera->nearPlane, g_Camera->farPlane);
+    glm::mat4 projection = g_Camera->GetProjectionMatrix();
 
     // camera/view transformation
     glm::mat4 view = g_Camera->GetViewMatrix();

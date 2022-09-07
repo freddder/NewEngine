@@ -212,6 +212,8 @@
     <None Include="assets\shaders\OceanVertShader.glsl" />
     <None Include="assets\shaders\SkyboxFragShader.glsl" />
     <None Include="assets\shaders\SkyboxVertShader.glsl" />
+    <None Include="assets\shaders\SnowFragShader.glsl" />
+    <None Include="assets\shaders\SnowVertShader.glsl" />
     <None Include="assets\shaders\SpriteFragShader.glsl" />
     <None Include="assets\shaders\SpriteVertShader.glsl" />
     <None Include="assets\shaders\VertShader1.glsl" />

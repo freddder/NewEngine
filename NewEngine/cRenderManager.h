@@ -39,9 +39,6 @@ class cRenderManager
 
 public:
 
-    unsigned int SCR_WIDTH;
-    unsigned int SCR_HEIGHT;
-
 	cRenderManager();
 	~cRenderManager();
 

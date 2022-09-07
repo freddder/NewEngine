@@ -76,9 +76,8 @@ int main()
     g_RenderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
     g_RenderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
     g_RenderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
-    //g_RenderManager->CreateShadderProgram("depth", "DepthVertShader.glsl", "DepthFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
     //g_RenderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
-    //g_RenderManager.use
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
@@ -91,31 +90,13 @@ int main()
     g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
     g_LightManager->lights[0].extraParam.w = 1.f; // turn on
 
-    //g_RenderManager->use("scene");
-    //g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
-
-    //g_RenderManager->use("sprite");
-    //g_LightManager->SetupUniformLocations(g_RenderManager->GetCurrentShaderId());
 
     //********************** Load models and textures ***************************
-
-    //std::vector<std::string> modelsToLoad;
-    ////modelsToLoad.push_back("Mistralton City House.obj");
-    //modelsToLoad.push_back("r0_treePine.obj");
-    //modelsToLoad.push_back("TestMapWater.obj");
-    //modelsToLoad.push_back("ISO_Shphere_flat_4div_xyz_n_rgba_uv.ply");
-    //modelsToLoad.push_back("SpriteHolder.obj");
-    //modelsToLoad.push_back("Water_c2.obj");
-    //modelsToLoad.push_back("Water_b2.obj");
-    //modelsToLoad.push_back("Water_bl2.obj");
-    //modelsToLoad.push_back("sea_water2.obj");
-
-    //for (unsigned int i = 0; i < modelsToLoad.size(); i++)
-    //    g_ModelManager->LoadModel(modelsToLoad[i], g_RenderManager->GetCurrentShaderId());
 
     g_ModelManager->LoadModel("r0_treePine.obj", "scene");
     g_ModelManager->LoadModel("TestMapWater.obj", "scene");
     g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
+    g_ModelManager->LoadModel("SpriteHolder.obj", "snow");
     g_ModelManager->LoadModel("Water_c2.obj", "wave");
     g_ModelManager->LoadModel("Water_b2.obj", "wave");
     g_ModelManager->LoadModel("Water_bl2.obj", "wave");
@@ -124,6 +105,8 @@ int main()
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+
+    g_TextureManager->CreateTexture("SnowFlake1.png");
 
     cRenderModel* tree = new cRenderModel();
     tree->meshName = "r0_treePine.obj";
@@ -188,6 +171,12 @@ int main()
     symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 4, true));
     symSpriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(symSpriteAnimation);
+
+    cRenderModel* snow = new cRenderModel();
+    snow->position.y = 5.f;
+    snow->meshName = "SpriteHolder.obj";
+    snow->textureName = "SnowFlake1.png";
+    g_RenderManager->AddModel(snow);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -343,8 +332,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // height will be significantly larger than specified on retina displays.
     //glViewport(0, 0, width, height);
 
-    g_RenderManager->SCR_WIDTH = width;
-    g_RenderManager->SCR_HEIGHT = height;
+    g_Camera->SCR_WIDTH = width;
+    g_Camera->SCR_HEIGHT = height;
 }
 
 

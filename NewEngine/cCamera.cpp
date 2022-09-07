@@ -86,3 +86,8 @@ glm::mat4 cCamera::GetViewMatrix()
 					   position + front,
 					   up);
 }
+
+glm::mat4 cCamera::GetProjectionMatrix()
+{
+	return glm::perspective(FOV, (float)SCR_WIDTH / (float)SCR_HEIGHT, nearPlane, farPlane);;
+}

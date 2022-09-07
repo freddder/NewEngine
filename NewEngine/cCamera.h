@@ -16,6 +16,10 @@ class cCamera
 	void UpdateCameraVectors();
 
 public:
+
+	unsigned int SCR_WIDTH;
+	unsigned int SCR_HEIGHT;
+
 	float FOV;
 	float nearPlane;
 	float farPlane;
@@ -32,4 +36,5 @@ public:
 	void ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch = true);
 
 	glm::mat4 GetViewMatrix();
+	glm::mat4 GetProjectionMatrix();
 };
