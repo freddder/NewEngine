@@ -1,8 +1,6 @@
 #version 330 core
 
 in vec4 fUVx2;
-in vec3 fNormal;
-in vec4 fVertPosLightSpace;
 
 // texture samplers
 uniform sampler2D texture_0;
@@ -28,4 +26,5 @@ void main()
 	}
 
 	gl_FragColor = vec4(vertColor.rgb, 1.f);
+	//gl_FragColor = vec4(1.f, 0.f, 0.f, 1.f);
 }

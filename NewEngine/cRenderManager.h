@@ -35,8 +35,6 @@ class cRenderManager
 
     std::set< cRenderModel* > models;
 
-    void DrawObject(cRenderModel* model);
-
 public:
 
 	cRenderManager();
@@ -57,5 +55,6 @@ public:
 
     void AddModel(cRenderModel* newModel);
     void RemoveModel(cRenderModel* model);
+    void DrawObject(cRenderModel* model);
     void DrawScene();
 };

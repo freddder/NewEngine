@@ -96,7 +96,7 @@ int main()
     g_ModelManager->LoadModel("r0_treePine.obj", "scene");
     g_ModelManager->LoadModel("TestMapWater.obj", "scene");
     g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
-    g_ModelManager->LoadModel("SpriteHolder.obj", "snow");
+    g_ModelManager->LoadModel("SpriteHolder2.obj", "snow");
     g_ModelManager->LoadModel("Water_c2.obj", "wave");
     g_ModelManager->LoadModel("Water_b2.obj", "wave");
     g_ModelManager->LoadModel("Water_bl2.obj", "wave");
@@ -107,6 +107,8 @@ int main()
     g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
 
     g_TextureManager->CreateTexture("SnowFlake1.png");
+    g_TextureManager->CreateTexture("SnowFlake2.png");
+    g_TextureManager->CreateTexture("SnowFlake3.png");
 
     cRenderModel* tree = new cRenderModel();
     tree->meshName = "r0_treePine.obj";
@@ -173,10 +175,25 @@ int main()
     g_AnimationManager->AddAnimation(symSpriteAnimation);
 
     cRenderModel* snow = new cRenderModel();
-    snow->position.y = 5.f;
-    snow->meshName = "SpriteHolder.obj";
+    //snow->position.x = -1.5f;
+    snow->meshName = "SpriteHolder2.obj";
     snow->textureName = "SnowFlake1.png";
-    g_RenderManager->AddModel(snow);
+    snow->shaderName = "snow";
+    //g_RenderManager->AddModel(snow);
+
+    cRenderModel* snow2 = new cRenderModel();
+    snow2->position.x = -0.5f;
+    snow2->meshName = "SpriteHolder2.obj";
+    snow2->textureName = "SnowFlake2.png";
+    snow2->shaderName = "snow";
+    //g_RenderManager->AddModel(snow);
+
+    cRenderModel* snow3 = new cRenderModel();
+    snow3->position.x = 0.5f;
+    snow3->meshName = "SpriteHolder2.obj";
+    snow3->textureName = "SnowFlake3.png";
+    snow3->shaderName = "snow";
+    //g_RenderManager->AddModel(snow);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -240,6 +257,23 @@ int main()
         g_AnimationManager->Update(deltaTime);
 
         g_RenderManager->DrawScene();
+
+        g_RenderManager->use("snow");
+
+        glm::mat4 proj = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, 1.f, 100.f);
+        glm::mat4 view = g_Camera->GetViewMatrix();
+
+        //g_RenderManager->setMat4("projection", proj);
+        //g_RenderManager->setMat4("view", view);
+
+        //snow->position.x += deltaTime * 100;
+
+        g_RenderManager->setFloat("scrWidth", g_Camera->SCR_WIDTH);
+        g_RenderManager->setFloat("scrHeight", g_Camera->SCR_HEIGHT);
+
+        g_RenderManager->DrawObject(snow);
+        g_RenderManager->DrawObject(snow2);
+        g_RenderManager->DrawObject(snow3);
 
         // Imgui
         ImGui_ImplOpenGL3_NewFrame();
