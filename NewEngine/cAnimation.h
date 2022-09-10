@@ -38,6 +38,11 @@ struct sKeyFrameString // texture
 
 struct sKeyFrameFloat // who knows
 {
+	sKeyFrameFloat() {}
+	sKeyFrameFloat(float _time, float _value) :
+		time(_time),
+		value(_value) {}
+
 	float value;
 	float time;
 };

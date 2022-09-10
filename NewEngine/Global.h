@@ -10,6 +10,7 @@
 #include "cAnimationManager.h"
 #include "cMapManager.h"
 #include "cRenderManager.h"
+#include "cWeatherManager.h"
 #include <set>
 
 void StartUp();
@@ -28,5 +29,7 @@ extern cAnimationManager* g_AnimationManager;
 extern cMapManager* g_MapManager;
 
 extern cRenderManager* g_RenderManager;
+
+extern cWeatherManager* g_WeatherManager;
 
 #endif // _globalThings_HG_

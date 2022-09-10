@@ -46,6 +46,12 @@
     <Filter Include="Render System">
       <UniqueIdentifier>{d4746e6d-f728-402c-98e1-074f6728043c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Weather">
+      <UniqueIdentifier>{1ec55a6f-951b-4529-b104-1e326af473a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RNG">
+      <UniqueIdentifier>{bd7bea6c-773a-4d41-be8e-bd0804d08edc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -131,6 +137,15 @@
     </ClCompile>
     <ClCompile Include="cOceanModel.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="cWeatherManager.cpp">
+      <Filter>Weather</Filter>
+    </ClCompile>
+    <ClCompile Include="cLinearCongruentialGenerator.cpp">
+      <Filter>RNG</Filter>
+    </ClCompile>
+    <ClCompile Include="cFloatAnimation.cpp">
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +235,18 @@
     </ClInclude>
     <ClInclude Include="cOceanModel.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="cWeatherManager.h">
+      <Filter>Weather</Filter>
+    </ClInclude>
+    <ClInclude Include="cRandomNumberGenerator.h">
+      <Filter>RNG</Filter>
+    </ClInclude>
+    <ClInclude Include="cLinearCongruentialGenerator.h">
+      <Filter>RNG</Filter>
+    </ClInclude>
+    <ClInclude Include="cFloatAnimation.h">
+      <Filter>Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

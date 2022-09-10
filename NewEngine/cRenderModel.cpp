@@ -17,11 +17,6 @@ cRenderModel::cRenderModel()
 	textureName = "";
 
 	shaderName = "scene";
-	//textureAnimationType = None;
-	//currSpriteId = 0;
-	//useGlobalPosForUV = false;
-	//globalUVRatios = glm::vec2(1.f);
-	//textureOffset = glm::vec3(0.f);
 }
 
 void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)

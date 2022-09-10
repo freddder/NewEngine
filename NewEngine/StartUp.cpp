@@ -15,4 +15,6 @@ void StartUp()
 	g_RenderManager = new cRenderManager();
 
 	g_MapManager = new cMapManager();
+
+	g_WeatherManager = new cWeatherManager();
 }

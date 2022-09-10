@@ -15,4 +15,6 @@ void Shutdown()
 	delete g_MapManager;
 
 	delete g_RenderManager;
+
+	delete g_WeatherManager;
 }

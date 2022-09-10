@@ -486,8 +486,8 @@ void cRenderManager::DrawScene()
     bruh = 0;
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
-    glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightSpaceMatrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -498,10 +498,53 @@ void cRenderManager::DrawScene()
         DrawObject(*it);
     }
 
+    // Draw weather particles
+
+    use("snow");
+
+    projection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, 1.f, 100.f);
+    view = g_Camera->GetViewMatrix();
+
+    setMat4("view", view);
+    setMat4("projection", projection);
+    setFloat("scrWidth", g_Camera->SCR_WIDTH);
+    setFloat("scrHeight", g_Camera->SCR_HEIGHT);
+    setFloat("swingDegree", g_WeatherManager->offsetDegree);
+
+    for (unsigned int i = 0; i < g_WeatherManager->particleTypes.size(); i++)
+    {
+        g_TextureManager->SetupTexture(g_WeatherManager->particleTypes[i].textureName, 0);
+
+        sModelDrawInfo drawInfo;
+        g_ModelManager->FindModelByName(g_WeatherManager->particleTypes[i].modelName, drawInfo);
+
+        glBindVertexArray(drawInfo.allMeshesData[0].VAO_ID);
+
+        glBindBuffer(GL_ARRAY_BUFFER, g_WeatherManager->particleTypes[i].positionsBufferId);
+
+        GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+        glEnableVertexAttribArray(offset_location);
+        glVertexAttribPointer(offset_location, 2,
+            GL_FLOAT, GL_FALSE,
+            sizeof(glm::vec2),
+            (void*)0);
+        glVertexAttribDivisor(offset_location, 1);
+
+        glDrawElementsInstanced(GL_TRIANGLES,
+            drawInfo.allMeshesData[0].numberOfIndices,
+            GL_UNSIGNED_INT,
+            (void*)0,
+            g_WeatherManager->particleTypes[i].positions.size());
+
+        glBindVertexArray(0);
+    }
+
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
     use("skybox");
     view = glm::mat4(glm::mat3(g_Camera->GetViewMatrix())); // remove translation from the view matrix
+    projection = g_Camera->GetProjectionMatrix();
+
     setMat4("view", view);
     setMat4("projection", projection);
 

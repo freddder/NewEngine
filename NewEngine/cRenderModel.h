@@ -5,13 +5,6 @@
 
 //static const unsigned int MAX_TEXTURES = 5;
 
-//enum eAnimationType
-//{
-//	None,
-//	Sprite,
-//	UVShifting
-//};
-
 class cRenderModel
 {
 public:
@@ -34,11 +27,6 @@ public:
 	std::string textureName;
 
 	std::string shaderName;
-	//eAnimationType textureAnimationType;
-	//int currSpriteId;
-	//bool useGlobalPosForUV;
-	//glm::vec2 globalUVRatios;
-	//glm::vec3 textureOffset;
 
 	cRenderModel();
 
