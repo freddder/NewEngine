@@ -471,7 +471,7 @@ void cRenderManager::DrawScene()
     //*********************** Regular pass ******************************
     // reset viewport
     glViewport(0, 0, g_Camera->SCR_WIDTH, g_Camera->SCR_HEIGHT);
-    glClearColor(0.f, 0.8f, 1.f, 1.0f);
+    glClearColor(0.89f, 0.89f, 0.89f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //g_LightManager->SetUnimormValues(programMap[currShader].ID);
@@ -552,7 +552,7 @@ void cRenderManager::DrawScene()
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
+    //glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default
 }

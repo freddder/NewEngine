@@ -95,7 +95,8 @@ int main()
     //********************** Load models and textures ***************************
 
     g_ModelManager->LoadModel("r0_treePine.obj", "scene");
-    g_ModelManager->LoadModel("TestMapWater.obj", "scene");
+    g_ModelManager->LoadModel("WinterTest.obj", "scene");
+    //g_ModelManager->LoadModel("FallTree.obj", "scene");
     g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
     g_ModelManager->LoadModel("SpriteHolder2.obj", "snow");
     g_ModelManager->LoadModel("Water_c2.obj", "wave");
@@ -111,10 +112,12 @@ int main()
     g_TextureManager->CreateTexture("SnowFlake2.png");
     g_TextureManager->CreateTexture("SnowFlake3.png");
 
-    cRenderModel* tree = new cRenderModel();
-    tree->meshName = "r0_treePine.obj";
-    //g_set_Models.insert(tree);
-    g_RenderManager->AddModel(tree);
+    //cRenderModel* tree = new cRenderModel();
+    //tree->meshName = "FallTree.obj";
+    //tree->position.x = -0.5f;
+    //tree->position.z = -0.5f;
+    ////g_set_Models.insert(tree);
+    //g_RenderManager->AddModel(tree);
 
     cSpriteModel* sprite = new cSpriteModel();
     sprite->meshName = "SpriteHolder.obj";

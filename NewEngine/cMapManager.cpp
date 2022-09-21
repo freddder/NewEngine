@@ -8,7 +8,7 @@ cMapManager::cMapManager()
 {
 	mapModel = new cRenderModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "TestMapWater.obj";
+	mapModel->meshName = "WinterTest.obj";
 	g_RenderManager->AddModel(mapModel);
 
 	instancedTiles[118].instancedModel = new cWaveModel();
@@ -113,6 +113,7 @@ cMapManager::cMapManager()
 	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(12.f, glm::vec3(720.f, 360.f, 0.f)));
 	instancedTiles[130].animation->isRepeat = true;
 
+	// grass
 	walkableTiles[100]; 
 	walkableTiles[101];
 	walkableTiles[103];
@@ -127,41 +128,58 @@ cMapManager::cMapManager()
 	walkableTiles[92];
 	walkableTiles[95];
 
+	// snow
+	walkableTiles[191];
+
 	//	^ x
 	//  > z
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 1.f));
-	walkableTiles[135].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 1.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
-	walkableTiles[135].unwalkableOffsets.push_back(glm::vec3(3.f, 0.f, 0.f));
 
-	walkableTiles[136].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
-	walkableTiles[136].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 0.f));
-	walkableTiles[136].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 0.f));
-	walkableTiles[136].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 0.f));
-	walkableTiles[136].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 0.f));
-	walkableTiles[136].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+	// left stair5
+	walkableTiles[148].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 1.f));
+	walkableTiles[148].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 1.f));
+	walkableTiles[148].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 1.f));
+	walkableTiles[148].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 1.f));
+	walkableTiles[148].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 1.f));
+	walkableTiles[148].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+	walkableTiles[148].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
+	walkableTiles[148].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
+	walkableTiles[148].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
+	walkableTiles[148].unwalkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
+	walkableTiles[148].unwalkableOffsets.push_back(glm::vec3(3.f, 0.f, 0.f));
 
-	walkableTiles[137].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
-	walkableTiles[137].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 0.f));
-	walkableTiles[137].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 0.f));
-	walkableTiles[137].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 0.f));
-	walkableTiles[137].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 0.f));
-	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
-	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
-	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 1.f));
-	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(2.f, 0.f, 1.f));
-	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(3.f, 0.f, 1.f));
-	walkableTiles[137].unwalkableOffsets.push_back(glm::vec3(4.f, 0.f, 1.f));
+	// mid stair5
+	walkableTiles[149].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[149].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 0.f));
+	walkableTiles[149].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 0.f));
+	walkableTiles[149].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 0.f));
+	walkableTiles[149].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 0.f));
+	walkableTiles[149].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
 
-	walkableTiles[171].walkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
-	walkableTiles[171].walkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
+	// left stair5
+	walkableTiles[150].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[150].walkableOffsets.push_back(glm::vec3(1.f, 2.f, 0.f));
+	walkableTiles[150].walkableOffsets.push_back(glm::vec3(2.f, 3.f, 0.f));
+	walkableTiles[150].walkableOffsets.push_back(glm::vec3(3.f, 4.f, 0.f));
+	walkableTiles[150].walkableOffsets.push_back(glm::vec3(4.f, 5.f, 0.f));
+	walkableTiles[150].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+	walkableTiles[150].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 1.f));
+	walkableTiles[150].unwalkableOffsets.push_back(glm::vec3(1.f, 0.f, 1.f));
+	walkableTiles[150].unwalkableOffsets.push_back(glm::vec3(2.f, 0.f, 1.f));
+	walkableTiles[150].unwalkableOffsets.push_back(glm::vec3(3.f, 0.f, 1.f));
+	walkableTiles[150].unwalkableOffsets.push_back(glm::vec3(4.f, 0.f, 1.f));
+
+	// left stair
+	walkableTiles[152].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[152].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+
+	walkableTiles[153].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[153].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+
+	walkableTiles[154].walkableOffsets.push_back(glm::vec3(0.f, 1.f, 0.f));
+	walkableTiles[154].unwalkableOffsets.push_back(glm::vec3(0.f, 0.f, 0.f));
+
+	walkableTiles[184].walkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
+	walkableTiles[184].walkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
 }
 
 cMapManager::~cMapManager()
@@ -179,7 +197,7 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 {
 	//g_set_Models.erase(mapModel);
 
-    std::ifstream file("assets/models/WaterTest.pdsmap");
+    std::ifstream file("assets/models/WinterTest.pdsmap");
 
     if (!file.is_open())
         return;
