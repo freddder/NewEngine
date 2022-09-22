@@ -35,7 +35,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-cCharacter* asymCharacter;
+cCharacter* playerChar;
 
 int main()
 {
@@ -147,7 +147,8 @@ int main()
     spriteAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(spriteAnimation);    
 
-    asymCharacter = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
+    playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
+    g_Camera->SetupPlayerPositionReference(playerChar->model->position);
 
     g_MapManager->LoadMap("", "");
 
@@ -298,6 +299,18 @@ int main()
         //ImGui::DragFloat("OF", &g_WeatherManager->offsetDegree);
         ImGui::End();
 
+        float* cameraPosition[3];
+        cameraPosition[0] = &g_Camera->position.x;
+        cameraPosition[1] = &g_Camera->position.y;
+        cameraPosition[2] = &g_Camera->position.z;
+
+        ImGui::Begin("Camera");
+        ImGui::DragFloat3("Position", *cameraPosition);
+        ImGui::DragFloat("FOV", &g_Camera->FOV);
+        ImGui::DragFloat("Distance", &g_Camera->PLY_DISTANCE);
+        ImGui::DragFloat("Angle", &g_Camera->PLY_ANGLE);
+        ImGui::End();
+
         float* position[3];
         position[0] = &g_LightManager->lights[0].position.x;
         position[1] = &g_LightManager->lights[0].position.y;
@@ -358,13 +371,13 @@ void processInput(GLFWwindow* window)
         g_Camera->MoveDown(deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        asymCharacter->Walk(UP);
+        playerChar->Walk(UP);
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        asymCharacter->Walk(DOWN);
+        playerChar->Walk(DOWN);
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        asymCharacter->Walk(LEFT);
+        playerChar->Walk(LEFT);
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        asymCharacter->Walk(RIGHT);
+        playerChar->Walk(RIGHT);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

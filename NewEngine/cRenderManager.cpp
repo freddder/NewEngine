@@ -510,6 +510,7 @@ void cRenderManager::DrawScene()
     setFloat("scrWidth", g_Camera->SCR_WIDTH);
     setFloat("scrHeight", g_Camera->SCR_HEIGHT);
     setFloat("swingDegree", g_WeatherManager->offsetDegree);
+    setVec3("cameraPosition", g_Camera->position);
 
     for (unsigned int i = 0; i < g_WeatherManager->particleTypes.size(); i++)
     {
@@ -552,7 +553,7 @@ void cRenderManager::DrawScene()
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
-    //glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default
 }

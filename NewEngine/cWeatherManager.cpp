@@ -58,7 +58,7 @@ cWeatherManager::cWeatherManager()
 
 		sWeatherParticlePosition newPosition;
 		newPosition.position.x = random_draws[i];
-		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100;
+		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100; // -1 - 1
 		newPosition.speed.x = 0.f;
 		newPosition.speed.y = (float)(rand() % 10 + 10) / (float)100 * -1;
 
@@ -120,14 +120,39 @@ void cWeatherManager::Process(float deltaTime)
 
 		for (unsigned j = 0; j < particleTypes[i].positions.size(); j++)
 		{
-			particleTypes[i].positions[j].position += particleTypes[i].positions[j].speed * deltaTime;
+			sWeatherParticlePosition& currParticlePosition = particleTypes[i].positions[j];
 
-			if (particleTypes[i].positions[j].position.y <= -1.2f)
-			{
-				particleTypes[i].positions[j].position.y = 1.2f;
-			}
+			// process speed
+			currParticlePosition.position += currParticlePosition.speed * deltaTime;
 
-			glBufferSubData(GL_ARRAY_BUFFER, j * sizeof(glm::vec2), sizeof(glm::vec2), glm::value_ptr(particleTypes[i].positions[j].position));
+			// process camera position
+			glm::vec2 positionWithCam = currParticlePosition.position;
+
+			positionWithCam.x -= std::fmodf(g_Camera->position.z / 6.f, 2.4f);
+			positionWithCam.y -= std::fmodf(g_Camera->position.x / 20.f, 2.4f);
+			positionWithCam.y -= std::fmodf(g_Camera->position.y / 10.f, 2.4f);
+
+			if (positionWithCam.y <= -1.2f)
+				positionWithCam.y += 2.4f;
+			else if (positionWithCam.y >= 1.2f)
+				positionWithCam.y -= 2.4f;
+
+			if (positionWithCam.x <= -1.2f)
+				positionWithCam.x += 2.4f;
+			else if (positionWithCam.x >= 1.2f)
+				positionWithCam.x -= 2.4f;
+
+			if (currParticlePosition.position.y <= -1.2f)
+				currParticlePosition.position.y += 2.4f;
+			else if (currParticlePosition.position.y >= 1.2f)
+				currParticlePosition.position.y -= 2.4f;
+
+			if (currParticlePosition.position.x <= -1.2f)
+				currParticlePosition.position.x += 2.4f;
+			else if (currParticlePosition.position.x >= 1.2f)
+				currParticlePosition.position.x -= 2.4f;
+
+			glBufferSubData(GL_ARRAY_BUFFER, j * sizeof(glm::vec2), sizeof(glm::vec2), glm::value_ptr(positionWithCam));
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

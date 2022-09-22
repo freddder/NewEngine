@@ -5,12 +5,13 @@
 
 class cCharacter
 {
-	cRenderModel* model;
 	cSpriteAnimation* spriteAnimation;
 	cModelAnimation* modelAnimation;
 	bool switchLeg;
 
 public:
+	cRenderModel* model;
+
 	cCharacter(glm::vec3 position, std::string textureName);
 	~cCharacter();
 
