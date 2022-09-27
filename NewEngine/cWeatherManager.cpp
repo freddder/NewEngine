@@ -7,8 +7,10 @@
 cWeatherManager::cWeatherManager()
 {
 	currWeather = SNOW;
-	fogDensity = 0.f;
-	fogColor = glm::vec3(0);
+
+	fogDensity = 0.007f;
+	fogGradient = 1.5f;
+	fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
 
 	offsetDegree = 0.f;
 
@@ -54,8 +56,6 @@ cWeatherManager::cWeatherManager()
 
 	for (unsigned int i = 0; i < random_draws.size(); i++)
 	{
-		// speed = 0.0714 - 0.1666
-
 		sWeatherParticlePosition newPosition;
 		newPosition.position.x = random_draws[i];
 		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100; // -1 - 1
@@ -71,8 +71,6 @@ cWeatherManager::cWeatherManager()
 
 	for (unsigned int i = 0; i < random_draws.size(); i++)
 	{
-		// speed = 0.1 - 0.2
-
 		sWeatherParticlePosition newPosition;
 		newPosition.position.x = random_draws[i];
 		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100;
@@ -88,8 +86,6 @@ cWeatherManager::cWeatherManager()
 
 	for (unsigned int i = 0; i < random_draws.size(); i++)
 	{
-		// speed = 0.0714 - 0.1666
-
 		sWeatherParticlePosition newPosition;
 		newPosition.position.x = random_draws[i];
 		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100;

@@ -12,18 +12,17 @@ class cCamera
 	glm::vec3 up;
 	glm::vec3 right;
 
-	bool usePlayerCamera;
-	glm::vec3* playerPosition;
-
 	void UpdateCameraVectors();
 
 public:
 
 	glm::vec3 position;
+	glm::vec3* playerPosition;
 
 	unsigned int SCR_WIDTH;
 	unsigned int SCR_HEIGHT;
 
+	bool usePlayerCamera;
 	float PLY_DISTANCE;
 	float PLY_ANGLE;
 
@@ -32,8 +31,6 @@ public:
 	float farPlane;
 
 	cCamera();
-
-	void SetupPlayerPositionReference(glm::vec3& _playerPosition);
 
 	void MoveForward(float deltaTime); // w
 	void MoveBackward(float deltaTime); // s

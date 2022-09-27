@@ -21,7 +21,6 @@ cLightManager::~cLightManager()
 void cLightManager::AddProgramToBlock(unsigned int newProgram)
 {
 	unsigned int uniformBlockIndex = glGetUniformBlockIndex(newProgram, "Lights");
-
 	glUniformBlockBinding(newProgram, uniformBlockIndex, 1);
 }
 

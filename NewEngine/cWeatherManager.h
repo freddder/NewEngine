@@ -34,10 +34,11 @@ class cWeatherManager
 
 	//glm::vec2 onScreenSpeed;
 
-	float fogDensity;
-	glm::vec3 fogColor;
-
 public:
+
+	float fogDensity;
+	float fogGradient;
+	glm::vec3 fogColor;
 
 	std::vector<sWeatherParticleType> particleTypes;
 

@@ -27,6 +27,7 @@ uniform vec2 UVoffset;
 out vec4 fUVx2;
 out vec3 fNormal;
 out vec4 fVertPosLightSpace;
+out vec4 fVertWorldPosition;
 
 void main()
 {
@@ -65,11 +66,11 @@ void main()
 		gl_Position = MVP * vPosition;
 	}
 
-	vec3 fragPos = vec3(model * vPosition);
+	fVertWorldPosition = model * vPosition;
 
 	fUVx2.x += UVoffset.x;
 	fUVx2.y += UVoffset.y;
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	fVertPosLightSpace = lightSpace * vec4(fragPos, 1.f);
+	fVertPosLightSpace = lightSpace * fVertWorldPosition;
 }

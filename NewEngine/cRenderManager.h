@@ -27,6 +27,7 @@ class cRenderManager
     unsigned int cubemapTextureID;
 
     unsigned int uboMatricesID;
+    unsigned int uboFogID;
 
     std::string currShader;
 	std::map<std::string, sShaderProgram> programMap;

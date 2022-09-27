@@ -132,6 +132,15 @@ cRenderManager::cRenderManager()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatricesID, 0, 3 * sizeof(glm::mat4) + sizeof(int));
+
+    // setup fog uniform block
+    glGenBuffers(1, &uboFogID);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + 2 * sizeof(float), NULL, GL_DYNAMIC_DRAW); // maybe change GL_STATIC_DRAW to dynamic
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
 }
 
 cRenderManager::~cRenderManager()
@@ -139,6 +148,7 @@ cRenderManager::~cRenderManager()
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVBO);
     glDeleteBuffers(1, &uboMatricesID);
+    glDeleteBuffers(1, &uboFogID);
     glDeleteBuffers(1, &notInstancedOffsetBufferId);
 }
 
@@ -215,11 +225,16 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
 
     programMap.insert(std::pair<std::string, sShaderProgram>(programName, newShader));
 
-    unsigned int uniformBlockIndex = glGetUniformBlockIndex(newShader.ID, "Matrices");
+    // add Matrices block to matrices
+    unsigned int ubMatricesIndex = glGetUniformBlockIndex(newShader.ID, "Matrices");
+    glUniformBlockBinding(newShader.ID, ubMatricesIndex, 0);
 
-    glUniformBlockBinding(newShader.ID, uniformBlockIndex, 0);
-
+    // add Lights block to matrices
     g_LightManager->AddProgramToBlock(newShader.ID);
+
+    // add Fog block to matrices
+    unsigned int ubFogIndex = glGetUniformBlockIndex(newShader.ID, "Fog");
+    glUniformBlockBinding(newShader.ID, ubFogIndex, 2);
 }
 
 unsigned int cRenderManager::GetCurrentShaderId()
@@ -490,6 +505,13 @@ void cRenderManager::DrawScene()
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightSpaceMatrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*g_Camera->playerPosition, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(g_WeatherManager->fogColor, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &g_WeatherManager->fogDensity);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &g_WeatherManager->fogGradient);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene

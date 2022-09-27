@@ -29,6 +29,7 @@ uniform int spriteId;
 out vec4 fUVx2;
 out vec3 fNormal;
 out vec4 fVertPosLightSpace;
+out vec4 fVertWorldPosition;
 
 void main()
 {
@@ -66,7 +67,7 @@ void main()
 		gl_Position = MVP * vPosition;
 	}
 
-	vec3 fragPos = vec3(model * vPosition);
+	fVertWorldPosition = model * vPosition;
 
 	vec2 newUV = vec2(vUVx2.x / float(numCols), vUVx2.y / float(numRows));
 
@@ -75,7 +76,6 @@ void main()
 
 	fUVx2 = vec4(newUV.x + addU, newUV.y - addV, 0, 0);
 
-
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	fVertPosLightSpace = lightSpace * vec4(fragPos, 1.f);
+	fVertPosLightSpace = lightSpace * fVertWorldPosition;
 }

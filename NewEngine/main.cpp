@@ -148,7 +148,8 @@ int main()
     g_AnimationManager->AddAnimation(spriteAnimation);    
 
     playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
-    g_Camera->SetupPlayerPositionReference(playerChar->model->position);
+    //g_Camera->SetPlayerPositionRef(playerChar->model->position);
+    g_Camera->playerPosition = &playerChar->model->position;
 
     g_MapManager->LoadMap("", "");
 
@@ -306,6 +307,7 @@ int main()
 
         ImGui::Begin("Camera");
         ImGui::DragFloat3("Position", *cameraPosition);
+        ImGui::Checkbox("Player Cam", &g_Camera->usePlayerCamera);
         ImGui::DragFloat("FOV", &g_Camera->FOV);
         ImGui::DragFloat("Distance", &g_Camera->PLY_DISTANCE);
         ImGui::DragFloat("Angle", &g_Camera->PLY_ANGLE);
@@ -327,6 +329,17 @@ int main()
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
         ImGui::Image((void*)(intptr_t)g_RenderManager->GetDepthMapId(), ImVec2(200, 200));
+        ImGui::End();
+
+        float* fogColor[3];
+        fogColor[0] = &g_WeatherManager->fogColor.r;
+        fogColor[1] = &g_WeatherManager->fogColor.g;
+        fogColor[2] = &g_WeatherManager->fogColor.b;
+
+        ImGui::Begin("Fog");
+        ImGui::ColorEdit3("Color", *fogColor);
+        ImGui::DragFloat("Density", &g_WeatherManager->fogDensity, 0.005f);
+        ImGui::DragFloat("Gradient", &g_WeatherManager->fogGradient, 0.03f);
         ImGui::End();
 
         ImGui::Render();

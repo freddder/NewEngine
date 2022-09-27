@@ -13,7 +13,6 @@ void cCamera::UpdateCameraVectors()
 	right = glm::normalize(glm::cross(front, glm::vec3(0.f, 1.f, 0.f)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	up = glm::normalize(glm::cross(right, front));
 
-	usePlayerCamera = true;
 	PLY_DISTANCE = 17.f;
 	PLY_ANGLE = 35.f;
 }
@@ -30,12 +29,9 @@ cCamera::cCamera()
 
 	position = glm::vec3(-3.0f, 3.0f, 0.0f);
 
-	UpdateCameraVectors();
-}
+	usePlayerCamera = true;
 
-void cCamera::SetupPlayerPositionReference(glm::vec3& _playerPosition)
-{
-	playerPosition = &_playerPosition;
+	UpdateCameraVectors();
 }
 
 void cCamera::MoveForward(float deltaTime)

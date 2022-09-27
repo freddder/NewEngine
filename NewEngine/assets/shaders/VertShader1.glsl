@@ -13,21 +13,16 @@ layout (std140) uniform Matrices
 	int isShadowPass;
 };
 
-//uniform mat4 view;
-//uniform mat4 projection;
-
 uniform vec3 modelPosition;
 uniform mat4 modelOrientationX;
 uniform mat4 modelOrientationY;
 uniform mat4 modelOrientationZ;
 uniform mat4 modelScale;
-//uniform mat4 lightSpaceMatrix;
-
-//uniform bool isShadowPass;
 
 out vec4 fUVx2;
 out vec3 fNormal;
 out vec4 fVertPosLightSpace;
+out vec4 fVertWorldPosition;
 
 void main()
 {
@@ -65,9 +60,9 @@ void main()
 		gl_Position = MVP * vPosition;
 	}
 
-	vec3 fragPos = vec3(model * vPosition);
+	fVertWorldPosition = model * vPosition;
 	fUVx2 = vUVx2;
 
 	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
-	fVertPosLightSpace = lightSpace * vec4(fragPos, 1.f);
+	fVertPosLightSpace = lightSpace * fVertWorldPosition;
 }

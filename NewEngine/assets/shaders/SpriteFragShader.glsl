@@ -3,6 +3,7 @@
 in vec4 fUVx2;
 in vec3 fNormal;
 in vec4 fVertPosLightSpace;
+in vec4 fVertWorldPosition;
 
 struct sLight
 {
@@ -17,11 +18,17 @@ struct sLight
 							// 2 = directional light
 };
 
-//uniform sLight theLights[20];
-
 layout (std140) uniform Lights
 {
     sLight theLights[20];
+};
+
+layout (std140) uniform Fog
+{
+	vec4 fogViewOrigin;
+	vec4 fogColor;
+	float fogDensity;
+	float fogGradient;
 };
 
 // texture samplers
@@ -63,7 +70,12 @@ void main()
 	float shadow = ShadowCalculation(fVertPosLightSpace);
 
 	vec3 pixelColor = (ambient + (1.0 - shadow) * (diffuse)) * vertColor.xyz;
-	//vec3 pixelColor = (ambient * (diffuse)) * vertColor.xyz;
+	
+	float distanceToFogOrigin = length(fVertWorldPosition.xyz - fogViewOrigin.xyz);
+	float fFogVisibility = exp(-pow(distanceToFogOrigin * fogDensity, fogGradient));
+	fFogVisibility = clamp(fFogVisibility, 0.0, 1.0);
+
+	pixelColor = mix(fogColor.rgb, pixelColor, fFogVisibility);
 
 	gl_FragColor = vec4(pixelColor, 1.f);
 }
