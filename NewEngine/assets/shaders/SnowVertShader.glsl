@@ -11,8 +11,8 @@ in vec4 oOffset;
 //uniform mat4 modelOrientationZ;
 //uniform mat4 modelScale;
 
-uniform float scrWidth;
-uniform float scrHeight;
+uniform int scrWidth;
+uniform int scrHeight;
 uniform float swingDegree;
 
 out vec4 fUVx2;
@@ -21,8 +21,8 @@ void main()
 {
 	fUVx2 = vUVx2;
 
-	float finalPosX = (vPosition.x * 100 / scrWidth) + oOffset.x;
-	float finalPosY = (vPosition.y * 100 / scrHeight) + oOffset.y;
+	float finalPosX = (vPosition.x * 100 / float(scrWidth)) + oOffset.x;
+	float finalPosY = (vPosition.y * 100 / float(scrHeight)) + oOffset.y;
 
 	finalPosX += sin(radians(gl_InstanceID * 30 + swingDegree)) / 50;
 

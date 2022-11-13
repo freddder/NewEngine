@@ -529,8 +529,8 @@ void cRenderManager::DrawScene()
 
     setMat4("view", view);
     setMat4("projection", projection);
-    setFloat("scrWidth", g_Camera->SCR_WIDTH);
-    setFloat("scrHeight", g_Camera->SCR_HEIGHT);
+    setInt("scrWidth", g_Camera->SCR_WIDTH);
+    setInt("scrHeight", g_Camera->SCR_HEIGHT);
     setFloat("swingDegree", g_WeatherManager->offsetDegree);
     setVec3("cameraPosition", g_Camera->position);
 

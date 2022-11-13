@@ -9,7 +9,7 @@ class cAnimationManager
 
 public:
 
-	void Update(float deltaTime);
+	void Process(float deltaTime);
 	void AddAnimation(cAnimation* newAnimation);
 	void RemoveAnimation(cAnimation* animationToRemove);
 };

@@ -6,17 +6,20 @@
 
 enum eWeather
 {
+	NONE,
 	SNOW,
 	HAIL,
 	SNOWSTORM,
 	RAIN,
-	SANDSTORM
+	HEAVYRAIN,
+	SANDSTORM,
+	LEAVES
 };
 
 struct sWeatherParticlePosition
 {
 	glm::vec2 position;
-	glm::vec2 speed;
+	glm::vec2 speedOffset;
 };
 
 struct sWeatherParticleType
@@ -32,8 +35,6 @@ class cWeatherManager
 {
 	eWeather currWeather;
 
-	//glm::vec2 onScreenSpeed;
-
 public:
 
 	float fogDensity;
@@ -41,7 +42,7 @@ public:
 	glm::vec3 fogColor;
 
 	std::vector<sWeatherParticleType> particleTypes;
-
+	glm::vec2 particleSpeed;
 	float offsetDegree;
 
 	cWeatherManager();
@@ -50,4 +51,11 @@ public:
 	void SetWeather(eWeather newWeather);
 
 	void Process(float deltaTime);
+
+private:
+
+	// Helper method for creating particle type and adding it to vector
+	void CreateWeatherParticleType(std::string _textureName, std::string _modelName, 
+									glm::vec2 minSpeedOffset, glm::vec2 maxSpeedOffset,
+									int amount);
 };

@@ -1,103 +1,15 @@
 #include "cWeatherManager.h"
 #include "cLinearCongruentialGenerator.h"
 #include "Global.h"
+#include "cFloatAnimation.h"
 #include <ctime>
 #include <glm/gtc/type_ptr.hpp>
 
 cWeatherManager::cWeatherManager()
 {
-	currWeather = SNOW;
-
-	fogDensity = 0.007f;
-	fogGradient = 1.5f;
-	fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
+	currWeather = NONE;
 
 	offsetDegree = 0.f;
-
-	std::vector<double> random_draws;
-
-	sWeatherParticleType snow1;
-	sWeatherParticleType snow2;
-	sWeatherParticleType snow3;
-
-	snow1.textureName = "SnowFlake1.png";
-	snow1.modelName = "SpriteHolder2.obj";
-
-	snow2.textureName = "SnowFlake2.png";
-	snow2.modelName = "SpriteHolder2.obj";
-
-	snow3.textureName = "SnowFlake3.png";
-	snow3.modelName = "SpriteHolder2.obj";
-
-	unsigned int numSnow1 = 4;
-	unsigned int numSnow2 = 6;
-	unsigned int numSnow3 = 8;
-
-	glGenBuffers(1, &snow1.positionsBufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, snow1.positionsBufferId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * numSnow1,	NULL, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &snow2.positionsBufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, snow2.positionsBufferId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * numSnow2, NULL, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &snow3.positionsBufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, snow3.positionsBufferId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * numSnow3, NULL, GL_DYNAMIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	srand((int)time(0));
-	unsigned int init_seed = (rand() % 10) + 1;
-
-	cLinearCongruentialGenerator lcg(init_seed);
-	lcg.get_uniform_draws2(random_draws, numSnow1);
-
-	for (unsigned int i = 0; i < random_draws.size(); i++)
-	{
-		sWeatherParticlePosition newPosition;
-		newPosition.position.x = random_draws[i];
-		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100; // -1 - 1
-		newPosition.speed.x = 0.f;
-		newPosition.speed.y = (float)(rand() % 10 + 10) / (float)100 * -1;
-
-		snow1.positions.push_back(newPosition);
-	}
-	
-	lcg.set_random_seed((rand() % 10) + 1);
-	random_draws.clear();
-	lcg.get_uniform_draws2(random_draws, numSnow2);
-
-	for (unsigned int i = 0; i < random_draws.size(); i++)
-	{
-		sWeatherParticlePosition newPosition;
-		newPosition.position.x = random_draws[i];
-		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100;
-		newPosition.speed.x = 0.f;
-		newPosition.speed.y = (float)(rand() % 10 + 10) / (float)100 * -1;
-
-		snow2.positions.push_back(newPosition);
-	}
-
-	lcg.set_random_seed((rand() % 10) + 1);
-	random_draws.clear();
-	lcg.get_uniform_draws2(random_draws, numSnow3);
-
-	for (unsigned int i = 0; i < random_draws.size(); i++)
-	{
-		sWeatherParticlePosition newPosition;
-		newPosition.position.x = random_draws[i];
-		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100;
-		newPosition.speed.x = 0.f;
-		newPosition.speed.y = (float)(rand() % 10 + 10) / (float)100 * -1;
-
-		snow3.positions.push_back(newPosition);
-	}
-
-	particleTypes.push_back(snow1);
-	particleTypes.push_back(snow2);
-	particleTypes.push_back(snow3);
 }
 
 cWeatherManager::~cWeatherManager()
@@ -106,6 +18,111 @@ cWeatherManager::~cWeatherManager()
 	{
 		glDeleteBuffers(1, &particleTypes[i].positionsBufferId);
 	}
+}
+
+void cWeatherManager::SetWeather(eWeather newWeather)
+{
+	if (newWeather == currWeather)
+		return;
+
+	if ((currWeather == SNOW || currWeather == HAIL || currWeather == SNOWSTORM) && // snow transition
+		(newWeather == SNOW || newWeather == HAIL || newWeather == SNOWSTORM))
+	{
+		// animate values to correct number
+		cFloatAnimation* particleSpeedXAnim = new cFloatAnimation(particleSpeed.x);
+		particleSpeedXAnim->clearAfterComplete = true;
+
+		cFloatAnimation* particleSpeedYAnim = new cFloatAnimation(particleSpeed.y);
+		particleSpeedYAnim->clearAfterComplete = true;
+
+		cFloatAnimation* fogDensityAnim = new cFloatAnimation(fogDensity);
+		fogDensityAnim->clearAfterComplete = true;
+
+		cFloatAnimation* fogGradientAnim = new cFloatAnimation(fogGradient);
+		fogGradientAnim->clearAfterComplete = true;
+
+		if (newWeather == SNOW)
+		{
+			particleSpeedXAnim->AddKeyFrame(sKeyFrameFloat(3.f, 0.f));
+			particleSpeedYAnim->AddKeyFrame(sKeyFrameFloat(3.f, -0.15f));
+			fogDensityAnim->AddKeyFrame(sKeyFrameFloat(3.f, 0.037f));
+			fogGradientAnim->AddKeyFrame(sKeyFrameFloat(3.f, 1.59f));
+		}
+		else if (newWeather == HAIL)
+		{
+			particleSpeedXAnim->AddKeyFrame(sKeyFrameFloat(3.f, -0.75));
+			particleSpeedYAnim->AddKeyFrame(sKeyFrameFloat(3.f, -1.65f));
+			fogDensityAnim->AddKeyFrame(sKeyFrameFloat(3.f, 0.022f));
+			fogGradientAnim->AddKeyFrame(sKeyFrameFloat(3.f, 0.48f));
+		}
+
+		g_AnimationManager->AddAnimation(particleSpeedXAnim);
+		g_AnimationManager->AddAnimation(particleSpeedYAnim);
+		g_AnimationManager->AddAnimation(fogDensityAnim);
+		g_AnimationManager->AddAnimation(fogGradientAnim);
+	}
+	else if ((currWeather == RAIN || currWeather == HEAVYRAIN) && // rain transition
+		(newWeather == RAIN || newWeather == HEAVYRAIN))
+	{
+		// animate values to correct number
+
+
+	}
+	else // no transition
+	{
+		if (newWeather == NONE)
+		{
+
+		}
+		else if (newWeather == SNOW)
+		{
+			fogDensity = 0.037f;
+			fogGradient = 1.59f;
+			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
+
+			particleSpeed.x = 0.f;
+			particleSpeed.y = -0.15f; // 0.5 - -0.5
+
+			CreateWeatherParticleType("SnowFlake1.png", "SpriteHolder2.obj", glm::vec2(0.f, -0.05f), glm::vec2(0.f, 0.05f), 4);
+			CreateWeatherParticleType("SnowFlake2.png", "SpriteHolder2.obj", glm::vec2(0.f, -0.05f), glm::vec2(0.f, 0.05f), 6);
+			CreateWeatherParticleType("SnowFlake3.png", "SpriteHolder2.obj", glm::vec2(0.f, -0.05f), glm::vec2(0.f, 0.05f), 8);
+		}
+		else if (newWeather == HAIL)
+		{
+			fogDensity = 0.022f;
+			fogGradient = 0.48f;
+			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
+
+			particleSpeed.x = -0.75f;
+			particleSpeed.y = -1.65f;
+
+			CreateWeatherParticleType("SnowFlake1.png", "SpriteHolder2.obj", glm::vec2(0.f, -0.05f), glm::vec2(0.f, 0.05f), 4);
+			CreateWeatherParticleType("SnowFlake2.png", "SpriteHolder2.obj", glm::vec2(0.f, -0.05f), glm::vec2(0.f, 0.05f), 6);
+			CreateWeatherParticleType("SnowFlake3.png", "SpriteHolder2.obj", glm::vec2(0.f, -0.05f), glm::vec2(0.f, 0.05f), 8);
+		}
+		else if (newWeather == SNOWSTORM)
+		{
+
+		}
+		else if (newWeather == RAIN)
+		{
+
+		}
+		else if (newWeather == HEAVYRAIN)
+		{
+
+		}
+		else if (newWeather == SANDSTORM)
+		{
+
+		}
+		else if (newWeather == LEAVES)
+		{
+
+		}
+	}
+
+	currWeather = newWeather;
 }
 
 void cWeatherManager::Process(float deltaTime)
@@ -119,7 +136,7 @@ void cWeatherManager::Process(float deltaTime)
 			sWeatherParticlePosition& currParticlePosition = particleTypes[i].positions[j];
 
 			// process speed
-			currParticlePosition.position += currParticlePosition.speed * deltaTime;
+			currParticlePosition.position += (particleSpeed + currParticlePosition.speedOffset) * deltaTime;
 
 			// process camera position
 			glm::vec2 positionWithCam = currParticlePosition.position;
@@ -155,4 +172,39 @@ void cWeatherManager::Process(float deltaTime)
 	}
 
 	// move UVs here i guess
+}
+
+void cWeatherManager::CreateWeatherParticleType(std::string _textureName, std::string _modelName,
+												glm::vec2 minSpeedOffset, glm::vec2 maxSpeedOffset,
+												int amount)
+{
+	sWeatherParticleType newType;
+
+	newType.modelName = _modelName;
+	newType.textureName = _textureName;
+
+	glGenBuffers(1, &newType.positionsBufferId);
+	glBindBuffer(GL_ARRAY_BUFFER, newType.positionsBufferId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * amount, NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	srand((int)time(0));
+	unsigned int init_seed = (rand() % 10) + 1;
+	cLinearCongruentialGenerator lcg(init_seed);
+
+	std::vector<double> random_draws;
+	lcg.get_uniform_draws2(random_draws, amount);
+
+	for (unsigned int i = 0; i < random_draws.size(); i++)
+	{
+		sWeatherParticlePosition newPosition;
+		newPosition.position.x = (float)random_draws[i]; // -1 | 1
+		newPosition.position.y = (float)(rand() % 200 - 100) / (float)100; // -1 | 1
+		newPosition.speedOffset.x = minSpeedOffset.x + (float)(rand()) * (float)(maxSpeedOffset.x - minSpeedOffset.x) / RAND_MAX;
+		newPosition.speedOffset.y = minSpeedOffset.y + (float)(rand()) * (float)(maxSpeedOffset.y - minSpeedOffset.y) / RAND_MAX; // 0.05 | -0.05
+
+		newType.positions.push_back(newPosition);
+	}
+
+	particleTypes.push_back(newType);
 }

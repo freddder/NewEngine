@@ -13,11 +13,11 @@ cModelManager::~cModelManager()
 {
     for (std::map<std::string, sModelDrawInfo>::iterator it = modelMap.begin(); it != modelMap.end(); it++)
     {
-        unsigned int size = it->second.allMeshesData.size();
+        int size = (int)it->second.allMeshesData.size();
 
         // I dont wanna play with you anymore
 
-        for (unsigned int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             delete[] it->second.allMeshesData[i].verticesData;
             delete[] it->second.allMeshesData[i].indiciesData;

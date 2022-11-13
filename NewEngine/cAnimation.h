@@ -13,7 +13,9 @@ enum eDirection
 
 struct sKeyFrameVec3 // rgb
 {
-	sKeyFrameVec3() {}
+	sKeyFrameVec3(): 
+		time(0.f), 
+		value(glm::vec3(0)) {}
 	sKeyFrameVec3(float _time, glm::vec3 _value) :
 		time(_time),
 		value(_value) {}
@@ -38,7 +40,9 @@ struct sKeyFrameString // texture
 
 struct sKeyFrameFloat // who knows
 {
-	sKeyFrameFloat() {}
+	sKeyFrameFloat():
+		time(0.f),
+		value(0.f) {}
 	sKeyFrameFloat(float _time, float _value) :
 		time(_time),
 		value(_value) {}
@@ -78,6 +82,7 @@ public:
 	float maxDuration;
 	float speed;
 	bool isRepeat;
+	bool clearAfterComplete;
 
 	cAnimation()
 	{
@@ -86,6 +91,7 @@ public:
 		maxDuration = 0.f;
 		speed = 1.f;
 		isRepeat = false;
+		clearAfterComplete = false;
 	}
 
 	virtual void Process(float deltaTime) = 0;
