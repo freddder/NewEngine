@@ -364,3 +364,7 @@ FodyWeavers.xsd
 
 !NewEngine/assets/models/*
 !NewEngine/lib/**
+
+!Build
+Build/*
+!Build/x64/Debug/assimp-vc142-mtd.dll
