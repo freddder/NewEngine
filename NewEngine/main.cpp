@@ -77,8 +77,9 @@ int main()
     g_RenderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
     g_RenderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
     g_RenderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
     g_RenderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
-    //g_RenderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
@@ -95,7 +96,8 @@ int main()
     //********************** Load models and textures ***************************
 
     g_ModelManager->LoadModel("r0_treePine.obj", "scene");
-    g_ModelManager->LoadModel("WinterTest.obj", "scene");
+    g_ModelManager->LoadModel("WaterTest3.obj", "scene");
+    //g_ModelManager->LoadModel("TestMapWater.obj", "scene");
     //g_ModelManager->LoadModel("FallTree.obj", "scene");
     g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
     g_ModelManager->LoadModel("SpriteHolder2.obj", "snow");
@@ -103,6 +105,9 @@ int main()
     g_ModelManager->LoadModel("Water_b2.obj", "wave");
     g_ModelManager->LoadModel("Water_bl2.obj", "wave");
     g_ModelManager->LoadModel("sea_water2.obj", "ocean");
+    g_ModelManager->LoadModel("Foam_b2.obj", "foam");
+    g_ModelManager->LoadModel("Foam_bl2.obj", "foam");
+    g_ModelManager->LoadModel("Foam_c2.obj", "foam");
 
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
@@ -152,6 +157,12 @@ int main()
     g_Camera->playerPosition = &playerChar->model->position;
 
     g_MapManager->LoadMap("", "");
+
+    //cFoamModel* foam = new cFoamModel();
+    ////foam->shaderName = "scene";
+    //foam->meshName = "Foam_b2.obj";
+    //foam->textureOffset = glm::vec3(0);
+    //g_RenderManager->AddModel(foam);
 
     cSpriteModel* spriteSym = new cSpriteModel();
     spriteSym->meshName = "SpriteHolder.obj";
@@ -223,6 +234,9 @@ int main()
     //glEnableVertexAttribArray(1);
     //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
+    //float noiseTimer = 0.f;
+    //float waterThreshold = 0.7;
+
     //***************************************************************************
 
     IMGUI_CHECKVERSION();
@@ -251,6 +265,19 @@ int main()
         g_WeatherManager->Process(deltaTime);
 
         g_RenderManager->DrawScene();
+
+
+        //g_RenderManager->use("debug");
+
+        //noiseTimer += deltaTime;
+        //g_RenderManager->setFloat("timer", noiseTimer);
+        //g_RenderManager->setFloat("threshold", waterThreshold);
+
+        //glBindVertexArray(quadVAO);
+        //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        //glBindVertexArray(0);
+
+        //**************************************************************************
 
         // Imgui
         ImGui_ImplOpenGL3_NewFrame();
@@ -288,6 +315,7 @@ int main()
         ImGui::Begin("Lights");
         ImGui::ColorEdit3("Color", *colors);
         ImGui::DragFloat3("Position", *position);
+        //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
         ImGui::Image((void*)(intptr_t)g_RenderManager->GetDepthMapId(), ImVec2(200, 200));

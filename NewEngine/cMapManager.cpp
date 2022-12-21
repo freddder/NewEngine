@@ -3,14 +3,16 @@
 
 #include <sstream>
 #include <fstream>
+#include "cFloatAnimation.h"
 
 cMapManager::cMapManager()
 {
 	mapModel = new cRenderModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "WinterTest.obj";
+	mapModel->meshName = "WaterTest3.obj";
 	g_RenderManager->AddModel(mapModel);
 
+	// wave
 	instancedTiles[118].instancedModel = new cWaveModel();
 	instancedTiles[118].instancedModel->meshName = "Water_b2.obj";
 	instancedTiles[118].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
@@ -113,6 +115,102 @@ cMapManager::cMapManager()
 	static_cast<cSinAnimation*>(instancedTiles[130].animation)->AddKeyFrame(sKeyFrameVec3(12.f, glm::vec3(720.f, 360.f, 0.f)));
 	instancedTiles[130].animation->isRepeat = true;
 
+	// foam
+	instancedTiles[144].instancedModel = new cFoamModel();
+	instancedTiles[144].instancedModel->meshName = "Foam_b2.obj";
+	instancedTiles[144].instancedModel->orientation.y = glm::radians(180.f);
+	instancedTiles[144].modelOffset = glm::vec3(0.5f, 0.f, 0.5f);
+	instancedTiles[144].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[144].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[144].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[144].animation->isRepeat = true;
+
+	instancedTiles[145].instancedModel = new cFoamModel();
+	instancedTiles[145].instancedModel->meshName = "Foam_b2.obj";
+	instancedTiles[145].instancedModel->orientation.y = glm::radians(-90.f);
+	instancedTiles[145].modelOffset = glm::vec3(0.5f, 0.f, -0.5f);
+	instancedTiles[145].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[145].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[145].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[145].animation->isRepeat = true;
+
+	instancedTiles[146].instancedModel = new cFoamModel();
+	instancedTiles[146].instancedModel->meshName = "Foam_b2.obj";
+	instancedTiles[146].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
+	instancedTiles[146].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[146].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[146].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[146].animation->isRepeat = true;
+
+	instancedTiles[147].instancedModel = new cFoamModel();
+	instancedTiles[147].instancedModel->meshName = "Foam_b2.obj";
+	instancedTiles[147].instancedModel->orientation.y = glm::radians(90.f);
+	instancedTiles[147].modelOffset = glm::vec3(-0.5f, 0.f, 0.5f);
+	instancedTiles[147].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[147].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[147].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[147].animation->isRepeat = true;
+
+	instancedTiles[148].instancedModel = new cFoamModel();
+	instancedTiles[148].instancedModel->meshName = "Foam_bl2.obj";
+	instancedTiles[148].instancedModel->orientation.y = glm::radians(-90.f);
+	instancedTiles[148].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
+	instancedTiles[148].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[148].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[148].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[148].animation->isRepeat = true;
+
+	instancedTiles[149].instancedModel = new cFoamModel();
+	instancedTiles[149].instancedModel->meshName = "Foam_bl2.obj";
+	instancedTiles[149].instancedModel->orientation.y = glm::radians(180.f);
+	instancedTiles[149].modelOffset = glm::vec3(0.5f, 0.f, -0.5f);
+	instancedTiles[149].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[149].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[149].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[149].animation->isRepeat = true;
+
+	instancedTiles[150].instancedModel = new cFoamModel();
+	instancedTiles[150].instancedModel->meshName = "Foam_bl2.obj";
+	//instancedTiles[150].instancedModel->orientation.y = glm::radians(180.f);
+	instancedTiles[150].modelOffset = glm::vec3(-0.5f, 0.f, 0.5f);
+	instancedTiles[150].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[150].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[150].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[150].animation->isRepeat = true;
+
+	instancedTiles[151].instancedModel = new cFoamModel();
+	instancedTiles[151].instancedModel->meshName = "Foam_bl2.obj";
+	instancedTiles[151].instancedModel->orientation.y = glm::radians(90.f);
+	instancedTiles[151].modelOffset = glm::vec3(0.5f, 0.f, 0.5f);
+	instancedTiles[151].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[151].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[151].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[151].animation->isRepeat = true;
+
+	instancedTiles[152].instancedModel = new cFoamModel();
+	instancedTiles[152].instancedModel->meshName = "Foam_c2.obj";
+	instancedTiles[152].instancedModel->orientation.y = glm::radians(180.f);
+	instancedTiles[152].modelOffset = glm::vec3(0.5f, 0.f, -0.5f);
+	instancedTiles[152].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[152].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[152].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[152].animation->isRepeat = true;
+
+	instancedTiles[153].instancedModel = new cFoamModel();
+	instancedTiles[153].instancedModel->meshName = "Foam_c2.obj";
+	instancedTiles[153].instancedModel->orientation.y = glm::radians(-90.f);
+	instancedTiles[153].modelOffset = glm::vec3(-0.5f, 0.f, -0.5f);
+	instancedTiles[153].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[153].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[153].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[153].animation->isRepeat = true;
+
+	instancedTiles[154].instancedModel = new cFoamModel();
+	instancedTiles[154].instancedModel->meshName = "Foam_c2.obj";
+	instancedTiles[154].instancedModel->orientation.y = glm::radians(90.f);
+	instancedTiles[154].modelOffset = glm::vec3(0.5f, 0.f, 0.5f);
+	instancedTiles[154].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[154].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[154].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[154].animation->isRepeat = true;
+
+	instancedTiles[155].instancedModel = new cFoamModel();
+	instancedTiles[155].instancedModel->meshName = "Foam_c2.obj";
+	//instancedTiles[155].instancedModel->orientation.y = glm::radians(90.f);
+	instancedTiles[155].modelOffset = glm::vec3(-0.5f, 0.f, 0.5f);
+	instancedTiles[155].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[155].instancedModel)->textureOffset, 2, 0);
+	static_cast<cSinAnimation*>(instancedTiles[155].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
+	instancedTiles[155].animation->isRepeat = true;
+
 	// grass
 	walkableTiles[100]; 
 	walkableTiles[101];
@@ -197,7 +295,7 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 {
 	//g_set_Models.erase(mapModel);
 
-    std::ifstream file("assets/models/WinterTest.pdsmap");
+    std::ifstream file("assets/models/WaterTest3.pdsmap");
 
     if (!file.is_open())
         return;

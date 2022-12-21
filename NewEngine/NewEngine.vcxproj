@@ -149,6 +149,7 @@
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cFloatAnimation.cpp" />
+    <ClCompile Include="cFoamModel.cpp" />
     <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="cMapManager.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cFloatAnimation.h" />
+    <ClInclude Include="cFoamModel.h" />
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cLinearCongruentialGenerator.h" />
     <ClInclude Include="cMapManager.h" />
@@ -215,6 +217,8 @@
   <ItemGroup>
     <None Include="assets\shaders\DebugFragShader.glsl" />
     <None Include="assets\shaders\DebugVertShader.glsl" />
+    <None Include="assets\shaders\FoamFragShader.glsl" />
+    <None Include="assets\shaders\FoamVertShader.glsl" />
     <None Include="assets\shaders\FragShader1.glsl" />
     <None Include="assets\shaders\OceanFragShader.glsl" />
     <None Include="assets\shaders\OceanVertShader.glsl" />

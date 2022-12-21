@@ -553,11 +553,11 @@ void cRenderManager::DrawScene()
             (void*)0);
         glVertexAttribDivisor(offset_location, 1);
 
-        glDrawElementsInstanced(GL_TRIANGLES,
-            drawInfo.allMeshesData[0].numberOfIndices,
-            GL_UNSIGNED_INT,
-            (void*)0,
-            g_WeatherManager->particleTypes[i].positions.size());
+        //glDrawElementsInstanced(GL_TRIANGLES,
+        //    drawInfo.allMeshesData[0].numberOfIndices,
+        //    GL_UNSIGNED_INT,
+        //    (void*)0,
+        //    g_WeatherManager->particleTypes[i].positions.size());
 
         glBindVertexArray(0);
     }

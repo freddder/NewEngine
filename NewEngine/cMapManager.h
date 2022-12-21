@@ -5,6 +5,7 @@
 #include <string>
 #include "cWaveModel.h"
 #include "cOceanModel.h"
+#include "cFoamModel.h"
 #include "cSinAnimation.h"
 
 struct sInstancedTile
@@ -23,8 +24,8 @@ struct sCorrectionTiles
 
 struct sTile
 {
-	bool isWalkable = false;
 	//cEntity* entity;
+	bool isWalkable = false;
 	bool isUnchangeable = false;
 };
 
@@ -47,13 +48,6 @@ class cMapManager
 	cRenderModel* mapModel;
 
 	std::map<int, sInstancedTile> instancedTiles;
-	//cModel* Water_b;
-	//cModel* Water_c;
-	//cModel* Water_bl;
-
-	//cSinAnimation* water_b_animation;
-	//cSinAnimation* water_c_animation;
-	//cSinAnimation* water_bl_animation;
 
 public:
 

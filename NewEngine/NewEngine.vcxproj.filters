@@ -147,6 +147,9 @@
     <ClCompile Include="cFloatAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
+    <ClCompile Include="cFoamModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -248,6 +251,9 @@
     <ClInclude Include="cFloatAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
+    <ClInclude Include="cFoamModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\FragShader1.glsl">
@@ -290,6 +296,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\SnowVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\FoamFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\FoamVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

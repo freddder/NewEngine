@@ -7,6 +7,7 @@ public:
 
 	glm::vec2 globalUVRatios;
 	glm::vec3 textureOffset;
+	float timer;
 
 	cOceanModel();
 
