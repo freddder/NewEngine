@@ -17,4 +17,6 @@ void Shutdown()
 	delete g_RenderManager;
 
 	delete g_WeatherManager;
+
+	delete g_ParticleManager;
 }

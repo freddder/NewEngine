@@ -22,8 +22,8 @@ cWeatherManager::~cWeatherManager()
 
 void cWeatherManager::SetWeather(eWeather newWeather)
 {
-	if (newWeather == currWeather)
-		return;
+	//if (newWeather == currWeather)
+	//	return;
 
 	if ((currWeather == SNOW || currWeather == HAIL || currWeather == SNOWSTORM) && // snow transition
 		(newWeather == SNOW || newWeather == HAIL || newWeather == SNOWSTORM))
@@ -72,7 +72,8 @@ void cWeatherManager::SetWeather(eWeather newWeather)
 	{
 		if (newWeather == NONE)
 		{
-
+			fogDensity = 0.f;
+			fogGradient = 0.1f;
 		}
 		else if (newWeather == SNOW)
 		{

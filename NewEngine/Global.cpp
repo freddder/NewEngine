@@ -15,3 +15,5 @@ cMapManager* g_MapManager = NULL;
 cRenderManager* g_RenderManager = NULL;
 
 cWeatherManager* g_WeatherManager = NULL;
+
+cParticleManager* g_ParticleManager = NULL;

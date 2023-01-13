@@ -17,4 +17,6 @@ void StartUp()
 	g_MapManager = new cMapManager();
 
 	g_WeatherManager = new cWeatherManager();
+
+	g_ParticleManager = new cParticleManager();
 }

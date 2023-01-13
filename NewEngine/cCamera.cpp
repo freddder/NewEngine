@@ -13,13 +13,13 @@ void cCamera::UpdateCameraVectors()
 	right = glm::normalize(glm::cross(front, glm::vec3(0.f, 1.f, 0.f)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	up = glm::normalize(glm::cross(right, front));
 
-	PLY_DISTANCE = 17.f;
+	PLY_DISTANCE =25.f; //17.f;
 	PLY_ANGLE = 35.f;
 }
 
 cCamera::cCamera()
 {
-	FOV = 45.f;
+	FOV = 30.f;//45.f;
 	nearPlane = 0.5f;
 	farPlane = 1'000'000.f;
 	cameraSpeed = 10.f;

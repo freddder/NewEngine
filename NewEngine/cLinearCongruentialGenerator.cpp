@@ -37,6 +37,11 @@ unsigned long cLinearCongruentialGenerator::get_random_integer() {
     return cur_seed;
 }
 
+void cLinearCongruentialGenerator::get_uniform_draw(double& draw)
+{
+    draw = get_random_integer() * max_multiplier;
+}
+
 // Create a vector of uniform draws between (0,1)
 void cLinearCongruentialGenerator::get_uniform_draws(std::vector<double>& draws, unsigned int num_draws)
 {

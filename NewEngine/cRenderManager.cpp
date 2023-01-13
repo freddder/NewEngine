@@ -522,45 +522,47 @@ void cRenderManager::DrawScene()
 
     // Draw weather particles
 
-    use("snow");
+    //use("snow");
 
-    projection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, 1.f, 100.f);
-    view = g_Camera->GetViewMatrix();
+    //projection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, 1.f, 100.f);
+    //view = g_Camera->GetViewMatrix();
 
-    setMat4("view", view);
-    setMat4("projection", projection);
-    setInt("scrWidth", g_Camera->SCR_WIDTH);
-    setInt("scrHeight", g_Camera->SCR_HEIGHT);
-    setFloat("swingDegree", g_WeatherManager->offsetDegree);
-    setVec3("cameraPosition", g_Camera->position);
+    //setMat4("view", view);
+    //setMat4("projection", projection);
+    //setInt("scrWidth", g_Camera->SCR_WIDTH);
+    //setInt("scrHeight", g_Camera->SCR_HEIGHT);
+    //setFloat("swingDegree", g_WeatherManager->offsetDegree);
+    //setVec3("cameraPosition", g_Camera->position);
 
-    for (unsigned int i = 0; i < g_WeatherManager->particleTypes.size(); i++)
-    {
-        g_TextureManager->SetupTexture(g_WeatherManager->particleTypes[i].textureName, 0);
+    //for (unsigned int i = 0; i < g_WeatherManager->particleTypes.size(); i++)
+    //{
+    //    g_TextureManager->SetupTexture(g_WeatherManager->particleTypes[i].textureName, 0);
 
-        sModelDrawInfo drawInfo;
-        g_ModelManager->FindModelByName(g_WeatherManager->particleTypes[i].modelName, drawInfo);
+    //    sModelDrawInfo drawInfo;
+    //    g_ModelManager->FindModelByName(g_WeatherManager->particleTypes[i].modelName, drawInfo);
 
-        glBindVertexArray(drawInfo.allMeshesData[0].VAO_ID);
+    //    glBindVertexArray(drawInfo.allMeshesData[0].VAO_ID);
 
-        glBindBuffer(GL_ARRAY_BUFFER, g_WeatherManager->particleTypes[i].positionsBufferId);
+    //    glBindBuffer(GL_ARRAY_BUFFER, g_WeatherManager->particleTypes[i].positionsBufferId);
 
-        GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
-        glEnableVertexAttribArray(offset_location);
-        glVertexAttribPointer(offset_location, 2,
-            GL_FLOAT, GL_FALSE,
-            sizeof(glm::vec2),
-            (void*)0);
-        glVertexAttribDivisor(offset_location, 1);
+    //    GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+    //    glEnableVertexAttribArray(offset_location);
+    //    glVertexAttribPointer(offset_location, 2,
+    //        GL_FLOAT, GL_FALSE,
+    //        sizeof(glm::vec2),
+    //        (void*)0);
+    //    glVertexAttribDivisor(offset_location, 1);
 
-        //glDrawElementsInstanced(GL_TRIANGLES,
-        //    drawInfo.allMeshesData[0].numberOfIndices,
-        //    GL_UNSIGNED_INT,
-        //    (void*)0,
-        //    g_WeatherManager->particleTypes[i].positions.size());
+    //    glDrawElementsInstanced(GL_TRIANGLES,
+    //        drawInfo.allMeshesData[0].numberOfIndices,
+    //        GL_UNSIGNED_INT,
+    //        (void*)0,
+    //        g_WeatherManager->particleTypes[i].positions.size());
 
-        glBindVertexArray(0);
-    }
+    //    glBindVertexArray(0);
+    //}
+
+    g_ParticleManager->DrawSpawnerParticles();
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

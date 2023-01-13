@@ -79,6 +79,7 @@ int main()
     g_RenderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
     g_RenderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
     g_RenderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
+    g_RenderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "3DParticleFragShader.glsl");
     g_RenderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
 
     // configure global opengl state
@@ -108,6 +109,7 @@ int main()
     g_ModelManager->LoadModel("Foam_b2.obj", "foam");
     g_ModelManager->LoadModel("Foam_bl2.obj", "foam");
     g_ModelManager->LoadModel("Foam_c2.obj", "foam");
+    g_ModelManager->LoadModel("SpriteHolder3.obj", "particle");
 
     g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
@@ -164,6 +166,22 @@ int main()
     //foam->textureOffset = glm::vec3(0);
     //g_RenderManager->AddModel(foam);
 
+    cRenderModel* prtcl = new cRenderModel();
+    prtcl->meshName = "SpriteHolder3.obj";
+    prtcl->shaderName = "particle";
+    prtcl->textureName = "SnowFlake2.png";
+    //prtcl->position = glm::vec3(0.f, 5.f, 0.f);
+    prtcl->scale = glm::vec3(0.5f);
+    //g_RenderManager->AddModel(prtcl);
+
+    cParticleSpawner weatherSpawner(glm::vec3(0.f, 10.f, 0.f), prtcl, 10000);
+    weatherSpawner.minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);
+    weatherSpawner.maxPositionOffset = glm::vec3(20.f, 0.f, 20.f);
+    weatherSpawner.spawnSpeed = glm::vec3(0.f, -3.f, 0.f);
+    weatherSpawner.spawnRate = 0.001f;
+    weatherSpawner.particleLifeTime = 10.f;
+    g_ParticleManager->AddSpawner(weatherSpawner);
+
     cSpriteModel* spriteSym = new cSpriteModel();
     spriteSym->meshName = "SpriteHolder.obj";
     spriteSym->position.z = -2.f;
@@ -196,7 +214,7 @@ int main()
     snowAnimation->isRepeat = true;
     g_AnimationManager->AddAnimation(snowAnimation);
 
-    g_WeatherManager->SetWeather(SNOW);
+    g_WeatherManager->SetWeather(NONE);
 
     //cModel* house = new cModel();
     //house->meshName = "Mistralton City House.obj";
@@ -264,8 +282,11 @@ int main()
 
         g_WeatherManager->Process(deltaTime);
 
+        g_ParticleManager->UpdateSpawners(deltaTime);
+
         g_RenderManager->DrawScene();
 
+        //g_RenderManager->DrawObject(prtcl);
 
         //g_RenderManager->use("debug");
 

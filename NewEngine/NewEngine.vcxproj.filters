@@ -52,6 +52,9 @@
     <Filter Include="RNG">
       <UniqueIdentifier>{bd7bea6c-773a-4d41-be8e-bd0804d08edc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{311beb57-ae00-4139-b099-2e3c18a44a46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -149,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="cFoamModel.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="cParticleSpawner.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="cParticleManager.cpp">
+      <Filter>Particles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +263,12 @@
     <ClInclude Include="cFoamModel.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="cParticleSpawner.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="cParticleManager.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\FragShader1.glsl">
@@ -302,6 +317,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\FoamVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\3DParticleFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\3DParticleVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

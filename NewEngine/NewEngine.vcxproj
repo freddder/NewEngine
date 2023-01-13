@@ -154,6 +154,8 @@
     <ClCompile Include="cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="cMapManager.cpp" />
     <ClCompile Include="cOceanModel.cpp" />
+    <ClCompile Include="cParticleManager.cpp" />
+    <ClCompile Include="cParticleSpawner.cpp" />
     <ClCompile Include="cRenderModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
@@ -189,6 +191,8 @@
     <ClInclude Include="cLinearCongruentialGenerator.h" />
     <ClInclude Include="cMapManager.h" />
     <ClInclude Include="cOceanModel.h" />
+    <ClInclude Include="cParticleManager.h" />
+    <ClInclude Include="cParticleSpawner.h" />
     <ClInclude Include="cRandomNumberGenerator.h" />
     <ClInclude Include="cRenderModel.h" />
     <ClInclude Include="cModelAnimation.h" />
@@ -215,6 +219,8 @@
     <ClInclude Include="include\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\3DParticleFragShader.glsl" />
+    <None Include="assets\shaders\3DParticleVertShader.glsl" />
     <None Include="assets\shaders\DebugFragShader.glsl" />
     <None Include="assets\shaders\DebugVertShader.glsl" />
     <None Include="assets\shaders\FoamFragShader.glsl" />
