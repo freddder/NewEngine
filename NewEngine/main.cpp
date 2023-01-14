@@ -97,7 +97,7 @@ int main()
     //********************** Load models and textures ***************************
 
     g_ModelManager->LoadModel("r0_treePine.obj", "scene");
-    g_ModelManager->LoadModel("WaterTest3.obj", "scene");
+    g_ModelManager->LoadModel("WinterTest.obj", "scene");
     //g_ModelManager->LoadModel("TestMapWater.obj", "scene");
     //g_ModelManager->LoadModel("FallTree.obj", "scene");
     g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
@@ -126,107 +126,65 @@ int main()
     ////g_set_Models.insert(tree);
     //g_RenderManager->AddModel(tree);
 
-    cSpriteModel* sprite = new cSpriteModel();
-    sprite->meshName = "SpriteHolder.obj";
-    sprite->textureName = "Nate.png";
-    sprite->currSpriteId = 3;
-    //g_set_Models.insert(sprite);
-    g_RenderManager->AddModel(sprite);
+    //cSpriteModel* sprite = new cSpriteModel();
+    //sprite->meshName = "SpriteHolder.obj";
+    //sprite->textureName = "Nate.png";
+    //sprite->currSpriteId = 3;
+    //g_RenderManager->AddModel(sprite);
 
-    cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId, sprite->scale);
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
-    spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
+    //cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId, sprite->scale);
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
+    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
+    //spriteAnimation->isRepeat = true;
+    //g_AnimationManager->AddAnimation(spriteAnimation);
 
-    spriteAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(spriteAnimation);    
+    //cSpriteModel* spriteSym = new cSpriteModel();
+    //spriteSym->meshName = "SpriteHolder.obj";
+    //spriteSym->position.z = -2.f;
+    //spriteSym->textureName = "SymetricNPC_1.png";
+    //spriteSym->currSpriteId = 2;
+    //g_RenderManager->AddModel(spriteSym);
+
+    //cSpriteAnimation* symSpriteAnimation = new cSpriteAnimation(spriteSym->currSpriteId, spriteSym->scale);
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 2, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 3, true));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 2, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 1, true));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 5, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 4, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 6, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 4, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 5, true));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 4, true));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 6, true));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 4, true));
+    //symSpriteAnimation->isRepeat = true;
+    //g_AnimationManager->AddAnimation(symSpriteAnimation);
 
     playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
-    //g_Camera->SetPlayerPositionRef(playerChar->model->position);
     g_Camera->playerPosition = &playerChar->model->position;
 
     g_MapManager->LoadMap("", "");
 
-    //cFoamModel* foam = new cFoamModel();
-    ////foam->shaderName = "scene";
-    //foam->meshName = "Foam_b2.obj";
-    //foam->textureOffset = glm::vec3(0);
-    //g_RenderManager->AddModel(foam);
-
-    cRenderModel* prtcl = new cRenderModel();
-    prtcl->meshName = "SpriteHolder3.obj";
-    prtcl->shaderName = "particle";
-    prtcl->textureName = "SnowFlake2.png";
-    //prtcl->position = glm::vec3(0.f, 5.f, 0.f);
-    prtcl->scale = glm::vec3(0.5f);
-    //g_RenderManager->AddModel(prtcl);
-
-    cParticleSpawner weatherSpawner(glm::vec3(0.f, 10.f, 0.f), prtcl, 10000);
-    weatherSpawner.minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);
-    weatherSpawner.maxPositionOffset = glm::vec3(20.f, 0.f, 20.f);
-    weatherSpawner.spawnSpeed = glm::vec3(0.f, -3.f, 0.f);
-    weatherSpawner.spawnRate = 0.001f;
-    weatherSpawner.particleLifeTime = 10.f;
-    g_ParticleManager->AddSpawner(weatherSpawner);
-
-    cSpriteModel* spriteSym = new cSpriteModel();
-    spriteSym->meshName = "SpriteHolder.obj";
-    spriteSym->position.z = -2.f;
-    spriteSym->textureName = "SymetricNPC_1.png";
-    spriteSym->currSpriteId = 2;
-    g_RenderManager->AddModel(spriteSym);
-
-    cSpriteAnimation* symSpriteAnimation = new cSpriteAnimation(spriteSym->currSpriteId, spriteSym->scale);
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 2, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 3, true));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 2, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 1, true));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 5, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 4, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 6, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 4, false));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 5, true));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 4, true));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 6, true));
-    symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 4, true));
-    symSpriteAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(symSpriteAnimation);
-
-    cFloatAnimation* snowAnimation = new cFloatAnimation(g_WeatherManager->offsetDegree);
-    snowAnimation->AddKeyFrame(sKeyFrameFloat(7.f, 360.f));
-    snowAnimation->isRepeat = true;
-    g_AnimationManager->AddAnimation(snowAnimation);
-
-    g_WeatherManager->SetWeather(NONE);
-
-    //cModel* house = new cModel();
-    //house->meshName = "Mistralton City House.obj";
-    //house->scale = glm::vec3(0.07f);
-    //g_vec_pModels.push_back(house);
-
-    //std::vector<glm::vec4> offsets;
-    //for (unsigned int i = 0; i < 100000; i++)
-    //{
-    //    offsets.push_back(glm::vec4(i));
-    //}
-    //tree->InstanceObject(offsets, g_ShaderManager->GetCurrentShaderId());
+    g_WeatherManager->SetWeather(SNOW);
 
     //********************** Setup on screen texture ****************************
 
@@ -279,8 +237,6 @@ int main()
         g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
 
         g_AnimationManager->Process(deltaTime);
-
-        g_WeatherManager->Process(deltaTime);
 
         g_ParticleManager->UpdateSpawners(deltaTime);
 

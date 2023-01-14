@@ -9,7 +9,7 @@ cMapManager::cMapManager()
 {
 	mapModel = new cRenderModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	mapModel->meshName = "WaterTest3.obj";
+	mapModel->meshName = "WinterTest.obj";
 	g_RenderManager->AddModel(mapModel);
 
 	// wave
@@ -295,7 +295,7 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 {
 	//g_set_Models.erase(mapModel);
 
-    std::ifstream file("assets/models/WaterTest3.pdsmap");
+    std::ifstream file("assets/models/WinterTest.pdsmap");
 
     if (!file.is_open())
         return;

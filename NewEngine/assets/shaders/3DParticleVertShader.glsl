@@ -40,21 +40,12 @@ void main()
 
 	mat4 model = mat4(1.f);
 	model[3] = vec4(finalModelPosition, 1.f);
-	
 	model = model * rotationZ(-theta) * rotationY(-phi);
-
 	model = model * modelScale;
 
 	mat4 MVP = projection * view * model;
 
-	if(isShadowPass == 1)
-	{
-		gl_Position = lightSpace * model * vPosition;
-	}
-	else
-	{
-		gl_Position = MVP * vPosition;
-	}
+	gl_Position = MVP * vPosition;
 
 	fVertWorldPosition = model * vPosition;
 	fUVx2 = vUVx2;

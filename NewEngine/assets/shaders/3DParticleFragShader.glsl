@@ -64,7 +64,7 @@ void main()
 
 	// diffuse 
     vec3 lightDir = normalize(-theLights[0].direction.xyz);
-    float diff = max(dot(lightDir, norm), 0.0);
+    float diff = max(dot(lightDir, norm), 0.0); //0.55f;
     vec3 diffuse = diff * theLights[0].diffuse.rgb;
 
 	float shadow = ShadowCalculation(fVertPosLightSpace);
