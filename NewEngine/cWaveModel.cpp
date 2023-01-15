@@ -1,5 +1,6 @@
 #include "cWaveModel.h"
-#include "Global.h"
+#include "cRenderManager.h"
+
 
 cWaveModel::cWaveModel()
 {
@@ -12,6 +13,7 @@ void cWaveModel::SetUpUniforms()
 {
 	timer += 0.0043f;
 
-	g_RenderManager->setVec2("UVoffset", textureOffset);
-	g_RenderManager->setFloat("timer", timer);
+	cRenderManager* renderManager = cRenderManager::GetInstance();
+	renderManager->setVec2("UVoffset", textureOffset);
+	renderManager->setFloat("timer", timer);
 }

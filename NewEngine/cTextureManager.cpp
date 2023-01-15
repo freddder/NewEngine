@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <iostream>
 #include "cTextureManager.h"
-#include "Global.h"
+#include "cRenderManager.h"
 
 void cTextureManager::CreateTexture(std::string fileName)
 {
@@ -89,7 +89,7 @@ void cTextureManager::SetupTexture(std::string textureToSetup, unsigned int shad
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
     glBindTexture(GL_TEXTURE_2D, textureId);
 
-    g_RenderManager->setInt(shaderVariable, shaderTextureUnit);
+    cRenderManager::GetInstance()->setInt(shaderVariable, shaderTextureUnit);
 }
 
 //void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)

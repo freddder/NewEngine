@@ -1,5 +1,7 @@
 #include "cParticleManager.h"
 
+cParticleManager* cParticleManager::singleton = NULL;
+
 cParticleManager::cParticleManager()
 {
 

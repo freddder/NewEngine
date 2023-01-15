@@ -4,11 +4,23 @@
 
 class cParticleManager 
 {
+	static cParticleManager* singleton;
+	cParticleManager();
+	cParticleManager(const cParticleManager& obj) = delete;
+
 	std::vector<cParticleSpawner> particleSpawners;
 
 public:
 
-	cParticleManager();
+    static cParticleManager* GetInstance()
+    {
+        if (singleton == NULL)
+        {
+            singleton = new cParticleManager();
+        }
+
+        return singleton;
+    }
 
 	void AddSpawner(cParticleSpawner newSpawner);
 	void UpdateSpawners(float deltaTime);

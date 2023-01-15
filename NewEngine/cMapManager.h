@@ -43,6 +43,10 @@ struct sQuadrant
 
 class cMapManager
 {
+	static cMapManager* singleton;
+	cMapManager();
+	cMapManager(const cMapManager& obj) = delete;
+
 	std::vector<sQuadrant> quads;
 	std::map<int, sCorrectionTiles> walkableTiles;
 	cRenderModel* mapModel;
@@ -51,7 +55,16 @@ class cMapManager
 
 public:
 
-	cMapManager();
+	static cMapManager* GetInstance()
+	{
+		if (singleton == NULL)
+		{
+			singleton = new cMapManager();
+		}
+
+		return singleton;
+	}
+
 	~cMapManager();
 
 	void LoadMap(std::string mapModelName, std::string mapDescName);

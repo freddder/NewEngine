@@ -32,9 +32,23 @@ enum eWeather
 
 class cWeatherManager
 {
+	static cWeatherManager* singleton;
+	cWeatherManager();
+	cWeatherManager(const cWeatherManager& obj) = delete;
+
 	eWeather currWeather;
 
 public:
+
+	static cWeatherManager* GetInstance()
+	{
+		if (singleton == NULL)
+		{
+			singleton = new cWeatherManager();
+		}
+
+		return singleton;
+	}
 
 	float fogDensity;
 	float fogGradient;
@@ -46,7 +60,6 @@ public:
 	//glm::vec2 particleSpeed;
 	//float offsetDegree;
 
-	cWeatherManager();
 	~cWeatherManager();
 
 	void SetWeather(eWeather newWeather);

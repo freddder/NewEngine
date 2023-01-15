@@ -10,10 +10,10 @@ cLightManager* g_LightManager = NULL;
 
 cAnimationManager* g_AnimationManager = NULL;
 
-cMapManager* g_MapManager = NULL;
+//cMapManager* g_MapManager = NULL;
 
-cRenderManager* g_RenderManager = NULL;
+//cRenderManager* g_RenderManager = NULL;
 
-cWeatherManager* g_WeatherManager = NULL;
+//cWeatherManager* g_WeatherManager = NULL;
 
-cParticleManager* g_ParticleManager = NULL;
+//cParticleManager* g_ParticleManager = NULL;

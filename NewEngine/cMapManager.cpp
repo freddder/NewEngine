@@ -4,13 +4,17 @@
 #include <sstream>
 #include <fstream>
 #include "cFloatAnimation.h"
+#include "cRenderManager.h"
+//#include "cAnimationManager.h"
+
+cMapManager* cMapManager::singleton = NULL;
 
 cMapManager::cMapManager()
 {
 	mapModel = new cRenderModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 	mapModel->meshName = "WinterTest.obj";
-	g_RenderManager->AddModel(mapModel);
+	cRenderManager::GetInstance()->AddModel(mapModel);
 
 	// wave
 	instancedTiles[118].instancedModel = new cWaveModel();
@@ -410,10 +414,9 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 	{
 		if (it->second.instanceOffsets.size() != 0)
 		{
-			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, g_RenderManager->GetCurrentShaderId());
+			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, cRenderManager::GetInstance()->GetCurrentShaderId());
 			g_AnimationManager->AddAnimation(it->second.animation);
-			//g_set_Models.insert(it->second.instancedModel);
-			g_RenderManager->AddModel(it->second.instancedModel);
+			cRenderManager::GetInstance()->AddModel(it->second.instancedModel);
 
 			it->second.instanceOffsets.clear();
 		}

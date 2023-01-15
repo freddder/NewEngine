@@ -12,11 +12,11 @@ void Shutdown()
 
 	delete g_AnimationManager;
 
-	delete g_MapManager;
+	//delete g_MapManager;
 
-	delete g_RenderManager;
+	//delete g_RenderManager;
 
-	delete g_WeatherManager;
+	//delete g_WeatherManager;
 
-	delete g_ParticleManager;
+	//delete g_ParticleManager;
 }

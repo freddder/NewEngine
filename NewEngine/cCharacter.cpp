@@ -1,6 +1,9 @@
 #include "cCharacter.h"
 #include "Global.h"
 #include "cSpriteModel.h"
+#include "cRenderManager.h"
+#include "cMapManager.h"
+#include "cAnimationManager.h"
 //#include <iostream>
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
@@ -11,10 +14,13 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 	model->textureName = textureName;
 	//model->textureAnimationType = Sprite;
 
-	g_RenderManager->AddModel(model);
+	cRenderManager::GetInstance()->AddModel(model);
 
 	spriteAnimation = new cSpriteAnimation(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
 	modelAnimation = new cModelAnimation(model->position, model->orientation, model->scale);
+
+	//cAnimationManager::GetInstance()->AddAnimation(spriteAnimation);
+	//cAnimationManager::GetInstance()->AddAnimation(modelAnimation);
 
 	g_AnimationManager->AddAnimation(spriteAnimation);
 	g_AnimationManager->AddAnimation(modelAnimation);
@@ -24,8 +30,10 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 
 cCharacter::~cCharacter()
 {
-	g_RenderManager->RemoveModel(model);
+	cRenderManager::GetInstance()->RemoveModel(model);
 
+	//cAnimationManager::GetInstance()->RemoveAnimation(spriteAnimation);
+	//cAnimationManager::GetInstance()->RemoveAnimation(modelAnimation);
 	g_AnimationManager->RemoveAnimation(spriteAnimation);
 	g_AnimationManager->RemoveAnimation(modelAnimation);
 
@@ -113,7 +121,7 @@ void cCharacter::Walk(eDirection dir)
 	if (!modelAnimation->isDone)
 		return;
 
-	int heightChange = g_MapManager->MoveEntity(model->position, dir);
+	int heightChange = cMapManager::GetInstance()->MoveEntity(model->position, dir);
 
 	if (heightChange == 0)
 		return;

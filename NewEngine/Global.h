@@ -8,10 +8,10 @@
 #include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
-#include "cMapManager.h"
-#include "cRenderManager.h"
-#include "cWeatherManager.h"
-#include "cParticleManager.h"
+//#include "cMapManager.h"
+//#include "cRenderManager.h"
+//#include "cWeatherManager.h"
+//#include "cParticleManager.h"
 #include <set>
 
 void StartUp();
@@ -27,12 +27,12 @@ extern cLightManager* g_LightManager;
 
 extern cAnimationManager* g_AnimationManager;
 
-extern cMapManager* g_MapManager;
+//extern cMapManager* g_MapManager;
 
-extern cRenderManager* g_RenderManager;
+//extern cRenderManager* g_RenderManager;
 
-extern cWeatherManager* g_WeatherManager;
+//extern cWeatherManager* g_WeatherManager;
 
-extern cParticleManager* g_ParticleManager;
+//extern cParticleManager* g_ParticleManager;
 
 #endif // _globalThings_HG_

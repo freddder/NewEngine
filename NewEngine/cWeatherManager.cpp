@@ -1,6 +1,8 @@
 #include "cWeatherManager.h"
-#include "Global.h"
 #include "cFloatAnimation.h"
+#include "cParticleManager.h"
+
+cWeatherManager* cWeatherManager::singleton = NULL;
 
 cWeatherManager::cWeatherManager()
 {
@@ -69,7 +71,7 @@ void cWeatherManager::SetWeather(eWeather newWeather)
 			weatherSpawner.spawnSpeed = glm::vec3(0.f, -3.f, 0.f);
 			weatherSpawner.spawnRate = 0.05f;
 			weatherSpawner.particleLifeTime = 10.f;
-			g_ParticleManager->AddSpawner(weatherSpawner);
+			cParticleManager::GetInstance()->AddSpawner(weatherSpawner);
 		}
 		else if (newWeather == HAIL)
 		{

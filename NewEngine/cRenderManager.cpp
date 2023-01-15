@@ -8,6 +8,10 @@
 
 #include "cRenderManager.h"
 #include "Global.h"
+#include "cParticleManager.h"
+#include "cWeatherManager.h"
+
+cRenderManager* cRenderManager::singleton = NULL;
 
 cRenderManager::cRenderManager()
 {
@@ -509,9 +513,9 @@ void cRenderManager::DrawScene()
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*g_Camera->playerPosition, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(g_WeatherManager->fogColor, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &g_WeatherManager->fogDensity);
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &g_WeatherManager->fogGradient);
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cWeatherManager::GetInstance()->fogColor, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cWeatherManager::GetInstance()->fogDensity);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cWeatherManager::GetInstance()->fogGradient);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
@@ -562,7 +566,7 @@ void cRenderManager::DrawScene()
     //    glBindVertexArray(0);
     //}
 
-    g_ParticleManager->DrawSpawnerParticles();
+    cParticleManager::GetInstance()->DrawSpawnerParticles();
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

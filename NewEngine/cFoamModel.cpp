@@ -1,5 +1,5 @@
 #include "cFoamModel.h"
-#include "Global.h"
+#include "cRenderManager.h"
 
 cFoamModel::cFoamModel()
 {
@@ -9,5 +9,5 @@ cFoamModel::cFoamModel()
 
 void cFoamModel::SetUpUniforms()
 {
-	g_RenderManager->setVec2("UVoffset", textureOffset);
+	cRenderManager::GetInstance()->setVec2("UVoffset", textureOffset);
 }

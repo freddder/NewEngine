@@ -20,6 +20,12 @@
 #include "cCharacter.h"
 #include "cSpriteModel.h"
 
+#include "cParticleManager.h"
+#include "cWeatherManager.h"
+#include "cRenderManager.h"
+#include "cMapManager.h"
+#include "cAnimationManager.h"
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -71,16 +77,22 @@ int main()
 
     StartUp();
 
+    //cAnimationManager* animationManager = cAnimationManager::GetInstance();
+    cRenderManager* renderManager = cRenderManager::GetInstance();
+    cMapManager* mapManager = cMapManager::GetInstance();
+    cWeatherManager* weatherManager = cWeatherManager::GetInstance();
+    cParticleManager* particleManager = cParticleManager::GetInstance();
+
     // Setup shader programs
-    g_RenderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
-    g_RenderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "3DParticleFragShader.glsl");
-    g_RenderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
+    renderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
+    renderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
+    renderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
+    renderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
+    renderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
+    renderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
+    renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
+    renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "3DParticleFragShader.glsl");
+    renderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
@@ -182,9 +194,9 @@ int main()
     playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
     g_Camera->playerPosition = &playerChar->model->position;
 
-    g_MapManager->LoadMap("", "");
+    mapManager->LoadMap("", "");
 
-    g_WeatherManager->SetWeather(SNOW);
+    weatherManager->SetWeather(SNOW);
 
     //********************** Setup on screen texture ****************************
 
@@ -238,11 +250,9 @@ int main()
 
         g_AnimationManager->Process(deltaTime);
 
-        g_ParticleManager->UpdateSpawners(deltaTime);
+        particleManager->UpdateSpawners(deltaTime);
 
-        g_RenderManager->DrawScene();
-
-        //g_RenderManager->DrawObject(prtcl);
+        renderManager->DrawScene();
 
         //g_RenderManager->use("debug");
 
@@ -295,21 +305,21 @@ int main()
         //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
-        ImGui::Image((void*)(intptr_t)g_RenderManager->GetDepthMapId(), ImVec2(200, 200));
+        ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(200, 200));
         ImGui::End();
 
         float* fogColor[3];
-        fogColor[0] = &g_WeatherManager->fogColor.r;
-        fogColor[1] = &g_WeatherManager->fogColor.g;
-        fogColor[2] = &g_WeatherManager->fogColor.b;
+        fogColor[0] = &weatherManager->fogColor.r;
+        fogColor[1] = &weatherManager->fogColor.g;
+        fogColor[2] = &weatherManager->fogColor.b;
 
         ImGui::Begin("Fog");
         ImGui::ColorEdit3("Color", *fogColor);
-        ImGui::DragFloat("Density", &g_WeatherManager->fogDensity, 0.005f);
-        ImGui::DragFloat("Gradient", &g_WeatherManager->fogGradient, 0.03f);
+        ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
+        ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
         if (ImGui::Button("Change weather"))
         {
-            g_WeatherManager->SetWeather(HAIL);
+            weatherManager->SetWeather(HAIL);
         }
         ImGui::End();
 

@@ -4,6 +4,7 @@
 #include "cLinearCongruentialGenerator.h"
 #include <glm/gtc/type_ptr.hpp>
 #include "Global.h"
+#include "cRenderManager.h"
 
 cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel* _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
 {
@@ -108,17 +109,18 @@ void cParticleSpawner::DrawParticles()
     if (!g_ModelManager->FindModelByName(model->meshName, drawInfo))
         return;
 
-    g_RenderManager->use("particle");
+	cRenderManager* renderManager = cRenderManager::GetInstance();
+	renderManager->use("particle");
 
-	g_RenderManager->setVec3("cameraPosition", g_Camera->position);
-	g_RenderManager->setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
+	renderManager->setVec3("cameraPosition", g_Camera->position);
+	renderManager->setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
 
-	g_RenderManager->setBool("useWholeColor", model->useWholeColor);
-	g_RenderManager->setVec4("wholeColor", model->wholeColor);
+	renderManager->setBool("useWholeColor", model->useWholeColor);
+	renderManager->setVec4("wholeColor", model->wholeColor);
 
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, g_RenderManager->GetDepthMapId());
-	g_RenderManager->setInt("shadowMap", 1);
+    glBindTexture(GL_TEXTURE_2D, renderManager->GetDepthMapId());
+	renderManager->setInt("shadowMap", 1);
 
     for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
@@ -131,7 +133,7 @@ void cParticleSpawner::DrawParticles()
 
 		glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
 
-		GLint offset_location = glGetAttribLocation(g_RenderManager->GetCurrentShaderId(), "oOffset");
+		GLint offset_location = glGetAttribLocation(renderManager->GetCurrentShaderId(), "oOffset");
 		glEnableVertexAttribArray(offset_location);
 		glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
 		glVertexAttribDivisor(offset_location, 1);

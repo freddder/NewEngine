@@ -1,5 +1,6 @@
 #include "cSpriteModel.h"
 #include "Global.h"
+#include "cRenderManager.h"
 
 cSpriteModel::cSpriteModel()
 {
@@ -9,11 +10,12 @@ cSpriteModel::cSpriteModel()
 
 void cSpriteModel::SetUpUniforms()
 {
-	g_RenderManager->setInt("spriteId", currSpriteId);
+	cRenderManager* renderManager = cRenderManager::GetInstance();
 
 	sSpriteSheet sheet;
 	g_TextureManager->GetSpriteSheet(textureName, sheet);
 
-	g_RenderManager->setInt("numCols", sheet.numCols);
-	g_RenderManager->setInt("numRows", sheet.numRows);
+	renderManager->setInt("spriteId", currSpriteId);
+	renderManager->setInt("numCols", sheet.numCols);
+	renderManager->setInt("numRows", sheet.numRows);
 }

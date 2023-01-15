@@ -1,6 +1,8 @@
 #include "cAnimationManager.h"
 #include <vector>
 
+//cAnimationManager* cAnimationManager::singleton = NULL;
+
 void cAnimationManager::Process(float deltaTime)
 {
 	std::vector<cAnimation*> animationsToDelete;

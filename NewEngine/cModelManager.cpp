@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 
 #include "Global.h"
+#include "cRenderManager.h"
 
 cModelManager::cModelManager()
 {
@@ -137,9 +138,9 @@ bool cModelManager::LoadModel(std::string fileName, std::string programName)
             newModel.allMeshesData.push_back(newMeshInfo);
         } // end of per mesh
 
-        g_RenderManager->use(programName);
+        cRenderManager::GetInstance()->use(programName);
 
-        CreateModelVAOs(newModel, g_RenderManager->GetCurrentShaderId());
+        CreateModelVAOs(newModel, cRenderManager::GetInstance()->GetCurrentShaderId());
         modelMap.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
 
         return true;

@@ -17,6 +17,10 @@ struct sShaderProgram
 
 class cRenderManager
 {
+    static cRenderManager* singleton;
+    cRenderManager();
+    cRenderManager(const cRenderManager& obj) = delete;
+
     unsigned int notInstancedOffsetBufferId;
 
     unsigned int skyboxVAO, skyboxVBO;
@@ -38,7 +42,16 @@ class cRenderManager
 
 public:
 
-	cRenderManager();
+    static cRenderManager* GetInstance()
+    {
+        if (singleton == NULL)
+        {
+            singleton = new cRenderManager();
+        }
+
+        return singleton;
+    }
+
 	~cRenderManager();
 
 	void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);

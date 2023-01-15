@@ -12,11 +12,11 @@ void StartUp()
 
 	g_AnimationManager = new cAnimationManager();
 
-	g_RenderManager = new cRenderManager();
+	//g_RenderManager = new cRenderManager();
 
-	g_MapManager = new cMapManager();
+	//g_MapManager = new cMapManager();
 
-	g_WeatherManager = new cWeatherManager();
+	//g_WeatherManager = new cWeatherManager();
 
-	g_ParticleManager = new cParticleManager();
+	//g_ParticleManager = new cParticleManager();
 }
