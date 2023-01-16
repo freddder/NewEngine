@@ -1,10 +1,13 @@
+#include "cModelManager.h"
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 #include <glad/glad.h>
 
-#include "Global.h"
 #include "cRenderManager.h"
+#include "cTextureManager.h"
+
+cModelManager* cModelManager::singleton = NULL;
 
 cModelManager::cModelManager()
 {
@@ -132,7 +135,7 @@ bool cModelManager::LoadModel(std::string fileName, std::string programName)
                 newMeshInfo.textureName = path.C_Str();
 
                 // maybe try to load texture in the texture manager right here
-                g_TextureManager->CreateTexture(newMeshInfo.textureName);
+                cTextureManager::GetInstance()->CreateTexture(newMeshInfo.textureName);
             }
         
             newModel.allMeshesData.push_back(newMeshInfo);

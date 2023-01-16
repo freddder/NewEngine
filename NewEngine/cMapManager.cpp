@@ -1,11 +1,10 @@
 #include "cMapManager.h"
-#include "Global.h"
 
 #include <sstream>
 #include <fstream>
 #include "cFloatAnimation.h"
 #include "cRenderManager.h"
-//#include "cAnimationManager.h"
+#include "cAnimationManager.h"
 
 cMapManager* cMapManager::singleton = NULL;
 
@@ -415,7 +414,7 @@ void cMapManager::LoadMap(std::string mapModelName, std::string mapDescName)
 		if (it->second.instanceOffsets.size() != 0)
 		{
 			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, cRenderManager::GetInstance()->GetCurrentShaderId());
-			g_AnimationManager->AddAnimation(it->second.animation);
+			cAnimationManager::GetInstance()->AddAnimation(it->second.animation);
 			cRenderManager::GetInstance()->AddModel(it->second.instancedModel);
 
 			it->second.instanceOffsets.clear();

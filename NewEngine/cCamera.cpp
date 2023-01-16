@@ -1,21 +1,7 @@
 #include "cCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-void cCamera::UpdateCameraVectors()
-{
-	// calculate the new Front vector
-	glm::vec3 frontVec;
-	frontVec.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	frontVec.y = sin(glm::radians(pitch));
-	frontVec.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	front = glm::normalize(frontVec);
-	// also re-calculate the Right and Up vector
-	right = glm::normalize(glm::cross(front, glm::vec3(0.f, 1.f, 0.f)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-	up = glm::normalize(glm::cross(right, front));
-
-	PLY_DISTANCE =25.f; //17.f;
-	PLY_ANGLE = 35.f;
-}
+cCamera* cCamera::singleton = NULL;
 
 cCamera::cCamera()
 {
@@ -32,6 +18,22 @@ cCamera::cCamera()
 	usePlayerCamera = true;
 
 	UpdateCameraVectors();
+}
+
+void cCamera::UpdateCameraVectors()
+{
+	// calculate the new Front vector
+	glm::vec3 frontVec;
+	frontVec.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	frontVec.y = sin(glm::radians(pitch));
+	frontVec.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front = glm::normalize(frontVec);
+	// also re-calculate the Right and Up vector
+	right = glm::normalize(glm::cross(front, glm::vec3(0.f, 1.f, 0.f)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+	up = glm::normalize(glm::cross(right, front));
+
+	PLY_DISTANCE =25.f; //17.f;
+	PLY_ANGLE = 35.f;
 }
 
 void cCamera::MoveForward(float deltaTime)

@@ -34,6 +34,7 @@ class cWeatherManager
 {
 	static cWeatherManager* singleton;
 	cWeatherManager();
+	~cWeatherManager();
 	cWeatherManager(const cWeatherManager& obj) = delete;
 
 	eWeather currWeather;
@@ -50,6 +51,15 @@ public:
 		return singleton;
 	}
 
+	static void DestroyInstance()
+	{
+		if (singleton != NULL)
+		{
+			delete singleton;
+			singleton = NULL;
+		}
+	}
+
 	float fogDensity;
 	float fogGradient;
 	glm::vec3 fogColor;
@@ -59,8 +69,6 @@ public:
 	//std::vector<sWeatherParticleType> particleTypes;
 	//glm::vec2 particleSpeed;
 	//float offsetDegree;
-
-	~cWeatherManager();
 
 	void SetWeather(eWeather newWeather);
 };

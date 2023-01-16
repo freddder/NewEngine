@@ -25,12 +25,33 @@ struct sLight
 
 class cLightManager
 {
+	static cLightManager* singleton;
+	cLightManager();
+	~cLightManager();
+	cLightManager(const cLightManager& obj) = delete;
+
 	unsigned int uboLights;
 
 public:
 
-	cLightManager();
-	~cLightManager();
+	static cLightManager* GetInstance()
+	{
+		if (singleton == NULL)
+		{
+			singleton = new cLightManager();
+		}
+
+		return singleton;
+	}
+
+	static void DestroyInstance()
+	{
+		if (singleton != NULL)
+		{
+			delete singleton;
+			singleton = NULL;
+		}
+	}
 
 	const static unsigned int NUMBER_OF_LIGHTS = 20;
 	sLight lights[NUMBER_OF_LIGHTS];

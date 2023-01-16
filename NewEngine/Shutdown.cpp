@@ -1,22 +1,32 @@
 #include "Global.h"
 
+#include "cCamera.h"
+#include "cModelManager.h"
+#include "cTextureManager.h"
+#include "cLightManager.h"
+#include "cAnimationManager.h"
+#include "cRenderManager.h"
+#include "cMapManager.h"
+#include "cWeatherManager.h"
+#include "cParticleManager.h"
+
 void Shutdown()
 {
-	delete g_Camera;
+    cCamera::DestroyInstance();
 
-	delete g_ModelManager;
+    cModelManager::DestroyInstance();
 
-	delete g_TextureManager;
+    cTextureManager::DestroyInstance();
 
-	delete g_LightManager;
+    cLightManager::DestroyInstance();
 
-	delete g_AnimationManager;
+    cAnimationManager::DestroyInstance();
 
-	//delete g_MapManager;
+    cRenderManager::DestroyInstance();
 
-	//delete g_RenderManager;
+    cMapManager::DestroyInstance();
 
-	//delete g_WeatherManager;
+    cWeatherManager::DestroyInstance();
 
-	//delete g_ParticleManager;
+    cParticleManager::DestroyInstance();
 }

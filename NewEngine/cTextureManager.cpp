@@ -6,6 +6,13 @@
 #include "cTextureManager.h"
 #include "cRenderManager.h"
 
+cTextureManager* cTextureManager::singleton = NULL;
+
+cTextureManager::cTextureManager()
+{
+
+}
+
 void cTextureManager::CreateTexture(std::string fileName)
 {
     if (texturesMap.count(fileName) || fileName == "") // texture already created

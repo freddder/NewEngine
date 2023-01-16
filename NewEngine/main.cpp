@@ -25,6 +25,10 @@
 #include "cRenderManager.h"
 #include "cMapManager.h"
 #include "cAnimationManager.h"
+#include "cLightManager.h"
+#include "cTextureManager.h"
+#include "cModelManager.h"
+#include "cCamera.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -77,7 +81,11 @@ int main()
 
     StartUp();
 
-    //cAnimationManager* animationManager = cAnimationManager::GetInstance();
+    cCamera* camera = cCamera::GetInstance();
+    cModelManager* modelManager = cModelManager::GetInstance();
+    cTextureManager* textureManager = cTextureManager::GetInstance();
+    cLightManager* lightManager = cLightManager::GetInstance();
+    cAnimationManager* animationManager = cAnimationManager::GetInstance();
     cRenderManager* renderManager = cRenderManager::GetInstance();
     cMapManager* mapManager = cMapManager::GetInstance();
     cWeatherManager* weatherManager = cWeatherManager::GetInstance();
@@ -100,36 +108,36 @@ int main()
 
     //********************** Prepare Light **************************************
 
-    g_LightManager->lights[0].extraParam.x = 2.f; // directional light
-    g_LightManager->lights[0].position = glm::vec4(-10.f, 10.f, 10.f, 1.f);
-    g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
-    g_LightManager->lights[0].extraParam.w = 1.f; // turn on
+    lightManager->lights[0].extraParam.x = 2.f; // directional light
+    lightManager->lights[0].position = glm::vec4(-10.f, 10.f, 10.f, 1.f);
+    lightManager->lights[0].direction = -(lightManager->lights[0].position);
+    lightManager->lights[0].extraParam.w = 1.f; // turn on
 
 
     //********************** Load models and textures ***************************
 
-    g_ModelManager->LoadModel("r0_treePine.obj", "scene");
-    g_ModelManager->LoadModel("WinterTest.obj", "scene");
-    //g_ModelManager->LoadModel("TestMapWater.obj", "scene");
-    //g_ModelManager->LoadModel("FallTree.obj", "scene");
-    g_ModelManager->LoadModel("SpriteHolder.obj", "sprite");
-    g_ModelManager->LoadModel("SpriteHolder2.obj", "snow");
-    g_ModelManager->LoadModel("Water_c2.obj", "wave");
-    g_ModelManager->LoadModel("Water_b2.obj", "wave");
-    g_ModelManager->LoadModel("Water_bl2.obj", "wave");
-    g_ModelManager->LoadModel("sea_water2.obj", "ocean");
-    g_ModelManager->LoadModel("Foam_b2.obj", "foam");
-    g_ModelManager->LoadModel("Foam_bl2.obj", "foam");
-    g_ModelManager->LoadModel("Foam_c2.obj", "foam");
-    g_ModelManager->LoadModel("SpriteHolder3.obj", "particle");
+    modelManager->LoadModel("r0_treePine.obj", "scene");
+    modelManager->LoadModel("WinterTest.obj", "scene");
+    //modelManager->LoadModel("TestMapWater.obj", "scene");
+    //modelManager->LoadModel("FallTree.obj", "scene");
+    modelManager->LoadModel("SpriteHolder.obj", "sprite");
+    modelManager->LoadModel("SpriteHolder2.obj", "snow");
+    modelManager->LoadModel("Water_c2.obj", "wave");
+    modelManager->LoadModel("Water_b2.obj", "wave");
+    modelManager->LoadModel("Water_bl2.obj", "wave");
+    modelManager->LoadModel("sea_water2.obj", "ocean");
+    modelManager->LoadModel("Foam_b2.obj", "foam");
+    modelManager->LoadModel("Foam_bl2.obj", "foam");
+    modelManager->LoadModel("Foam_c2.obj", "foam");
+    modelManager->LoadModel("SpriteHolder3.obj", "particle");
 
-    g_TextureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
-    g_TextureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
-    g_TextureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+    textureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
+    textureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
+    textureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
 
-    g_TextureManager->CreateTexture("SnowFlake1.png");
-    g_TextureManager->CreateTexture("SnowFlake2.png");
-    g_TextureManager->CreateTexture("SnowFlake3.png");
+    textureManager->CreateTexture("SnowFlake1.png");
+    textureManager->CreateTexture("SnowFlake2.png");
+    textureManager->CreateTexture("SnowFlake3.png");
 
     //cRenderModel* tree = new cRenderModel();
     //tree->meshName = "FallTree.obj";
@@ -192,7 +200,7 @@ int main()
     //g_AnimationManager->AddAnimation(symSpriteAnimation);
 
     playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
-    g_Camera->playerPosition = &playerChar->model->position;
+    camera->playerPosition = &playerChar->model->position;
 
     mapManager->LoadMap("", "");
 
@@ -246,9 +254,9 @@ int main()
         // input
         processInput(window);
 
-        g_LightManager->lights[0].direction = -(g_LightManager->lights[0].position);
+        lightManager->lights[0].direction = -(lightManager->lights[0].position);
 
-        g_AnimationManager->Process(deltaTime);
+        animationManager->Process(deltaTime);
 
         particleManager->UpdateSpawners(deltaTime);
 
@@ -277,27 +285,27 @@ int main()
         ImGui::End();
 
         float* cameraPosition[3];
-        cameraPosition[0] = &g_Camera->position.x;
-        cameraPosition[1] = &g_Camera->position.y;
-        cameraPosition[2] = &g_Camera->position.z;
+        cameraPosition[0] = &camera->position.x;
+        cameraPosition[1] = &camera->position.y;
+        cameraPosition[2] = &camera->position.z;
 
         ImGui::Begin("Camera");
         ImGui::DragFloat3("Position", *cameraPosition);
-        ImGui::Checkbox("Player Cam", &g_Camera->usePlayerCamera);
-        ImGui::DragFloat("FOV", &g_Camera->FOV);
-        ImGui::DragFloat("Distance", &g_Camera->PLY_DISTANCE);
-        ImGui::DragFloat("Angle", &g_Camera->PLY_ANGLE);
+        ImGui::Checkbox("Player Cam", &camera->usePlayerCamera);
+        ImGui::DragFloat("FOV", &camera->FOV);
+        ImGui::DragFloat("Distance", &camera->PLY_DISTANCE);
+        ImGui::DragFloat("Angle", &camera->PLY_ANGLE);
         ImGui::End();
 
         float* position[3];
-        position[0] = &g_LightManager->lights[0].position.x;
-        position[1] = &g_LightManager->lights[0].position.y;
-        position[2] = &g_LightManager->lights[0].position.z;
+        position[0] = &lightManager->lights[0].position.x;
+        position[1] = &lightManager->lights[0].position.y;
+        position[2] = &lightManager->lights[0].position.z;
 
         float* colors[3];
-        colors[0] = &g_LightManager->lights[0].diffuse.r;
-        colors[1] = &g_LightManager->lights[0].diffuse.g;
-        colors[2] = &g_LightManager->lights[0].diffuse.b;
+        colors[0] = &lightManager->lights[0].diffuse.r;
+        colors[1] = &lightManager->lights[0].diffuse.g;
+        colors[2] = &lightManager->lights[0].diffuse.b;
 
         ImGui::Begin("Lights");
         ImGui::ColorEdit3("Color", *colors);
@@ -352,17 +360,17 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        g_Camera->MoveForward(deltaTime);
+        cCamera::GetInstance()->MoveForward(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        g_Camera->MoveBackward(deltaTime);
+        cCamera::GetInstance()->MoveBackward(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        g_Camera->MoveLeft(deltaTime);
+        cCamera::GetInstance()->MoveLeft(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        g_Camera->MoveRight(deltaTime);
+        cCamera::GetInstance()->MoveRight(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        g_Camera->MoveUp(deltaTime);
+        cCamera::GetInstance()->MoveUp(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        g_Camera->MoveDown(deltaTime);
+        cCamera::GetInstance()->MoveDown(deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         playerChar->Walk(UP);
@@ -387,8 +395,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     // height will be significantly larger than specified on retina displays.
     //glViewport(0, 0, width, height);
 
-    g_Camera->SCR_WIDTH = width;
-    g_Camera->SCR_HEIGHT = height;
+    cCamera::GetInstance()->SCR_WIDTH = width;
+    cCamera::GetInstance()->SCR_HEIGHT = height;
 }
 
 
@@ -415,7 +423,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
         lastX = xpos;
         lastY = ypos;
 
-        g_Camera->ProcessMouseMovement(xoffset, yoffset);
+        cCamera::GetInstance()->ProcessMouseMovement(xoffset, yoffset);
     }
 }
 

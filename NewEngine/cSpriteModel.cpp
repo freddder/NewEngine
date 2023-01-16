@@ -1,6 +1,6 @@
 #include "cSpriteModel.h"
-#include "Global.h"
 #include "cRenderManager.h"
+#include "cTextureManager.h"
 
 cSpriteModel::cSpriteModel()
 {
@@ -13,7 +13,7 @@ void cSpriteModel::SetUpUniforms()
 	cRenderManager* renderManager = cRenderManager::GetInstance();
 
 	sSpriteSheet sheet;
-	g_TextureManager->GetSpriteSheet(textureName, sheet);
+	cTextureManager::GetInstance()->GetSpriteSheet(textureName, sheet);
 
 	renderManager->setInt("spriteId", currSpriteId);
 	renderManager->setInt("numCols", sheet.numCols);

@@ -1,9 +1,9 @@
 #include "cCharacter.h"
-#include "Global.h"
 #include "cSpriteModel.h"
 #include "cRenderManager.h"
 #include "cMapManager.h"
 #include "cAnimationManager.h"
+#include "cTextureManager.h"
 //#include <iostream>
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
@@ -19,11 +19,10 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 	spriteAnimation = new cSpriteAnimation(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
 	modelAnimation = new cModelAnimation(model->position, model->orientation, model->scale);
 
-	//cAnimationManager::GetInstance()->AddAnimation(spriteAnimation);
-	//cAnimationManager::GetInstance()->AddAnimation(modelAnimation);
-
-	g_AnimationManager->AddAnimation(spriteAnimation);
-	g_AnimationManager->AddAnimation(modelAnimation);
+	cAnimationManager::GetInstance()->AddAnimation(spriteAnimation);
+	cAnimationManager::GetInstance()->AddAnimation(modelAnimation);
+	//g_AnimationManager->AddAnimation(spriteAnimation);
+	//g_AnimationManager->AddAnimation(modelAnimation);
 
 	switchLeg = false;
 }
@@ -32,10 +31,10 @@ cCharacter::~cCharacter()
 {
 	cRenderManager::GetInstance()->RemoveModel(model);
 
-	//cAnimationManager::GetInstance()->RemoveAnimation(spriteAnimation);
-	//cAnimationManager::GetInstance()->RemoveAnimation(modelAnimation);
-	g_AnimationManager->RemoveAnimation(spriteAnimation);
-	g_AnimationManager->RemoveAnimation(modelAnimation);
+	cAnimationManager::GetInstance()->RemoveAnimation(spriteAnimation);
+	cAnimationManager::GetInstance()->RemoveAnimation(modelAnimation);
+	//g_AnimationManager->RemoveAnimation(spriteAnimation);
+	//g_AnimationManager->RemoveAnimation(modelAnimation);
 
 	delete spriteAnimation;
 	delete modelAnimation;
@@ -52,7 +51,7 @@ void cCharacter::Walk(eDirection dir)
 	// setup sprite animation into specific direction
 	spriteAnimation->Reset(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
 
-	if (g_TextureManager->GetSpritesheetSymetry(model->textureName)) // is symetrical
+	if (cTextureManager::GetInstance()->GetSpritesheetSymetry(model->textureName)) // is symetrical
 	{
 		if (dir == UP)
 		{

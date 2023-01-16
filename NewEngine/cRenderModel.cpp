@@ -1,6 +1,5 @@
 #include "cRenderModel.h"
 #include <glad/glad.h>
-#include "Global.h"
 
 cRenderModel::cRenderModel()
 {

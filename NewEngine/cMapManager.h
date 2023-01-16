@@ -45,6 +45,7 @@ class cMapManager
 {
 	static cMapManager* singleton;
 	cMapManager();
+	~cMapManager();
 	cMapManager(const cMapManager& obj) = delete;
 
 	std::vector<sQuadrant> quads;
@@ -65,7 +66,14 @@ public:
 		return singleton;
 	}
 
-	~cMapManager();
+	static void DestroyInstance()
+	{
+		if (singleton != NULL)
+		{
+			delete singleton;
+			singleton = NULL;
+		}
+	}
 
 	void LoadMap(std::string mapModelName, std::string mapDescName);
 	int MoveEntity(glm::vec3 currPosition, int direction);

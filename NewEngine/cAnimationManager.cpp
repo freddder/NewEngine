@@ -1,7 +1,12 @@
 #include "cAnimationManager.h"
 #include <vector>
 
-//cAnimationManager* cAnimationManager::singleton = NULL;
+cAnimationManager* cAnimationManager::singleton = NULL;
+
+cAnimationManager::cAnimationManager()
+{
+
+}
 
 void cAnimationManager::Process(float deltaTime)
 {

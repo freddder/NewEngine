@@ -22,6 +22,15 @@ public:
         return singleton;
     }
 
+	static void DestroyInstance()
+	{
+		if (singleton != NULL)
+		{
+			delete singleton;
+			singleton = NULL;
+		}
+	}
+
 	void AddSpawner(cParticleSpawner newSpawner);
 	void UpdateSpawners(float deltaTime);
 	void DrawSpawnerParticles();

@@ -19,6 +19,7 @@ class cRenderManager
 {
     static cRenderManager* singleton;
     cRenderManager();
+    ~cRenderManager();
     cRenderManager(const cRenderManager& obj) = delete;
 
     unsigned int notInstancedOffsetBufferId;
@@ -52,7 +53,14 @@ public:
         return singleton;
     }
 
-	~cRenderManager();
+    static void DestroyInstance()
+    {
+        if (singleton != NULL)
+        {
+            delete singleton;
+            singleton = NULL;
+        }
+    }
 
 	void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
     void use(std::string programName);

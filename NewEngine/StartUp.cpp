@@ -1,22 +1,32 @@
 #include "Global.h"
 
+#include "cCamera.h"
+#include "cModelManager.h"
+#include "cTextureManager.h"
+#include "cLightManager.h"
+#include "cAnimationManager.h"
+#include "cRenderManager.h"
+#include "cMapManager.h"
+#include "cWeatherManager.h"
+#include "cParticleManager.h"
+
 void StartUp()
 {
-	g_Camera = new cCamera();
+    cCamera::GetInstance();
 
-	g_ModelManager = new cModelManager();
+    cModelManager::GetInstance();
 
-	g_TextureManager = new cTextureManager();
+    cTextureManager::GetInstance();
 
-	g_LightManager = new cLightManager();
+    cLightManager::GetInstance();
 
-	g_AnimationManager = new cAnimationManager();
+    cAnimationManager::GetInstance();
 
-	//g_RenderManager = new cRenderManager();
+    cRenderManager::GetInstance();
 
-	//g_MapManager = new cMapManager();
+    cMapManager::GetInstance();
 
-	//g_WeatherManager = new cWeatherManager();
+    cWeatherManager::GetInstance();
 
-	//g_ParticleManager = new cParticleManager();
+    cParticleManager::GetInstance();
 }

@@ -3,6 +3,10 @@
 
 class cCamera
 {
+	static cCamera* singleton;
+	cCamera();
+	cCamera(const cCamera& obj) = delete;
+
 	float cameraSpeed;
 	float yaw;
 	float pitch;
@@ -15,6 +19,25 @@ class cCamera
 	void UpdateCameraVectors();
 
 public:
+
+	static cCamera* GetInstance()
+	{
+		if (singleton == NULL)
+		{
+			singleton = new cCamera();
+		}
+
+		return singleton;
+	}
+
+	static void DestroyInstance()
+	{
+		if (singleton != NULL)
+		{
+			delete singleton;
+			singleton = NULL;
+		}
+	}
 
 	glm::vec3 position;
 	glm::vec3* playerPosition;
@@ -29,8 +52,6 @@ public:
 	float FOV;
 	float nearPlane;
 	float farPlane;
-
-	cCamera();
 
 	void MoveForward(float deltaTime); // w
 	void MoveBackward(float deltaTime); // s

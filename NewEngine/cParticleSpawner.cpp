@@ -3,8 +3,11 @@
 #include <time.h>
 #include "cLinearCongruentialGenerator.h"
 #include <glm/gtc/type_ptr.hpp>
-#include "Global.h"
+
 #include "cRenderManager.h"
+#include "cTextureManager.h"
+#include "cModelManager.h"
+#include "cCamera.h"
 
 cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel* _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
 {
@@ -106,15 +109,14 @@ void cParticleSpawner::Update(float deltaTime)
 void cParticleSpawner::DrawParticles()
 {
     sModelDrawInfo drawInfo;
-    if (!g_ModelManager->FindModelByName(model->meshName, drawInfo))
+    if (!cModelManager::GetInstance()->FindModelByName(model->meshName, drawInfo))
         return;
 
 	cRenderManager* renderManager = cRenderManager::GetInstance();
+
 	renderManager->use("particle");
-
-	renderManager->setVec3("cameraPosition", g_Camera->position);
+	renderManager->setVec3("cameraPosition", cCamera::GetInstance()->position);
 	renderManager->setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
-
 	renderManager->setBool("useWholeColor", model->useWholeColor);
 	renderManager->setVec4("wholeColor", model->wholeColor);
 
@@ -122,11 +124,13 @@ void cParticleSpawner::DrawParticles()
     glBindTexture(GL_TEXTURE_2D, renderManager->GetDepthMapId());
 	renderManager->setInt("shadowMap", 1);
 
+	cTextureManager* textureManager = cTextureManager::GetInstance();
+
     for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
         // Setup texture
         std::string textureToUse = model->textureName;
-        g_TextureManager->SetupTexture(textureToUse, 0);
+		textureManager->SetupTexture(textureToUse, 0);
 
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);

@@ -1,3 +1,4 @@
+#include "cRenderManager.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -6,17 +7,19 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "cRenderManager.h"
-#include "Global.h"
 #include "cParticleManager.h"
 #include "cWeatherManager.h"
+#include "cLightManager.h"
+#include "cTextureManager.h"
+#include "cModelManager.h"
+#include "cCamera.h"
 
 cRenderManager* cRenderManager::singleton = NULL;
 
 cRenderManager::cRenderManager()
 {
-    g_Camera->SCR_WIDTH = 1200;
-    g_Camera->SCR_HEIGHT = 640;
+    cCamera::GetInstance()->SCR_WIDTH = 1200;
+    cCamera::GetInstance()->SCR_HEIGHT = 640;
 
     //******* Create origin offset buffer for non instanced objects *************
     glm::vec4 originOffset = glm::vec4(0.f);
@@ -105,7 +108,7 @@ cRenderManager::cRenderManager()
         "TropicalSunnyDayFront.jpg",    //"front.jpg",
         "TropicalSunnyDayBack.jpg",     //"back.jpg"
     };
-    cubemapTextureID = g_TextureManager->CreateCubemap(faces);
+    cubemapTextureID = cTextureManager::GetInstance()->CreateCubemap(faces);
 
     //********************** Setup depth map FBO ********************************
 
@@ -234,7 +237,7 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
     glUniformBlockBinding(newShader.ID, ubMatricesIndex, 0);
 
     // add Lights block to matrices
-    g_LightManager->AddProgramToBlock(newShader.ID);
+    cLightManager::GetInstance()->AddProgramToBlock(newShader.ID);
 
     // add Fog block to matrices
     unsigned int ubFogIndex = glGetUniformBlockIndex(newShader.ID, "Fog");
@@ -374,7 +377,7 @@ void cRenderManager::RemoveModel(cRenderModel* model)
 void cRenderManager::DrawObject(cRenderModel* model)
 {
     sModelDrawInfo drawInfo;
-    if (!g_ModelManager->FindModelByName(model->meshName, drawInfo))
+    if (!cModelManager::GetInstance()->FindModelByName(model->meshName, drawInfo))
         return;
 
     use(model->shaderName);
@@ -404,7 +407,7 @@ void cRenderManager::DrawObject(cRenderModel* model)
         else
             textureToUse = model->textureName;
 
-        g_TextureManager->SetupTexture(textureToUse, 0);
+        cTextureManager::GetInstance()->SetupTexture(textureToUse, 0);
 
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
@@ -462,7 +465,7 @@ void cRenderManager::DrawScene()
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(g_LightManager->lights[0].position);// + pSprite->positionXYZ;
+    glm::vec3 lightPos = glm::vec3(cLightManager::GetInstance()->lights[0].position);// + pSprite->positionXYZ;
     glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
@@ -489,18 +492,18 @@ void cRenderManager::DrawScene()
 
     //*********************** Regular pass ******************************
     // reset viewport
-    glViewport(0, 0, g_Camera->SCR_WIDTH, g_Camera->SCR_HEIGHT);
+    glViewport(0, 0, cCamera::GetInstance()->SCR_WIDTH, cCamera::GetInstance()->SCR_HEIGHT);
     glClearColor(0.89f, 0.89f, 0.89f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //g_LightManager->SetUnimormValues(programMap[currShader].ID);
-    g_LightManager->SetUnimormValues();
+    cLightManager::GetInstance()->SetUnimormValues();
 
     // pass projection matrix to shader (note that in this case it could change every frame)
-    glm::mat4 projection = g_Camera->GetProjectionMatrix();
+    glm::mat4 projection = cCamera::GetInstance()->GetProjectionMatrix();
 
     // camera/view transformation
-    glm::mat4 view = g_Camera->GetViewMatrix();
+    glm::mat4 view = cCamera::GetInstance()->GetViewMatrix();
 
     bruh = 0;
 
@@ -512,7 +515,7 @@ void cRenderManager::DrawScene()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*g_Camera->playerPosition, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*cCamera::GetInstance()->playerPosition, 1.f)));
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cWeatherManager::GetInstance()->fogColor, 1.f)));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cWeatherManager::GetInstance()->fogDensity);
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cWeatherManager::GetInstance()->fogGradient);
@@ -571,8 +574,8 @@ void cRenderManager::DrawScene()
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
     use("skybox");
-    view = glm::mat4(glm::mat3(g_Camera->GetViewMatrix())); // remove translation from the view matrix
-    projection = g_Camera->GetProjectionMatrix();
+    view = glm::mat4(glm::mat3(cCamera::GetInstance()->GetViewMatrix())); // remove translation from the view matrix
+    projection = cCamera::GetInstance()->GetProjectionMatrix();
 
     setMat4("view", view);
     setMat4("projection", projection);
