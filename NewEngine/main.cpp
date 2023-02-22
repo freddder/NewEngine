@@ -117,6 +117,7 @@ int main()
     //********************** Load models and textures ***************************
 
     modelManager->LoadModel("r0_treePine.obj", "scene");
+    modelManager->LoadModel("WaterTest3.obj", "scene");
     modelManager->LoadModel("WinterTest.obj", "scene");
     //modelManager->LoadModel("TestMapWater.obj", "scene");
     //modelManager->LoadModel("FallTree.obj", "scene");
@@ -202,7 +203,8 @@ int main()
     playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
     camera->playerPosition = &playerChar->model->position;
 
-    mapManager->LoadMap("", "");
+    //mapManager->LoadMap("WinterTestDesc.json");
+    mapManager->LoadMap("WaterTest3Desc.json");
 
     weatherManager->SetWeather(SNOW);
 
