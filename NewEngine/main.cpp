@@ -17,7 +17,7 @@
 #include "cSpriteAnimation.h"
 #include "cFloatAnimation.h"
 #include "cModelAnimation.h"
-#include "cCharacter.h"
+#include "cPlayerCharacter.h"
 #include "cSpriteModel.h"
 
 #include "cParticleManager.h"
@@ -45,7 +45,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-cCharacter* playerChar;
+cPlayerCharacter* playerChar;
 
 int main()
 {
@@ -98,6 +98,7 @@ int main()
     renderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
     renderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
     renderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
+    //renderManager->CreateShadderProgram("2dsnow", "2DSnowVertShader.glsl", "2DSnowFragShader.glsl");
     renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
     renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "3DParticleFragShader.glsl");
     renderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
@@ -200,40 +201,40 @@ int main()
     //symSpriteAnimation->isRepeat = true;
     //g_AnimationManager->AddAnimation(symSpriteAnimation);
 
-    playerChar = new cCharacter(glm::vec3(0.f, 0.f, 2.f), "SymetricNPC_1.png");
+    playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
     camera->playerPosition = &playerChar->model->position;
 
     //mapManager->LoadMap("WinterTestDesc.json");
-    mapManager->LoadMap("WaterTest3Desc.json");
+    mapManager->LoadMap("WinterTestDesc.json");
 
     weatherManager->SetWeather(SNOW);
 
     //********************** Setup on screen texture ****************************
 
-    //unsigned int quadVAO;
-    //unsigned int quadVBO;
+    unsigned int quadVAO;
+    unsigned int quadVBO;
 
-    //float quadVertices[] = {
-    //    // positions        // texture Coords
-    //    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-    //    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-    //     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-    //     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-    //};
+    float quadVertices[] = {
+        // positions        // texture Coords
+        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+         1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+    };
 
-    //// setup plane VAO
-    //glGenVertexArrays(1, &quadVAO);
-    //glGenBuffers(1, &quadVBO);
-    //glBindVertexArray(quadVAO);
-    //glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-    //glEnableVertexAttribArray(0);
-    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    //glEnableVertexAttribArray(1);
-    //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    // setup plane VAO
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
-    //float noiseTimer = 0.f;
-    //float waterThreshold = 0.7;
+    float noiseTimer = 0.f;
+    float waterThreshold = 0.7;
 
     //***************************************************************************
 
@@ -264,11 +265,11 @@ int main()
 
         renderManager->DrawScene();
 
-        //g_RenderManager->use("debug");
+        //renderManager->use("debug");
 
         //noiseTimer += deltaTime;
-        //g_RenderManager->setFloat("timer", noiseTimer);
-        //g_RenderManager->setFloat("threshold", waterThreshold);
+        //renderManager->setFloat("timer", noiseTimer);
+        //renderManager->setFloat("threshold", waterThreshold);
 
         //glBindVertexArray(quadVAO);
         //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
@@ -373,6 +374,15 @@ void processInput(GLFWwindow* window)
         cCamera::GetInstance()->MoveUp(deltaTime);
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         cCamera::GetInstance()->MoveDown(deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+        playerChar->Run(UP);
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+        playerChar->Run(DOWN);
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+        playerChar->Run(LEFT);
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+        playerChar->Run(RIGHT);
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         playerChar->Walk(UP);

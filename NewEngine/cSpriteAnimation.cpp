@@ -37,24 +37,41 @@ void cSpriteAnimation::Process(float deltaTime)
 
 	timer += deltaTime * speed;
 
-	for (unsigned int keyFrameIndex = 0; keyFrameIndex < keyframes.size(); keyFrameIndex++)
+	//for (unsigned int keyFrameIndex = 0; keyFrameIndex < keyframes.size(); keyFrameIndex++)
+	//{
+	//	if (keyframes[keyFrameIndex].time >= timer)
+	//	{
+	//		// no interpolation I guess
+	//		if (keyFrameIndex != 0)
+	//		{
+	//			spriteIdRef = keyframes[keyFrameIndex - 1].value;
+
+	//			if ((keyframes[keyFrameIndex - 1].flip && modelScaleRef.z > 0) ||
+	//				!keyframes[keyFrameIndex - 1].flip && modelScaleRef.z < 0)
+	//			{
+	//				modelScaleRef.z *= -1;
+	//			}
+	//		}
+	//		else
+	//		{
+	//			spriteIdRef = initId;
+	//		}
+
+	//		break;
+	//	}
+	//}
+
+	for (int keyFrameIndex = keyframes.size() - 1; keyFrameIndex >= 0; keyFrameIndex--)
 	{
-		if (keyframes[keyFrameIndex].time >= timer)
+		if (keyframes[keyFrameIndex].time < timer)
 		{
 			// no interpolation I guess
-			if (keyFrameIndex != 0)
-			{
-				spriteIdRef = keyframes[keyFrameIndex - 1].value;
+			spriteIdRef = keyframes[keyFrameIndex].value;
 
-				if ((keyframes[keyFrameIndex - 1].flip && modelScaleRef.z > 0) ||
-					!keyframes[keyFrameIndex - 1].flip && modelScaleRef.z < 0)
-				{
-					modelScaleRef.z *= -1;
-				}
-			}
-			else
+			if ((keyframes[keyFrameIndex].flip && modelScaleRef.z > 0) ||
+				!keyframes[keyFrameIndex].flip && modelScaleRef.z < 0)
 			{
-				spriteIdRef = initId;
+				modelScaleRef.z *= -1;
 			}
 
 			break;

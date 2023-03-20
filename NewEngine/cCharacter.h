@@ -1,16 +1,17 @@
 #pragma once
-#include "cRenderModel.h"
+#include "cSpriteModel.h"
 #include "cSpriteAnimation.h"
 #include "cModelAnimation.h"
 
 class cCharacter
 {
+protected:
 	cSpriteAnimation* spriteAnimation;
 	cModelAnimation* modelAnimation;
 	bool switchLeg;
 
 public:
-	cRenderModel* model;
+	cSpriteModel* model;
 
 	cCharacter(glm::vec3 position, std::string textureName);
 	~cCharacter();

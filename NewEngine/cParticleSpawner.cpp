@@ -114,7 +114,7 @@ void cParticleSpawner::DrawParticles()
 
 	cRenderManager* renderManager = cRenderManager::GetInstance();
 
-	renderManager->use("particle");
+	renderManager->use("snow");
 	renderManager->setVec3("cameraPosition", cCamera::GetInstance()->position);
 	renderManager->setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
 	renderManager->setBool("useWholeColor", model->useWholeColor);

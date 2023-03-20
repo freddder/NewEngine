@@ -156,6 +156,7 @@
     <ClCompile Include="cOceanModel.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
     <ClCompile Include="cParticleSpawner.cpp" />
+    <ClCompile Include="cPlayerCharacter.cpp" />
     <ClCompile Include="cRenderModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="cOceanModel.h" />
     <ClInclude Include="cParticleManager.h" />
     <ClInclude Include="cParticleSpawner.h" />
+    <ClInclude Include="cPlayerCharacter.h" />
     <ClInclude Include="cRandomNumberGenerator.h" />
     <ClInclude Include="cRenderModel.h" />
     <ClInclude Include="cModelAnimation.h" />
@@ -230,6 +232,8 @@
     <None Include="assets\shaders\OceanVertShader.glsl" />
     <None Include="assets\shaders\SkyboxFragShader.glsl" />
     <None Include="assets\shaders\SkyboxVertShader.glsl" />
+    <None Include="assets\shaders\2DSnowFragShader.glsl" />
+    <None Include="assets\shaders\2DSnowVertShader.glsl" />
     <None Include="assets\shaders\SnowFragShader.glsl" />
     <None Include="assets\shaders\SnowVertShader.glsl" />
     <None Include="assets\shaders\SpriteFragShader.glsl" />

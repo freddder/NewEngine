@@ -16,13 +16,11 @@ cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 
 	cRenderManager::GetInstance()->AddModel(model);
 
-	spriteAnimation = new cSpriteAnimation(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
+	spriteAnimation = new cSpriteAnimation(model->currSpriteId, model->scale);
 	modelAnimation = new cModelAnimation(model->position, model->orientation, model->scale);
 
 	cAnimationManager::GetInstance()->AddAnimation(spriteAnimation);
 	cAnimationManager::GetInstance()->AddAnimation(modelAnimation);
-	//g_AnimationManager->AddAnimation(spriteAnimation);
-	//g_AnimationManager->AddAnimation(modelAnimation);
 
 	switchLeg = false;
 }
@@ -49,7 +47,7 @@ void cCharacter::Walk(eDirection dir)
 		return;
 
 	// setup sprite animation into specific direction
-	spriteAnimation->Reset(static_cast<cSpriteModel*>(model)->currSpriteId, model->scale);
+	spriteAnimation->Reset(model->currSpriteId, model->scale);
 
 	if (cTextureManager::GetInstance()->GetSpritesheetSymetry(model->textureName)) // is symetrical
 	{
@@ -120,19 +118,18 @@ void cCharacter::Walk(eDirection dir)
 	if (!modelAnimation->isDone)
 		return;
 
-	int heightChange = cMapManager::GetInstance()->MoveEntity(model->position, dir);
+	int moveResult = cMapManager::GetInstance()->TryMoveEntity(model->position, dir);
 
-	if (heightChange == 0)
-		return;
+	if (moveResult == 0) return;
 
 	// set up model animation
 	modelAnimation->Reset(model->position, model->orientation, model->scale);
 
 	glm::vec3 newPosition = model->position;
 
-	if (heightChange == 2)
+	if (moveResult == 2)
 		newPosition.y += 1.f;
-	else if (heightChange == 3)
+	else if (moveResult == 3)
 		newPosition.y -= 1.f;
 
 	if (dir == UP)
@@ -143,8 +140,6 @@ void cCharacter::Walk(eDirection dir)
 		newPosition.z -= 1.f;
 	else if (dir == RIGHT)
 		newPosition.z += 1.f;
-
-	//std::cout << "NewPosition: " << newPosition.x + 15 << " " << newPosition.y + 15 << " " << newPosition.z + 15 << std::endl;
 
 	modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 }

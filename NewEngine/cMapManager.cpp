@@ -56,6 +56,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	rapidjson::Document d;
 	d.ParseStream(is);
 
+	if (fp == 0) return;
 	fclose(fp);
 
 	// unload old map (how to unload textures?)
@@ -282,7 +283,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	pdsmap.close();
 }
 
-int cMapManager::MoveEntity(glm::vec3 currPosition, int direction)
+int cMapManager::TryMoveEntity(glm::vec3 currPosition, int direction)
 {
 	glm::vec3 desiredLocation = currPosition;
 

@@ -77,12 +77,12 @@ void main()
 	vec2 p = fVertWorldPosition.xz / vec2(5);
 
 	vec2 uv = p*vec2(256/256,1.0);
-    uv.x += timer / 2;
-    uv.y += timer / 2;
+    uv.x += timer / 1.5f;
+    //uv.y += timer / 2;
 
 	vec2 uv2 = p*vec2(256/256,1.0);
-    uv2.x += timer / 2;
-    uv2.y -= timer / 2;
+    //uv2.x += timer / 2;
+    uv2.y += timer / 1.5f;
 	
 	float f = 0.0;
 	float f2 = 0.0;

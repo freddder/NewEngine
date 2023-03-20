@@ -48,47 +48,15 @@ float random (in vec2 st);
 
 void main()
 {
-
-	vec4 vertColor;
-
-	if(useWholeColor)
-	{
-		vertColor = wholeColor;
-	}
-	else
-	{
-		vec2 newUV1 = vec2(fUVx2.x + UVoffset.x, fUVx2.y + UVoffset.y);
-		vec2 newUV2 = vec2(fUVx2.x - UVoffset.y, fUVx2.y - UVoffset.y);
-
-		vertColor = texture(texture_0, vec2(newUV1.x, newUV1.y)) * 0.5f + 
-					texture(texture_0, vec2(newUV2.y, newUV2.x)) * 0.5f;
-
-		if(vertColor.a < 0.1)
-			discard;
-	}
-
-	// ambient
-    vec3 ambient = 0.4 * vertColor.rgb;
-
-	vec3 norm = normalize(fNormal);
-
-	// diffuse 
-    vec3 lightDir = normalize(-theLights[0].direction.xyz);
-    float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = diff * theLights[0].diffuse.rgb;
-
-	// calculate if in shadow
-	float shadow = ShadowCalculation(fVertPosLightSpace);
-
 	vec2 p = fVertWorldPosition.xz / vec2(5);
 
 	vec2 uv = p*vec2(256/256,1.0);
-    uv.x += timer / 2;
-    uv.y += timer / 2;
+    uv.x += timer / 1.5f;
+    //uv.y += timer / 2;
 
 	vec2 uv2 = p*vec2(256/256,1.0);
-    uv2.x += timer / 2;
-    uv2.y -= timer / 2;
+    //uv2.x += timer / 2;
+    uv2.y += timer / 1.5f;
 	
 	float f = 0.0;
 	float f2 = 0.0;
@@ -109,11 +77,42 @@ void main()
 
     f = mix(f, f2, 0.5);
 
+	vec4 vertColor;
+
+	if(useWholeColor)
+	{
+		vertColor = wholeColor;
+	}
+	else
+	{
+		vec2 newUV1 = vec2(fUVx2.x + UVoffset.x + (f * 0.35f), fUVx2.y + UVoffset.y + (f * 0.35f));
+		vec2 newUV2 = vec2(fUVx2.x - UVoffset.y, fUVx2.y - UVoffset.y);
+
+		vertColor = texture(texture_0, vec2(newUV1.x, newUV1.y));// * 0.5f + 
+					//texture(texture_0, vec2(newUV2.y, newUV2.x)) * 0.5f;
+
+		if(vertColor.a < 0.1)
+			discard;
+	}
+
+	// ambient
+    vec3 ambient = 0.4 * vertColor.rgb;
+
+	vec3 norm = normalize(fNormal);
+
+	// diffuse 
+    vec3 lightDir = normalize(-theLights[0].direction.xyz);
+    float diff = max(dot(lightDir, norm), 0.0);
+    vec3 diffuse = diff * theLights[0].diffuse.rgb;
+
+	// calculate if in shadow
+	float shadow = ShadowCalculation(fVertPosLightSpace);
+
 	vec3 pixelColor;
 
 	if(f >= 0.65f && shadow < 0.5)
 	{
-		pixelColor = mix(vertColor.xyz, vec3(f), 0.8f);
+		pixelColor = mix(vertColor.xyz, vec3(f), 1.f);
 	}
 	else
 	{

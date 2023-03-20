@@ -159,6 +159,9 @@
     <ClCompile Include="cParticleManager.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
+    <ClCompile Include="cPlayerCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -269,6 +272,9 @@
     <ClInclude Include="cParticleManager.h">
       <Filter>Particles</Filter>
     </ClInclude>
+    <ClInclude Include="cPlayerCharacter.h">
+      <Filter>Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\FragShader1.glsl">
@@ -307,10 +313,10 @@
     <None Include="assets\shaders\OceanVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="assets\shaders\SnowFragShader.glsl">
+    <None Include="assets\shaders\2DSnowFragShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="assets\shaders\SnowVertShader.glsl">
+    <None Include="assets\shaders\2DSnowVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\FoamFragShader.glsl">
@@ -323,6 +329,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="assets\shaders\3DParticleVertShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SnowFragShader.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="assets\shaders\SnowVertShader.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

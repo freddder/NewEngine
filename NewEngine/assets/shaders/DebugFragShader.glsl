@@ -55,48 +55,51 @@ void main()
     ////FragColor = vec4(vec3(LinearizeDepth(depthValue) / far_plane), 1.0); // perspective
     //FragColor = vec4(vec3(depthValue), 1.0); // orthographic
 
+    // 256 = resolution
     vec2 p = gl_FragCoord.xy / vec2(256);
 
 	vec2 uv = p*vec2(256/256,1.0);
-    uv.x += timer / 2;
-    uv.y += timer / 2;
+    //uv.x += timer / 2;
+    //uv.y += timer / 2;
 	
 	float f = 0.0;
 
-    uv *= 8.0;
+    uv *= .7;
     mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
 	f  = 0.5000*noise( uv ); uv = m*uv;
 	f += 0.2500*noise( uv ); uv = m*uv;
 	f += 0.1250*noise( uv ); uv = m*uv;
 	f += 0.0625*noise( uv ); uv = m*uv;
+	//f += 0.03125*noise( uv ); uv = m*uv;
+	//f += 0.015625*noise( uv ); uv = m*uv;
 
-    vec2 uv2 = p*vec2(256/256,1.0);
-    uv2.x += timer / 2;
-    uv2.y -= timer / 2;
-
-    float f2 = 0.0;
-
-    uv2 *= 8.0;
-    mat2 m2 = mat2( 1.6,  1.2, -1.2,  1.6 );
-	f2  = 0.5000*noise( uv2 ); uv2 = m2*uv2;
-	f2 += 0.2500*noise( uv2 ); uv2 = m2*uv2;
-	f2 += 0.1250*noise( uv2 ); uv2 = m2*uv2;
-	f2 += 0.0625*noise( uv2 ); uv2 = m2*uv2;
-
-    f = mix(f, f2, 0.5);
+    //vec2 uv2 = p*vec2(256/256,1.0);
+    //uv2.x += timer / 2;
+    //uv2.y -= timer / 2;
+    //
+    //float f2 = 0.0;
+    //
+    //uv2 *= 8.0;
+    //mat2 m2 = mat2( 1.6,  1.2, -1.2,  1.6 );
+	//f2  = 0.5000*noise( uv2 ); uv2 = m2*uv2;
+	//f2 += 0.2500*noise( uv2 ); uv2 = m2*uv2;
+	//f2 += 0.1250*noise( uv2 ); uv2 = m2*uv2;
+	//f2 += 0.0625*noise( uv2 ); uv2 = m2*uv2;
+    //
+    //f = mix(f, f2, 0.5);
 
     //f = 0.5 + 0.5*f;
 	
     //f *= smoothstep( 0.0, 0.005, abs(p.x-0.6) );
 
-    if(f >= threshold)
-    {
-        FragColor = vec4(vec3(f), 1.f);
-    }
-    else
-    {
-        FragColor = vec4(vec3(0), 1.f);
-    }
+    //if(f >= threshold)
+    //{
+    //    FragColor = vec4(vec3(f), 1.f);
+    //}
+    //else
+    //{
+    //    FragColor = vec4(vec3(0), 1.f);
+    //}
 
-    //FragColor = vec4(vec3(f), 1.f);
+    FragColor = vec4(vec3(f), 1.f);
 }
