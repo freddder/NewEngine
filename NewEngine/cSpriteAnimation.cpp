@@ -17,9 +17,10 @@ void cSpriteAnimation::AddKeyFrame(sKeyFrameSprite newKeyframe)
 
 void cSpriteAnimation::Reset()
 {
-	timer = 0.f;
-	maxDuration = 0.f;
-	isDone = false;
+	//timer = 0.f;
+	//maxDuration = 0.f;
+	//isDone = false;
+	cAnimation::Reset();
 	keyframes.clear();
 }
 
@@ -78,11 +79,11 @@ void cSpriteAnimation::Process(float deltaTime)
 		}
 	}
 
-	if (timer >= maxDuration)
-	{
-		if (isRepeat)
-			timer = 0.f;
-		else
-			isDone = true;
-	}
+	//if (timer >= maxDuration)
+	//{
+	//	if (isRepeat)
+	//		timer = 0.f;
+	//	else
+	//		isDone = true;
+	//}
 }

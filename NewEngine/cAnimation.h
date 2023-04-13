@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <string>
+#include <functional>
 
 enum eDirection
 {
@@ -83,6 +84,7 @@ public:
 	float speed;
 	bool isRepeat;
 	bool clearAfterComplete;
+	std::function<void()> callback;
 
 	cAnimation()
 	{
@@ -101,5 +103,6 @@ public:
 		timer = 0.f;
 		isDone = false;
 		maxDuration = 0.f;
+		callback = nullptr;
 	}
 };

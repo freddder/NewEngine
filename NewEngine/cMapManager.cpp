@@ -84,7 +84,10 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	rapidjson::Value& correctionTileData = d["correctionTiles"];
 	for (int i = 0; i < correctionTileData.Size(); i++)
 	{
-		int tileId = correctionTileData[i]["tileId"].GetInt();
+		//int tileId = correctionTileData[i]["tileId"].GetInt();
+
+		std::vector<glm::vec3> newTileWalkableOffsets;
+		std::vector<glm::vec3> newTileUnwalkableOffsets;
 
 		rapidjson::Value& walkableData = correctionTileData[i]["walkableTiles"];
 		for (int j = 0; j < walkableData.Size(); j++)
@@ -93,7 +96,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 			newWalkableOffset.x = walkableData[j]["x"].GetFloat();
 			newWalkableOffset.y = walkableData[j]["y"].GetFloat();
 			newWalkableOffset.z = walkableData[j]["z"].GetFloat();
-			walkableTiles[tileId].walkableOffsets.push_back(newWalkableOffset);
+			newTileWalkableOffsets.push_back(newWalkableOffset);
 		}
 
 		rapidjson::Value& unwalkableData = correctionTileData[i]["unwalkableTiles"];
@@ -103,7 +106,15 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 			newUnwalkableOffset.x = unwalkableData[j]["x"].GetFloat();
 			newUnwalkableOffset.y = unwalkableData[j]["y"].GetFloat();
 			newUnwalkableOffset.z = unwalkableData[j]["z"].GetFloat();
-			walkableTiles[tileId].unwalkableOffsets.push_back(newUnwalkableOffset);
+			newTileUnwalkableOffsets.push_back(newUnwalkableOffset);
+		}
+
+		rapidjson::Value& tileIds = correctionTileData[i]["tileIds"];
+		for (int j = 0; j < tileIds.Size(); j++)
+		{
+			int tileId = tileIds[j].GetInt();
+			walkableTiles[tileId].walkableOffsets = newTileWalkableOffsets;
+			walkableTiles[tileId].unwalkableOffsets = newTileUnwalkableOffsets;
 		}
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cAnimation.h"
-#include <set>
+#include <vector>
 
 class cAnimationManager
 {
@@ -9,7 +9,7 @@ class cAnimationManager
 	cAnimationManager();
 	cAnimationManager(const cAnimationManager& obj) = delete;
 
-	std::set<cAnimation*> animations;
+	std::vector<cAnimation*> animations;
 
 public:
 

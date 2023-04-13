@@ -7,7 +7,7 @@
 
 cPlayerCharacter::cPlayerCharacter(glm::vec3 position) : cCharacter(position, "Nate.png")
 {
-	putLegForwrard = true;
+	putLegForward = true;
 }
 
 cPlayerCharacter::~cPlayerCharacter()
@@ -85,7 +85,7 @@ void cPlayerCharacter::Run(eDirection dir)
 
 	if (dir == UP)
 	{
-		if (putLegForwrard)
+		if (putLegForward)
 		{
 			if (switchLeg)
 			{
@@ -104,10 +104,11 @@ void cPlayerCharacter::Run(eDirection dir)
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 12, false));
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 12, false));
 		}
+		spriteAnimation->callback = [this]() { model->currSpriteId = 0; };
 	}
 	else if (dir == DOWN)
 	{
-		if (putLegForwrard)
+		if (putLegForward)
 		{
 			if (switchLeg)
 			{
@@ -126,10 +127,11 @@ void cPlayerCharacter::Run(eDirection dir)
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 15, false));
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 15, false));
 		}
+		spriteAnimation->callback = [this]() { model->currSpriteId = 3; };
 	}
 	else if (dir == LEFT)
 	{
-		if (putLegForwrard)
+		if (putLegForward)
 		{
 			if (switchLeg)
 			{
@@ -148,10 +150,11 @@ void cPlayerCharacter::Run(eDirection dir)
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 18, false));
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 18, false));
 		}
+		spriteAnimation->callback = [this]() { model->currSpriteId = 6; };
 	}
 	else if (dir == RIGHT)
 	{
-		if (putLegForwrard)
+		if (putLegForward)
 		{
 			if (switchLeg)
 			{
@@ -170,7 +173,8 @@ void cPlayerCharacter::Run(eDirection dir)
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 21, false));
 			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 21, false));
 		}
+		spriteAnimation->callback = [this]() { model->currSpriteId = 9; };
 	}
 
-	putLegForwrard = !putLegForwrard;
+	putLegForward = !putLegForward;
 }

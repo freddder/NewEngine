@@ -4,7 +4,7 @@
     "walkableTiles": [191,192,193,194,195,196,197,198,199,200,201,202,203],
     "correctionTiles": [
         {
-            "tileId": 184,
+            "tileId": [184],
             "walkableTiles": [
                 { "x": 1, "y": 0, "z": 0 },
                 { "x": 2, "y": 0, "z": 0 }
@@ -12,7 +12,7 @@
             "unwalkableTiles": []
         },
         {
-            "tileId": 148,
+            "tileId": [148],
             "walkableTiles": [
                 { "x": 0, "y": 1, "z": 1 },
                 { "x": 1, "y": 2, "z": 1 },
@@ -29,7 +29,7 @@
             ]
         },
         {
-            "tileId": 149,
+            "tileId": [149],
             "walkableTiles": [
                 { "x": 0, "y": 1, "z": 0 },
                 { "x": 1, "y": 2, "z": 0 },
@@ -42,7 +42,7 @@
             ]
         },
         {
-            "tileId": 150,
+            "tileId": [150],
             "walkableTiles": [
                 { "x": 0, "y": 1, "z": 0 },
                 { "x": 1, "y": 2, "z": 0 },
@@ -60,25 +60,7 @@
             ]
         },
         {
-            "tileId": 152,
-            "walkableTiles": [
-                { "x": 0, "y": 1, "z": 0 }
-            ],
-            "unwalkableTiles": [
-                { "x": 0, "y": 0, "z": 0 }
-            ]
-        },
-        {
-            "tileId": 153,
-            "walkableTiles": [
-                { "x": 0, "y": 1, "z": 0 }
-            ],
-            "unwalkableTiles": [
-                { "x": 0, "y": 0, "z": 0 }
-            ]
-        },
-        {
-            "tileId": 154,
+            "tileId": [152,153,154],
             "walkableTiles": [
                 { "x": 0, "y": 1, "z": 0 }
             ],

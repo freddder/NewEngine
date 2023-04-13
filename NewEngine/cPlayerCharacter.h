@@ -3,7 +3,7 @@
 
 class cPlayerCharacter : public cCharacter
 {
-	bool putLegForwrard;
+	bool putLegForward;
 
 public:
 	cPlayerCharacter(glm::vec3 position);

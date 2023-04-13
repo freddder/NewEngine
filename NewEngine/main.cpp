@@ -120,6 +120,7 @@ int main()
     modelManager->LoadModel("r0_treePine.obj", "scene");
     modelManager->LoadModel("WaterTest3.obj", "scene");
     modelManager->LoadModel("WinterTest.obj", "scene");
+    modelManager->LoadModel("SlopeTest.obj", "scene");
     //modelManager->LoadModel("TestMapWater.obj", "scene");
     //modelManager->LoadModel("FallTree.obj", "scene");
     modelManager->LoadModel("SpriteHolder.obj", "sprite");
@@ -205,7 +206,8 @@ int main()
     camera->playerPosition = &playerChar->model->position;
 
     //mapManager->LoadMap("WinterTestDesc.json");
-    mapManager->LoadMap("WinterTestDesc.json");
+    //mapManager->LoadMap("WinterTestDesc.json");
+    mapManager->LoadMap("SlopeTestDesc.json");
 
     weatherManager->SetWeather(SNOW);
 

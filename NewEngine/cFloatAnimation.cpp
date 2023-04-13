@@ -56,11 +56,11 @@ void cFloatAnimation::Process(float deltaTime)
 		}
 	}
 
-	if (timer >= maxDuration)
-	{
-		if (isRepeat)
-			timer = 0.f;
-		else
-			isDone = true;
-	}
+	//if (timer >= maxDuration)
+	//{
+	//	if (isRepeat)
+	//		timer = 0.f;
+	//	else
+	//		isDone = true;
+	//}
 }
