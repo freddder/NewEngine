@@ -27,7 +27,7 @@
 #include "cAnimationManager.h"
 #include "cLightManager.h"
 #include "cTextureManager.h"
-#include "cModelManager.h"
+//#include "cModelManager.h"
 #include "cCamera.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -82,7 +82,7 @@ int main()
     StartUp();
 
     cCamera* camera = cCamera::GetInstance();
-    cModelManager* modelManager = cModelManager::GetInstance();
+    //cModelManager* modelManager = cModelManager::GetInstance();
     cTextureManager* textureManager = cTextureManager::GetInstance();
     cLightManager* lightManager = cLightManager::GetInstance();
     cAnimationManager* animationManager = cAnimationManager::GetInstance();
@@ -117,22 +117,22 @@ int main()
 
     //********************** Load models and textures ***************************
 
-    modelManager->LoadModel("r0_treePine.obj", "scene");
-    modelManager->LoadModel("WaterTest3.obj", "scene");
-    modelManager->LoadModel("WinterTest.obj", "scene");
-    modelManager->LoadModel("SlopeTest.obj", "scene");
+    renderManager->LoadModel("r0_treePine.obj", "scene");
+    renderManager->LoadModel("WaterTest3.obj", "scene");
+    renderManager->LoadModel("WinterTest.obj", "scene");
+    renderManager->LoadModel("SlopeTest.obj", "scene");
     //modelManager->LoadModel("TestMapWater.obj", "scene");
     //modelManager->LoadModel("FallTree.obj", "scene");
-    modelManager->LoadModel("SpriteHolder.obj", "sprite");
-    modelManager->LoadModel("SpriteHolder2.obj", "snow");
-    modelManager->LoadModel("Water_c2.obj", "wave");
-    modelManager->LoadModel("Water_b2.obj", "wave");
-    modelManager->LoadModel("Water_bl2.obj", "wave");
-    modelManager->LoadModel("sea_water2.obj", "ocean");
-    modelManager->LoadModel("Foam_b2.obj", "foam");
-    modelManager->LoadModel("Foam_bl2.obj", "foam");
-    modelManager->LoadModel("Foam_c2.obj", "foam");
-    modelManager->LoadModel("SpriteHolder3.obj", "particle");
+    renderManager->LoadModel("SpriteHolder.obj", "sprite");
+    //renderManager->LoadModel("SpriteHolder.obj", "particle");
+    renderManager->LoadModel("SpriteHolder.obj", "snow");
+    renderManager->LoadModel("Water_c2.obj", "wave");
+    renderManager->LoadModel("Water_b2.obj", "wave");
+    renderManager->LoadModel("Water_bl2.obj", "wave");
+    renderManager->LoadModel("sea_water2.obj", "ocean");
+    renderManager->LoadModel("Foam_b2.obj", "foam");
+    renderManager->LoadModel("Foam_bl2.obj", "foam");
+    renderManager->LoadModel("Foam_c2.obj", "foam");
 
     textureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     textureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);

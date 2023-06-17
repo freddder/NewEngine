@@ -1,7 +1,7 @@
 #include "Global.h"
 
 #include "cCamera.h"
-#include "cModelManager.h"
+//#include "cModelManager.h"
 #include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
@@ -14,7 +14,7 @@ void StartUp()
 {
     cCamera::GetInstance();
 
-    cModelManager::GetInstance();
+    //cModelManager::GetInstance();
 
     cTextureManager::GetInstance();
 

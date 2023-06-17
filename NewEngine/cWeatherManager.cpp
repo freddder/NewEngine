@@ -60,7 +60,7 @@ void cWeatherManager::SetWeather(eWeather newWeather)
 			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
 
 			cRenderModel* prtcl = new cRenderModel();
-			prtcl->meshName = "SpriteHolder3.obj";
+			prtcl->meshName = "SpriteHolder.obj";
 			prtcl->shaderName = "particle";
 			prtcl->textureName = "SnowFlake3.png";
 			prtcl->scale = glm::vec3(0.5f);

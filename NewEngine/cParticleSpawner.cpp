@@ -1,12 +1,12 @@
 #include "cParticleSpawner.h"
 #include <glad/glad.h>
 #include <time.h>
-#include "cLinearCongruentialGenerator.h"
 #include <glm/gtc/type_ptr.hpp>
 
+#include "cLinearCongruentialGenerator.h"
 #include "cRenderManager.h"
 #include "cTextureManager.h"
-#include "cModelManager.h"
+//#include "cModelManager.h"
 #include "cCamera.h"
 
 cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel* _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
@@ -108,11 +108,11 @@ void cParticleSpawner::Update(float deltaTime)
 
 void cParticleSpawner::DrawParticles()
 {
-    sModelDrawInfo drawInfo;
-    if (!cModelManager::GetInstance()->FindModelByName(model->meshName, drawInfo))
-        return;
-
 	cRenderManager* renderManager = cRenderManager::GetInstance();
+    
+	sModelDrawInfo drawInfo;
+    if (!renderManager->FindModelByName(model->meshName, "snow", drawInfo))
+        return;
 
 	renderManager->use("snow");
 	renderManager->setVec3("cameraPosition", cCamera::GetInstance()->position);
@@ -124,13 +124,11 @@ void cParticleSpawner::DrawParticles()
     glBindTexture(GL_TEXTURE_2D, renderManager->GetDepthMapId());
 	renderManager->setInt("shadowMap", 1);
 
-	cTextureManager* textureManager = cTextureManager::GetInstance();
-
     for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
         // Setup texture
         std::string textureToUse = model->textureName;
-		textureManager->SetupTexture(textureToUse, 0);
+		cTextureManager::GetInstance()->SetupTexture(textureToUse, 0);
 
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);

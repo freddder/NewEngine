@@ -11,6 +11,7 @@ cModelManager* cModelManager::singleton = NULL;
 
 cModelManager::cModelManager()
 {
+    int test = 0;
 }
 
 cModelManager::~cModelManager()

@@ -3,15 +3,18 @@
 #include <glm/glm.hpp>
 #include <set>
 #include <map>
+#include "DrawInfo.h"
 #include "cRenderModel.h"
 
 const std::string SHADER_PATH = "assets/shaders/";
+const std::string MODEL_PATH = "assets/models/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
 
 struct sShaderProgram
 {
     unsigned int ID;
+    std::map<std::string, sModelDrawInfo> modelsLoaded; // stored by file name
     std::map<std::string, unsigned int> uniformLocations;
 };
 
@@ -39,7 +42,10 @@ class cRenderManager
 
     void checkCompileErrors(unsigned int shader, std::string type);
 
-    std::set< cRenderModel* > models;
+    std::vector< cRenderModel* > models;
+
+    std::string lastError;
+    void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
 
 public:
 
@@ -65,7 +71,12 @@ public:
 	void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
     void use(std::string programName);
     unsigned int GetCurrentShaderId();
+    unsigned int GetShaderIdByName(std::string programName);
     unsigned int GetDepthMapId();
+
+    bool LoadModel(std::string fileName, std::string programName);
+    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
+    std::string GetLastError(bool clear);
 
     void setBool(const std::string& name, bool value);
     void setInt(const std::string& name, int value);

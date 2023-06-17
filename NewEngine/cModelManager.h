@@ -3,7 +3,7 @@
 
 #include "DrawInfo.h"
 
-const std::string MODEL_PATH = "assets/models/";
+//const std::string MODEL_PATH = "assets/models/";
 
 class cModelManager
 {
