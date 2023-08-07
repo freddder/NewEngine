@@ -59,6 +59,7 @@ void cCharacter::Walk(eDirection dir)
 	else if (moveResult == 3) newPosition.y -= 1.f;
 	
 	modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
+	spriteAnimation->Reset();
 
 	if (dir == UP)
 	{
