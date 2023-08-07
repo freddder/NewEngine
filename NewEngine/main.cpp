@@ -153,54 +153,39 @@ int main()
     //sprite->meshName = "SpriteHolder.obj";
     //sprite->textureName = "Nate.png";
     //sprite->currSpriteId = 3;
-    //g_RenderManager->AddModel(sprite);
-
+    //renderManager->AddModel(sprite);
+    //
     //cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId, sprite->scale);
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 4, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 3, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 5, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 3, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 2, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 7, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 6, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 8, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 6, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 10, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 9, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 11, false));
-    //spriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 9, false));
+    //spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_RIGHT_R);
     //spriteAnimation->isRepeat = true;
-    //g_AnimationManager->AddAnimation(spriteAnimation);
+    //animationManager->AddAnimation(spriteAnimation);
 
     //cSpriteModel* spriteSym = new cSpriteModel();
     //spriteSym->meshName = "SpriteHolder.obj";
     //spriteSym->position.z = -2.f;
     //spriteSym->textureName = "SymetricNPC_1.png";
     //spriteSym->currSpriteId = 2;
-    //g_RenderManager->AddModel(spriteSym);
-
+    //renderManager->AddModel(spriteSym);
+    //
     //cSpriteAnimation* symSpriteAnimation = new cSpriteAnimation(spriteSym->currSpriteId, spriteSym->scale);
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 2, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 2));
     //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 3, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 2, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 2));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0));
     //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 1, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 5, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 4, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 6, false));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 4, false));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 5));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 4));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 6));
+    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 4));
     //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 5, true));
     //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 4, true));
     //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 6, true));
     //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 4, true));
     //symSpriteAnimation->isRepeat = true;
-    //g_AnimationManager->AddAnimation(symSpriteAnimation);
+    //animationManager->AddAnimation(symSpriteAnimation);
 
     playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
     camera->playerPosition = &playerChar->model->position;
@@ -377,23 +362,57 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         cCamera::GetInstance()->MoveDown(deltaTime);
 
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-        playerChar->Run(UP);
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-        playerChar->Run(DOWN);
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-        playerChar->Run(LEFT);
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-        playerChar->Run(RIGHT);
+    //if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+    //    playerChar->Run(UP);
+    //if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+    //    playerChar->Run(DOWN);
+    //if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+    //    playerChar->Run(LEFT);
+    //if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+    //    playerChar->Run(RIGHT);
+    //
+    //if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    //    playerChar->Walk(UP);
+    //if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    //    playerChar->Walk(DOWN);
+    //if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    //    playerChar->Walk(LEFT);
+    //if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    //    playerChar->Walk(RIGHT);
+
+    bool playerDesiresMovement = false;
+    eDirection playerDesiredDirection = eDirection::UP;
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        playerChar->Walk(UP);
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        playerChar->Walk(DOWN);
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        playerChar->Walk(LEFT);
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        playerChar->Walk(RIGHT);
+    {
+        playerDesiresMovement = true;
+        playerDesiredDirection = eDirection::UP;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        playerDesiresMovement = true;
+        playerDesiredDirection = eDirection::DOWN;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        playerDesiresMovement = true;
+        playerDesiredDirection = eDirection::LEFT;
+    }
+    else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        playerDesiresMovement = true;
+        playerDesiredDirection = eDirection::RIGHT;
+    }
+
+    if (playerDesiresMovement)
+    {
+        if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) playerChar->Run(playerDesiredDirection);
+        else playerChar->Walk(playerDesiredDirection);
+    }
+    else
+    {
+        playerChar->StopMovement();
+    }
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

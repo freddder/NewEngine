@@ -15,6 +15,7 @@ public:
 
 	cSpriteAnimation(int& _spriteRef, glm::vec3& _modelScale);
 	void AddKeyFrame(sKeyFrameSprite newKeyframe);
+	void AddKeyFrames(std::vector<sKeyFrameSprite>& newKeyframes);
 
 	virtual void Reset();
 	void Reset(int newInitId, glm::vec3 newInitScale);

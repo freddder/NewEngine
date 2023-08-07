@@ -76,5 +76,5 @@ public:
 	}
 
 	void LoadMap(std::string mapDescriptionFile);
-	int TryMoveEntity(glm::vec3 currPosition, int direction);
+	int TryMoveEntity(glm::vec3 currPosition, eDirection direction);
 };

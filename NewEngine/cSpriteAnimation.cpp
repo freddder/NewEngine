@@ -15,6 +15,14 @@ void cSpriteAnimation::AddKeyFrame(sKeyFrameSprite newKeyframe)
 	keyframes.push_back(newKeyframe);
 }
 
+void cSpriteAnimation::AddKeyFrames(std::vector<sKeyFrameSprite>& newKeyframes)
+{
+	for (int i = 0; i < newKeyframes.size(); i++)
+	{
+		AddKeyFrame(newKeyframes[i]);
+	}
+}
+
 void cSpriteAnimation::Reset()
 {
 	//timer = 0.f;

@@ -64,7 +64,7 @@ struct sKeyFrameInt
 
 struct sKeyFrameSprite // sprite
 {
-	sKeyFrameSprite(float _time, int _value, bool _flip) :
+	sKeyFrameSprite(float _time, int _value, bool _flip = false) :
 		time(_time),
 		value(_value),
 		flip(_flip) {}

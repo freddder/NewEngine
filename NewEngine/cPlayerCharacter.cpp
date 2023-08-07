@@ -7,174 +7,95 @@
 
 cPlayerCharacter::cPlayerCharacter(glm::vec3 position) : cCharacter(position, "Nate.png")
 {
-	putLegForward = true;
+	spriteAnimation->isRepeat = true;
+	lastDesiredDirection = DOWN;
 }
 
 cPlayerCharacter::~cPlayerCharacter()
 {
 }
 
+void cPlayerCharacter::Walk(eDirection dir)
+{
+	cCharacter::Walk(dir);
+
+	lastDesiredDirection = dir;
+}
+
 void cPlayerCharacter::Run(eDirection dir)
 {
-	// if sprite animation isnt done no point on proceeding
-	if (!spriteAnimation->isDone)
-		return;
-
-	// setup sprite animation into specific direction
-	spriteAnimation->Reset(model->currSpriteId, model->scale);
-
+	if (!modelAnimation->isDone) return;
+	
+	modelAnimation->Reset(model->position, model->orientation, model->scale);
+	
+	// Make model animation
 	int moveResult = cMapManager::GetInstance()->TryMoveEntity(model->position, dir);
-
-	if (moveResult == 0)
+	glm::vec3 newPosition = model->position;
+	
+	if (moveResult != 0)
 	{
-		// walk instead
+		if (dir == UP) newPosition.x += 1.f;
+		else if (dir == DOWN) newPosition.x -= 1.f;
+		else if (dir == LEFT) newPosition.z -= 1.f;
+		else if (dir == RIGHT) newPosition.z += 1.f;
+	}
+	
+	// Ajust height
+	if (moveResult == 2) newPosition.y += 1.f;
+	else if (moveResult == 3) newPosition.y -= 1.f;
+	
+	if (moveResult == 0) // walk instead
+	{
+		modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
+		spriteAnimation->Reset(model->currSpriteId, model->scale);
+		
 		if (dir == UP)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 1, false)); // 1 or 2
-			else spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 2, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 0, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.3f, 0, false));
+			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_UP_L);
+			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_UP_R);
 		}
 		else if (dir == DOWN)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 4, false)); // 4 or 5
-			else spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 5, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.3f, 3, false));
+			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_DOWN_L);
+			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_DOWN_R);
 		}
 		else if (dir == LEFT)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 7, false)); // 7 or 8
-			else spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 8, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 6, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.3f, 6, false));
+			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_LEFT_L);
+			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_LEFT_R);
 		}
 		else if (dir == RIGHT)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 10, false)); // 10 or 11
-			else spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 11, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 9, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.3f, 9, false));
+			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_RIGHT_L);
+			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_RIGHT_R);
 		}
 
 		switchLeg = !switchLeg;
-
-		return;
 	}
-
-	// set up model animation
-	modelAnimation->Reset(model->position, model->orientation, model->scale);
-
-	glm::vec3 newPosition = model->position;
-
-	if (moveResult == 2)
-		newPosition.y += 1.f;
-	else if (moveResult == 3)
-		newPosition.y -= 1.f;
-
-	if (dir == UP)
-		newPosition.x += 1.f;
-	else if (dir == DOWN)
-		newPosition.x -= 1.f;
-	else if (dir == LEFT)
-		newPosition.z -= 1.f;
-	else if (dir == RIGHT)
-		newPosition.z += 1.f;
-
-	modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));
-
-	if (dir == UP)
+	else
 	{
-		if (putLegForward)
-		{
-			if (switchLeg)
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 13, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 13, false));
-			}
-			else
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 14, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 14, false));
-			}
-			switchLeg = !switchLeg;
-		}
-		else
-		{
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 12, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 12, false));
-		}
-		spriteAnimation->callback = [this]() { model->currSpriteId = 0; };
-	}
-	else if (dir == DOWN)
-	{
-		if (putLegForward)
-		{
-			if (switchLeg)
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 16, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 16, false));
-			}
-			else
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 17, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 17, false));
-			}
-			switchLeg = !switchLeg;
-		}
-		else
-		{
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 15, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 15, false));
-		}
-		spriteAnimation->callback = [this]() { model->currSpriteId = 3; };
-	}
-	else if (dir == LEFT)
-	{
-		if (putLegForward)
-		{
-			if (switchLeg)
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 19, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 19, false));
-			}
-			else
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 20, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 20, false));
-			}
-			switchLeg = !switchLeg;
-		}
-		else
-		{
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 18, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 18, false));
-		}
-		spriteAnimation->callback = [this]() { model->currSpriteId = 6; };
-	}
-	else if (dir == RIGHT)
-	{
-		if (putLegForward)
-		{
-			if (switchLeg)
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 22, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 22, false));
-			}
-			else
-			{
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 23, false));
-				spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 23, false));
-			}
-			switchLeg = !switchLeg;
-		}
-		else
-		{
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.01f, 21, false));
-			spriteAnimation->AddKeyFrame(sKeyFrameSprite(0.14f, 21, false));
-		}
-		spriteAnimation->callback = [this]() { model->currSpriteId = 9; };
-	}
+		modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));
 
-	putLegForward = !putLegForward;
+		if(lastDesiredDirection != dir) spriteAnimation->Reset(model->currSpriteId, model->scale);
+
+		if (dir == UP) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_UP);
+		else if (dir == DOWN) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_DOWN);
+		else if (dir == LEFT) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_LEFT);
+		else if (dir == RIGHT) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_RIGHT);
+
+		lastDesiredDirection = dir;
+	}
+}
+
+void cPlayerCharacter::StopMovement()
+{
+	if (!modelAnimation->isDone) return;
+
+	spriteAnimation->Reset();
+	modelAnimation->Reset();
+
+	if (lastDesiredDirection == UP) model->currSpriteId = 0;
+	else if (lastDesiredDirection == DOWN) model->currSpriteId = 3;
+	else if (lastDesiredDirection == LEFT) model->currSpriteId = 6;
+	else if (lastDesiredDirection == RIGHT) model->currSpriteId = 9;
 }

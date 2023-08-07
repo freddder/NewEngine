@@ -10,23 +10,6 @@ cAnimationManager::cAnimationManager()
 
 void cAnimationManager::Process(float deltaTime)
 {
-	//std::vector<cAnimation*> animationsToDelete;
-	//for (std::set<cAnimation*>::iterator it = animations.begin(); it != animations.end(); it++)
-	//{
-	//	(*it)->Process(deltaTime);
-
-	//	if ((*it)->timer >= (*it)->maxDuration)
-	//	{
-	//		if ((*it)->isRepeat)
-	//			(*it)->timer = 0.f;
-	//		else
-	//			(*it)->isDone = true;
-	//	}
-
-	//	if ((*it)->clearAfterComplete && (*it)->isDone)
-	//		animationsToDelete.push_back((*it));
-	//}
-
 	for (int i = animations.size() - 1; i >= 0; i--)
 	{
 		animations[i]->Process(deltaTime);
@@ -51,12 +34,6 @@ void cAnimationManager::Process(float deltaTime)
 			delete animationToDelete;
 		}
 	}
-
-	//for (unsigned int i = 0; i < animationsToDelete.size(); i++)
-	//{
-	//	animations.erase(animationsToDelete[i]);
-	//	delete animationsToDelete[i];
-	//}
 }
 
 void cAnimationManager::AddAnimation(cAnimation* newAnimation)

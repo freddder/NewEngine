@@ -75,14 +75,14 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 	// Load simple walkable tiles
 	rapidjson::Value& walkableTileData = d["walkableTiles"];
-	for (int i = 0; i < walkableTileData.Size(); i++)
+	for (unsigned int i = 0; i < walkableTileData.Size(); i++)
 	{
 		walkableTiles[walkableTileData[i].GetInt()];
 	}
 
 	// Load complex walkable tiles
 	rapidjson::Value& correctionTileData = d["correctionTiles"];
-	for (int i = 0; i < correctionTileData.Size(); i++)
+	for (unsigned int i = 0; i < correctionTileData.Size(); i++)
 	{
 		//int tileId = correctionTileData[i]["tileId"].GetInt();
 
@@ -90,7 +90,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		std::vector<glm::vec3> newTileUnwalkableOffsets;
 
 		rapidjson::Value& walkableData = correctionTileData[i]["walkableTiles"];
-		for (int j = 0; j < walkableData.Size(); j++)
+		for (unsigned int j = 0; j < walkableData.Size(); j++)
 		{
 			glm::vec3 newWalkableOffset;
 			newWalkableOffset.x = walkableData[j]["x"].GetFloat();
@@ -100,7 +100,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		}
 
 		rapidjson::Value& unwalkableData = correctionTileData[i]["unwalkableTiles"];
-		for (int j = 0; j < unwalkableData.Size(); j++)
+		for (unsigned int j = 0; j < unwalkableData.Size(); j++)
 		{
 			glm::vec3 newUnwalkableOffset;
 			newUnwalkableOffset.x = unwalkableData[j]["x"].GetFloat();
@@ -110,7 +110,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		}
 
 		rapidjson::Value& tileIds = correctionTileData[i]["tileIds"];
-		for (int j = 0; j < tileIds.Size(); j++)
+		for (unsigned int j = 0; j < tileIds.Size(); j++)
 		{
 			int tileId = tileIds[j].GetInt();
 			walkableTiles[tileId].walkableOffsets = newTileWalkableOffsets;
@@ -121,7 +121,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	// Load tile animations
 	rapidjson::Value& instancedTileData = d["instancedTiles"];
 
-	for (int i = 0; i < instancedTileData.Size(); i++)
+	for (unsigned int i = 0; i < instancedTileData.Size(); i++)
 	{
 		rapidjson::Value& currInstancedTile = d["instancedTiles"][i];
 
@@ -236,19 +236,19 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 							for (unsigned int i = 0; i < walkableTiles[currTile].walkableOffsets.size(); i++)
 							{
 								newQuad.quadData[x + (int)walkableTiles[currTile].walkableOffsets[i].x]
-									[z + (int)walkableTiles[currTile].walkableOffsets[i].z]
-								[currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y].isWalkable = true;
+												[z + (int)walkableTiles[currTile].walkableOffsets[i].z]
+												[currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y].isWalkable = true;
 							}
 
 							for (unsigned int i = 0; i < walkableTiles[currTile].unwalkableOffsets.size(); i++)
 							{
 								newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
-									[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
-								[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
+												[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+												[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
 
 								newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
-									[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
-								[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
+												[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
+												[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
 							}
 						}
 					}
@@ -294,21 +294,17 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	pdsmap.close();
 }
 
-int cMapManager::TryMoveEntity(glm::vec3 currPosition, int direction)
+int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 {
 	glm::vec3 desiredLocation = currPosition;
 
-	// direction = 0 -> UP
-	// direction = 1 -> DOWN
-	// direction = 2 -> LEFT
-	// direction = 3 -> RIGHT
-	if (direction == 0)
+	if (direction == eDirection::UP)
 		desiredLocation.x += 1.f;
-	else if (direction == 1)
+	else if (direction == eDirection::DOWN)
 		desiredLocation.x -= 1.f;
-	else if (direction == 2)
+	else if (direction == eDirection::LEFT)
 		desiredLocation.z -= 1.f;
-	else if (direction == 3)
+	else if (direction == eDirection::RIGHT)
 		desiredLocation.z += 1.f;
 
 	if (desiredLocation.x + 15 < 0 || desiredLocation.z + 15 < 0)
