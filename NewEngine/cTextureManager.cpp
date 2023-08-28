@@ -52,17 +52,17 @@ void cTextureManager::CreateTexture(std::string fileName)
 
 void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym)
 {
-    if (sheetsMap.count(spriteSheetName)) // texture already created
+    if (spriteSheetsMap.count(spriteSheetName)) // texture already created
         return;
 
     sSpriteSheet newSheet;
     newSheet.numCols = cols;
     newSheet.numRows = rows;
-    newSheet.isSymetrical = sym;
+    newSheet.isSymmetrical = sym;
 
     CreateTexture(spriteSheetName);
 
-    sheetsMap[spriteSheetName] = newSheet;
+    spriteSheetsMap[spriteSheetName] = newSheet;
 }
 
 bool cTextureManager::GetTexureId(std::string texture, unsigned int& textureID)
@@ -76,10 +76,10 @@ bool cTextureManager::GetTexureId(std::string texture, unsigned int& textureID)
 
 bool cTextureManager::GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet)
 {
-    if (sheetsMap.find(sheetName) == sheetsMap.end()) // texture doesnt exists
+    if (spriteSheetsMap.find(sheetName) == spriteSheetsMap.end()) // texture doesnt exists
         return false;
 
-    sheet = sheetsMap[sheetName];
+    sheet = spriteSheetsMap[sheetName];
     return true;
 }
 
@@ -98,19 +98,6 @@ void cTextureManager::SetupTexture(std::string textureToSetup, unsigned int shad
 
     cRenderManager::GetInstance()->setInt(shaderVariable, shaderTextureUnit);
 }
-
-//void cTextureManager::SetupSpriteSheet(std::string spriteSheetName)
-//{
-//    if (sheetsMap.count(spriteSheetName) == 0) // texture doesnt exists
-//        return;
-//
-//    //g_ShaderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
-//    //g_ShaderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
-//    g_RenderManager->setInt("numCols", sheetsMap[spriteSheetName].numCols);
-//    g_RenderManager->setInt("numRows", sheetsMap[spriteSheetName].numRows);
-//
-//    SetupTexture(spriteSheetName);
-//}
 
 unsigned int cTextureManager::CreateCubemap(std::vector<std::string> faces)
 {
@@ -143,7 +130,13 @@ unsigned int cTextureManager::CreateCubemap(std::vector<std::string> faces)
     return textureID;
 }
 
-bool cTextureManager::GetSpritesheetSymetry(std::string spriteSheetName)
+bool cTextureManager::IsSpriteSymmetric(std::string spriteSheetName)
 {
-    return sheetsMap[spriteSheetName].isSymetrical;
+    if (spriteSheetsMap.find(spriteSheetName) == spriteSheetsMap.end())
+    {
+        std::cout << "Sprite sheet " << spriteSheetName << " doesn't exists" << std::endl;
+        return false;
+    }
+        
+    return spriteSheetsMap[spriteSheetName].isSymmetrical;
 }

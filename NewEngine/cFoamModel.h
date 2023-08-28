@@ -1,13 +1,14 @@
 #pragma once
-#include "cRenderModel.h"
+#include "cAnimatedModel.h"
 
-class cFoamModel : public cRenderModel
+class cFoamModel : public cAnimatedModel
 {
 public:
 
 	glm::vec3 textureOffset;
 
 	cFoamModel();
+	~cFoamModel();
 
 	virtual void SetUpUniforms();
 };

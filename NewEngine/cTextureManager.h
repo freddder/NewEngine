@@ -3,6 +3,7 @@
 #include <string>
 #include <map>
 #include "cRenderModel.h"
+#include "cAnimation.h"
 
 const std::string TEXTURE_PATH = "assets/textures/";
 
@@ -10,7 +11,7 @@ struct sSpriteSheet
 {
 	unsigned int numCols;
 	unsigned int numRows;
-	bool isSymetrical;
+	bool isSymmetrical;
 };
 
 class cTextureManager
@@ -19,7 +20,7 @@ class cTextureManager
 	cTextureManager();
 	cTextureManager(const cTextureManager& obj) = delete;
 
-	std::map<std::string, sSpriteSheet> sheetsMap;
+	std::map<std::string, sSpriteSheet> spriteSheetsMap;
 	std::map<std::string, unsigned int> texturesMap;
 
 public:
@@ -44,12 +45,13 @@ public:
 	}
 
 	void CreateTexture(std::string fileName);
-	void CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym);
 	bool GetTexureId(std::string texture, unsigned int& textureID);
-	bool GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet);
-	void SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit);
-	//void SetupSpriteSheet(std::string spriteSheetName);
 	unsigned int CreateCubemap(std::vector<std::string> faces);
 
-	bool GetSpritesheetSymetry(std::string spriteSheetName);
+	void CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym);
+	bool GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet);
+
+	void SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit);
+
+	bool IsSpriteSymmetric(std::string spriteSheetName);
 };

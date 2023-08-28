@@ -63,7 +63,7 @@ void cWeatherManager::SetWeather(eWeather newWeather)
 			prtcl->meshName = "SpriteHolder.obj";
 			prtcl->shaderName = "particle";
 			prtcl->textureName = "SnowFlake3.png";
-			prtcl->scale = glm::vec3(0.5f);
+			prtcl->scale = glm::vec3(0.3f);
 
 			cParticleSpawner weatherSpawner(glm::vec3(0.f, 20.f, 0.f), prtcl, 1000);
 			weatherSpawner.minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);

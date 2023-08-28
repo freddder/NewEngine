@@ -55,6 +55,9 @@
     <Filter Include="Particles">
       <UniqueIdentifier>{311beb57-ae00-4139-b099-2e3c18a44a46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\MapEnvoirnmentModels">
+      <UniqueIdentifier>{92e3223d-dc10-4501-859d-6554a90c8cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -135,12 +138,6 @@
     <ClCompile Include="cSpriteModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="cWaveModel.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="cOceanModel.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="cWeatherManager.cpp">
       <Filter>Weather</Filter>
     </ClCompile>
@@ -150,9 +147,6 @@
     <ClCompile Include="cFloatAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cFoamModel.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="cParticleSpawner.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
@@ -161,6 +155,21 @@
     </ClCompile>
     <ClCompile Include="cPlayerCharacter.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimatedModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="cWaveModel.cpp">
+      <Filter>Model\MapEnvoirnmentModels</Filter>
+    </ClCompile>
+    <ClCompile Include="cFoamModel.cpp">
+      <Filter>Model\MapEnvoirnmentModels</Filter>
+    </ClCompile>
+    <ClCompile Include="cOceanModel.cpp">
+      <Filter>Model\MapEnvoirnmentModels</Filter>
+    </ClCompile>
+    <ClCompile Include="cAnimation.cpp">
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -245,12 +254,6 @@
     <ClInclude Include="cSpriteModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="cWaveModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="cOceanModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="cWeatherManager.h">
       <Filter>Weather</Filter>
     </ClInclude>
@@ -263,9 +266,6 @@
     <ClInclude Include="cFloatAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cFoamModel.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="cParticleSpawner.h">
       <Filter>Particles</Filter>
     </ClInclude>
@@ -274,6 +274,18 @@
     </ClInclude>
     <ClInclude Include="cPlayerCharacter.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="cAnimatedModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="cWaveModel.h">
+      <Filter>Model\MapEnvoirnmentModels</Filter>
+    </ClInclude>
+    <ClInclude Include="cFoamModel.h">
+      <Filter>Model\MapEnvoirnmentModels</Filter>
+    </ClInclude>
+    <ClInclude Include="cOceanModel.h">
+      <Filter>Model\MapEnvoirnmentModels</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

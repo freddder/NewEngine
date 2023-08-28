@@ -49,27 +49,31 @@ void cPlayerCharacter::Run(eDirection dir)
 		modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 		spriteAnimation->Reset(model->currSpriteId, model->scale);
 		
+		std::string animationName;
 		if (dir == UP)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_UP_L);
-			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_UP_R);
+			if (switchLeg) animationName = "WALK_UP_L";
+			else animationName = "WALK_UP_R";
 		}
 		else if (dir == DOWN)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_DOWN_L);
-			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_DOWN_R);
+			if (switchLeg) animationName = "WALK_DOWN_L";
+			else animationName = "WALK_DOWN_R";
 		}
 		else if (dir == LEFT)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_LEFT_L);
-			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_LEFT_R);
+			if (switchLeg) animationName = "WALK_LEFT_L";
+			else animationName = "WALK_LEFT_R";
 		}
 		else if (dir == RIGHT)
 		{
-			if (switchLeg) spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_RIGHT_L);
-			else spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_RIGHT_R);
+			if (switchLeg) animationName = "WALK_RIGHT_L";
+			else animationName = "WALK_RIGHT_R";
 		}
 
+		std::vector<sKeyFrameSprite> keyframes;
+		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
+		spriteAnimation->AddKeyFrames(keyframes);
 		switchLeg = !switchLeg;
 	}
 	else
@@ -78,11 +82,15 @@ void cPlayerCharacter::Run(eDirection dir)
 
 		if(lastDesiredDirection != dir) spriteAnimation->Reset(model->currSpriteId, model->scale);
 
-		if (dir == UP) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_UP);
-		else if (dir == DOWN) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_DOWN);
-		else if (dir == LEFT) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_LEFT);
-		else if (dir == RIGHT) spriteAnimation->AddKeyFrames(KEYFRAMES_RUN_RIGHT);
+		std::string animationName;
+		if (dir == UP) animationName = "RUN_UP";
+		else if (dir == DOWN) animationName = "RUN_DOWN";
+		else if (dir == LEFT) animationName = "RUN_LEFT";
+		else if (dir == RIGHT) animationName = "RUN_RIGHT";
 
+		std::vector<sKeyFrameSprite> keyframes;
+		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
+		spriteAnimation->AddKeyFrames(keyframes);
 		lastDesiredDirection = dir;
 	}
 }

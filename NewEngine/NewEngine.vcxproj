@@ -145,6 +145,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cAnimatedModel.cpp" />
+    <ClCompile Include="cAnimation.cpp" />
     <ClCompile Include="cAnimationManager.cpp" />
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacter.cpp" />
@@ -182,6 +184,7 @@
     <ClCompile Include="StartUp.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cAnimatedModel.h" />
     <ClInclude Include="cAnimation.h" />
     <ClInclude Include="cAnimationManager.h" />
     <ClInclude Include="cCamera.h" />

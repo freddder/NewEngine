@@ -1,7 +1,8 @@
 #pragma once
-#include "cRenderModel.h"
+#include "cAnimatedModel.h"
+#include "cSinAnimation.h"
 
-class cOceanModel : public cRenderModel
+class cOceanModel : public cAnimatedModel
 {
 public:
 
@@ -10,6 +11,7 @@ public:
 	float timer;
 
 	cOceanModel();
+	~cOceanModel();
 
 	virtual void SetUpUniforms();
 };

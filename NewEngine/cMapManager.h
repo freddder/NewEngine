@@ -3,17 +3,14 @@
 #include <set>
 #include <map>
 #include <string>
-#include "cWaveModel.h"
-#include "cOceanModel.h"
-#include "cFoamModel.h"
-#include "cSinAnimation.h"
+#include "cAnimatedModel.h"
 
 struct sInstancedTile
 {
-	cRenderModel* instancedModel;
+	cAnimatedModel* instancedModel;
 	std::vector<glm::vec4> instanceOffsets;
 	glm::vec3 modelOffset;
-	cAnimation* animation;
+	//cAnimation* animation;
 };
 
 struct sCorrectionTiles

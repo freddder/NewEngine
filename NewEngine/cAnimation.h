@@ -86,23 +86,10 @@ public:
 	bool clearAfterComplete;
 	std::function<void()> callback;
 
-	cAnimation()
-	{
-		timer = 0.f;
-		isDone = false;
-		maxDuration = 0.f;
-		speed = 1.f;
-		isRepeat = false;
-		clearAfterComplete = false;
-	}
+	cAnimation();
+	// maybe try removing this from the animation manager when delteting
 
 	virtual void Process(float deltaTime) = 0;
 
-	virtual void Reset()
-	{
-		timer = 0.f;
-		isDone = false;
-		maxDuration = 0.f;
-		callback = nullptr;
-	}
+	virtual void Reset();
 };

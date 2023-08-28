@@ -7,8 +7,8 @@ class cSpriteAnimation : public cAnimation
 {
 public:
 	int& spriteIdRef;
-	glm::vec3& modelScaleRef;
 	int initId;
+	glm::vec3& modelScaleRef;
 	glm::vec3 initScale;
 
 	std::vector<sKeyFrameSprite> keyframes;

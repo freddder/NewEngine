@@ -9,6 +9,9 @@
 #include "cFloatAnimation.h"
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
+#include "cOceanModel.h"
+#include "cFoamModel.h"
+#include "cWaveModel.h"
 
 cMapManager* cMapManager::singleton = NULL;
 
@@ -40,7 +43,6 @@ cMapManager::~cMapManager()
 	for (std::map<int, sInstancedTile>::iterator it = instancedTiles.begin(); it != instancedTiles.end(); it++)
 	{
 		delete it->second.instancedModel;
-		delete it->second.animation;
 	}
 }
 
@@ -138,27 +140,16 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		{
 			instancedTiles[tileId].instancedModel = new cOceanModel();
 			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-			static_cast<cOceanModel*>(instancedTiles[tileId].instancedModel)->globalUVRatios = glm::vec2(0.35f, 0.35f);
-			instancedTiles[tileId].animation = new cSinAnimation(static_cast<cOceanModel*>(instancedTiles[tileId].instancedModel)->textureOffset, 0.5f, 0);
-			static_cast<cSinAnimation*>(instancedTiles[tileId].animation)->AddKeyFrame(sKeyFrameVec3(6.f, glm::vec3(360.f, 180.f, 0.f)));
-			static_cast<cSinAnimation*>(instancedTiles[tileId].animation)->AddKeyFrame(sKeyFrameVec3(12.f, glm::vec3(720.f, 360.f, 0.f)));
-			instancedTiles[tileId].animation->isRepeat = true;
 		}
 		else if (animationType == "wave")
 		{
 			instancedTiles[tileId].instancedModel = new cWaveModel();
 			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-			instancedTiles[tileId].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[tileId].instancedModel)->textureOffset, 2, 0);
-			static_cast<cSinAnimation*>(instancedTiles[tileId].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
-			instancedTiles[tileId].animation->isRepeat = true;
 		}
 		else if (animationType == "foam")
 		{
 			instancedTiles[tileId].instancedModel = new cFoamModel();
 			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-			instancedTiles[tileId].animation = new cSinAnimation(static_cast<cWaveModel*>(instancedTiles[tileId].instancedModel)->textureOffset, 2, 0);
-			static_cast<cSinAnimation*>(instancedTiles[tileId].animation)->AddKeyFrame(sKeyFrameVec3(7.f, glm::vec3(360.f, 0.f, 0.f)));
-			instancedTiles[tileId].animation->isRepeat = true;
 		}
 
 		instancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
@@ -169,16 +160,14 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	std::string collisionMapFileName = d["mapCollisionFileName"].GetString();
 	std::ifstream pdsmap("assets/maps/" + collisionMapFileName);
 
-	if (!pdsmap.is_open())
-		return;
+	if (!pdsmap.is_open()) return;
 
 	std::string currToken;
 
 	// make sure reader is at first mapstart
 	while (pdsmap >> currToken)
 	{
-		if (currToken == "mapstart")
-			break;
+		if (currToken == "mapstart") break;
 	}
 
 	// start here
@@ -199,8 +188,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		{
 			pdsmap >> currToken;
 
-			if (currToken != "tilegrid")
-				break;
+			if (currToken != "tilegrid") break;
 
 			for (int x = 0; x < 32; x++)
 			{
@@ -215,8 +203,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		{
 			pdsmap >> currToken;
 
-			if (currToken != "heightgrid")
-				break;
+			if (currToken != "heightgrid") break;
 
 			for (int x = 0; x < 32; x++)
 			{
@@ -284,7 +271,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		if (it->second.instanceOffsets.size() != 0)
 		{
 			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, cRenderManager::GetInstance()->GetCurrentShaderId());
-			cAnimationManager::GetInstance()->AddAnimation(it->second.animation);
+			cAnimationManager::GetInstance()->AddAnimation(it->second.instancedModel->animation);
 			cRenderManager::GetInstance()->AddModel(it->second.instancedModel);
 
 			it->second.instanceOffsets.clear();
@@ -307,8 +294,7 @@ int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 	else if (direction == eDirection::RIGHT)
 		desiredLocation.z += 1.f;
 
-	if (desiredLocation.x + 15 < 0 || desiredLocation.z + 15 < 0)
-		return 0;
+	if (desiredLocation.x + 15 < 0 || desiredLocation.z + 15 < 0) return 0;
 
 	desiredLocation.x += 15;
 	desiredLocation.z += 15;
@@ -323,12 +309,12 @@ int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 			desiredLocation.z -= 32 * quadZCoord;
 			desiredLocation.x -= 32 * quadXCoord;
 
-			if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y].isWalkable)
-				return 1; // same height
-			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y + 1].isWalkable)
-				return 2; // go up
-			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y - 1].isWalkable)
-				return 3; // go down
+			if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y].isWalkable) // same height
+				return 1;
+			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y + 1].isWalkable) // go up
+				return 2;
+			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y - 1].isWalkable) // go down
+				return 3;
 
 			return 0;
 		}

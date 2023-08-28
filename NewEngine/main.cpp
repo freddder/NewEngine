@@ -124,7 +124,6 @@ int main()
     //modelManager->LoadModel("TestMapWater.obj", "scene");
     //modelManager->LoadModel("FallTree.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
-    //renderManager->LoadModel("SpriteHolder.obj", "particle");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
     renderManager->LoadModel("Water_c2.obj", "wave");
     renderManager->LoadModel("Water_b2.obj", "wave");
@@ -142,6 +141,8 @@ int main()
     textureManager->CreateTexture("SnowFlake2.png");
     textureManager->CreateTexture("SnowFlake3.png");
 
+    animationManager->InitializeAnimationsPresets();
+
     //cRenderModel* tree = new cRenderModel();
     //tree->meshName = "FallTree.obj";
     //tree->position.x = -0.5f;
@@ -149,50 +150,12 @@ int main()
     ////g_set_Models.insert(tree);
     //g_RenderManager->AddModel(tree);
 
-    //cSpriteModel* sprite = new cSpriteModel();
-    //sprite->meshName = "SpriteHolder.obj";
-    //sprite->textureName = "Nate.png";
-    //sprite->currSpriteId = 3;
-    //renderManager->AddModel(sprite);
-    //
-    //cSpriteAnimation* spriteAnimation = new cSpriteAnimation(sprite->currSpriteId, sprite->scale);
-    //spriteAnimation->AddKeyFrames(KEYFRAMES_WALK_RIGHT_R);
-    //spriteAnimation->isRepeat = true;
-    //animationManager->AddAnimation(spriteAnimation);
-
-    //cSpriteModel* spriteSym = new cSpriteModel();
-    //spriteSym->meshName = "SpriteHolder.obj";
-    //spriteSym->position.z = -2.f;
-    //spriteSym->textureName = "SymetricNPC_1.png";
-    //spriteSym->currSpriteId = 2;
-    //renderManager->AddModel(spriteSym);
-    //
-    //cSpriteAnimation* symSpriteAnimation = new cSpriteAnimation(spriteSym->currSpriteId, spriteSym->scale);
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.2f, 3));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.4f, 2));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.6f, 3, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(0.8f, 2));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.0f, 1));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.2f, 0));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.4f, 1, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.6f, 0));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(1.8f, 5));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.0f, 4));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.2f, 6));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.4f, 4));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.6f, 5, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(2.8f, 4, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.0f, 6, true));
-    //symSpriteAnimation->AddKeyFrame(sKeyFrameSprite(3.2f, 4, true));
-    //symSpriteAnimation->isRepeat = true;
-    //animationManager->AddAnimation(symSpriteAnimation);
-
     playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
     camera->playerPosition = &playerChar->model->position;
 
     //mapManager->LoadMap("WinterTestDesc.json");
-    //mapManager->LoadMap("WinterTestDesc.json");
-    mapManager->LoadMap("SlopeTestDesc.json");
+    mapManager->LoadMap("WaterTest3Desc.json");
+    //mapManager->LoadMap("SlopeTestDesc.json");
 
     weatherManager->SetWeather(SNOW);
 

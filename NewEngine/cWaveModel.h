@@ -1,7 +1,8 @@
 #pragma once
-#include "cRenderModel.h"
+#include "cAnimatedModel.h"
+#include "cSinAnimation.h"
 
-class cWaveModel : public cRenderModel
+class cWaveModel : public cAnimatedModel
 {
 public:
 
@@ -9,6 +10,7 @@ public:
 	float timer;
 
 	cWaveModel();
+	~cWaveModel();
 
 	virtual void SetUpUniforms();
 };

@@ -2,14 +2,26 @@
 
 #include "cAnimation.h"
 #include <vector>
+#include <map>
+
+enum eSpriteEntityType
+{
+	PLAYER,
+	NPC,
+	OW_POKEMON
+};
+
+struct sEntitySpriteAnimationPreset
+{
+	std::string animationName;
+	std::vector<sKeyFrameSprite> keyframes;
+};
 
 class cAnimationManager
 {
 	static cAnimationManager* singleton;
 	cAnimationManager();
 	cAnimationManager(const cAnimationManager& obj) = delete;
-
-	std::vector<cAnimation*> animations;
 
 public:
 
@@ -32,7 +44,16 @@ public:
 		}
 	}
 
+private:
+	std::vector<cAnimation*> animations;
+	std::map<eSpriteEntityType, std::vector<sEntitySpriteAnimationPreset>> entitySpriteAnimationPresets;
+
+public:
 	void Process(float deltaTime);
+	void InitializeAnimationsPresets();
 	void AddAnimation(cAnimation* newAnimation);
 	void RemoveAnimation(cAnimation* animationToRemove);
+
+	void CreateSpriteAnimation(eSpriteEntityType spriteType, std::string animationName, std::vector<sKeyFrameSprite>& keyframes);
+	bool GetSpriteAnimationKeyframes(eSpriteEntityType spriteType, std::string animationName, std::vector<sKeyFrameSprite>& keyframes);
 };
