@@ -4,13 +4,6 @@
 #include <vector>
 #include <map>
 
-enum eSpriteEntityType
-{
-	PLAYER,
-	NPC,
-	OW_POKEMON
-};
-
 struct sEntitySpriteAnimationPreset
 {
 	std::string animationName;

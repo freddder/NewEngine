@@ -43,56 +43,56 @@ void cAnimationManager::InitializeAnimationsPresets()
 	WALK_UP_L.push_back(sKeyFrameSprite(0.2f, 0));
 	WALK_UP_L.push_back(sKeyFrameSprite(0.3f, 0));
 	CreateSpriteAnimation(PLAYER, "WALK_UP_L", WALK_UP_L);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_UP_L", WALK_UP_L);
+	CreateSpriteAnimation(NPC, "WALK_UP_L", WALK_UP_L);
 
 	std::vector<sKeyFrameSprite> WALK_UP_R;
 	WALK_UP_R.push_back(sKeyFrameSprite(0.01f, 2));
 	WALK_UP_R.push_back(sKeyFrameSprite(0.2f, 0));
 	WALK_UP_R.push_back(sKeyFrameSprite(0.3f, 0));
 	CreateSpriteAnimation(PLAYER, "WALK_UP_R", WALK_UP_R);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_UP_R", WALK_UP_R);
+	CreateSpriteAnimation(NPC, "WALK_UP_R", WALK_UP_R);
 
 	std::vector<sKeyFrameSprite> WALK_DOWN_L;
 	WALK_DOWN_L.push_back(sKeyFrameSprite(0.01f, 4));
 	WALK_DOWN_L.push_back(sKeyFrameSprite(0.2f, 3));
 	WALK_DOWN_L.push_back(sKeyFrameSprite(0.3f, 3));
 	CreateSpriteAnimation(PLAYER, "WALK_DOWN_L", WALK_DOWN_L);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_DOWN_L", WALK_DOWN_L);
+	CreateSpriteAnimation(NPC, "WALK_DOWN_L", WALK_DOWN_L);
 
 	std::vector<sKeyFrameSprite> WALK_DOWN_R;
 	WALK_DOWN_R.push_back(sKeyFrameSprite(0.01f, 5));
 	WALK_DOWN_R.push_back(sKeyFrameSprite(0.2f, 3));
 	WALK_DOWN_R.push_back(sKeyFrameSprite(0.3f, 3));
 	CreateSpriteAnimation(PLAYER, "WALK_DOWN_R", WALK_DOWN_R);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_DOWN_R", WALK_DOWN_R);
+	CreateSpriteAnimation(NPC, "WALK_DOWN_R", WALK_DOWN_R);
 
 	std::vector<sKeyFrameSprite> WALK_LEFT_L;
 	WALK_LEFT_L.push_back(sKeyFrameSprite(0.01f, 7));
 	WALK_LEFT_L.push_back(sKeyFrameSprite(0.2f, 6));
 	WALK_LEFT_L.push_back(sKeyFrameSprite(0.3f, 6));
 	CreateSpriteAnimation(PLAYER, "WALK_LEFT_L", WALK_LEFT_L);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_LEFT_L", WALK_LEFT_L);
+	CreateSpriteAnimation(NPC, "WALK_LEFT_L", WALK_LEFT_L);
 
 	std::vector<sKeyFrameSprite> WALK_LEFT_R;
 	WALK_LEFT_R.push_back(sKeyFrameSprite(0.01f, 8));
 	WALK_LEFT_R.push_back(sKeyFrameSprite(0.2f, 6));
 	WALK_LEFT_R.push_back(sKeyFrameSprite(0.3f, 6));
 	CreateSpriteAnimation(PLAYER, "WALK_LEFT_R", WALK_LEFT_R);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_LEFT_R", WALK_LEFT_R);
+	CreateSpriteAnimation(NPC, "WALK_LEFT_R", WALK_LEFT_R);
 
 	std::vector<sKeyFrameSprite> WALK_RIGHT_L;
 	WALK_RIGHT_L.push_back(sKeyFrameSprite(0.01f, 10));
 	WALK_RIGHT_L.push_back(sKeyFrameSprite(0.2f, 9));
 	WALK_RIGHT_L.push_back(sKeyFrameSprite(0.3f, 9));
 	CreateSpriteAnimation(PLAYER, "WALK_RIGHT_L", WALK_RIGHT_L);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_RIGHT_L", WALK_RIGHT_L);
+	CreateSpriteAnimation(NPC, "WALK_RIGHT_L", WALK_RIGHT_L);
 
 	std::vector<sKeyFrameSprite> WALK_RIGHT_R;
 	WALK_RIGHT_R.push_back(sKeyFrameSprite(0.01f, 11));
 	WALK_RIGHT_R.push_back(sKeyFrameSprite(0.2f, 9));
 	WALK_RIGHT_R.push_back(sKeyFrameSprite(0.3f, 9));
 	CreateSpriteAnimation(PLAYER, "WALK_RIGHT_R", WALK_RIGHT_R);
-	CreateSpriteAnimation(NPC, "ASYM_WALK_RIGHT_R", WALK_RIGHT_R);
+	CreateSpriteAnimation(NPC, "WALK_RIGHT_R", WALK_RIGHT_R);
 
 	std::vector<sKeyFrameSprite> RUN_UP;
 	RUN_UP.push_back(sKeyFrameSprite(0.01f, 13));

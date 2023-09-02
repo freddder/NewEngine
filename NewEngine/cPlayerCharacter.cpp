@@ -9,6 +9,7 @@ cPlayerCharacter::cPlayerCharacter(glm::vec3 position) : cCharacter(position, "N
 {
 	spriteAnimation->isRepeat = true;
 	lastDesiredDirection = DOWN;
+	characterType = PLAYER;
 }
 
 cPlayerCharacter::~cPlayerCharacter()
@@ -72,7 +73,7 @@ void cPlayerCharacter::Run(eDirection dir)
 		}
 
 		std::vector<sKeyFrameSprite> keyframes;
-		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
+		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(characterType, animationName, keyframes);
 		spriteAnimation->AddKeyFrames(keyframes);
 		switchLeg = !switchLeg;
 	}
@@ -80,18 +81,24 @@ void cPlayerCharacter::Run(eDirection dir)
 	{
 		modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));
 
-		if(lastDesiredDirection != dir) spriteAnimation->Reset(model->currSpriteId, model->scale);
+		if (lastDesiredDirection != dir || spriteAnimation->keyframes.size() == 0)
+		{
+			spriteAnimation->Reset(model->currSpriteId, model->scale);
 
-		std::string animationName;
-		if (dir == UP) animationName = "RUN_UP";
-		else if (dir == DOWN) animationName = "RUN_DOWN";
-		else if (dir == LEFT) animationName = "RUN_LEFT";
-		else if (dir == RIGHT) animationName = "RUN_RIGHT";
+			std::string animationName;
+			if (dir == UP) animationName = "RUN_UP";
+			else if (dir == DOWN) animationName = "RUN_DOWN";
+			else if (dir == LEFT) animationName = "RUN_LEFT";
+			else if (dir == RIGHT) animationName = "RUN_RIGHT";
 
-		std::vector<sKeyFrameSprite> keyframes;
-		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
-		spriteAnimation->AddKeyFrames(keyframes);
+			std::vector<sKeyFrameSprite> keyframes;
+			cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(characterType, animationName, keyframes);
+			spriteAnimation->AddKeyFrames(keyframes);
+		}
+
 		lastDesiredDirection = dir;
+
+		if (follower && moveResult != 0) follower->Follow(model->position, true);
 	}
 }
 

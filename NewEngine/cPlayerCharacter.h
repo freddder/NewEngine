@@ -10,6 +10,6 @@ public:
 	~cPlayerCharacter();
 
 	virtual void Walk(eDirection dir);
-	void Run(eDirection dir);
+	virtual void Run(eDirection dir);
 	void StopMovement();
 };

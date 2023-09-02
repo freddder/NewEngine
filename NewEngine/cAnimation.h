@@ -4,6 +4,13 @@
 #include <string>
 #include <functional>
 
+enum eSpriteEntityType
+{
+	PLAYER,
+	NPC,
+	OW_POKEMON
+};
+
 enum eDirection
 {
 	UP,
