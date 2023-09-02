@@ -151,6 +151,8 @@ int main()
     //g_RenderManager->AddModel(tree);
 
     playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
+    cCharacter* follower = new cCharacter(glm::vec3(0.f, 0.f, 3.f), "AsymetricalNPC_1.png");
+    playerChar->SetFollower(follower);
     camera->playerPosition = &playerChar->model->position;
 
     //mapManager->LoadMap("WinterTestDesc.json");
@@ -297,6 +299,9 @@ int main()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
+    delete playerChar;
+    delete follower;
+
     Shutdown();
 
     // glfw: terminate, clearing all previously allocated GLFW resources.
@@ -325,24 +330,6 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         cCamera::GetInstance()->MoveDown(deltaTime);
 
-    //if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    //    playerChar->Run(UP);
-    //if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    //    playerChar->Run(DOWN);
-    //if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    //    playerChar->Run(LEFT);
-    //if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-    //    playerChar->Run(RIGHT);
-    //
-    //if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    //    playerChar->Walk(UP);
-    //if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    //    playerChar->Walk(DOWN);
-    //if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    //    playerChar->Walk(LEFT);
-    //if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    //    playerChar->Walk(RIGHT);
-
     bool playerDesiresMovement = false;
     eDirection playerDesiredDirection = eDirection::UP;
 
@@ -369,8 +356,10 @@ void processInput(GLFWwindow* window)
 
     if (playerDesiresMovement)
     {
-        if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) playerChar->Run(playerDesiredDirection);
-        else playerChar->Walk(playerDesiredDirection);
+        if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) 
+            playerChar->Move(playerDesiredDirection, true);
+        else 
+            playerChar->Move(playerDesiredDirection, false);
     }
     else
     {

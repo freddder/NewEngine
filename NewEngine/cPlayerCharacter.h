@@ -9,7 +9,9 @@ public:
 	cPlayerCharacter(glm::vec3 position);
 	~cPlayerCharacter();
 
-	virtual void Walk(eDirection dir);
-	virtual void Run(eDirection dir);
+	virtual void Move(eDirection dir, bool run);
 	void StopMovement();
+private:
+	void SetupSpriteWalk(eDirection dir);
+	void SetupSpriteRun(eDirection dir);
 };

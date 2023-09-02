@@ -17,8 +17,7 @@ protected:
 	bool switchLeg;
 public:
 	cSpriteModel* model;
-	virtual void Walk(eDirection dir);
-	virtual void Run(eDirection dir);
+	virtual void Move(eDirection dir, bool run);
 
 	// Follow
 protected:
