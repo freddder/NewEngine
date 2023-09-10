@@ -29,6 +29,7 @@
 #include "cTextureManager.h"
 //#include "cModelManager.h"
 #include "cCamera.h"
+#include "cOverworldPokemon.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -136,6 +137,7 @@ int main()
     textureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
     textureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     textureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+    textureManager->CreateSpriteSheet("722.png", 4, 4, false);
 
     textureManager->CreateTexture("SnowFlake1.png");
     textureManager->CreateTexture("SnowFlake2.png");
@@ -151,7 +153,7 @@ int main()
     //g_RenderManager->AddModel(tree);
 
     playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
-    cCharacter* follower = new cCharacter(glm::vec3(0.f, 0.f, 3.f), "AsymetricalNPC_1.png");
+    cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(0.f, 0.f, 3.f), "722.png");
     playerChar->SetFollower(follower);
     camera->playerPosition = &playerChar->model->position;
 

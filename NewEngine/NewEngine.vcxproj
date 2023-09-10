@@ -156,6 +156,7 @@
     <ClCompile Include="cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="cMapManager.cpp" />
     <ClCompile Include="cOceanModel.cpp" />
+    <ClCompile Include="cOverworldPokemon.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
     <ClCompile Include="cParticleSpawner.cpp" />
     <ClCompile Include="cPlayerCharacter.cpp" />
@@ -163,7 +164,6 @@
     <ClCompile Include="cModelAnimation.cpp" />
     <ClCompile Include="cModelManager.cpp" />
     <ClCompile Include="cRenderManager.cpp" />
-    <ClCompile Include="cSpecialCharacter.cpp" />
     <ClCompile Include="cSpriteAnimation.cpp" />
     <ClCompile Include="cSpriteModel.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
@@ -203,7 +203,6 @@
     <ClInclude Include="cModelAnimation.h" />
     <ClInclude Include="cModelManager.h" />
     <ClInclude Include="cRenderManager.h" />
-    <ClInclude Include="cSpecialCharacter.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cSpriteAnimation.h" />
     <ClInclude Include="cSpriteModel.h" />
@@ -222,6 +221,7 @@
     <ClInclude Include="include\imgui\imstb_rectpack.h" />
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
+    <ClInclude Include="cOverworldPokemon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\3DParticleFragShader.glsl" />

@@ -123,9 +123,6 @@
     <ClCompile Include="cCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="cSpecialCharacter.cpp">
-      <Filter>Character</Filter>
-    </ClCompile>
     <ClCompile Include="cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -170,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="cAnimation.cpp">
       <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="cOverworldPokemon.cpp">
+      <Filter>Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,9 +236,6 @@
     <ClInclude Include="cAnimationManager.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cSpecialCharacter.h">
-      <Filter>Character</Filter>
-    </ClInclude>
     <ClInclude Include="cCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
@@ -286,6 +283,9 @@
     </ClInclude>
     <ClInclude Include="cOceanModel.h">
       <Filter>Model\MapEnvoirnmentModels</Filter>
+    </ClInclude>
+    <ClInclude Include="cOverworldPokemon.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

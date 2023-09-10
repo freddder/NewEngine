@@ -23,7 +23,7 @@ public:
 protected:
 	cCharacter* follower;
 public:
-	void Follow(glm::vec3 newPosition, bool run);
+	virtual void Follow(glm::vec3 newPosition, bool run);
 	void SetFollower(cCharacter* newFollower);
 	void UnsetFollower();
 };

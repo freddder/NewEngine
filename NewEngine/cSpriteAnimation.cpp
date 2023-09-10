@@ -46,28 +46,12 @@ void cSpriteAnimation::Process(float deltaTime)
 
 	timer += deltaTime * speed;
 
-	//for (unsigned int keyFrameIndex = 0; keyFrameIndex < keyframes.size(); keyFrameIndex++)
+	//if (keyframes.size() != 0 && keyframes[0].time > timer)
 	//{
-	//	if (keyframes[keyFrameIndex].time >= timer)
-	//	{
-	//		// no interpolation I guess
-	//		if (keyFrameIndex != 0)
-	//		{
-	//			spriteIdRef = keyframes[keyFrameIndex - 1].value;
+	//	spriteIdRef = initId;
+	//	//modelScaleRef = initScale;
 
-	//			if ((keyframes[keyFrameIndex - 1].flip && modelScaleRef.z > 0) ||
-	//				!keyframes[keyFrameIndex - 1].flip && modelScaleRef.z < 0)
-	//			{
-	//				modelScaleRef.z *= -1;
-	//			}
-	//		}
-	//		else
-	//		{
-	//			spriteIdRef = initId;
-	//		}
-
-	//		break;
-	//	}
+	//	return;
 	//}
 
 	for (int keyFrameIndex = keyframes.size() - 1; keyFrameIndex >= 0; keyFrameIndex--)
@@ -86,12 +70,4 @@ void cSpriteAnimation::Process(float deltaTime)
 			break;
 		}
 	}
-
-	//if (timer >= maxDuration)
-	//{
-	//	if (isRepeat)
-	//		timer = 0.f;
-	//	else
-	//		isDone = true;
-	//}
 }

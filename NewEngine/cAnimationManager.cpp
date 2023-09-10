@@ -173,6 +173,38 @@ void cAnimationManager::InitializeAnimationsPresets()
 	SYM_WALK_RIGHT_R.push_back(sKeyFrameSprite(0.2f, 4, true));
 	SYM_WALK_RIGHT_R.push_back(sKeyFrameSprite(0.3f, 4, true));
 	CreateSpriteAnimation(NPC, "SYM_WALK_RIGHT_R", SYM_WALK_RIGHT_R);
+
+	std::vector<sKeyFrameSprite> OWP_WALK_UP;
+	OWP_WALK_UP.push_back(sKeyFrameSprite(0.01f, 12));
+	OWP_WALK_UP.push_back(sKeyFrameSprite(0.15f, 13));
+	OWP_WALK_UP.push_back(sKeyFrameSprite(0.3f, 14));
+	OWP_WALK_UP.push_back(sKeyFrameSprite(0.45f, 15));
+	OWP_WALK_UP.push_back(sKeyFrameSprite(0.6f, 15));
+	CreateSpriteAnimation(OW_POKEMON, "WALK_UP", OWP_WALK_UP);
+
+	std::vector<sKeyFrameSprite> OWP_WALK_DOWN;
+	OWP_WALK_DOWN.push_back(sKeyFrameSprite(0.01f, 0));
+	OWP_WALK_DOWN.push_back(sKeyFrameSprite(0.15f, 1));
+	OWP_WALK_DOWN.push_back(sKeyFrameSprite(0.3f, 2));
+	OWP_WALK_DOWN.push_back(sKeyFrameSprite(0.45f, 3));
+	OWP_WALK_DOWN.push_back(sKeyFrameSprite(0.6f, 3));
+	CreateSpriteAnimation(OW_POKEMON, "WALK_DOWN", OWP_WALK_DOWN);
+
+	std::vector<sKeyFrameSprite> OWP_WALK_LEFT;
+	OWP_WALK_LEFT.push_back(sKeyFrameSprite(0.01f, 4));
+	OWP_WALK_LEFT.push_back(sKeyFrameSprite(0.15f, 5));
+	OWP_WALK_LEFT.push_back(sKeyFrameSprite(0.3f, 6));
+	OWP_WALK_LEFT.push_back(sKeyFrameSprite(0.45f, 7));
+	OWP_WALK_LEFT.push_back(sKeyFrameSprite(0.6f, 7));
+	CreateSpriteAnimation(OW_POKEMON, "WALK_LEFT", OWP_WALK_LEFT);
+
+	std::vector<sKeyFrameSprite> OWP_WALK_RIGHT;
+	OWP_WALK_RIGHT.push_back(sKeyFrameSprite(0.01f, 8));
+	OWP_WALK_RIGHT.push_back(sKeyFrameSprite(0.15f, 9));
+	OWP_WALK_RIGHT.push_back(sKeyFrameSprite(0.3f, 10));
+	OWP_WALK_RIGHT.push_back(sKeyFrameSprite(0.45f, 11));
+	OWP_WALK_RIGHT.push_back(sKeyFrameSprite(0.6f, 11));
+	CreateSpriteAnimation(OW_POKEMON, "WALK_RIGHT", OWP_WALK_RIGHT);
 }
 
 void cAnimationManager::AddAnimation(cAnimation* newAnimation)
