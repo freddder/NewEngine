@@ -17,7 +17,6 @@
 #include "cSpriteAnimation.h"
 #include "cFloatAnimation.h"
 #include "cModelAnimation.h"
-#include "cPlayerCharacter.h"
 #include "cSpriteModel.h"
 
 #include "cParticleManager.h"
@@ -27,9 +26,11 @@
 #include "cAnimationManager.h"
 #include "cLightManager.h"
 #include "cTextureManager.h"
-//#include "cModelManager.h"
+
 #include "cCamera.h"
 #include "cOverworldPokemon.h"
+#include "cPlayerCharacter.h"
+#include "cNPCCharacter.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);

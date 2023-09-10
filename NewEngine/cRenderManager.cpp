@@ -15,7 +15,6 @@
 #include "cWeatherManager.h"
 #include "cLightManager.h"
 #include "cTextureManager.h"
-#include "cModelManager.h"
 #include "cCamera.h"
 
 cRenderManager* cRenderManager::singleton = NULL;

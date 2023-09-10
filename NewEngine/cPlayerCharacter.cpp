@@ -9,7 +9,6 @@ cPlayerCharacter::cPlayerCharacter(glm::vec3 position) : cCharacter(position, "N
 {
 	spriteAnimation->isRepeat = true;
 	lastDesiredDirection = DOWN;
-	characterType = PLAYER;
 }
 
 cPlayerCharacter::~cPlayerCharacter()
@@ -20,38 +19,14 @@ void cPlayerCharacter::Move(eDirection dir, bool run)
 {
 	if (!modelAnimation->isDone) return;
 
-	modelAnimation->Reset(model->position, model->orientation, model->scale);
+	int moveResult = ProcessMovement(dir, run);
 
-	// Make model animation
-	int moveResult = cMapManager::GetInstance()->TryMoveEntity(model->position, dir);
-	glm::vec3 newPosition = model->position;
-
-	if (moveResult != 0)
-	{
-		if (dir == UP) newPosition.x += 1.f;
-		else if (dir == DOWN) newPosition.x -= 1.f;
-		else if (dir == LEFT) newPosition.z -= 1.f;
-		else if (dir == RIGHT) newPosition.z += 1.f;
-	}
-
-	// Ajust height
-	if (moveResult == 2) newPosition.y += 1.f;
-	else if (moveResult == 3) newPosition.y -= 1.f;
-
-	if (!run || moveResult == 0)
-	{
-		modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
-		SetupSpriteWalk(dir);
-	}
-	else
-	{
-		modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));
-		SetupSpriteRun(dir);
-	}
+	if (!run || moveResult == 0) SetupSpriteWalk(dir);
+	else SetupSpriteRun(dir);
 
 	lastDesiredDirection = dir;
 
-	if (follower && moveResult != 0) follower->Follow(model->position, run);
+	if (follower && moveResult != 0) MoveFollower(model->position, run);
 }
 
 void cPlayerCharacter::StopMovement()
@@ -93,7 +68,7 @@ void cPlayerCharacter::SetupSpriteWalk(eDirection dir)
 	}
 
 	std::vector<sKeyFrameSprite> keyframes;
-	cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(characterType, animationName, keyframes);
+	cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
 	spriteAnimation->AddKeyFrames(keyframes);
 	switchLeg = !switchLeg;
 }
@@ -111,7 +86,7 @@ void cPlayerCharacter::SetupSpriteRun(eDirection dir)
 		else if (dir == RIGHT) animationName = "RUN_RIGHT";
 
 		std::vector<sKeyFrameSprite> keyframes;
-		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(characterType, animationName, keyframes);
+		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
 		spriteAnimation->AddKeyFrames(keyframes);
 	}
 }

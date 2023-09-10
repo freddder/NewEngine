@@ -10,5 +10,4 @@ public:
 	~cOverworldPokemon();
 
 	virtual void Move(eDirection dir, bool run);
-	virtual void Follow(glm::vec3 newPosition, bool run);
 };

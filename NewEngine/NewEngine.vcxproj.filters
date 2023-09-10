@@ -81,9 +81,6 @@
     <ClCompile Include="cCamera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="cModelManager.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="cRenderModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -171,6 +168,9 @@
     <ClCompile Include="cOverworldPokemon.cpp">
       <Filter>Character</Filter>
     </ClCompile>
+    <ClCompile Include="cNPCCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Global.h">
@@ -186,9 +186,6 @@
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="DrawInfo.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="cModelManager.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="include\imgui\imconfig.h">
@@ -285,6 +282,9 @@
       <Filter>Model\MapEnvoirnmentModels</Filter>
     </ClInclude>
     <ClInclude Include="cOverworldPokemon.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="cNPCCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>

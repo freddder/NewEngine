@@ -1,7 +1,6 @@
 #include "Global.h"
 
 #include "cCamera.h"
-//#include "cModelManager.h"
 #include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
@@ -13,8 +12,6 @@
 void Shutdown()
 {
     cCamera::DestroyInstance();
-
-    //cModelManager::DestroyInstance();
 
     cTextureManager::DestroyInstance();
 

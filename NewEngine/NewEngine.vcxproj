@@ -155,6 +155,7 @@
     <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="cMapManager.cpp" />
+    <ClCompile Include="cNPCCharacter.cpp" />
     <ClCompile Include="cOceanModel.cpp" />
     <ClCompile Include="cOverworldPokemon.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
@@ -162,7 +163,6 @@
     <ClCompile Include="cPlayerCharacter.cpp" />
     <ClCompile Include="cRenderModel.cpp" />
     <ClCompile Include="cModelAnimation.cpp" />
-    <ClCompile Include="cModelManager.cpp" />
     <ClCompile Include="cRenderManager.cpp" />
     <ClCompile Include="cSpriteAnimation.cpp" />
     <ClCompile Include="cSpriteModel.cpp" />
@@ -194,6 +194,7 @@
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cLinearCongruentialGenerator.h" />
     <ClInclude Include="cMapManager.h" />
+    <ClInclude Include="cNPCCharacter.h" />
     <ClInclude Include="cOceanModel.h" />
     <ClInclude Include="cParticleManager.h" />
     <ClInclude Include="cParticleSpawner.h" />
@@ -201,7 +202,6 @@
     <ClInclude Include="cRandomNumberGenerator.h" />
     <ClInclude Include="cRenderModel.h" />
     <ClInclude Include="cModelAnimation.h" />
-    <ClInclude Include="cModelManager.h" />
     <ClInclude Include="cRenderManager.h" />
     <ClInclude Include="cSceneManager.h" />
     <ClInclude Include="cSpriteAnimation.h" />

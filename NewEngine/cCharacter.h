@@ -13,17 +13,16 @@ public:
 protected:
 	cSpriteAnimation* spriteAnimation;
 	cModelAnimation* modelAnimation;
-	eSpriteEntityType characterType;
-	bool switchLeg;
+	int ProcessMovement(eDirection dir, bool run);
 public:
 	cSpriteModel* model;
-	virtual void Move(eDirection dir, bool run);
+	virtual void Move(eDirection dir, bool run) = 0;
 
 	// Follow
 protected:
 	cCharacter* follower;
 public:
-	virtual void Follow(glm::vec3 newPosition, bool run);
+	void MoveFollower(glm::vec3 newPosition, bool run);
 	void SetFollower(cCharacter* newFollower);
 	void UnsetFollower();
 };

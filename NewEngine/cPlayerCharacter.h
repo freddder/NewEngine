@@ -4,6 +4,7 @@
 class cPlayerCharacter : public cCharacter
 {
 	eDirection lastDesiredDirection;
+	bool switchLeg;
 
 public:
 	cPlayerCharacter(glm::vec3 position);
