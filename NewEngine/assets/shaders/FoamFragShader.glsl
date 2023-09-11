@@ -21,6 +21,7 @@ struct sLight
 layout (std140) uniform Lights
 {
     sLight theLights[20];
+	int shadowSampleRadius;
 };
 
 layout (std140) uniform Fog
@@ -99,15 +100,15 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     float bias = 0.002;
 	float shadow = 0.0;
 	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-	for(int x = -1; x <= 1; ++x)
+	for(int x = shadowSampleRadius * -1; x <= shadowSampleRadius; ++x)
 	{
-	    for(int y = -1; y <= 1; ++y)
+	    for(int y = shadowSampleRadius * -1; y <= shadowSampleRadius; ++y)
 	    {
 	        float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
 	        shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;        
 	    }    
 	}
-	shadow /= 9.0;
+	shadow /= pow(shadowSampleRadius * 2 + 1, 2);
 
     return shadow;
 }

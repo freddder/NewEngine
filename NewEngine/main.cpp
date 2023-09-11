@@ -158,8 +158,8 @@ int main()
     playerChar->SetFollower(follower);
     camera->playerPosition = &playerChar->model->position;
 
-    //mapManager->LoadMap("WinterTestDesc.json");
-    mapManager->LoadMap("WaterTest3Desc.json");
+    mapManager->LoadMap("WinterTestDesc.json");
+    //mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
 
     weatherManager->SetWeather(SNOW);
@@ -265,9 +265,12 @@ int main()
         colors[1] = &lightManager->lights[0].diffuse.g;
         colors[2] = &lightManager->lights[0].diffuse.b;
 
+        int* shadowSmooth = &lightManager->shadowSampleRadius;
+
         ImGui::Begin("Lights");
         ImGui::ColorEdit3("Color", *colors);
         ImGui::DragFloat3("Position", *position);
+        ImGui::DragInt("Smoothing", shadowSmooth);
         //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
         //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
         //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);

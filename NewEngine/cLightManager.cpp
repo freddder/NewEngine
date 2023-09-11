@@ -9,10 +9,12 @@ cLightManager::cLightManager()
 	glGenBuffers(1, &uboLights);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, uboLights);
-	glBufferData(GL_UNIFORM_BUFFER, NUMBER_OF_LIGHTS * sizeof(sLight), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, (NUMBER_OF_LIGHTS * sizeof(sLight)) + sizeof(GL_INT), NULL, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uboLights, 0, NUMBER_OF_LIGHTS * sizeof(sLight));
+
+	shadowSampleRadius = 5;
 }
 
 cLightManager::~cLightManager()
@@ -30,5 +32,6 @@ void cLightManager::SetUnimormValues()
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, uboLights);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, NUMBER_OF_LIGHTS * sizeof(sLight), lights);
+	glBufferSubData(GL_UNIFORM_BUFFER, NUMBER_OF_LIGHTS * sizeof(sLight), sizeof(GL_INT), &shadowSampleRadius);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

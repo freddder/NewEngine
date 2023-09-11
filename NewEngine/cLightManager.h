@@ -56,6 +56,8 @@ public:
 	const static unsigned int NUMBER_OF_LIGHTS = 20;
 	sLight lights[NUMBER_OF_LIGHTS];
 
+	int shadowSampleRadius;
+
 	void AddProgramToBlock(unsigned int newProgram); // called everytime a new program is created
 	void SetUnimormValues(); // called every frame
 };

@@ -111,7 +111,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 			newTileUnwalkableOffsets.push_back(newUnwalkableOffset);
 		}
 
-		rapidjson::Value& tileIds = correctionTileData[i]["tileIds"];
+		rapidjson::Value& tileIds = correctionTileData[i]["tileId"];
 		for (unsigned int j = 0; j < tileIds.Size(); j++)
 		{
 			int tileId = tileIds[j].GetInt();

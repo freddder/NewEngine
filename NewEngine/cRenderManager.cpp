@@ -725,7 +725,7 @@ void cRenderManager::DrawScene()
     //g_LightManager->SetUnimormValues(programMap[currShader].ID);
     cLightManager::GetInstance()->SetUnimormValues();
 
-    // pass projection matrix to shader (note that in this case it could change every frame)
+    // pass projection matrix to shader
     glm::mat4 projection = cCamera::GetInstance()->GetProjectionMatrix();
 
     // camera/view transformation
@@ -754,47 +754,6 @@ void cRenderManager::DrawScene()
     }
 
     // Draw weather particles
-
-    //use("snow");
-
-    //projection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, 1.f, 100.f);
-    //view = g_Camera->GetViewMatrix();
-
-    //setMat4("view", view);
-    //setMat4("projection", projection);
-    //setInt("scrWidth", g_Camera->SCR_WIDTH);
-    //setInt("scrHeight", g_Camera->SCR_HEIGHT);
-    //setFloat("swingDegree", g_WeatherManager->offsetDegree);
-    //setVec3("cameraPosition", g_Camera->position);
-
-    //for (unsigned int i = 0; i < g_WeatherManager->particleTypes.size(); i++)
-    //{
-    //    g_TextureManager->SetupTexture(g_WeatherManager->particleTypes[i].textureName, 0);
-
-    //    sModelDrawInfo drawInfo;
-    //    g_ModelManager->FindModelByName(g_WeatherManager->particleTypes[i].modelName, drawInfo);
-
-    //    glBindVertexArray(drawInfo.allMeshesData[0].VAO_ID);
-
-    //    glBindBuffer(GL_ARRAY_BUFFER, g_WeatherManager->particleTypes[i].positionsBufferId);
-
-    //    GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
-    //    glEnableVertexAttribArray(offset_location);
-    //    glVertexAttribPointer(offset_location, 2,
-    //        GL_FLOAT, GL_FALSE,
-    //        sizeof(glm::vec2),
-    //        (void*)0);
-    //    glVertexAttribDivisor(offset_location, 1);
-
-    //    glDrawElementsInstanced(GL_TRIANGLES,
-    //        drawInfo.allMeshesData[0].numberOfIndices,
-    //        GL_UNSIGNED_INT,
-    //        (void*)0,
-    //        g_WeatherManager->particleTypes[i].positions.size());
-
-    //    glBindVertexArray(0);
-    //}
-
     cParticleManager::GetInstance()->DrawSpawnerParticles();
 
     // Draw skybox
