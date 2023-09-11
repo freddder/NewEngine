@@ -265,31 +265,38 @@ int main()
         colors[1] = &lightManager->lights[0].diffuse.g;
         colors[2] = &lightManager->lights[0].diffuse.b;
 
-        int* shadowSmooth = &lightManager->shadowSampleRadius;
-
-        ImGui::Begin("Lights");
-        ImGui::ColorEdit3("Color", *colors);
-        ImGui::DragFloat3("Position", *position);
-        ImGui::DragInt("Smoothing", shadowSmooth);
-        //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
-        //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
-        //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
-        ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(200, 200));
-        ImGui::End();
-
         float* fogColor[3];
         fogColor[0] = &weatherManager->fogColor.r;
         fogColor[1] = &weatherManager->fogColor.g;
         fogColor[2] = &weatherManager->fogColor.b;
 
-        ImGui::Begin("Fog");
-        ImGui::ColorEdit3("Color", *fogColor);
-        ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
-        ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
-        if (ImGui::Button("Change weather"))
+        int* shadowSmooth = &lightManager->shadowSampleRadius;
+
+        ImGui::Begin("Weather");
+        ImGui::BeginTabBar("Tabs");
+        if (ImGui::BeginTabItem("Light"))
         {
-            weatherManager->SetWeather(HAIL);
+            ImGui::ColorEdit3("Color", *colors);
+            ImGui::DragFloat3("Position", *position);
+            ImGui::DragInt("Smoothing", shadowSmooth);
+            //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
+            //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
+            //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
+            ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(200, 200));
+            ImGui::EndTabItem();
         }
+        if (ImGui::BeginTabItem("Fog")) 
+        {
+            ImGui::ColorEdit3("Color", *fogColor);
+            ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
+            ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
+            if (ImGui::Button("Change weather"))
+            {
+                weatherManager->SetWeather(HAIL);
+            }
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
         ImGui::End();
 
         ImGui::Render();
