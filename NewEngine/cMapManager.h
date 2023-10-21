@@ -44,15 +44,7 @@ class cMapManager
 	cMapManager();
 	~cMapManager();
 	cMapManager(const cMapManager& obj) = delete;
-
-	std::vector<sQuadrant> quads;
-	std::map<int, sCorrectionTiles> walkableTiles;
-	cRenderModel* mapModel;
-
-	std::map<int, sInstancedTile> instancedTiles;
-
 public:
-
 	static cMapManager* GetInstance()
 	{
 		if (singleton == NULL)
@@ -62,7 +54,6 @@ public:
 
 		return singleton;
 	}
-
 	static void DestroyInstance()
 	{
 		if (singleton != NULL)
@@ -72,6 +63,13 @@ public:
 		}
 	}
 
+private:
+	std::vector<sQuadrant> quads;
+	std::map<int, sCorrectionTiles> walkableTiles;
+	cRenderModel* mapModel;
+	std::map<int, sInstancedTile> instancedTiles;
+public:
 	void LoadMap(std::string mapDescriptionFile);
+
 	int TryMoveEntity(glm::vec3 currPosition, eDirection direction);
 };

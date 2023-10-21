@@ -36,11 +36,7 @@ class cWeatherManager
 	cWeatherManager();
 	~cWeatherManager();
 	cWeatherManager(const cWeatherManager& obj) = delete;
-
-	eWeather currWeather;
-
 public:
-
 	static cWeatherManager* GetInstance()
 	{
 		if (singleton == NULL)
@@ -50,7 +46,6 @@ public:
 
 		return singleton;
 	}
-
 	static void DestroyInstance()
 	{
 		if (singleton != NULL)
@@ -60,6 +55,10 @@ public:
 		}
 	}
 
+private:
+	eWeather currWeather;
+
+public:
 	float fogDensity;
 	float fogGradient;
 	glm::vec3 fogColor;

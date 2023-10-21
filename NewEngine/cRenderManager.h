@@ -24,6 +24,26 @@ class cRenderManager
     cRenderManager();
     ~cRenderManager();
     cRenderManager(const cRenderManager& obj) = delete;
+public:
+    static cRenderManager* GetInstance()
+    {
+        if (singleton == NULL)
+        {
+            singleton = new cRenderManager();
+        }
+
+        return singleton;
+    }
+    static void DestroyInstance()
+    {
+        if (singleton != NULL)
+        {
+            delete singleton;
+            singleton = NULL;
+        }
+    }
+
+private:
 
     unsigned int notInstancedOffsetBufferId;
 
@@ -48,25 +68,6 @@ class cRenderManager
     void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
 
 public:
-
-    static cRenderManager* GetInstance()
-    {
-        if (singleton == NULL)
-        {
-            singleton = new cRenderManager();
-        }
-
-        return singleton;
-    }
-
-    static void DestroyInstance()
-    {
-        if (singleton != NULL)
-        {
-            delete singleton;
-            singleton = NULL;
-        }
-    }
 
 	void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
     void use(std::string programName);

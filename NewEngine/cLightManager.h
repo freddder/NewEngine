@@ -29,11 +29,7 @@ class cLightManager
 	cLightManager();
 	~cLightManager();
 	cLightManager(const cLightManager& obj) = delete;
-
-	unsigned int uboLights;
-
 public:
-
 	static cLightManager* GetInstance()
 	{
 		if (singleton == NULL)
@@ -43,7 +39,6 @@ public:
 
 		return singleton;
 	}
-
 	static void DestroyInstance()
 	{
 		if (singleton != NULL)
@@ -60,4 +55,7 @@ public:
 
 	void AddProgramToBlock(unsigned int newProgram); // called everytime a new program is created
 	void SetUnimormValues(); // called every frame
+
+private:
+	unsigned int uboLights;
 };

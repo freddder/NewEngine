@@ -16,15 +16,11 @@ struct sSpriteSheet
 
 class cTextureManager
 {
+	// Singleton
 	static cTextureManager* singleton;
 	cTextureManager();
 	cTextureManager(const cTextureManager& obj) = delete;
-
-	std::map<std::string, sSpriteSheet> spriteSheetsMap;
-	std::map<std::string, unsigned int> texturesMap;
-
 public:
-
 	static cTextureManager* GetInstance()
 	{
 		if (singleton == NULL)
@@ -34,7 +30,6 @@ public:
 
 		return singleton;
 	}
-
 	static void DestroyInstance()
 	{
 		if (singleton != NULL)
@@ -44,10 +39,13 @@ public:
 		}
 	}
 
+private:
+	std::map<std::string, sSpriteSheet> spriteSheetsMap;
+	std::map<std::string, unsigned int> texturesMap;
+public:
 	void CreateTexture(std::string fileName);
 	bool GetTexureId(std::string texture, unsigned int& textureID);
 	unsigned int CreateCubemap(std::vector<std::string> faces);
-
 	void CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym);
 	bool GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet);
 

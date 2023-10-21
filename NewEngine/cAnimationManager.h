@@ -15,9 +15,7 @@ class cAnimationManager
 	static cAnimationManager* singleton;
 	cAnimationManager();
 	cAnimationManager(const cAnimationManager& obj) = delete;
-
 public:
-
 	static cAnimationManager* GetInstance()
 	{
 		if (singleton == NULL)
@@ -27,7 +25,6 @@ public:
 
 		return singleton;
 	}
-
 	static void DestroyInstance()
 	{
 		if (singleton != NULL)
