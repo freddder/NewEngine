@@ -3,8 +3,12 @@
 #include <glm/glm.hpp>
 #include <set>
 #include <map>
+#include <memory>
 #include "DrawInfo.h"
 #include "cRenderModel.h"
+
+class cSpriteModel;
+class cAnimatedModel;
 
 const std::string SHADER_PATH = "assets/shaders/";
 const std::string MODEL_PATH = "assets/models/";
@@ -16,6 +20,13 @@ struct sShaderProgram
     unsigned int ID;
     std::map<std::string, sModelDrawInfo> modelsLoaded; // stored by file name
     std::map<std::string, unsigned int> uniformLocations;
+};
+
+enum eAnimatedModels
+{
+    OCEAN,
+    FOAM,
+    WAVE
 };
 
 class cRenderManager
@@ -62,7 +73,7 @@ private:
 
     void checkCompileErrors(unsigned int shader, std::string type);
 
-    std::vector< cRenderModel* > models;
+    std::vector< std::shared_ptr<cRenderModel> > models;
 
     std::string lastError;
     void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
@@ -87,8 +98,10 @@ public:
     void setVec3(const std::string& name, const glm::vec3& value);
     void setVec4(const std::string& name, const glm::vec4& value);
 
-    void AddModel(cRenderModel* newModel);
-    void RemoveModel(cRenderModel* model);
-    void DrawObject(cRenderModel* model);
+    static std::shared_ptr<cRenderModel> CreateRenderModel();
+    static std::shared_ptr<cSpriteModel> CreateSpriteModel();
+    static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModels modelType);
+    static void RemoveModel(std::shared_ptr<cRenderModel> model);
+    void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawScene();
 };

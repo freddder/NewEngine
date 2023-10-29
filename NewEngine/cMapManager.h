@@ -3,11 +3,12 @@
 #include <set>
 #include <map>
 #include <string>
+#include <memory>
 #include "cAnimatedModel.h"
 
 struct sInstancedTile
 {
-	cAnimatedModel* instancedModel;
+	std::shared_ptr<cAnimatedModel> instancedModel;
 	std::vector<glm::vec4> instanceOffsets;
 	glm::vec3 modelOffset;
 	//cAnimation* animation;
@@ -66,7 +67,7 @@ public:
 private:
 	std::vector<sQuadrant> quads;
 	std::map<int, sCorrectionTiles> walkableTiles;
-	cRenderModel* mapModel;
+	std::shared_ptr<cRenderModel> mapModel;
 	std::map<int, sInstancedTile> instancedTiles;
 public:
 	void LoadMap(std::string mapDescriptionFile);

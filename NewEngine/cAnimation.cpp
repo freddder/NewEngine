@@ -7,7 +7,11 @@ cAnimation::cAnimation()
 	maxDuration = 0.f;
 	speed = 1.f;
 	isRepeat = false;
-	clearAfterComplete = false;
+	removeAfterComplete = false;
+}
+
+cAnimation::~cAnimation()
+{
 }
 
 void cAnimation::Reset()

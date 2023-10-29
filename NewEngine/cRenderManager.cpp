@@ -11,6 +11,8 @@
 #include <assimp/scene.h>           // Output data structure
 #include <assimp/postprocess.h>     // Post processing flags
 
+#include "cSpriteModel.h"
+#include "cAnimatedModel.h"
 #include "cParticleManager.h"
 #include "cWeatherManager.h"
 #include "cLightManager.h"
@@ -587,20 +589,52 @@ void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
     glUniform4fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
 }
 
-void cRenderManager::AddModel(cRenderModel* newModel)
+std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
 {
-    models.push_back(newModel);
+    std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
+    singleton->models.push_back(newModel);
+
+    return newModel;
 }
 
-void cRenderManager::RemoveModel(cRenderModel* model)
+std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
 {
-    std::vector<cRenderModel*>::iterator it = std::find(models.begin(), models.end(), model);
+    std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
+    singleton->models.push_back(newModel);
+
+    return newModel;
+}
+
+std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModels modelType)
+{
+    std::shared_ptr<cAnimatedModel> newModel;
+
+    switch (modelType)
+    {
+    case FOAM:
+        newModel = std::make_shared<cFoamModel>();
+        break;
+    case OCEAN:
+        newModel = std::make_shared<cOceanModel>();
+        break;
+    case WAVE:
+        newModel = std::make_shared<cWaveModel>();
+        break;
+    }
+    singleton->models.push_back(newModel);
+
+    return newModel;
+}
+
+void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
+{
+    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(singleton->models.begin(), singleton->models.end(), model);
     
-    if(it != models.end())
-        models.erase(it);
+    if(it != singleton->models.end())
+        singleton->models.erase(it);
 }
 
-void cRenderManager::DrawObject(cRenderModel* model)
+void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 {
     sModelDrawInfo drawInfo;
     if (!FindModelByName(model->meshName, model->shaderName, drawInfo))
@@ -709,7 +743,7 @@ void cRenderManager::DrawScene()
 
 
     //Draw scene
-    for (std::vector<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
+    for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
     {
         DrawObject(*it);
     }
@@ -748,7 +782,7 @@ void cRenderManager::DrawScene()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
-    for (std::vector<cRenderModel*>::iterator it = models.begin(); it != models.end(); it++)
+    for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
     {
         DrawObject(*it);
     }

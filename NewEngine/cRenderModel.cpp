@@ -13,9 +13,14 @@ cRenderModel::cRenderModel()
 
 	wholeColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
 
+	meshName = "";
 	textureName = "";
 
 	shaderName = "scene";
+}
+
+cRenderModel::~cRenderModel()
+{
 }
 
 void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)

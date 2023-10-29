@@ -9,9 +9,7 @@
 #include "cFloatAnimation.h"
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
-#include "cOceanModel.h"
-#include "cFoamModel.h"
-#include "cWaveModel.h"
+#include "cAnimatedModel.h"
 
 cMapManager* cMapManager::singleton = NULL;
 
@@ -38,11 +36,12 @@ cMapManager::cMapManager()
 
 cMapManager::~cMapManager()
 {	
-	delete mapModel;
+	//delete mapModel;
+	cRenderManager::GetInstance()->RemoveModel(mapModel);
 
 	for (std::map<int, sInstancedTile>::iterator it = instancedTiles.begin(); it != instancedTiles.end(); it++)
 	{
-		delete it->second.instancedModel;
+		cRenderManager::GetInstance()->RemoveModel(it->second.instancedModel);
 	}
 }
 
@@ -68,9 +67,8 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	// Load map model
 	if (!mapModel)
 	{
-		mapModel = new cRenderModel();
+		mapModel = cRenderManager::CreateRenderModel();
 		mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-		cRenderManager::GetInstance()->AddModel(mapModel);
 	}
 
 	mapModel->meshName = d["mapModelFileName"].GetString();
@@ -138,17 +136,17 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		std::string animationType = currInstancedTile["animationType"].GetString();
 		if (animationType == "ocean")
 		{
-			instancedTiles[tileId].instancedModel = new cOceanModel();
+			instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(OCEAN);
 			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		}
 		else if (animationType == "wave")
 		{
-			instancedTiles[tileId].instancedModel = new cWaveModel();
+			instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(WAVE);
 			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		}
 		else if (animationType == "foam")
 		{
-			instancedTiles[tileId].instancedModel = new cFoamModel();
+			instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(FOAM);
 			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		}
 
@@ -271,8 +269,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		if (it->second.instanceOffsets.size() != 0)
 		{
 			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, cRenderManager::GetInstance()->GetCurrentShaderId());
-			cAnimationManager::GetInstance()->AddAnimation(it->second.instancedModel->animation);
-			cRenderManager::GetInstance()->AddModel(it->second.instancedModel);
+			cAnimationManager::AddAnimation(it->second.instancedModel->animation);
 
 			it->second.instanceOffsets.clear();
 		}

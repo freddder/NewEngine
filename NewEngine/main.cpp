@@ -158,8 +158,8 @@ int main()
     playerChar->SetFollower(follower);
     camera->playerPosition = &playerChar->model->position;
 
-    mapManager->LoadMap("WinterTestDesc.json");
-    //mapManager->LoadMap("WaterTest3Desc.json");
+    //mapManager->LoadMap("WinterTestDesc.json");
+    mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
 
     weatherManager->SetWeather(SNOW);

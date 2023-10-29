@@ -2,6 +2,7 @@
 #include "cSpriteModel.h"
 #include "cSpriteAnimation.h"
 #include "cModelAnimation.h"
+#include <memory>
 
 class cCharacter
 {
@@ -11,11 +12,11 @@ public:
 
 	// Move
 protected:
-	cSpriteAnimation* spriteAnimation;
-	cModelAnimation* modelAnimation;
+	std::shared_ptr<cSpriteAnimation> spriteAnimation;
+	std::shared_ptr<cModelAnimation> modelAnimation;
 	int ProcessMovement(eDirection dir, bool run);
 public:
-	cSpriteModel* model;
+	std::shared_ptr<cSpriteModel> model;
 	virtual void Move(eDirection dir, bool run) = 0;
 
 	// Follow

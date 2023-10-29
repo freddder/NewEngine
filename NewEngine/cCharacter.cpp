@@ -6,31 +6,24 @@
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
-	model = new cSpriteModel();
+	model = std::static_pointer_cast<cSpriteModel>(cRenderManager::CreateSpriteModel());
 	model->meshName = "SpriteHolder.obj";
 	model->position = position;
 	model->textureName = textureName;
 
-	cRenderManager::GetInstance()->AddModel(model);
+	spriteAnimation = std::make_shared<cSpriteAnimation>(model->currSpriteId, model->scale);
+	modelAnimation = std::make_shared<cModelAnimation>(model->position, model->orientation, model->scale);
 
-	spriteAnimation = new cSpriteAnimation(model->currSpriteId, model->scale);
-	modelAnimation = new cModelAnimation(model->position, model->orientation, model->scale);
-
-	cAnimationManager::GetInstance()->AddAnimation(spriteAnimation);
-	cAnimationManager::GetInstance()->AddAnimation(modelAnimation);
+	cAnimationManager::AddAnimation(spriteAnimation);
+	cAnimationManager::AddAnimation(modelAnimation);
 }
 
 cCharacter::~cCharacter()
 {
-	cRenderManager::GetInstance()->RemoveModel(model);
+	cRenderManager::RemoveModel(model);
 
-	cAnimationManager::GetInstance()->RemoveAnimation(spriteAnimation);
-	cAnimationManager::GetInstance()->RemoveAnimation(modelAnimation);
-
-	delete spriteAnimation;
-	delete modelAnimation;
-
-	delete model;
+	cAnimationManager::RemoveAnimation(spriteAnimation);
+	cAnimationManager::RemoveAnimation(modelAnimation);
 }
 
 int cCharacter::ProcessMovement(eDirection dir, bool run)

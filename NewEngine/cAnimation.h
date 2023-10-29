@@ -90,10 +90,11 @@ public:
 	float maxDuration;
 	float speed;
 	bool isRepeat;
-	bool clearAfterComplete;
+	bool removeAfterComplete;
 	std::function<void()> callback;
 
 	cAnimation();
+	~cAnimation();
 	// maybe try removing this from the animation manager when delteting
 
 	virtual void Process(float deltaTime) = 0;

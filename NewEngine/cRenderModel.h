@@ -29,6 +29,7 @@ public:
 	std::string shaderName;
 
 	cRenderModel();
+	~cRenderModel();
 
 	void InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program);
 

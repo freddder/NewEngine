@@ -55,9 +55,6 @@
     <Filter Include="Particles">
       <UniqueIdentifier>{311beb57-ae00-4139-b099-2e3c18a44a46}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\MapEnvoirnmentModels">
-      <UniqueIdentifier>{92e3223d-dc10-4501-859d-6554a90c8cd5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -152,15 +149,6 @@
     </ClCompile>
     <ClCompile Include="cAnimatedModel.cpp">
       <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="cWaveModel.cpp">
-      <Filter>Model\MapEnvoirnmentModels</Filter>
-    </ClCompile>
-    <ClCompile Include="cFoamModel.cpp">
-      <Filter>Model\MapEnvoirnmentModels</Filter>
-    </ClCompile>
-    <ClCompile Include="cOceanModel.cpp">
-      <Filter>Model\MapEnvoirnmentModels</Filter>
     </ClCompile>
     <ClCompile Include="cAnimation.cpp">
       <Filter>Animation</Filter>
@@ -271,15 +259,6 @@
     </ClInclude>
     <ClInclude Include="cAnimatedModel.h">
       <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="cWaveModel.h">
-      <Filter>Model\MapEnvoirnmentModels</Filter>
-    </ClInclude>
-    <ClInclude Include="cFoamModel.h">
-      <Filter>Model\MapEnvoirnmentModels</Filter>
-    </ClInclude>
-    <ClInclude Include="cOceanModel.h">
-      <Filter>Model\MapEnvoirnmentModels</Filter>
     </ClInclude>
     <ClInclude Include="cOverworldPokemon.h">
       <Filter>Character</Filter>

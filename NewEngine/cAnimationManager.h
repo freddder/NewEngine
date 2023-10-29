@@ -3,6 +3,7 @@
 #include "cAnimation.h"
 #include <vector>
 #include <map>
+#include <memory>
 
 struct sEntitySpriteAnimationPreset
 {
@@ -35,15 +36,16 @@ public:
 	}
 
 private:
-	std::vector<cAnimation*> animations;
-	std::map<eSpriteEntityType, std::vector<sEntitySpriteAnimationPreset>> entitySpriteAnimationPresets;
-
+	std::vector<std::shared_ptr<cAnimation>> animations;
 public:
-	void Process(float deltaTime);
-	void InitializeAnimationsPresets();
-	void AddAnimation(cAnimation* newAnimation);
-	void RemoveAnimation(cAnimation* animationToRemove);
+	static void AddAnimation(std::shared_ptr<cAnimation> newAnimation);
+	static void Process(float deltaTime);
+	static void RemoveAnimation(std::shared_ptr<cAnimation> animationToRemove);
 
-	void CreateSpriteAnimation(eSpriteEntityType spriteType, std::string animationName, std::vector<sKeyFrameSprite>& keyframes);
+private:
+	std::map<eSpriteEntityType, std::vector<sEntitySpriteAnimationPreset>> entitySpriteAnimationPresets;
+	void CreateSpritePresetAnimation(eSpriteEntityType spriteType, std::string animationName, std::vector<sKeyFrameSprite>& keyframes);
+public:
+	void InitializeAnimationsPresets();
 	bool GetSpriteAnimationKeyframes(eSpriteEntityType spriteType, std::string animationName, std::vector<sKeyFrameSprite>& keyframes);
 };

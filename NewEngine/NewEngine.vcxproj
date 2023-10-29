@@ -151,12 +151,10 @@
     <ClCompile Include="cCamera.cpp" />
     <ClCompile Include="cCharacter.cpp" />
     <ClCompile Include="cFloatAnimation.cpp" />
-    <ClCompile Include="cFoamModel.cpp" />
     <ClCompile Include="cLightManager.cpp" />
     <ClCompile Include="cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="cMapManager.cpp" />
     <ClCompile Include="cNPCCharacter.cpp" />
-    <ClCompile Include="cOceanModel.cpp" />
     <ClCompile Include="cOverworldPokemon.cpp" />
     <ClCompile Include="cParticleManager.cpp" />
     <ClCompile Include="cParticleSpawner.cpp" />
@@ -168,7 +166,6 @@
     <ClCompile Include="cSpriteModel.cpp" />
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cSinAnimation.cpp" />
-    <ClCompile Include="cWaveModel.cpp" />
     <ClCompile Include="cWeatherManager.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Global.cpp" />
@@ -190,12 +187,10 @@
     <ClInclude Include="cCamera.h" />
     <ClInclude Include="cCharacter.h" />
     <ClInclude Include="cFloatAnimation.h" />
-    <ClInclude Include="cFoamModel.h" />
     <ClInclude Include="cLightManager.h" />
     <ClInclude Include="cLinearCongruentialGenerator.h" />
     <ClInclude Include="cMapManager.h" />
     <ClInclude Include="cNPCCharacter.h" />
-    <ClInclude Include="cOceanModel.h" />
     <ClInclude Include="cParticleManager.h" />
     <ClInclude Include="cParticleSpawner.h" />
     <ClInclude Include="cPlayerCharacter.h" />
@@ -208,7 +203,6 @@
     <ClInclude Include="cSpriteModel.h" />
     <ClInclude Include="cTextureManager.h" />
     <ClInclude Include="cSinAnimation.h" />
-    <ClInclude Include="cWaveModel.h" />
     <ClInclude Include="cWeatherManager.h" />
     <ClInclude Include="DrawInfo.h" />
     <ClInclude Include="Global.h" />
