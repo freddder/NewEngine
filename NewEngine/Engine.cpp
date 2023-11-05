@@ -26,6 +26,12 @@ GLFWwindow* window;
 float deltaTime = 0.f;
 float lastFrame = 0.f;
 
+const char* resolutions[] = {
+    "2560x1400",
+    "1920x1080",
+    "1280x720",
+};
+
 void InitializeImgui()
 {
     IMGUI_CHECKVERSION();
@@ -44,9 +50,36 @@ void RenderImgui()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
+    ImGui::ShowDemoWindow();
+
     ImGui::Begin("General");
     ImGui::Text("FPS: %f", (1.f / deltaTime));
     //ImGui::DragFloat("OF", &g_WeatherManager->offsetDegree);
+    
+    static int item_current_idx = 2; // Here we store our selection data as an index.
+    std::string combo_preview_value = resolutions[item_current_idx]; // Pass in the preview value visible before opening the combo (it could be anything)
+    if (ImGui::BeginCombo("Resolution", combo_preview_value.c_str()))
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(resolutions); n++)
+        {
+            const bool is_selected = (item_current_idx == n);
+            if (ImGui::Selectable(resolutions[n], is_selected))
+            {
+                item_current_idx = n;
+                std::string newResolution = resolutions[n];
+                int pos = newResolution.find('x');
+                int width = stoi(newResolution.substr(0, pos));
+                int height = stoi(newResolution.substr(pos + 1));
+                glfwSetWindowSize(window, width, height);
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
     ImGui::End();
 
     cLightManager* lightManager = cLightManager::GetInstance();
@@ -84,7 +117,7 @@ void RenderImgui()
 
     int* shadowSmooth = &lightManager->shadowSampleRadius;
 
-    ImGui::Begin("Weather");
+    ImGui::Begin("Envoirnment");
     ImGui::BeginTabBar("Tabs");
     if (ImGui::BeginTabItem("Light"))
     {
