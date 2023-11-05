@@ -66,12 +66,6 @@
     <ClCompile Include="Global.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
-    <ClCompile Include="StartUp.cpp">
-      <Filter>Globals</Filter>
-    </ClCompile>
-    <ClCompile Include="Shutdown.cpp">
-      <Filter>Globals</Filter>
-    </ClCompile>
     <ClCompile Include="cTextureManager.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
@@ -158,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="cNPCCharacter.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -265,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="cNPCCharacter.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

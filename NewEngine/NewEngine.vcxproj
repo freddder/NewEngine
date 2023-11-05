@@ -167,6 +167,7 @@
     <ClCompile Include="cTextureManager.cpp" />
     <ClCompile Include="cSinAnimation.cpp" />
     <ClCompile Include="cWeatherManager.cpp" />
+    <ClCompile Include="Engine.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
@@ -177,8 +178,6 @@
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Shutdown.cpp" />
-    <ClCompile Include="StartUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cAnimatedModel.h" />
@@ -205,6 +204,7 @@
     <ClInclude Include="cSinAnimation.h" />
     <ClInclude Include="cWeatherManager.h" />
     <ClInclude Include="DrawInfo.h" />
+    <ClInclude Include="Engine.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
     <ClInclude Include="include\imgui\imgui.h" />
