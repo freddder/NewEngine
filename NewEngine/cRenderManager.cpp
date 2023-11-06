@@ -23,8 +23,8 @@ cRenderManager* cRenderManager::singleton = NULL;
 
 cRenderManager::cRenderManager()
 {
-    cCamera::GetInstance()->SCR_WIDTH = 1200;
-    cCamera::GetInstance()->SCR_HEIGHT = 640;
+    cCamera::GetInstance()->SCR_WIDTH = 1280;
+    cCamera::GetInstance()->SCR_HEIGHT = 720;
 
     //******* Create origin offset buffer for non instanced objects *************
     glm::vec4 originOffset = glm::vec4(0.f);

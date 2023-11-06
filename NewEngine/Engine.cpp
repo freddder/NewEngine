@@ -55,6 +55,10 @@ void RenderImgui()
     ImGui::Begin("General");
     ImGui::Text("FPS: %f", (1.f / deltaTime));
     //ImGui::DragFloat("OF", &g_WeatherManager->offsetDegree);
+    //if (ImGui::Button("Fullscreen"))
+    //{
+    //    glfwSetWindowMonitor(window, NULL);
+    //}
     
     static int item_current_idx = 2; // Here we store our selection data as an index.
     std::string combo_preview_value = resolutions[item_current_idx]; // Pass in the preview value visible before opening the combo (it could be anything)
@@ -70,6 +74,9 @@ void RenderImgui()
                 int pos = newResolution.find('x');
                 int width = stoi(newResolution.substr(0, pos));
                 int height = stoi(newResolution.substr(pos + 1));
+
+                cCamera::GetInstance()->SCR_WIDTH = width;
+                cCamera::GetInstance()->SCR_HEIGHT = height;
                 glfwSetWindowSize(window, width, height);
             }
 
@@ -174,7 +181,7 @@ namespace Engine
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         // glfw window creation
-        window = glfwCreateWindow(1200, 640, "LearnOpenGL", NULL, NULL);
+        window = glfwCreateWindow(1280, 720, "LearnOpenGL", NULL, NULL);
         if (window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
