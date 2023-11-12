@@ -66,7 +66,7 @@ void RenderImgui()
 
     ImGui::Begin("General");
     ImGui::Text("FPS: %f", (1.f / deltaTime));
-    if (ImGui::Button("Fullscreen"))
+    if (ImGui::Button(isFullscreen ? "Window" : "Fullscreen"))
     {
         if (isFullscreen) // set windowed
         {
@@ -81,7 +81,7 @@ void RenderImgui()
             int height = stoi(resolution.substr(pos + 1));
             SetWindowResolution(width, height);
         }
-        else // set borlerless window
+        else // set borlerless window (fullscreen)
         {
             glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
             glfwSetWindowPos(window, 0, 0);
