@@ -26,11 +26,21 @@ GLFWwindow* window;
 float deltaTime = 0.f;
 float lastFrame = 0.f;
 
+bool isFullscreen = false;
+
 const char* resolutions[] = {
     "2560x1400",
     "1920x1080",
+    "1600x900",
     "1280x720",
 };
+
+void SetWindowResolution(int width, int height)
+{
+    cCamera::GetInstance()->SCR_WIDTH = width;
+    cCamera::GetInstance()->SCR_HEIGHT = height;
+    glfwSetWindowSize(window, width, height);
+}
 
 void InitializeImgui()
 {
@@ -51,33 +61,54 @@ void RenderImgui()
     ImGui::NewFrame();
 
     ImGui::ShowDemoWindow();
+    
+    static int currentSelectedResolutionIndex = 3;
 
     ImGui::Begin("General");
     ImGui::Text("FPS: %f", (1.f / deltaTime));
-    //ImGui::DragFloat("OF", &g_WeatherManager->offsetDegree);
-    //if (ImGui::Button("Fullscreen"))
-    //{
-    //    glfwSetWindowMonitor(window, NULL);
-    //}
+    if (ImGui::Button("Fullscreen"))
+    {
+        if (isFullscreen) // set windowed
+        {
+            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+            glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
+            glfwSetWindowPos(window, mode->width/7, mode->height/7);
+
+            std::string resolution = resolutions[currentSelectedResolutionIndex];
+            int pos = resolution.find('x');
+            int width = stoi(resolution.substr(0, pos));
+            int height = stoi(resolution.substr(pos + 1));
+            SetWindowResolution(width, height);
+        }
+        else // set borlerless window
+        {
+            glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
+            glfwSetWindowPos(window, 0, 0);
+            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+            glfwSetWindowSize(window, mode->width, mode->height);
+        }
+        
+        isFullscreen = !isFullscreen;
+    }
     
-    static int item_current_idx = 2; // Here we store our selection data as an index.
-    std::string combo_preview_value = resolutions[item_current_idx]; // Pass in the preview value visible before opening the combo (it could be anything)
-    if (ImGui::BeginCombo("Resolution", combo_preview_value.c_str()))
+    std::string resolutionPreviewValue = std::to_string(cCamera::GetInstance()->SCR_WIDTH) + "x" + std::to_string(cCamera::GetInstance()->SCR_HEIGHT); // Pass in the preview value visible before opening the combo (it could be anything)
+    float aspectRatio = round(((float)cCamera::GetInstance()->SCR_WIDTH / (float)cCamera::GetInstance()->SCR_HEIGHT) * 100.f) / 100.f;
+    if (ImGui::BeginCombo(std::to_string(aspectRatio).c_str(), resolutionPreviewValue.c_str()))
     {
         for (int n = 0; n < IM_ARRAYSIZE(resolutions); n++)
         {
-            const bool is_selected = (item_current_idx == n);
-            if (ImGui::Selectable(resolutions[n], is_selected))
+            const bool is_selected = (currentSelectedResolutionIndex == n);
+            if (ImGui::Selectable(resolutions[n], is_selected) && !isFullscreen)
             {
-                item_current_idx = n;
+                currentSelectedResolutionIndex = n;
                 std::string newResolution = resolutions[n];
                 int pos = newResolution.find('x');
                 int width = stoi(newResolution.substr(0, pos));
                 int height = stoi(newResolution.substr(pos + 1));
 
-                cCamera::GetInstance()->SCR_WIDTH = width;
-                cCamera::GetInstance()->SCR_HEIGHT = height;
-                glfwSetWindowSize(window, width, height);
+                SetWindowResolution(width, height);
             }
 
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -181,7 +212,7 @@ namespace Engine
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
         // glfw window creation
-        window = glfwCreateWindow(1280, 720, "LearnOpenGL", NULL, NULL);
+        window = glfwCreateWindow(1280, 720, "Magik", NULL, NULL);
         if (window == NULL)
         {
             std::cout << "Failed to create GLFW window" << std::endl;

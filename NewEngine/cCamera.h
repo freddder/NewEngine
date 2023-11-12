@@ -6,7 +6,26 @@ class cCamera
 	static cCamera* singleton;
 	cCamera();
 	cCamera(const cCamera& obj) = delete;
+public:
+	static cCamera* GetInstance()
+	{
+		if (singleton == NULL)
+		{
+			singleton = new cCamera();
+		}
 
+		return singleton;
+	}
+	static void DestroyInstance()
+	{
+		if (singleton != NULL)
+		{
+			delete singleton;
+			singleton = NULL;
+		}
+	}
+
+private:
 	float cameraSpeed;
 	float yaw;
 	float pitch;
@@ -19,33 +38,13 @@ class cCamera
 	void UpdateCameraVectors();
 
 public:
-
-	static cCamera* GetInstance()
-	{
-		if (singleton == NULL)
-		{
-			singleton = new cCamera();
-		}
-
-		return singleton;
-	}
-
-	static void DestroyInstance()
-	{
-		if (singleton != NULL)
-		{
-			delete singleton;
-			singleton = NULL;
-		}
-	}
-
 	glm::vec3 position;
-	glm::vec3* playerPosition;
 
 	unsigned int SCR_WIDTH;
 	unsigned int SCR_HEIGHT;
 
 	bool usePlayerCamera;
+	glm::vec3* playerPosition;
 	float PLY_DISTANCE;
 	float PLY_ANGLE;
 

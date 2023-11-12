@@ -112,5 +112,5 @@ glm::mat4 cCamera::GetViewMatrix()
 
 glm::mat4 cCamera::GetProjectionMatrix()
 {
-	return glm::perspective(glm::radians(FOV), (float)SCR_WIDTH / (float)SCR_HEIGHT, nearPlane, farPlane);;
+	return glm::perspective(glm::radians(FOV), (float)SCR_WIDTH / (float)SCR_HEIGHT, nearPlane, farPlane);
 }
