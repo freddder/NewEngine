@@ -57,22 +57,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glad.c">
+    <ClCompile Include="source\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Global.cpp">
+    <ClCompile Include="source\Global.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
-    <ClCompile Include="cTextureManager.cpp">
+    <ClCompile Include="source\cTextureManager.cpp">
       <Filter>Texture</Filter>
     </ClCompile>
-    <ClCompile Include="cCamera.cpp">
+    <ClCompile Include="source\cCamera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
-    <ClCompile Include="cRenderModel.cpp">
+    <ClCompile Include="source\cRenderModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="include\imgui\imgui.cpp">
@@ -96,81 +96,81 @@
     <ClCompile Include="include\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="cLightManager.cpp">
+    <ClCompile Include="source\cLightManager.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="cModelAnimation.cpp">
+    <ClCompile Include="source\cModelAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cSpriteAnimation.cpp">
+    <ClCompile Include="source\cSpriteAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cAnimationManager.cpp">
+    <ClCompile Include="source\cAnimationManager.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cCharacter.cpp">
+    <ClCompile Include="source\cCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="cMapManager.cpp">
+    <ClCompile Include="source\cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="cSinAnimation.cpp">
+    <ClCompile Include="source\cSinAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cRenderManager.cpp">
+    <ClCompile Include="source\cRenderManager.cpp">
       <Filter>Render System</Filter>
     </ClCompile>
-    <ClCompile Include="cSpriteModel.cpp">
+    <ClCompile Include="source\cSpriteModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="cWeatherManager.cpp">
+    <ClCompile Include="source\cWeatherManager.cpp">
       <Filter>Weather</Filter>
     </ClCompile>
-    <ClCompile Include="cLinearCongruentialGenerator.cpp">
+    <ClCompile Include="source\cLinearCongruentialGenerator.cpp">
       <Filter>RNG</Filter>
     </ClCompile>
-    <ClCompile Include="cFloatAnimation.cpp">
+    <ClCompile Include="source\cFloatAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cParticleSpawner.cpp">
+    <ClCompile Include="source\cParticleSpawner.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
-    <ClCompile Include="cParticleManager.cpp">
+    <ClCompile Include="source\cParticleManager.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
-    <ClCompile Include="cPlayerCharacter.cpp">
+    <ClCompile Include="source\cPlayerCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="cAnimatedModel.cpp">
+    <ClCompile Include="source\cAnimatedModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="cAnimation.cpp">
+    <ClCompile Include="source\cAnimation.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="cOverworldPokemon.cpp">
+    <ClCompile Include="source\cOverworldPokemon.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="cNPCCharacter.cpp">
+    <ClCompile Include="source\cNPCCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="Engine.cpp">
+    <ClCompile Include="source\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Global.h">
+    <ClInclude Include="source\Global.h">
       <Filter>Globals</Filter>
     </ClInclude>
-    <ClInclude Include="cTextureManager.h">
+    <ClInclude Include="source\cTextureManager.h">
       <Filter>Texture</Filter>
     </ClInclude>
-    <ClInclude Include="cRenderModel.h">
+    <ClInclude Include="source\cRenderModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="cCamera.h">
+    <ClInclude Include="source\cCamera.h">
       <Filter>Camera</Filter>
     </ClInclude>
-    <ClInclude Include="DrawInfo.h">
+    <ClInclude Include="source\DrawInfo.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="include\imgui\imconfig.h">
@@ -200,70 +200,70 @@
     <ClInclude Include="include\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="cLightManager.h">
+    <ClInclude Include="source\cLightManager.h">
       <Filter>Light</Filter>
     </ClInclude>
-    <ClInclude Include="cSceneManager.h">
+    <ClInclude Include="source\cSceneManager.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="cAnimation.h">
+    <ClInclude Include="source\cAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cSpriteAnimation.h">
+    <ClInclude Include="source\cSpriteAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cModelAnimation.h">
+    <ClInclude Include="source\cModelAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cAnimationManager.h">
+    <ClInclude Include="source\cAnimationManager.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cCharacter.h">
+    <ClInclude Include="source\cCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="cMapManager.h">
+    <ClInclude Include="source\cMapManager.h">
       <Filter>Map</Filter>
     </ClInclude>
-    <ClInclude Include="cSinAnimation.h">
+    <ClInclude Include="source\cSinAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cRenderManager.h">
+    <ClInclude Include="source\cRenderManager.h">
       <Filter>Render System</Filter>
     </ClInclude>
-    <ClInclude Include="cSpriteModel.h">
+    <ClInclude Include="source\cSpriteModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="cWeatherManager.h">
+    <ClInclude Include="source\cWeatherManager.h">
       <Filter>Weather</Filter>
     </ClInclude>
-    <ClInclude Include="cRandomNumberGenerator.h">
+    <ClInclude Include="source\cRandomNumberGenerator.h">
       <Filter>RNG</Filter>
     </ClInclude>
-    <ClInclude Include="cLinearCongruentialGenerator.h">
+    <ClInclude Include="source\cLinearCongruentialGenerator.h">
       <Filter>RNG</Filter>
     </ClInclude>
-    <ClInclude Include="cFloatAnimation.h">
+    <ClInclude Include="source\cFloatAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="cParticleSpawner.h">
+    <ClInclude Include="source\cParticleSpawner.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="cParticleManager.h">
+    <ClInclude Include="source\cParticleManager.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="cPlayerCharacter.h">
+    <ClInclude Include="source\cPlayerCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="cAnimatedModel.h">
+    <ClInclude Include="source\cAnimatedModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="cOverworldPokemon.h">
+    <ClInclude Include="source\cOverworldPokemon.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="cNPCCharacter.h">
+    <ClInclude Include="source\cNPCCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
+    <ClInclude Include="source\Engine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

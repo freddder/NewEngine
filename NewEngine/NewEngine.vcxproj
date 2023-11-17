@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)include</IncludePath>
-    <LibraryPath>$(ProjectDir)lib\$(Configuration)\$(Platform)</LibraryPath>
+    <LibraryPath>$(ProjectDir)lib\$(Configuration)\$(Platform);$(LibraryPath)</LibraryPath>
     <ExternalIncludePath>$(ExternalIncludePath)</ExternalIncludePath>
     <OutDir>$(SolutionDir)Build\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -155,31 +155,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cAnimatedModel.cpp" />
-    <ClCompile Include="cAnimation.cpp" />
-    <ClCompile Include="cAnimationManager.cpp" />
-    <ClCompile Include="cCamera.cpp" />
-    <ClCompile Include="cCharacter.cpp" />
-    <ClCompile Include="cFloatAnimation.cpp" />
-    <ClCompile Include="cLightManager.cpp" />
-    <ClCompile Include="cLinearCongruentialGenerator.cpp" />
-    <ClCompile Include="cMapManager.cpp" />
-    <ClCompile Include="cNPCCharacter.cpp" />
-    <ClCompile Include="cOverworldPokemon.cpp" />
-    <ClCompile Include="cParticleManager.cpp" />
-    <ClCompile Include="cParticleSpawner.cpp" />
-    <ClCompile Include="cPlayerCharacter.cpp" />
-    <ClCompile Include="cRenderModel.cpp" />
-    <ClCompile Include="cModelAnimation.cpp" />
-    <ClCompile Include="cRenderManager.cpp" />
-    <ClCompile Include="cSpriteAnimation.cpp" />
-    <ClCompile Include="cSpriteModel.cpp" />
-    <ClCompile Include="cTextureManager.cpp" />
-    <ClCompile Include="cSinAnimation.cpp" />
-    <ClCompile Include="cWeatherManager.cpp" />
-    <ClCompile Include="Engine.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="source\cAnimatedModel.cpp" />
+    <ClCompile Include="source\cAnimation.cpp" />
+    <ClCompile Include="source\cAnimationManager.cpp" />
+    <ClCompile Include="source\cCamera.cpp" />
+    <ClCompile Include="source\cCharacter.cpp" />
+    <ClCompile Include="source\cFloatAnimation.cpp" />
+    <ClCompile Include="source\cLightManager.cpp" />
+    <ClCompile Include="source\cLinearCongruentialGenerator.cpp" />
+    <ClCompile Include="source\cMapManager.cpp" />
+    <ClCompile Include="source\cNPCCharacter.cpp" />
+    <ClCompile Include="source\cOverworldPokemon.cpp" />
+    <ClCompile Include="source\cParticleManager.cpp" />
+    <ClCompile Include="source\cParticleSpawner.cpp" />
+    <ClCompile Include="source\cPlayerCharacter.cpp" />
+    <ClCompile Include="source\cRenderModel.cpp" />
+    <ClCompile Include="source\cModelAnimation.cpp" />
+    <ClCompile Include="source\cRenderManager.cpp" />
+    <ClCompile Include="source\cSpriteAnimation.cpp" />
+    <ClCompile Include="source\cSpriteModel.cpp" />
+    <ClCompile Include="source\cTextureManager.cpp" />
+    <ClCompile Include="source\cSinAnimation.cpp" />
+    <ClCompile Include="source\cWeatherManager.cpp" />
+    <ClCompile Include="source\Engine.cpp" />
+    <ClCompile Include="source\glad.c" />
+    <ClCompile Include="source\Global.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
     <ClCompile Include="include\imgui\imgui_demo.cpp" />
     <ClCompile Include="include\imgui\imgui_draw.cpp" />
@@ -187,35 +187,35 @@
     <ClCompile Include="include\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cAnimatedModel.h" />
-    <ClInclude Include="cAnimation.h" />
-    <ClInclude Include="cAnimationManager.h" />
-    <ClInclude Include="cCamera.h" />
-    <ClInclude Include="cCharacter.h" />
-    <ClInclude Include="cFloatAnimation.h" />
-    <ClInclude Include="cLightManager.h" />
-    <ClInclude Include="cLinearCongruentialGenerator.h" />
-    <ClInclude Include="cMapManager.h" />
-    <ClInclude Include="cNPCCharacter.h" />
-    <ClInclude Include="cParticleManager.h" />
-    <ClInclude Include="cParticleSpawner.h" />
-    <ClInclude Include="cPlayerCharacter.h" />
-    <ClInclude Include="cRandomNumberGenerator.h" />
-    <ClInclude Include="cRenderModel.h" />
-    <ClInclude Include="cModelAnimation.h" />
-    <ClInclude Include="cRenderManager.h" />
-    <ClInclude Include="cSceneManager.h" />
-    <ClInclude Include="cSpriteAnimation.h" />
-    <ClInclude Include="cSpriteModel.h" />
-    <ClInclude Include="cTextureManager.h" />
-    <ClInclude Include="cSinAnimation.h" />
-    <ClInclude Include="cWeatherManager.h" />
-    <ClInclude Include="DrawInfo.h" />
-    <ClInclude Include="Engine.h" />
-    <ClInclude Include="Global.h" />
+    <ClInclude Include="source\cAnimatedModel.h" />
+    <ClInclude Include="source\cAnimation.h" />
+    <ClInclude Include="source\cAnimationManager.h" />
+    <ClInclude Include="source\cCamera.h" />
+    <ClInclude Include="source\cCharacter.h" />
+    <ClInclude Include="source\cFloatAnimation.h" />
+    <ClInclude Include="source\cLightManager.h" />
+    <ClInclude Include="source\cLinearCongruentialGenerator.h" />
+    <ClInclude Include="source\cMapManager.h" />
+    <ClInclude Include="source\cNPCCharacter.h" />
+    <ClInclude Include="source\cParticleManager.h" />
+    <ClInclude Include="source\cParticleSpawner.h" />
+    <ClInclude Include="source\cPlayerCharacter.h" />
+    <ClInclude Include="source\cRandomNumberGenerator.h" />
+    <ClInclude Include="source\cRenderModel.h" />
+    <ClInclude Include="source\cModelAnimation.h" />
+    <ClInclude Include="source\cRenderManager.h" />
+    <ClInclude Include="source\cSceneManager.h" />
+    <ClInclude Include="source\cSpriteAnimation.h" />
+    <ClInclude Include="source\cSpriteModel.h" />
+    <ClInclude Include="source\cTextureManager.h" />
+    <ClInclude Include="source\cSinAnimation.h" />
+    <ClInclude Include="source\cWeatherManager.h" />
+    <ClInclude Include="source\DrawInfo.h" />
+    <ClInclude Include="source\Engine.h" />
+    <ClInclude Include="source\Global.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
     <ClInclude Include="include\imgui\imgui.h" />
     <ClInclude Include="include\imgui\imgui_impl_glfw.h" />
@@ -225,7 +225,7 @@
     <ClInclude Include="include\imgui\imstb_rectpack.h" />
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
-    <ClInclude Include="cOverworldPokemon.h" />
+    <ClInclude Include="source\cOverworldPokemon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\3DParticleFragShader.glsl" />
