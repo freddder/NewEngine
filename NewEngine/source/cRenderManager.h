@@ -104,4 +104,9 @@ public:
     static void RemoveModel(std::shared_ptr<cRenderModel> model);
     void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawScene();
+
+    // Debug quad
+    unsigned int quadVAO;
+    unsigned int quadVBO;
+    unsigned int quadEBO;
 };

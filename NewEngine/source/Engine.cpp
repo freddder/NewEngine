@@ -19,6 +19,7 @@
 #include "cMapManager.h"
 #include "cWeatherManager.h"
 #include "cParticleManager.h"
+#include "cUIManager.h"
 
 #include "cPlayerCharacter.h"
 
@@ -255,6 +256,8 @@ namespace Engine
         cWeatherManager::GetInstance();
 
         cParticleManager::GetInstance();
+
+        cUIManager::GetInstance();
     }
 
     void ShutdownManagers()
@@ -274,6 +277,8 @@ namespace Engine
         cWeatherManager::DestroyInstance();
 
         cParticleManager::DestroyInstance();
+
+        cUIManager::DestroyInstance();
     }
 
     void GameLoop(bool renderDebugInfo)
@@ -284,27 +289,50 @@ namespace Engine
         float waterThreshold = 0.7;
 
         //********************** Setup on screen texture ****************************
-        //unsigned int quadVAO;
-        //unsigned int quadVBO;
+        float quadVertices[] = {
+            // positions        // texture Coords (x, y)
+             1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
+             1.0f, -1.0f, 0.0f, 1.0f, 1.0f, // bottom right
+            -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
+            -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, // top left
+        };
 
-        //float quadVertices[] = {
-        //    // positions        // texture Coords
-        //    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-        //    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        //     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-        //     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        //};
+        unsigned int quadIndicies[] = {
+            0, 1, 3,   // first triangle
+            1, 2, 3    // second triangle
+        };
 
-        //// setup plane VAO
-        //glGenVertexArrays(1, &quadVAO);
-        //glGenBuffers(1, &quadVBO);
-        //glBindVertexArray(quadVAO);
-        //glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        // setup plane VAO
+        //glGenVertexArrays(1, &cRenderManager::GetInstance()->quadVAO);
+        //glGenBuffers(1, &cRenderManager::GetInstance()->quadVBO);
+        //glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
+        //glBindBuffer(GL_ARRAY_BUFFER, cRenderManager::GetInstance()->quadVBO);
         //glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
         //glEnableVertexAttribArray(0);
         //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         //glEnableVertexAttribArray(1);
         //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+        glGenVertexArrays(1, &cRenderManager::GetInstance()->quadVAO);
+        glGenBuffers(1, &cRenderManager::GetInstance()->quadVBO);
+        glGenBuffers(1, &cRenderManager::GetInstance()->quadEBO);
+
+        glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
+
+        glBindBuffer(GL_ARRAY_BUFFER, cRenderManager::GetInstance()->quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cRenderManager::GetInstance()->quadEBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndicies), quadIndicies, GL_STATIC_DRAW);
+
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindVertexArray(0);
+        //***************************************************************************
 
         while (!glfwWindowShouldClose(window))
         {

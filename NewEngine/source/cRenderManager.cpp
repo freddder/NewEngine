@@ -115,7 +115,7 @@ cRenderManager::cRenderManager()
     };
     cubemapTextureID = cTextureManager::GetInstance()->CreateCubemap(faces);
 
-    //********************** Setup depth map FBO ********************************
+    //********************** Setup depth map FBO **********************
 
     glGenFramebuffers(1, &depthMapFBO);
 
@@ -135,6 +135,7 @@ cRenderManager::cRenderManager()
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //*****************************************************************
 
     // setup matrices uniform block
     glGenBuffers(1, &uboMatricesID);
@@ -789,6 +790,12 @@ void cRenderManager::DrawScene()
 
     // Draw weather particles
     cParticleManager::GetInstance()->DrawSpawnerParticles();
+    
+    //use("debug");
+    //cTextureManager::GetInstance()->SetupTexture("TestUITexture.png", 0);
+    //glBindVertexArray(quadVAO);
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //glBindVertexArray(0);
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -799,11 +806,12 @@ void cRenderManager::DrawScene()
     setMat4("view", view);
     setMat4("projection", projection);
 
+
     // skybox cube
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    glDepthFunc(GL_LESS); // set depth function back to default
+    glDepthFunc(GL_LESS); // set depth function back to default      
 }

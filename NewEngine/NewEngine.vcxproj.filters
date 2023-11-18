@@ -5,22 +5,11 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Globals">
       <UniqueIdentifier>{b7be64d0-52aa-426e-aa16-5f7ce6c06a9d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Texture">
       <UniqueIdentifier>{e9ef2838-107a-4676-a711-599e99ec7ad1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Model">
-      <UniqueIdentifier>{3973b097-7a50-4520-919d-6df2c87a0550}</UniqueIdentifier>
     </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{c6f38401-7c8c-47e6-8415-590048876612}</UniqueIdentifier>
@@ -55,6 +44,19 @@
     <Filter Include="Particles">
       <UniqueIdentifier>{311beb57-ae00-4139-b099-2e3c18a44a46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render System\Model">
+      <UniqueIdentifier>{3973b097-7a50-4520-919d-6df2c87a0550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{1b8e4f65-1453-4878-a894-756d267d7e04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements">
+      <UniqueIdentifier>{f624938e-7944-4376-a577-66add062adee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -73,7 +75,7 @@
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="source\cRenderModel.cpp">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClCompile>
     <ClCompile Include="include\imgui\imgui.cpp">
       <Filter>imgui</Filter>
@@ -121,7 +123,7 @@
       <Filter>Render System</Filter>
     </ClCompile>
     <ClCompile Include="source\cSpriteModel.cpp">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClCompile>
     <ClCompile Include="source\cWeatherManager.cpp">
       <Filter>Weather</Filter>
@@ -142,7 +144,7 @@
       <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="source\cAnimatedModel.cpp">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClCompile>
     <ClCompile Include="source\cAnimation.cpp">
       <Filter>Animation</Filter>
@@ -156,6 +158,9 @@
     <ClCompile Include="source\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\cUIManager.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Global.h">
@@ -165,13 +170,13 @@
       <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="source\cRenderModel.h">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClInclude>
     <ClInclude Include="source\cCamera.h">
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="source\DrawInfo.h">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClInclude>
     <ClInclude Include="include\imgui\imconfig.h">
       <Filter>imgui</Filter>
@@ -231,7 +236,7 @@
       <Filter>Render System</Filter>
     </ClInclude>
     <ClInclude Include="source\cSpriteModel.h">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClInclude>
     <ClInclude Include="source\cWeatherManager.h">
       <Filter>Weather</Filter>
@@ -255,7 +260,7 @@
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="source\cAnimatedModel.h">
-      <Filter>Model</Filter>
+      <Filter>Render System\Model</Filter>
     </ClInclude>
     <ClInclude Include="source\cOverworldPokemon.h">
       <Filter>Character</Filter>
@@ -266,67 +271,73 @@
     <ClInclude Include="source\Engine.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\cUIManager.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UIElements.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\FragShader1.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\VertShader1.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\SkyboxFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\SkyboxVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\DebugFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\DebugVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\SpriteFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\SpriteVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\WaveFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\WaveVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\OceanFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\OceanVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\2DSnowFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\2DSnowVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\FoamFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\FoamVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\3DParticleFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\3DParticleVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\SnowFragShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\SnowVertShader.glsl">
-      <Filter>Resource Files</Filter>
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -76,6 +76,8 @@ int main()
     textureManager->CreateTexture("SnowFlake2.png");
     textureManager->CreateTexture("SnowFlake3.png");
 
+    textureManager->CreateTexture("TestUITexture.png");
+
     animationManager->InitializeAnimationsPresets();
 
     //cRenderModel* tree = new cRenderModel();

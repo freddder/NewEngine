@@ -176,6 +176,7 @@
     <ClCompile Include="source\cSpriteModel.cpp" />
     <ClCompile Include="source\cTextureManager.cpp" />
     <ClCompile Include="source\cSinAnimation.cpp" />
+    <ClCompile Include="source\cUIManager.cpp" />
     <ClCompile Include="source\cWeatherManager.cpp" />
     <ClCompile Include="source\Engine.cpp" />
     <ClCompile Include="source\glad.c" />
@@ -190,6 +191,7 @@
     <ClCompile Include="source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\cUIManager.h" />
     <ClInclude Include="source\cAnimatedModel.h" />
     <ClInclude Include="source\cAnimation.h" />
     <ClInclude Include="source\cAnimationManager.h" />
@@ -226,6 +228,7 @@
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
     <ClInclude Include="source\cOverworldPokemon.h" />
+    <ClInclude Include="source\UIElements.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\3DParticleFragShader.glsl" />
