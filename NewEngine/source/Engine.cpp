@@ -34,6 +34,7 @@ const char* resolutions[] = {
     "1920x1080",
     "1600x900",
     "1280x720",
+    "900x900",
 };
 
 void SetWindowResolution(int width, int height)
@@ -303,16 +304,6 @@ namespace Engine
         };
 
         // setup plane VAO
-        //glGenVertexArrays(1, &cRenderManager::GetInstance()->quadVAO);
-        //glGenBuffers(1, &cRenderManager::GetInstance()->quadVBO);
-        //glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
-        //glBindBuffer(GL_ARRAY_BUFFER, cRenderManager::GetInstance()->quadVBO);
-        //glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-        //glEnableVertexAttribArray(0);
-        //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        //glEnableVertexAttribArray(1);
-        //glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
         glGenVertexArrays(1, &cRenderManager::GetInstance()->quadVAO);
         glGenBuffers(1, &cRenderManager::GetInstance()->quadVBO);
         glGenBuffers(1, &cRenderManager::GetInstance()->quadEBO);
@@ -352,16 +343,6 @@ namespace Engine
             cParticleManager::GetInstance()->UpdateSpawners(deltaTime);
 
             cRenderManager::GetInstance()->DrawScene();
-
-            //renderManager->use("debug");
-
-            //noiseTimer += deltaTime;
-            //renderManager->setFloat("timer", noiseTimer);
-            //renderManager->setFloat("threshold", waterThreshold);
-
-            //glBindVertexArray(quadVAO);
-            //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            //glBindVertexArray(0);
 
             if (renderDebugInfo) RenderImgui();
 

@@ -791,11 +791,30 @@ void cRenderManager::DrawScene()
     // Draw weather particles
     cParticleManager::GetInstance()->DrawSpawnerParticles();
     
-    //use("debug");
-    //cTextureManager::GetInstance()->SetupTexture("TestUITexture.png", 0);
-    //glBindVertexArray(quadVAO);
-    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    //glBindVertexArray(0);
+    use("debug");
+    cTextureManager::GetInstance()->SetupTexture("TestUITexture.png", 0);
+    //setFloat("scrWidth", cCamera::GetInstance()->SCR_WIDTH);
+    //setFloat("scrHeight", cCamera::GetInstance()->SCR_HEIGHT);
+    //setFloat("desiredHeightPercent", (1.f / 9.f));
+    //setFloat("widgetDefaultRartio", 1.f);//((1.f / 9.f) / (5.f / 16.f)));
+
+    float desiredHeightPercent = 1.f / 9.f;
+    float scrHeight = cCamera::GetInstance()->SCR_HEIGHT;
+    float scrWidth = cCamera::GetInstance()->SCR_WIDTH;
+    float desiredRatio = 0.2f;
+    
+    float pixelHeight = scrHeight * desiredHeightPercent;
+    float pixelWidth = pixelHeight / desiredRatio;
+    
+    float widthPercent = pixelWidth / scrWidth;
+    float heightPercent = desiredHeightPercent;
+    
+    setFloat("widthPercent", widthPercent);
+    setFloat("heightPercent", heightPercent);
+
+    glBindVertexArray(quadVAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
