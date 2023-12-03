@@ -189,6 +189,7 @@
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\UIElements.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cUIManager.h" />

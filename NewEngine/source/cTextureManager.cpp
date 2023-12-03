@@ -13,7 +13,7 @@ cTextureManager::cTextureManager()
 
 }
 
-void cTextureManager::CreateTexture(std::string fileName)
+void cTextureManager::CreateTexture(std::string fileName, std::string subdirectory)
 {
     if (texturesMap.count(fileName) || fileName == "") // texture already created
         return;
@@ -31,7 +31,7 @@ void cTextureManager::CreateTexture(std::string fileName)
 
     // load and generate the texture
     int width, height, nrChannels;
-    std::string fullPath = TEXTURE_PATH + fileName;
+    std::string fullPath = TEXTURE_PATH + subdirectory + fileName;
     unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
     if (data)
     {

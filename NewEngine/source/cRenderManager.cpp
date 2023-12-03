@@ -18,6 +18,7 @@
 #include "cLightManager.h"
 #include "cTextureManager.h"
 #include "cCamera.h"
+#include "cUIManager.h"
 
 cRenderManager* cRenderManager::singleton = NULL;
 
@@ -48,7 +49,6 @@ cRenderManager::cRenderManager()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     //*************** Setup skybox vertices and VAOs ***************************
-
     float skyboxVertices[] = {
         // positions          
         -1.0f,  1.0f, -1.0f,
@@ -116,7 +116,6 @@ cRenderManager::cRenderManager()
     cubemapTextureID = cTextureManager::GetInstance()->CreateCubemap(faces);
 
     //********************** Setup depth map FBO **********************
-
     glGenFramebuffers(1, &depthMapFBO);
 
     glGenTextures(1, &depthMapID);
@@ -154,6 +153,42 @@ cRenderManager::cRenderManager()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
+
+    //********************** Setup on screen texture ****************************
+    float quadVertices[] = {
+        // positions        // texture Coords (x, y)
+         1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
+         1.0f, -1.0f, 0.0f, 1.0f, 1.0f, // bottom right
+        -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
+        -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, // top left
+    };
+
+    unsigned int quadIndicies[] = {
+        0, 1, 3,   // first triangle
+        1, 2, 3    // second triangle
+    };
+
+    // setup plane VAO
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glGenBuffers(1, &quadEBO);
+
+    glBindVertexArray(quadVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndicies), quadIndicies, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    //***************************************************************************
 }
 
 cRenderManager::~cRenderManager()
@@ -668,7 +703,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
         else
             textureToUse = model->textureName;
 
-        cTextureManager::GetInstance()->SetupTexture(textureToUse, 0);
+        cTextureManager::GetInstance()->SetupTexture(textureToUse);
 
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
@@ -790,31 +825,8 @@ void cRenderManager::DrawScene()
 
     // Draw weather particles
     cParticleManager::GetInstance()->DrawSpawnerParticles();
-    
-    use("debug");
-    cTextureManager::GetInstance()->SetupTexture("TestUITexture.png", 0);
-    //setFloat("scrWidth", cCamera::GetInstance()->SCR_WIDTH);
-    //setFloat("scrHeight", cCamera::GetInstance()->SCR_HEIGHT);
-    //setFloat("desiredHeightPercent", (1.f / 9.f));
-    //setFloat("widgetDefaultRartio", 1.f);//((1.f / 9.f) / (5.f / 16.f)));
 
-    float desiredHeightPercent = 1.f / 9.f;
-    float scrHeight = cCamera::GetInstance()->SCR_HEIGHT;
-    float scrWidth = cCamera::GetInstance()->SCR_WIDTH;
-    float desiredRatio = 0.2f;
-    
-    float pixelHeight = scrHeight * desiredHeightPercent;
-    float pixelWidth = pixelHeight / desiredRatio;
-    
-    float widthPercent = pixelWidth / scrWidth;
-    float heightPercent = desiredHeightPercent;
-    
-    setFloat("widthPercent", widthPercent);
-    setFloat("heightPercent", heightPercent);
-
-    glBindVertexArray(quadVAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    cUIManager::GetInstance()->DrawUI();
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -825,8 +837,6 @@ void cRenderManager::DrawScene()
     setMat4("view", view);
     setMat4("projection", projection);
 
-
-    // skybox cube
     glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);

@@ -55,7 +55,11 @@ void main()
 {
     // -------------------------- UI Texture testing --------------------------
     vec4 color = texture(testTexture, TexCoords);
-    FragColor = vec4(vec3(color), 1.0); // orthographic
+
+    if (color.a < 0.1)
+			discard;
+
+    FragColor = color; // orthographic
 
     return;
     // ------------------------------------------------------------------------

@@ -12,6 +12,7 @@
 #include "cPlayerCharacter.h"
 
 #include "Engine.h"
+#include "cUIManager.h"
 
 int main()
 {
@@ -41,6 +42,10 @@ int main()
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
+
+    // Enable transparency objects
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //********************** Prepare Light **************************************
 
@@ -76,7 +81,8 @@ int main()
     textureManager->CreateTexture("SnowFlake2.png");
     textureManager->CreateTexture("SnowFlake3.png");
 
-    textureManager->CreateTexture("TestUITexture.png");
+    textureManager->CreateTexture("PartyMemberButtonBackground.png", "ui/");
+    textureManager->CreateTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
 
     animationManager->InitializeAnimationsPresets();
 
@@ -85,6 +91,20 @@ int main()
     //tree->position.x = -0.5f;
     //tree->position.z = -0.5f;
     //g_RenderManager->AddModel(tree);
+
+    cUICanvas canvas;
+    cUIWidget button;
+    button.aspectRatio = 0.365f;
+    button.heightPercent = 1.f / 9.f;
+    button.textureName = "PartyMemberButtonBackground.png";
+    cUIWidget image;
+    image.aspectRatio = 3.f / 4.f;
+    image.heightPercent = 3.f / 4.f;
+    image.textureName = "ico_3ds_646-white.png";
+    button.AddChild(image);
+
+    canvas.AddWidget(button);
+    cUIManager::GetInstance()->AddCanvas(canvas);
 
     Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
     cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(0.f, 0.f, 3.f), "722.png");

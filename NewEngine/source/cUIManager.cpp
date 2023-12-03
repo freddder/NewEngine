@@ -1,5 +1,4 @@
 #include "cUIManager.h"
-#include <glm/ext/matrix_clip_space.hpp>
 
 cUIManager* cUIManager::singleton = NULL;
 
@@ -13,9 +12,24 @@ cUIManager::~cUIManager()
 
 }
 
+void cUICanvas::AddWidget(const cUIWidget& newWidget, eAnchors anchor)
+{
+	anchoredWidgets.push_back(std::pair<eAnchors, cUIWidget>(anchor, newWidget));
+}
+
+void cUIManager::AddCanvas(const cUICanvas& newCanvas)
+{
+	canvases.push(newCanvas);
+}
+
 void cUIManager::DrawUI()
 {
-	//glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, 1.f, 100.f);
+	cUICanvas& canvasToDraw = canvases.top();
+
+	for (int i = 0; i < canvasToDraw.anchoredWidgets.size(); i++)
+	{
+		canvasToDraw.anchoredWidgets[i].second.DrawWidget();
+	}
 }
 
 

@@ -43,13 +43,13 @@ private:
 	std::map<std::string, sSpriteSheet> spriteSheetsMap;
 	std::map<std::string, unsigned int> texturesMap;
 public:
-	void CreateTexture(std::string fileName);
+	void CreateTexture(std::string fileName, std::string subdirectory = "");
 	bool GetTexureId(std::string texture, unsigned int& textureID);
 	unsigned int CreateCubemap(std::vector<std::string> faces);
 	void CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym);
 	bool GetSpriteSheet(std::string sheetName, sSpriteSheet& sheet);
 
-	void SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit);
+	void SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit = 0);
 
 	bool IsSpriteSymmetric(std::string spriteSheetName);
 };

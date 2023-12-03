@@ -128,7 +128,7 @@ void cParticleSpawner::DrawParticles()
     {
         // Setup texture
         std::string textureToUse = model->textureName;
-		cTextureManager::GetInstance()->SetupTexture(textureToUse, 0);
+		cTextureManager::GetInstance()->SetupTexture(textureToUse);
 
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);

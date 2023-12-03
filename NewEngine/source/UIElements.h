@@ -1,33 +1,30 @@
 #pragma once
 #include <vector>
+#include <string>
 
-//class cUIElement
-//{
-//public:
-//	bool focusable = false;
-//
-//	virtual void DrawElement() = 0;
-//};
-
-class cUICanvas
+class cUIWidget
 {
 public:
-	enum eAnchors
-	{
-		TOP_LEFT,
-		TOP_MIDDLE,
-		TOP_RIGHT,
-		MIDLLE_LEFT,
-		MIDDLE_MIDDLE,
-		MIDDLE_RIGHT,
-		BOTTOM_LEFT,
-		BOTTOM_MIDDLE,
-		BOTTOM_RIGHT
-	};
+
+	bool focusable = false;
+	
+	float heightPercent = 1.f; // Number from 0 to 1 that represents percentage of vertical space this widget take from parent (or window height if parent is null)
+	float aspectRatio = 1.f; // Ratio between widget height and width (height / width)
+
+	std::string textureName;
+
+	virtual void DrawWidget();
+
 private:
-	//std::vector<std::pair<eAnchors, cUIElement>> anchoredElements;
+	std::vector<cUIWidget> children;
+public:
+	// Do NOT set manually, use AddChild
+	cUIWidget* parent;
+	void AddChild(cUIWidget& newChild);
 
-	//void DrawCanvas();
-
-	//cUIElement* currentFocus;
+protected:
+	float CalculateHeightPixels();
+	float CalculateHeightScreenPercent();
+	float CalculateWidthPixels();
+	float CalculateWidthScreenPercent();
 };
