@@ -1,4 +1,4 @@
-#include "UIElements.h"
+#include "UIWidgets.h"
 #include "cCamera.h"
 
 // Should be removed (maybe?)
@@ -11,19 +11,6 @@ void cUIWidget::DrawWidget()
 	{
 		children[i].DrawWidget();
 	}
-
-	cRenderManager::GetInstance()->use("debug");
-	cTextureManager::GetInstance()->SetupTexture(textureName);
-
-	float height = CalculateHeightScreenPercent();
-	float width = CalculateWidthScreenPercent();
-
-	cRenderManager::GetInstance()->setFloat("widthPercent", width);
-	cRenderManager::GetInstance()->setFloat("heightPercent", height);
-
-	glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }
 
 void cUIWidget::AddChild(cUIWidget& newChild)
@@ -56,4 +43,22 @@ float cUIWidget::CalculateWidthPixels()
 float cUIWidget::CalculateWidthScreenPercent()
 {
 	return CalculateWidthPixels() / cCamera::GetInstance()->SCR_WIDTH;;
+}
+
+void cUIStaticImage::DrawWidget()
+{
+	cUIWidget::DrawWidget();
+
+	cRenderManager::GetInstance()->use("debug");
+	cTextureManager::GetInstance()->SetupTexture(textureName);
+
+	float height = CalculateHeightScreenPercent();
+	float width = CalculateWidthScreenPercent();
+
+	cRenderManager::GetInstance()->setFloat("widthPercent", width);
+	cRenderManager::GetInstance()->setFloat("heightPercent", height);
+
+	glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }

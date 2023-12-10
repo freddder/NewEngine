@@ -161,7 +161,7 @@
     <ClCompile Include="source\cUIManager.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="source\UIElements.cpp">
+    <ClCompile Include="source\UIWidgets.cpp">
       <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -277,7 +277,7 @@
     <ClInclude Include="source\cUIManager.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="source\UIElements.h">
+    <ClInclude Include="source\UIWidgets.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

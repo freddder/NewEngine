@@ -189,7 +189,7 @@
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\UIElements.cpp" />
+    <ClCompile Include="source\UIWidgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cUIManager.h" />
@@ -229,7 +229,7 @@
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
     <ClInclude Include="source\cOverworldPokemon.h" />
-    <ClInclude Include="source\UIElements.h" />
+    <ClInclude Include="source\UIWidgets.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\3DParticleFragShader.glsl" />

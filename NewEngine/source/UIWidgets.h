@@ -11,8 +11,6 @@ public:
 	float heightPercent = 1.f; // Number from 0 to 1 that represents percentage of vertical space this widget take from parent (or window height if parent is null)
 	float aspectRatio = 1.f; // Ratio between widget height and width (height / width)
 
-	std::string textureName;
-
 	virtual void DrawWidget();
 
 private:
@@ -27,4 +25,18 @@ protected:
 	float CalculateHeightScreenPercent();
 	float CalculateWidthPixels();
 	float CalculateWidthScreenPercent();
+};
+
+class cUIStaticImage : public cUIWidget
+{
+public:
+	std::string textureName;
+	virtual void DrawWidget();
+};
+
+class cUIAnimatedSprite : public cUIWidget
+{
+public:
+	std::string spriteTextureName;
+	virtual void DrawWidget();
 };

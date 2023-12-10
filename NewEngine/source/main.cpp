@@ -96,13 +96,19 @@ int main()
     cUIWidget button;
     button.aspectRatio = 0.365f;
     button.heightPercent = 1.f / 9.f;
-    button.textureName = "PartyMemberButtonBackground.png";
-    cUIWidget image;
-    image.aspectRatio = 3.f / 4.f;
-    image.heightPercent = 3.f / 4.f;
-    image.textureName = "ico_3ds_646-white.png";
-    button.AddChild(image);
 
+    cUIStaticImage background;
+    background.textureName = "PartyMemberButtonBackground.png";
+    background.aspectRatio = 0.365f;
+    background.heightPercent = 1.f;
+
+    cUIStaticImage sprite;
+    sprite.aspectRatio = 3.f / 4.f;
+    sprite.heightPercent = 3.f / 4.f;
+    sprite.textureName = "ico_3ds_646-white.png";
+
+    button.AddChild(background);
+    button.AddChild(sprite);
     canvas.AddWidget(button);
     cUIManager::GetInstance()->AddCanvas(canvas);
 
