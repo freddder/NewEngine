@@ -6,6 +6,8 @@ class cUIWidget
 {
 public:
 
+	virtual ~cUIWidget();
+
 	bool focusable = false;
 	
 	float heightPercent = 1.f; // Number from 0 to 1 that represents percentage of vertical space this widget take from parent (or window height if parent is null)
@@ -14,11 +16,11 @@ public:
 	virtual void DrawWidget();
 
 private:
-	std::vector<cUIWidget> children;
+	std::vector<cUIWidget*> children;
 public:
-	// Do NOT set manually, use AddChild
+	// Do NOT set manually, use CreateChild functions
 	cUIWidget* parent;
-	void AddChild(cUIWidget& newChild);
+	void AddChild(cUIWidget* newChild);
 
 protected:
 	float CalculateHeightPixels();
@@ -29,6 +31,7 @@ protected:
 
 class cUIStaticImage : public cUIWidget
 {
+	~cUIStaticImage() {}
 public:
 	std::string textureName;
 	virtual void DrawWidget();

@@ -92,25 +92,29 @@ int main()
     //tree->position.z = -0.5f;
     //g_RenderManager->AddModel(tree);
 
-    cUICanvas canvas;
-    cUIWidget button;
-    button.aspectRatio = 0.365f;
-    button.heightPercent = 1.f / 9.f;
+    {
+        cUICanvas* canvas = new cUICanvas();
+        cUIWidget* button = new cUIWidget();
+        button->aspectRatio = 0.365f;
+        button->heightPercent = 1.f / 9.f;
 
-    cUIStaticImage background;
-    background.textureName = "PartyMemberButtonBackground.png";
-    background.aspectRatio = 0.365f;
-    background.heightPercent = 1.f;
+        cUIStaticImage* background = new cUIStaticImage();
+        background->textureName = "PartyMemberButtonBackground.png";
+        background->aspectRatio = 0.365f;
+        background->heightPercent = 1.f;
 
-    cUIStaticImage sprite;
-    sprite.aspectRatio = 3.f / 4.f;
-    sprite.heightPercent = 3.f / 4.f;
-    sprite.textureName = "ico_3ds_646-white.png";
+        cUIStaticImage* sprite = new cUIStaticImage();
+        sprite->aspectRatio = 3.f / 4.f;
+        sprite->heightPercent = 3.f / 4.f;
+        sprite->textureName = "ico_3ds_646-white.png";
 
-    button.AddChild(background);
-    button.AddChild(sprite);
-    canvas.AddWidget(button);
-    cUIManager::GetInstance()->AddCanvas(canvas);
+        // Make sure to add back gound items last
+        button->AddChild(sprite);
+        button->AddChild(background);
+
+        canvas->AddWidget(button);
+        cUIManager::GetInstance()->AddCanvas(canvas);
+    }
 
     Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
     cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(0.f, 0.f, 3.f), "722.png");

@@ -6,6 +6,8 @@
 class cUICanvas
 {
 public:
+    ~cUICanvas();
+
     enum eAnchors
     {
         TOP_LEFT,
@@ -19,11 +21,11 @@ public:
         BOTTOM_RIGHT
     };
 private:
-    std::vector<std::pair<eAnchors, cUIWidget>> anchoredWidgets;
+    std::vector<std::pair<eAnchors, cUIWidget*>> anchoredWidgets;
     cUIWidget* currentFocus;
 
 public:
-    void AddWidget(const cUIWidget& newWidget, eAnchors anchor = MIDDLE_MIDDLE);
+    void AddWidget(cUIWidget* newWidget, eAnchors anchor = MIDDLE_MIDDLE);
 
     friend class cUIManager;
 };
@@ -54,9 +56,9 @@ public:
     }
 
 private:
-    std::stack<cUICanvas> canvases;
+    std::stack<cUICanvas*> canvases;
 public:
-    void AddCanvas(const cUICanvas& newCanvas);
+    void AddCanvas(cUICanvas* newCanvas);
 
 public:
     void DrawUI();

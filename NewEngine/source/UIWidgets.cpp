@@ -5,17 +5,25 @@
 #include "cRenderManager.h"
 #include "cTextureManager.h"
 
+cUIWidget::~cUIWidget()
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		delete children[i];
+	}
+}
+
 void cUIWidget::DrawWidget()
 {
 	for (int i = 0; i < children.size(); i++)
 	{
-		children[i].DrawWidget();
+		children[i]->DrawWidget();
 	}
 }
 
-void cUIWidget::AddChild(cUIWidget& newChild)
+void cUIWidget::AddChild(cUIWidget* newChild)
 {
-	newChild.parent = this;
+	newChild->parent = this;
 	children.push_back(newChild);
 }
 
