@@ -9,7 +9,7 @@
 //#include "cModelManager.h"
 #include "cCamera.h"
 
-cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel* _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
+cParticleSpawner::cParticleSpawner(glm::vec3 position, std::shared_ptr<cRenderModel> _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
 {
 	spawnPosition = position;
 	minPositionOffset = glm::vec3(0.f);
@@ -46,8 +46,6 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel* _model, int
 
 cParticleSpawner::~cParticleSpawner()
 {
-	if(!model)
-		delete model;
 }
 
 void cParticleSpawner::Update(float deltaTime)

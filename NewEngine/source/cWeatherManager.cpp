@@ -1,6 +1,7 @@
 #include "cWeatherManager.h"
 #include "cFloatAnimation.h"
 #include "cParticleManager.h"
+#include "cRenderManager.h"
 
 cWeatherManager* cWeatherManager::singleton = NULL;
 
@@ -59,7 +60,7 @@ void cWeatherManager::SetWeather(eWeather newWeather)
 			fogGradient = 1.59f;
 			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
 
-			cRenderModel* prtcl = new cRenderModel();
+			std::shared_ptr<cRenderModel> prtcl = cRenderManager::CreateRenderModel();
 			prtcl->meshName = "SpriteHolder.obj";
 			prtcl->shaderName = "particle";
 			prtcl->textureName = "SnowFlake3.png";

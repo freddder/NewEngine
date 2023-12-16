@@ -1,6 +1,7 @@
 #pragma once
 #include "cRenderModel.h"
 #include "cLinearCongruentialGenerator.h"
+#include <memory>
 
 struct sParticle
 {
@@ -29,7 +30,7 @@ public:
 	float timer;
 	float particleLifeTime;
 
-	cRenderModel* model;
+	std::shared_ptr<cRenderModel> model;
 	unsigned int particleBufferId;
 
 	std::vector<sParticle> particles;
@@ -38,7 +39,7 @@ public:
 	cLinearCongruentialGenerator lcgY;
 	cLinearCongruentialGenerator lcgZ;
 
-	cParticleSpawner(glm::vec3 position, cRenderModel* _model, int _maxParticles);
+	cParticleSpawner(glm::vec3 position, std::shared_ptr<cRenderModel> _model, int _maxParticles);
 	~cParticleSpawner();
 
 	void Update(float deltaTime);

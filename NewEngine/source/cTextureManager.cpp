@@ -40,7 +40,7 @@ void cTextureManager::CreateTexture(std::string fileName, std::string subdirecto
 
         texturesMap.insert(std::pair<std::string, unsigned int>(fileName, textureId));
 
-        std::cout << "Created texture " << fileName << std::endl;
+        //std::cout << "Created texture " << fileName << std::endl;
     }
     else
     {

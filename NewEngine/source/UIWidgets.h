@@ -18,7 +18,7 @@ public:
 private:
 	std::vector<cUIWidget*> children;
 public:
-	// Do NOT set manually, use CreateChild functions
+	// Do NOT set manually, use AddChild functions
 	cUIWidget* parent;
 	void AddChild(cUIWidget* newChild);
 
