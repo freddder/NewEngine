@@ -94,23 +94,26 @@ int main()
 
     {
         cUICanvas* canvas = new cUICanvas();
-        cUIWidget* button = new cUIWidget();
+        cUIStaticImage* button = new cUIStaticImage();
+        button->anchor = MIDDLE_LEFT;
+        button->textureName = "PartyMemberButtonBackground.png";
         button->aspectRatio = 0.365f;
         button->heightPercent = 1.f / 9.f;
 
-        cUIStaticImage* background = new cUIStaticImage();
-        background->textureName = "PartyMemberButtonBackground.png";
-        background->aspectRatio = 0.365f;
-        background->heightPercent = 1.f;
+        //cUIStaticImage* background = new cUIStaticImage();
+        //background->textureName = "PartyMemberButtonBackground.png";
+        //background->aspectRatio = 0.365f;
+        //background->heightPercent = 1.f;
 
         cUIStaticImage* sprite = new cUIStaticImage();
+        sprite->anchor = MIDDLE_LEFT;
         sprite->aspectRatio = 3.f / 4.f;
         sprite->heightPercent = 3.f / 4.f;
         sprite->textureName = "ico_3ds_646-white.png";
 
         // Make sure to add back gound items last
         button->AddChild(sprite);
-        button->AddChild(background);
+        //button->AddChild(background);
 
         canvas->AddWidget(button);
         cUIManager::GetInstance()->AddCanvas(canvas);

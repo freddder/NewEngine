@@ -8,24 +8,12 @@ class cUICanvas
 public:
     ~cUICanvas();
 
-    enum eAnchors
-    {
-        TOP_LEFT,
-        TOP_MIDDLE,
-        TOP_RIGHT,
-        MIDLLE_LEFT,
-        MIDDLE_MIDDLE,
-        MIDDLE_RIGHT,
-        BOTTOM_LEFT,
-        BOTTOM_MIDDLE,
-        BOTTOM_RIGHT
-    };
 private:
-    std::vector<std::pair<eAnchors, cUIWidget*>> anchoredWidgets;
+    std::vector<cUIWidget*> anchoredWidgets;
     cUIWidget* currentFocus;
 
 public:
-    void AddWidget(cUIWidget* newWidget, eAnchors anchor = MIDDLE_MIDDLE);
+    void AddWidget(cUIWidget* newWidget);
 
     friend class cUIManager;
 };

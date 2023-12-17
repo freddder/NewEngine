@@ -20,13 +20,13 @@ cUICanvas::~cUICanvas()
 {
 	for (int i = 0; i < anchoredWidgets.size(); i++)
 	{
-		delete anchoredWidgets[i].second;
+		delete anchoredWidgets[i];
 	}
 }
 
-void cUICanvas::AddWidget(cUIWidget* newWidget, eAnchors anchor)
+void cUICanvas::AddWidget(cUIWidget* newWidget)
 {
-	anchoredWidgets.push_back(std::pair<eAnchors, cUIWidget*>(anchor, newWidget));
+	anchoredWidgets.push_back(newWidget);
 }
 
 void cUIManager::AddCanvas(cUICanvas* newCanvas)
@@ -40,6 +40,6 @@ void cUIManager::DrawUI()
 
 	for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
 	{
-		canvasToDraw->anchoredWidgets[i].second->DrawWidget();
+		canvasToDraw->anchoredWidgets[i]->DrawWidget();
 	}
 }

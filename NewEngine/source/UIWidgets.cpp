@@ -27,14 +27,14 @@ void cUIWidget::AddChild(cUIWidget* newChild)
 	children.push_back(newChild);
 }
 
-float cUIWidget::CalculateHeightPixels()
+const float cUIWidget::CalculateHeightPixels()
 {
 	if (!parent) return heightPercent * cCamera::GetInstance()->SCR_HEIGHT;
 
 	return heightPercent * parent->CalculateHeightPixels();
 }
 
-float cUIWidget::CalculateHeightScreenPercent()
+const float cUIWidget::CalculateHeightScreenPercent()
 {
 	if (!parent) return heightPercent;
 
@@ -43,14 +43,56 @@ float cUIWidget::CalculateHeightScreenPercent()
 	return heightInPixels / cCamera::GetInstance()->SCR_HEIGHT;
 }
 
-float cUIWidget::CalculateWidthPixels()
+const float cUIWidget::CalculateWidthPixels()
 {
 	return CalculateHeightPixels() / aspectRatio;
 }
 
-float cUIWidget::CalculateWidthScreenPercent()
+const float cUIWidget::CalculateWidthScreenPercent()
 {
-	return CalculateWidthPixels() / cCamera::GetInstance()->SCR_WIDTH;;
+	return CalculateWidthPixels() / cCamera::GetInstance()->SCR_WIDTH;
+}
+
+const float cUIWidget::CalculateVerticalTranslate()
+{
+	float parentVerticalTranslation = 0.f;
+	if (parent) parentVerticalTranslation = parent->CalculateVerticalTranslate();
+
+	if (anchor == MIDDLE_LEFT || anchor == MIDDLE_MIDDLE || anchor == MIDDLE_RIGHT)
+	{
+		return parentVerticalTranslation;
+	}
+	else
+	{
+		// This is specifically for middle right
+		float widgetHalfHeight = CalculateHeightPixels() / 2.f;
+		float screenHalfHeight = (float)cCamera::GetInstance()->SCR_HEIGHT / 2.f;
+		float pixelTranslate = screenHalfHeight - widgetHalfHeight;
+
+		return (pixelTranslate / (float)cCamera::GetInstance()->SCR_HEIGHT * 2.f) + parentVerticalTranslation;
+	}
+}
+
+const float cUIWidget::CalculateHorizontalTranslate()
+{
+	float parentHorizontalTranslation = 0.f;
+	float parentWidthPixels = (float)cCamera::GetInstance()->SCR_WIDTH;
+	if (parent)
+	{
+		parentHorizontalTranslation = parent->CalculateHorizontalTranslate();
+		parentWidthPixels = parent->CalculateWidthPixels();
+	}
+
+	if (anchor == TOP_MIDDLE || anchor == MIDDLE_MIDDLE || anchor == BOTTOM_MIDDLE)	return parentHorizontalTranslation;
+
+	float widgetHalfWidth = CalculateWidthPixels() / 2.f;
+	float parentHalfWidth = parentWidthPixels / 2.f;
+	float pixelTranslate = parentHalfWidth - widgetHalfWidth;
+	float percentTranslate = pixelTranslate / parentWidthPixels * 2.f;
+
+	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) percentTranslate *= -1.f;
+
+	return percentTranslate;
 }
 
 void cUIStaticImage::DrawWidget()
@@ -60,11 +102,17 @@ void cUIStaticImage::DrawWidget()
 	cRenderManager::GetInstance()->use("debug");
 	cTextureManager::GetInstance()->SetupTexture(textureName);
 
-	float height = CalculateHeightScreenPercent();
-	float width = CalculateWidthScreenPercent();
+	float widthPercent = CalculateWidthScreenPercent();
+	float heightPercent = CalculateHeightScreenPercent();
 
-	cRenderManager::GetInstance()->setFloat("widthPercent", width);
-	cRenderManager::GetInstance()->setFloat("heightPercent", height);
+	cRenderManager::GetInstance()->setFloat("widthPercent", widthPercent);
+	cRenderManager::GetInstance()->setFloat("heightPercent", heightPercent);
+
+	float widthTranslate = CalculateHorizontalTranslate();
+	float heightTranslate = CalculateVerticalTranslate();
+
+	cRenderManager::GetInstance()->setFloat("widthTranslate", widthTranslate);
+	cRenderManager::GetInstance()->setFloat("heightTranslate", heightTranslate);
 
 	glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
