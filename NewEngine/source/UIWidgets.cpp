@@ -56,21 +56,21 @@ const float cUIWidget::CalculateWidthScreenPercent()
 const float cUIWidget::CalculateVerticalTranslate()
 {
 	float parentVerticalTranslation = 0.f;
-	if (parent) parentVerticalTranslation = parent->CalculateVerticalTranslate();
-
-	if (anchor == MIDDLE_LEFT || anchor == MIDDLE_MIDDLE || anchor == MIDDLE_RIGHT)
+	float parentHeightPixels = (float)cCamera::GetInstance()->SCR_HEIGHT;
+	if (parent)
 	{
-		return parentVerticalTranslation;
+		parentVerticalTranslation = parent->CalculateVerticalTranslate();
+		parentHeightPixels = parent->CalculateHeightPixels();
 	}
-	else
-	{
-		// This is specifically for middle right
-		float widgetHalfHeight = CalculateHeightPixels() / 2.f;
-		float screenHalfHeight = (float)cCamera::GetInstance()->SCR_HEIGHT / 2.f;
-		float pixelTranslate = screenHalfHeight - widgetHalfHeight;
 
-		return (pixelTranslate / (float)cCamera::GetInstance()->SCR_HEIGHT * 2.f) + parentVerticalTranslation;
-	}
+	if (anchor == MIDDLE_LEFT || anchor == MIDDLE_MIDDLE || anchor == MIDDLE_RIGHT)	return parentVerticalTranslation;
+
+	float widgetPixelTranslate = parentHeightPixels - CalculateHeightPixels();
+	float widgetPercentTranslate = widgetPixelTranslate / (float)cCamera::GetInstance()->SCR_HEIGHT;
+
+	if (anchor == BOTTOM_LEFT || anchor == BOTTOM_MIDDLE || anchor == BOTTOM_RIGHT) widgetPercentTranslate *= -1.f;
+
+	return parentVerticalTranslation + widgetPercentTranslate;
 }
 
 const float cUIWidget::CalculateHorizontalTranslate()
@@ -85,14 +85,12 @@ const float cUIWidget::CalculateHorizontalTranslate()
 
 	if (anchor == TOP_MIDDLE || anchor == MIDDLE_MIDDLE || anchor == BOTTOM_MIDDLE)	return parentHorizontalTranslation;
 
-	float widgetHalfWidth = CalculateWidthPixels() / 2.f;
-	float parentHalfWidth = parentWidthPixels / 2.f;
-	float pixelTranslate = parentHalfWidth - widgetHalfWidth;
-	float percentTranslate = pixelTranslate / parentWidthPixels * 2.f;
+	float widgetPixelTranslate = parentWidthPixels - CalculateWidthPixels();
+	float widgetPercentTranslate = widgetPixelTranslate / (float)cCamera::GetInstance()->SCR_WIDTH;
 
-	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) percentTranslate *= -1.f;
+	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) widgetPercentTranslate *= -1.f;
 
-	return percentTranslate;
+	return parentHorizontalTranslation + widgetPercentTranslate;
 }
 
 void cUIStaticImage::DrawWidget()
