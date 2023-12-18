@@ -93,30 +93,24 @@ int main()
     //g_RenderManager->AddModel(tree);
 
     {
-        cUICanvas* canvas = new cUICanvas();
-        cUIStaticImage* button = new cUIStaticImage();
-        button->anchor = MIDDLE_LEFT;
-        button->textureName = "PartyMemberButtonBackground.png";
-        button->aspectRatio = 0.365f;
-        button->heightPercent = 1.f / 9.f;
+        //cUICanvas* canvas = new cUICanvas();
+        //cUIStaticImage* button = new cUIStaticImage();
+        //button->anchor = MIDDLE_LEFT;
+        //button->textureName = "PartyMemberButtonBackground.png";
+        //button->aspectRatio = 0.365f;
+        //button->heightPercent = 1.f / 9.f;
 
-        //cUIStaticImage* background = new cUIStaticImage();
-        //background->textureName = "PartyMemberButtonBackground.png";
-        //background->aspectRatio = 0.365f;
-        //background->heightPercent = 1.f;
+        //cUIStaticImage* sprite = new cUIStaticImage();
+        //sprite->anchor = MIDDLE_LEFT;
+        //sprite->aspectRatio = 3.f / 4.f;
+        //sprite->heightPercent = 3.f / 4.f;
+        //sprite->textureName = "ico_3ds_646-white.png";
 
-        cUIStaticImage* sprite = new cUIStaticImage();
-        sprite->anchor = MIDDLE_LEFT;
-        sprite->aspectRatio = 3.f / 4.f;
-        sprite->heightPercent = 3.f / 4.f;
-        sprite->textureName = "ico_3ds_646-white.png";
+        //// Make sure to add back gound items last
+        //button->AddChild(sprite);
 
-        // Make sure to add back gound items last
-        button->AddChild(sprite);
-        //button->AddChild(background);
-
-        canvas->AddWidget(button);
-        cUIManager::GetInstance()->AddCanvas(canvas);
+        //canvas->AddWidget(button);
+        //cUIManager::GetInstance()->AddCanvas(canvas);
     }
 
     Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
