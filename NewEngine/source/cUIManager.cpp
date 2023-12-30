@@ -36,6 +36,8 @@ void cUIManager::AddCanvas(cUICanvas* newCanvas)
 
 void cUIManager::DrawUI()
 {
+	if (canvases.empty()) return;
+
 	const cUICanvas* canvasToDraw = canvases.top();
 
 	for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)

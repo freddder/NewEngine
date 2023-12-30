@@ -66,7 +66,7 @@ void RenderImgui()
     
     static int currentSelectedResolutionIndex = 3;
 
-    ImGui::Begin("General");
+    ImGui::Begin("Debug");
     ImGui::Text("FPS: %f", (1.f / deltaTime));
     if (ImGui::Button(isFullscreen ? "Window" : "Fullscreen"))
     {
@@ -95,7 +95,8 @@ void RenderImgui()
         isFullscreen = !isFullscreen;
     }
     
-    std::string resolutionPreviewValue = std::to_string(cCamera::GetInstance()->SCR_WIDTH) + "x" + std::to_string(cCamera::GetInstance()->SCR_HEIGHT); // Pass in the preview value visible before opening the combo (it could be anything)
+    // Pass in the preview value visible before opening the combo (it could be anything)
+    std::string resolutionPreviewValue = std::to_string(cCamera::GetInstance()->SCR_WIDTH) + "x" + std::to_string(cCamera::GetInstance()->SCR_HEIGHT);
     float aspectRatio = round(((float)cCamera::GetInstance()->SCR_WIDTH / (float)cCamera::GetInstance()->SCR_HEIGHT) * 100.f) / 100.f;
     if (ImGui::BeginCombo(std::to_string(aspectRatio).c_str(), resolutionPreviewValue.c_str()))
     {
@@ -120,68 +121,83 @@ void RenderImgui()
         ImGui::EndCombo();
     }
 
-    ImGui::End();
+    ImGui::Separator();
 
-    cLightManager* lightManager = cLightManager::GetInstance();
-    cWeatherManager* weatherManager = cWeatherManager::GetInstance();
-    cRenderManager* renderManager = cRenderManager::GetInstance();
-    cCamera* camera = cCamera::GetInstance();
-
-    float* cameraPosition[3];
-    cameraPosition[0] = &camera->position.x;
-    cameraPosition[1] = &camera->position.y;
-    cameraPosition[2] = &camera->position.z;
-
-    ImGui::Begin("Camera");
-    ImGui::DragFloat3("Position", *cameraPosition);
-    ImGui::Checkbox("Player Cam", &camera->usePlayerCamera);
-    ImGui::DragFloat("FOV", &camera->FOV);
-    ImGui::DragFloat("Distance", &camera->PLY_DISTANCE);
-    ImGui::DragFloat("Angle", &camera->PLY_ANGLE);
-    ImGui::End();
-
-    float* position[3];
-    position[0] = &lightManager->lights[0].position.x;
-    position[1] = &lightManager->lights[0].position.y;
-    position[2] = &lightManager->lights[0].position.z;
-
-    float* colors[3];
-    colors[0] = &lightManager->lights[0].diffuse.r;
-    colors[1] = &lightManager->lights[0].diffuse.g;
-    colors[2] = &lightManager->lights[0].diffuse.b;
-
-    float* fogColor[3];
-    fogColor[0] = &weatherManager->fogColor.r;
-    fogColor[1] = &weatherManager->fogColor.g;
-    fogColor[2] = &weatherManager->fogColor.b;
-
-    int* shadowSmooth = &lightManager->shadowSampleRadius;
-
-    ImGui::Begin("Envoirnment");
-    ImGui::BeginTabBar("Tabs");
-    if (ImGui::BeginTabItem("Light"))
+    if (ImGui::CollapsingHeader("Camera"))
     {
-        ImGui::ColorEdit3("Color", *colors);
-        ImGui::DragFloat3("Position", *position);
-        ImGui::DragInt("Smoothing", shadowSmooth);
-        //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
-        //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
-        //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
-        ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(200, 200));
-        ImGui::EndTabItem();
+        cCamera* camera = cCamera::GetInstance();
+
+        float* cameraPosition[3];
+        cameraPosition[0] = &camera->position.x;
+        cameraPosition[1] = &camera->position.y;
+        cameraPosition[2] = &camera->position.z;
+
+        ImGui::DragFloat3("Position", *cameraPosition);
+        ImGui::Checkbox("Player Cam", &camera->usePlayerCamera);
+        ImGui::DragFloat("FOV", &camera->FOV);
+        ImGui::DragFloat("Distance", &camera->PLY_DISTANCE);
+        ImGui::DragFloat("Angle", &camera->PLY_ANGLE);
     }
-    if (ImGui::BeginTabItem("Fog"))
+
+    if (ImGui::CollapsingHeader("Enviornment"))
     {
-        ImGui::ColorEdit3("Color", *fogColor);
-        ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
-        ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
-        if (ImGui::Button("Change weather"))
+        if (ImGui::BeginTabBar("Tabs"))
         {
-            weatherManager->SetWeather(HAIL);
+            if (ImGui::BeginTabItem("Light"))
+            {
+                cLightManager* lightManager = cLightManager::GetInstance();
+                cRenderManager* renderManager = cRenderManager::GetInstance();
+
+                float* position[3];
+                position[0] = &lightManager->lights[0].position.x;
+                position[1] = &lightManager->lights[0].position.y;
+                position[2] = &lightManager->lights[0].position.z;
+
+                float* colors[3];
+                colors[0] = &lightManager->lights[0].diffuse.r;
+                colors[1] = &lightManager->lights[0].diffuse.g;
+                colors[2] = &lightManager->lights[0].diffuse.b;
+
+                int* shadowSmooth = &lightManager->shadowSampleRadius;
+
+                ImGui::ColorEdit3("Color", *colors);
+                ImGui::DragFloat3("Position", *position);
+                ImGui::DragInt("Smoothing", shadowSmooth);
+                //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
+                //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
+                //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
+                ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(200, 200));
+
+                ImGui::EndTabItem();
+            }
+            if (ImGui::BeginTabItem("Fog"))
+            {
+                cWeatherManager* weatherManager = cWeatherManager::GetInstance();
+
+                float* fogColor[3];
+                fogColor[0] = &weatherManager->fogColor.r;
+                fogColor[1] = &weatherManager->fogColor.g;
+                fogColor[2] = &weatherManager->fogColor.b;
+
+                ImGui::ColorEdit3("Color", *fogColor);
+                ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
+                ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
+                if (ImGui::Button("Change weather"))
+                {
+                    weatherManager->SetWeather(HAIL);
+                }
+                ImGui::EndTabItem();
+            }
+
+            ImGui::EndTabBar();
         }
-        ImGui::EndTabItem();
     }
-    ImGui::EndTabBar();
+
+    if (ImGui::CollapsingHeader("Data"))
+    {
+
+    }
+
     ImGui::End();
 
     ImGui::Render();
