@@ -211,7 +211,22 @@ void RenderImgui()
         ImGui::SameLine();
         if (ImGui::Button("Save Species Data"))
         {
-            Pokemon::SaveSpecieData(1, selectedSpecies);
+            selectedSpecies.nationalDexNumber = 406;
+            selectedSpecies.name = "Budew";
+            selectedSpecies.hatchCycles = 20;
+            selectedSpecies.catchRate = 255;
+            selectedSpecies.defaultForm.baseHp = 40;
+            selectedSpecies.defaultForm.baseAtk = 30;
+            selectedSpecies.defaultForm.baseDef = 35;
+            selectedSpecies.defaultForm.baseSpAtk = 50;
+            selectedSpecies.defaultForm.baseSpDef = 70;
+            selectedSpecies.defaultForm.baseSpd = 55;
+            selectedSpecies.defaultForm.type1 = Pokemon::Type::GRASS;
+            selectedSpecies.defaultForm.type2 = Pokemon::Type::POISON;
+            selectedSpecies.defaultForm.height = 0.2f;
+            selectedSpecies.defaultForm.weight = 1.2f;
+            
+            Pokemon::SaveSpecieData(selectedSpecies.nationalDexNumber, selectedSpecies);
         }
     }
 

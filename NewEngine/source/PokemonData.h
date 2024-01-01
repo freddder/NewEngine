@@ -48,7 +48,7 @@ namespace Pokemon
 
 	struct Form
 	{
-		std::string formName; // Display name for Pokedex
+		std::string formName = ""; // Display name for Pokedex (same as species if not set) (might remove later)
 		std::string formId = "default"; // Name for looking up sprite file name
 
 		int baseHp;
@@ -67,6 +67,8 @@ namespace Pokemon
 
 		float height; // in meters
 		float weight; // in kilograms
+
+		// Learnset as a pair of int (level) and int (move id)
 	};
 
 	struct SpeciesData
@@ -79,7 +81,7 @@ namespace Pokemon
 		EggGroup eggGroup = EGG_NO_EGGS_DISCOVERED;
 		int hatchCycles; // Not sure what this means, but its related to the amount of steps to hatch
 
-		float catchRatio; // Not sure how this will work either
+		float catchRate; // Not sure how this will work either
 
 		bool isStatsGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
 		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
