@@ -20,6 +20,7 @@
 #include "cWeatherManager.h"
 #include "cParticleManager.h"
 #include "cUIManager.h"
+#include "PokemonData.h"
 
 #include "cPlayerCharacter.h"
 
@@ -27,7 +28,9 @@ GLFWwindow* window;
 float deltaTime = 0.f;
 float lastFrame = 0.f;
 
-bool isFullscreen = false;
+static bool isFullscreen = false;
+
+static Pokemon::SpeciesData selectedSpecies;
 
 const char* resolutions[] = {
     "2560x1400",
@@ -95,9 +98,12 @@ void RenderImgui()
         isFullscreen = !isFullscreen;
     }
     
+    if (isFullscreen) ImGui::BeginDisabled();
+
     // Pass in the preview value visible before opening the combo (it could be anything)
     std::string resolutionPreviewValue = std::to_string(cCamera::GetInstance()->SCR_WIDTH) + "x" + std::to_string(cCamera::GetInstance()->SCR_HEIGHT);
     float aspectRatio = round(((float)cCamera::GetInstance()->SCR_WIDTH / (float)cCamera::GetInstance()->SCR_HEIGHT) * 100.f) / 100.f;
+    ImGui::SameLine(); ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x * 0.7f);
     if (ImGui::BeginCombo(std::to_string(aspectRatio).c_str(), resolutionPreviewValue.c_str()))
     {
         for (int n = 0; n < IM_ARRAYSIZE(resolutions); n++)
@@ -120,6 +126,8 @@ void RenderImgui()
         }
         ImGui::EndCombo();
     }
+
+    if (isFullscreen) ImGui::EndDisabled();
 
     ImGui::Separator();
 
@@ -195,7 +203,16 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Data"))
     {
+        if (ImGui::Button("Load Species Data"))
+        {
+            Pokemon::LoadSpecieData(1, selectedSpecies);
+        }
 
+        ImGui::SameLine();
+        if (ImGui::Button("Save Species Data"))
+        {
+            Pokemon::SaveSpecieData(1, selectedSpecies);
+        }
     }
 
     ImGui::End();

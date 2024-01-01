@@ -57,6 +57,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pokemon">
+      <UniqueIdentifier>{bc6c6b07-fea1-48f3-847f-6ac28a200d0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -163,6 +166,12 @@
     </ClCompile>
     <ClCompile Include="source\UIWidgets.cpp">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cSceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\PokemonData.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -279,6 +288,9 @@
     </ClInclude>
     <ClInclude Include="source\UIWidgets.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\PokemonData.h">
+      <Filter>Pokemon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
