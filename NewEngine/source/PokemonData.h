@@ -6,7 +6,7 @@ namespace Pokemon
 {
 	enum Type
 	{
-		NORMAL,
+		NORMAL = 0,
 		FIRE,
 		WATER,
 		ELECTRIC,
@@ -24,7 +24,31 @@ namespace Pokemon
 		STEEL,
 		DARK,
 		FAIRY,
-		NO_TYPE
+		NO_TYPE,
+		TYPE_ENUM_COUNT
+	};
+
+	const static char* Type_Strings[] =
+	{
+		"Normal",
+		"Fire",
+		"Water",
+		"Electric",
+		"Grass",
+		"Ice",
+		"Fighting",
+		"Poison",
+		"Ground",
+		"Flying",
+		"Psychic",
+		"Bug",
+		"Rock",
+		"Ghost",
+		"Dragon",
+		"Steel",
+		"Dark",
+		"Fairy",
+		"No Type"
 	};
 
 	enum EggGroup
@@ -43,7 +67,29 @@ namespace Pokemon
 		EGG_WATER_1,
 		EGG_WATER_2,
 		EGG_WATER_3,
-		EGG_NO_EGGS_DISCOVERED
+		EGG_NO_EGGS_DISCOVERED,
+		EGG_NO_EGG_GROUP,
+		EGG_ENUM_COUNT
+	};
+
+	const static char* EggGroup_Strings[] =
+	{
+		"Amorphous",
+		"Bug",
+		"Ditto",
+		"Dragon",
+		"Fairy",
+		"Field",
+		"Flying",
+		"Grass",
+		"Mineral",
+		"Monster",
+		"Human Like",
+		"Water 1",
+		"Water 2",
+		"Water 3",
+		"No Eggs Discovered",
+		"No Egg Group"
 	};
 
 	struct Form
@@ -74,11 +120,12 @@ namespace Pokemon
 	struct SpeciesData
 	{
 		std::string name;
-		int nationalDexNumber = -1;
+		int nationalDexNumber = 0;
 
 		bool isGenderless = false;
 		float genderRatio = 0.5f; // chance to be male (0 to 1)
-		EggGroup eggGroup = EGG_NO_EGGS_DISCOVERED;
+		EggGroup eggGroup1 = EGG_NO_EGGS_DISCOVERED;
+		EggGroup eggGroup2 = EGG_NO_EGG_GROUP;
 		int hatchCycles; // Not sure what this means, but its related to the amount of steps to hatch
 
 		float catchRate; // Not sure how this will work either

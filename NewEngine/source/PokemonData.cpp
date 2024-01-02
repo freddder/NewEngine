@@ -44,7 +44,8 @@ namespace Pokemon
 
 		d.AddMember("isGenderless", data.isGenderless, allocator);
 		d.AddMember("genderRatio", data.genderRatio, allocator);
-		d.AddMember("eggGroup", data.eggGroup, allocator);
+		d.AddMember("eggGroup1", data.eggGroup1, allocator);
+		d.AddMember("eggGroup2", data.eggGroup2, allocator);
 		d.AddMember("hatchCycles", data.hatchCycles, allocator);
 
 		d.AddMember("catchRate", data.catchRate, allocator);
@@ -107,10 +108,10 @@ namespace Pokemon
 	
 	void LoadSpecieData(const int nationalDexNumber, SpeciesData& data)
 	{
-		if (nationalDexNumber <= 0 || nationalDexNumber >= 1008)
+		if (nationalDexNumber == 0 || nationalDexNumber >= 1008)
 		{
 			// Isn't a valid national dex number
-			data.nationalDexNumber = -1;
+			data.nationalDexNumber = 0;
 			return;
 		}
 	
@@ -125,7 +126,7 @@ namespace Pokemon
 		if(fp == 0)
 		{
 			// File doesn't exists
-			data.nationalDexNumber = -1;
+			data.nationalDexNumber = 0;
 			return;
 		}
 	

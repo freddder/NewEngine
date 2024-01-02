@@ -30,6 +30,7 @@ float lastFrame = 0.f;
 
 static bool isFullscreen = false;
 
+static int searchNationalDexNumber = 0;
 static Pokemon::SpeciesData selectedSpecies;
 
 const char* resolutions[] = {
@@ -56,6 +57,52 @@ void InitializeImgui()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+}
+
+void RenderFormData(Pokemon::Form& form)
+{
+    std::string typePreviewValue = Pokemon::Type_Strings[form.type1];
+    ImGui::PushItemWidth(100);
+    if (ImGui::BeginCombo("Type 1", Pokemon::Type_Strings[form.type1]))
+    {
+        for (int n = 0; n < Pokemon::Type::TYPE_ENUM_COUNT; n++)
+        {
+            const bool is_selected = (form.type1 == n);
+            if (ImGui::Selectable(Pokemon::Type_Strings[n], is_selected) && n != Pokemon::NO_TYPE)
+            {
+                form.type1 = static_cast<Pokemon::Type>(n);
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    if (ImGui::BeginCombo("Type 2", Pokemon::Type_Strings[form.type2]))
+    {
+        for (int n = 0; n < Pokemon::Type::TYPE_ENUM_COUNT; n++)
+        {
+            const bool is_selected = (form.type2 == n);
+            if (ImGui::Selectable(Pokemon::Type_Strings[n], is_selected))
+            {
+                form.type2 = static_cast<Pokemon::Type>(n);
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+                ImGui::SetItemDefaultFocus();
+        }
+        ImGui::EndCombo();
+    }
+
+    ImGui::DragInt("HP", &form.baseHp, 1, 1, 150);
+    ImGui::DragInt("Attack", &form.baseAtk, 1, 1, 150);
+    ImGui::DragInt("Defence", &form.baseDef, 1, 1, 150);
+    ImGui::DragInt("Special Attack", &form.baseSpAtk, 1, 1, 150);
+    ImGui::DragInt("Special Defence", &form.baseSpDef, 1, 1, 150);
+    ImGui::DragInt("Speed", &form.baseSpd, 1, 1, 150);
 }
 
 void RenderImgui()
@@ -203,14 +250,14 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Data"))
     {
-        if (ImGui::Button("Load Species Data"))
-        {
-            Pokemon::LoadSpecieData(1, selectedSpecies);
-        }
+        ImGui::Text("Search National Dex");
+        ImGui::PushItemWidth(50); ImGui::SameLine();
+        ImGui::DragInt(":", &searchNationalDexNumber, 1, 0, 1008);
 
         ImGui::SameLine();
-        if (ImGui::Button("Save Species Data"))
+        if (ImGui::Button("Load Species Data"))
         {
+            searchNationalDexNumber = 406;
             selectedSpecies.nationalDexNumber = 406;
             selectedSpecies.name = "Budew";
             selectedSpecies.hatchCycles = 20;
@@ -225,8 +272,77 @@ void RenderImgui()
             selectedSpecies.defaultForm.type2 = Pokemon::Type::POISON;
             selectedSpecies.defaultForm.height = 0.2f;
             selectedSpecies.defaultForm.weight = 1.2f;
-            
-            Pokemon::SaveSpecieData(selectedSpecies.nationalDexNumber, selectedSpecies);
+
+            //Pokemon::LoadSpecieData(1, selectedSpecies);
+        }
+
+        if (searchNationalDexNumber != 0)
+        {
+            std::string title = selectedSpecies.name + " #" + std::to_string(selectedSpecies.nationalDexNumber);
+            ImGui::Text(title.c_str());
+
+            if (ImGui::BeginTable("table1", 2, ImGuiTableFlags_SizingFixedFit))
+            {
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                cRenderManager* renderManager = cRenderManager::GetInstance();
+                ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(120, 90));
+
+                ImGui::TableNextColumn();
+
+                ImGui::Checkbox("Is genderless", &selectedSpecies.isGenderless);
+                if (!selectedSpecies.isGenderless)
+                {
+                    ImGui::Checkbox("Are stats gender based", &selectedSpecies.isStatsGenderBased);
+
+                    ImGui::DragFloat("Gender ratio", &selectedSpecies.genderRatio, 0.1f, 0, 1);
+                }
+
+                if (ImGui::BeginCombo("Egg Group 1", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup1]))
+                {
+                    for (int n = 0; n < Pokemon::EggGroup::EGG_ENUM_COUNT; n++)
+                    {
+                        const bool is_selected = (selectedSpecies.eggGroup1 == n && n != Pokemon::EGG_NO_EGG_GROUP);
+                        if (ImGui::Selectable(Pokemon::EggGroup_Strings[n], is_selected))
+                        {
+                            selectedSpecies.eggGroup1 = static_cast<Pokemon::EggGroup>(n);
+                        }
+
+                        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                    ImGui::EndCombo();
+                }
+
+                if (ImGui::BeginCombo("Egg Group 2", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup2]))
+                {
+                    for (int n = 0; n < Pokemon::EggGroup::EGG_ENUM_COUNT; n++)
+                    {
+                        const bool is_selected = (selectedSpecies.eggGroup2 == n);
+                        if (ImGui::Selectable(Pokemon::EggGroup_Strings[n], is_selected))
+                        {
+                            selectedSpecies.eggGroup2 = static_cast<Pokemon::EggGroup>(n);
+                        }
+
+                        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                    ImGui::EndCombo();
+                }
+
+                ImGui::EndTable();
+            }
+            ImGui::Separator();
+
+            ImGui::Text("Default Form");
+            RenderFormData(selectedSpecies.defaultForm);
+
+            if (ImGui::Button("Save Species Data"))
+            {
+                Pokemon::SaveSpecieData(selectedSpecies.nationalDexNumber, selectedSpecies);
+            }
         }
     }
 
