@@ -103,6 +103,10 @@ void RenderFormData(Pokemon::Form& form)
     ImGui::DragInt("Special Attack", &form.baseSpAtk, 1, 1, 150);
     ImGui::DragInt("Special Defence", &form.baseSpDef, 1, 1, 150);
     ImGui::DragInt("Speed", &form.baseSpd, 1, 1, 150);
+
+    ImGui::DragFloat("Height(m)", &form.height, 0.1f, 0.1f, 25.f);
+    ImGui::SameLine();
+    ImGui::DragFloat("Weight(kg)", &form.weight, 0.1f, 0.1f, 1000.f);
 }
 
 void RenderImgui()
