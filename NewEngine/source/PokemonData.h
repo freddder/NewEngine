@@ -92,17 +92,34 @@ namespace Pokemon
 		"No Egg Group"
 	};
 
+	enum Gender
+	{
+		MALE,
+		FEMALE,
+		NO_GENDER
+	};
+
+	struct Stats
+	{
+		int hp = 0;		// Health
+		int atk = 0;	// Attack
+		int spAtk = 0;	// Special Attack
+		int def = 0;	// Defence
+		int spDef = 0;	// Special Defence
+		int spd = 0;	// Speed
+
+		int Total()
+		{
+			return hp + atk + spAtk + def + spDef + spd;
+		}
+	};
+
 	struct Form
 	{
-		std::string formName = ""; // Display name for Pokedex (same as species if not set) (might remove later)
+		//std::string formName = ""; // Display name for Pokedex (same as species if not set) (might remove later)
 		std::string formId = "default"; // Name for looking up sprite file name
 
-		int baseHp;
-		int baseAtk;
-		int baseSpAtk;
-		int baseDef;
-		int baseSpDef;
-		int baseSpd;
+		Stats baseStats;
 		
 		// Ability ability1
 		// Ability ability2
@@ -140,4 +157,25 @@ namespace Pokemon
 	const static unsigned int JSON_DATA_VERSION = 1;
 	void SaveSpecieData(const int nationalDexNumber, const SpeciesData& data);
 	void LoadSpecieData(const int nationalDexNumber, SpeciesData& data);
+
+	struct OverworldPokemonData
+	{
+		int nationalDexNumber = 0;
+		std::string formName = "";
+
+		Gender gender;
+		bool shiny = false;
+
+		// Ability ability;
+		// Natire nature;
+		Stats IVs; // Individial values
+		Stats EVs; // Effort values
+
+		// HeldItem item;
+
+		// Move move1;
+		// Move move2;
+		// Move move3;
+		// Move move4;
+	};
 }

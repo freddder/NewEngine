@@ -52,8 +52,7 @@ void cTextureManager::CreateTexture(std::string fileName, std::string subdirecto
 
 void cTextureManager::CreateSpriteSheet(std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym)
 {
-    if (spriteSheetsMap.count(spriteSheetName)) // texture already created
-        return;
+    if (spriteSheetsMap.count(spriteSheetName)) return; // texture already created
 
     sSpriteSheet newSheet;
     newSheet.numCols = cols;

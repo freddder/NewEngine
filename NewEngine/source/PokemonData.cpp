@@ -54,17 +54,17 @@ namespace Pokemon
 		d.AddMember("isSpriteGenderBased", data.isSpriteGenderBased, allocator);
 
 		rapidjson::Value defaultForm(rapidjson::kObjectType);
-		rapidjson::Value formName(data.defaultForm.formName.c_str(), allocator);
-		defaultForm.AddMember("formName", formName, allocator);
+		//rapidjson::Value formName(data.defaultForm.formName.c_str(), allocator);
+		//defaultForm.AddMember("formName", formName, allocator);
 		rapidjson::Value formId(data.defaultForm.formId.c_str(), allocator);
 		defaultForm.AddMember("formId", formId, allocator);
 
-		defaultForm.AddMember("baseHp", data.defaultForm.baseHp, allocator);
-		defaultForm.AddMember("baseAtk", data.defaultForm.baseAtk, allocator);
-		defaultForm.AddMember("baseSpAtk", data.defaultForm.baseSpAtk, allocator);
-		defaultForm.AddMember("baseDef", data.defaultForm.baseDef, allocator);
-		defaultForm.AddMember("baseSpDef", data.defaultForm.baseDef, allocator);
-		defaultForm.AddMember("baseSpd", data.defaultForm.baseSpd, allocator);
+		defaultForm.AddMember("baseHp", data.defaultForm.baseStats.hp, allocator);
+		defaultForm.AddMember("baseAtk", data.defaultForm.baseStats.atk, allocator);
+		defaultForm.AddMember("baseSpAtk", data.defaultForm.baseStats.spAtk, allocator);
+		defaultForm.AddMember("baseDef", data.defaultForm.baseStats.def, allocator);
+		defaultForm.AddMember("baseSpDef", data.defaultForm.baseStats.spDef, allocator);
+		defaultForm.AddMember("baseSpd", data.defaultForm.baseStats.spd, allocator);
 
 		defaultForm.AddMember("type1", data.defaultForm.type1, allocator);
 		defaultForm.AddMember("type2", data.defaultForm.type2, allocator);
@@ -78,17 +78,17 @@ namespace Pokemon
 		for (int i = 0; i < data.alternateForms.size(); i++)
 		{
 			rapidjson::Value newAlternateForm(rapidjson::kObjectType);
-			rapidjson::Value alternateFormName(data.alternateForms[i].formName.c_str(), allocator);
-			newAlternateForm.AddMember("formName", alternateFormName, allocator);
+			//rapidjson::Value alternateFormName(data.alternateForms[i].formName.c_str(), allocator);
+			//newAlternateForm.AddMember("formName", alternateFormName, allocator);
 			rapidjson::Value alternateFormId(data.alternateForms[i].formId.c_str(), allocator);
 			newAlternateForm.AddMember("formId", alternateFormId, allocator);
 
-			newAlternateForm.AddMember("baseHp", data.alternateForms[i].baseHp, allocator);
-			newAlternateForm.AddMember("baseAtk", data.alternateForms[i].baseAtk, allocator);
-			newAlternateForm.AddMember("baseSpAtk", data.alternateForms[i].baseSpAtk, allocator);
-			newAlternateForm.AddMember("baseDef", data.alternateForms[i].baseDef, allocator);
-			newAlternateForm.AddMember("baseSpDef", data.alternateForms[i].baseDef, allocator);
-			newAlternateForm.AddMember("baseSpd", data.alternateForms[i].baseSpd, allocator);
+			newAlternateForm.AddMember("baseHp", data.alternateForms[i].baseStats.hp, allocator);
+			newAlternateForm.AddMember("baseAtk", data.alternateForms[i].baseStats.atk, allocator);
+			newAlternateForm.AddMember("baseSpAtk", data.alternateForms[i].baseStats.spAtk, allocator);
+			newAlternateForm.AddMember("baseDef", data.alternateForms[i].baseStats.def, allocator);
+			newAlternateForm.AddMember("baseSpDef", data.alternateForms[i].baseStats.spDef, allocator);
+			newAlternateForm.AddMember("baseSpd", data.alternateForms[i].baseStats.spd, allocator);
 
 			newAlternateForm.AddMember("type1", data.alternateForms[i].type1, allocator);
 			newAlternateForm.AddMember("type2", data.alternateForms[i].type2, allocator);
