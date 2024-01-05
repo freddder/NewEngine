@@ -408,7 +408,7 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             newMeshInfo.textureName = path.C_Str();
 
             // maybe try to load texture in the texture manager right here
-            cTextureManager::GetInstance()->CreateTexture(newMeshInfo.textureName);
+            cTextureManager::GetInstance()->LoadGeneralTexture(newMeshInfo.textureName);
         }
 
         newModel.allMeshesData.push_back(newMeshInfo);

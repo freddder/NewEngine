@@ -97,12 +97,12 @@ void RenderFormData(Pokemon::Form& form)
         ImGui::EndCombo();
     }
 
-    ImGui::DragInt("HP", &form.baseHp, 1, 1, 150);
-    ImGui::DragInt("Attack", &form.baseAtk, 1, 1, 150);
-    ImGui::DragInt("Defence", &form.baseDef, 1, 1, 150);
-    ImGui::DragInt("Special Attack", &form.baseSpAtk, 1, 1, 150);
-    ImGui::DragInt("Special Defence", &form.baseSpDef, 1, 1, 150);
-    ImGui::DragInt("Speed", &form.baseSpd, 1, 1, 150);
+    ImGui::DragInt("HP", &form.baseStats.hp, 1, 1, 150);
+    ImGui::DragInt("Attack", &form.baseStats.atk, 1, 1, 150);
+    ImGui::DragInt("Defence", &form.baseStats.def, 1, 1, 150);
+    ImGui::DragInt("Special Attack", &form.baseStats.spAtk, 1, 1, 150);
+    ImGui::DragInt("Special Defence", &form.baseStats.spDef, 1, 1, 150);
+    ImGui::DragInt("Speed", &form.baseStats.spd, 1, 1, 150);
 
     ImGui::DragFloat("Height(m)", &form.height, 0.1f, 0.1f, 25.f);
     ImGui::SameLine();
@@ -266,12 +266,12 @@ void RenderImgui()
             selectedSpecies.name = "Budew";
             selectedSpecies.hatchCycles = 20;
             selectedSpecies.catchRate = 255;
-            selectedSpecies.defaultForm.baseHp = 40;
-            selectedSpecies.defaultForm.baseAtk = 30;
-            selectedSpecies.defaultForm.baseDef = 35;
-            selectedSpecies.defaultForm.baseSpAtk = 50;
-            selectedSpecies.defaultForm.baseSpDef = 70;
-            selectedSpecies.defaultForm.baseSpd = 55;
+            selectedSpecies.defaultForm.baseStats.hp = 40;
+            selectedSpecies.defaultForm.baseStats.atk = 30;
+            selectedSpecies.defaultForm.baseStats.def = 35;
+            selectedSpecies.defaultForm.baseStats.spAtk = 50;
+            selectedSpecies.defaultForm.baseStats.spDef = 70;
+            selectedSpecies.defaultForm.baseStats.spd = 55;
             selectedSpecies.defaultForm.type1 = Pokemon::Type::GRASS;
             selectedSpecies.defaultForm.type2 = Pokemon::Type::POISON;
             selectedSpecies.defaultForm.height = 0.2f;

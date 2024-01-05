@@ -72,17 +72,17 @@ int main()
     renderManager->LoadModel("Foam_bl2.obj", "foam");
     renderManager->LoadModel("Foam_c2.obj", "foam");
 
-    textureManager->CreateSpriteSheet("Nate.png", 3, 8, false);
-    textureManager->CreateSpriteSheet("SymetricNPC_1.png", 2, 4, true);
-    textureManager->CreateSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-    textureManager->CreateSpriteSheet("722.png", 4, 4, false);
+    textureManager->LoadSpriteSheet("Nate.png", 3, 8, false);
+    textureManager->LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
+    textureManager->LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+    textureManager->LoadSpriteSheet("722.png", 4, 4, false);
 
-    textureManager->CreateTexture("SnowFlake1.png");
-    textureManager->CreateTexture("SnowFlake2.png");
-    textureManager->CreateTexture("SnowFlake3.png");
+    textureManager->LoadGeneralTexture("SnowFlake1.png");
+    textureManager->LoadGeneralTexture("SnowFlake2.png");
+    textureManager->LoadGeneralTexture("SnowFlake3.png");
 
-    textureManager->CreateTexture("PartyMemberButtonBackground.png", "ui/");
-    textureManager->CreateTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
+    textureManager->LoadGeneralTexture("PartyMemberButtonBackground.png", "ui/");
+    textureManager->LoadGeneralTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
 
     animationManager->InitializeAnimationsPresets();
 
