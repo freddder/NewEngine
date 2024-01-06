@@ -116,7 +116,7 @@ void cTextureManager::LoadSpriteSheet(const std::string spriteSheetName, unsigne
         spriteSheetsMap[spriteSheetName] = newSheet;
 }
 
-void cTextureManager::SetupSpriteSheet(const std::string sheetName, const int spriteId)
+void cTextureManager::SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit)
 {
     if (spriteSheetsMap.find(sheetName) == spriteSheetsMap.end()) return; // texture doesn't exists
 
@@ -126,19 +126,27 @@ void cTextureManager::SetupSpriteSheet(const std::string sheetName, const int sp
     renderManager->setInt("spriteId", spriteId);
     renderManager->setInt("numCols", sheet.numCols);
     renderManager->setInt("numRows", sheet.numRows);
-}
 
-void cTextureManager::SetupTexture(std::string textureToSetup, unsigned int shaderTextureUnit)
-{
-    if (generalTexturesMap.find(textureToSetup) == generalTexturesMap.end()) return; // texture doesn't exists
-
-    unsigned int textureId = generalTexturesMap[textureToSetup];
-
-    std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
+    unsigned int textureId = spriteSheetsMap[sheetName].textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
     glBindTexture(GL_TEXTURE_2D, textureId);
 
+    std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
+    cRenderManager::GetInstance()->setInt(shaderVariable, shaderTextureUnit);
+}
+
+void cTextureManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
+{
+    if (generalTexturesMap.find(textureToSetup) == generalTexturesMap.end()) return; // texture doesn't exists
+
+    unsigned int textureId = generalTexturesMap[textureToSetup];
+
+    //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
+    glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
     cRenderManager::GetInstance()->setInt(shaderVariable, shaderTextureUnit);
 }

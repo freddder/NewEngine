@@ -695,15 +695,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 
     for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
-        // Setup texture
-        std::string textureToUse;
-
-        if (model->textureName == "")
-            textureToUse = drawInfo.allMeshesData[i].textureName;
-        else
-            textureToUse = model->textureName;
-
-        cTextureManager::GetInstance()->SetupTexture(textureToUse);
+        if (model->textureName == "") cTextureManager::GetInstance()->SetupTexture(drawInfo.allMeshesData[i].textureName);
 
         // Bind VAO
         glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);

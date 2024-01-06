@@ -1,6 +1,8 @@
 #include "cRenderModel.h"
 #include <glad/glad.h>
 
+#include "cTextureManager.h"
+
 cRenderModel::cRenderModel()
 {
 	position = glm::vec3(0.f);
@@ -51,7 +53,10 @@ void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int 
 	glDisableVertexAttribArray(offset_location);
 }
 
+// This might change when dynamic map loading is implemented (not using a general texture map)
 void cRenderModel::SetUpUniforms()
 {
-	
+	if (textureName == "") return;
+
+	cTextureManager::GetInstance()->SetupTexture(textureName);
 }
