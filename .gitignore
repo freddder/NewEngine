@@ -366,6 +366,7 @@ FodyWeavers.xsd
 !NewEngine/lib/**
 
 Build/*
-!Build/**/**/*.dll
+!Build/x64/Debug/*.dll
+!Build/x64/Release/*.dll
 
 NewEngine/imgui.ini
