@@ -364,5 +364,10 @@ FodyWeavers.xsd
 
 !NewEngine/assets/models/*
 !NewEngine/lib/**
-!Build/**/assimp-vc142-mtd.dll
+
+Build/x64/Debug/*
+Build/x64/Release/*
+!Build/x64/Debug/*.dll
+!Build/x64/Release/*.dll
+
 NewEngine/imgui.ini
