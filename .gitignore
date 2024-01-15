@@ -365,7 +365,8 @@ FodyWeavers.xsd
 !NewEngine/assets/models/*
 !NewEngine/lib/**
 
-Build/*
+Build/x64/Debug/*
+Build/x64/Release/*
 !Build/x64/Debug/*.dll
 !Build/x64/Release/*.dll
 
