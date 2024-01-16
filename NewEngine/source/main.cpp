@@ -60,8 +60,6 @@ int main()
     renderManager->LoadModel("WaterTest3.obj", "scene");
     renderManager->LoadModel("WinterTest.obj", "scene");
     renderManager->LoadModel("SlopeTest.obj", "scene");
-    //modelManager->LoadModel("TestMapWater.obj", "scene");
-    //modelManager->LoadModel("FallTree.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
     renderManager->LoadModel("Water_c2.obj", "wave");
@@ -86,12 +84,8 @@ int main()
 
     animationManager->InitializeAnimationsPresets();
 
-    //cRenderModel* tree = new cRenderModel();
-    //tree->meshName = "FallTree.obj";
-    //tree->position.x = -0.5f;
-    //tree->position.z = -0.5f;
-    //g_RenderManager->AddModel(tree);
-
+    
+    // UI testing
     {
         //cUICanvas* canvas = new cUICanvas();
         //cUIStaticImage* button = new cUIStaticImage();
@@ -118,11 +112,11 @@ int main()
     Engine::playerChar->SetFollower(follower);
     camera->playerPosition = &Engine::playerChar->model->position;
 
-    //mapManager->LoadMap("WinterTestDesc.json");
-    mapManager->LoadMap("WaterTest3Desc.json");
+    mapManager->LoadMap("WinterTestDesc.json");
+    //mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
 
-    weatherManager->SetWeather(SNOW);
+    //weatherManager->SetWeather(SNOW);
 
     Engine::GameLoop(true);
 

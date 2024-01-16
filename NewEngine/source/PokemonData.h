@@ -4,7 +4,7 @@
 
 namespace Pokemon
 {
-	enum Type
+	enum eType
 	{
 		NORMAL = 0,
 		FIRE,
@@ -51,7 +51,7 @@ namespace Pokemon
 		"No Type"
 	};
 
-	enum EggGroup
+	enum eEggGroup
 	{
 		EGG_AMORPHOUS,
 		EGG_BUG,
@@ -125,8 +125,8 @@ namespace Pokemon
 		// Ability ability2
 		// Ability hiddenAbility
 
-		Type type1;
-		Type type2 = NO_TYPE;
+		eType type1;
+		eType type2 = NO_TYPE;
 
 		float height; // in meters
 		float weight; // in kilograms
@@ -141,8 +141,8 @@ namespace Pokemon
 
 		bool isGenderless = false;
 		float genderRatio = 0.5f; // chance to be male (0 to 1)
-		EggGroup eggGroup1 = EGG_NO_EGGS_DISCOVERED;
-		EggGroup eggGroup2 = EGG_NO_EGG_GROUP;
+		eEggGroup eggGroup1 = EGG_NO_EGGS_DISCOVERED;
+		eEggGroup eggGroup2 = EGG_NO_EGG_GROUP;
 		int hatchCycles; // Not sure what this means, but its related to the amount of steps to hatch
 
 		float catchRate; // Not sure how this will work either

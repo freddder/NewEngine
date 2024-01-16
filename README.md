@@ -17,3 +17,6 @@ Current technologies:
 
 # How to import maps
 (video incoming)
+
+# Planned features
+- Release build

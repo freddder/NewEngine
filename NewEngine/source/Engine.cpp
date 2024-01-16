@@ -32,6 +32,7 @@ static bool isFullscreen = false;
 
 static int searchNationalDexNumber = 0;
 static Pokemon::SpeciesData selectedSpecies;
+static eWeather selectedWeather = NONE;
 
 const char* resolutions[] = {
     "2560x1400",
@@ -65,12 +66,12 @@ void RenderFormData(Pokemon::Form& form)
     ImGui::PushItemWidth(100);
     if (ImGui::BeginCombo("Type 1", Pokemon::Type_Strings[form.type1]))
     {
-        for (int n = 0; n < Pokemon::Type::TYPE_ENUM_COUNT; n++)
+        for (int n = 0; n < Pokemon::eType::TYPE_ENUM_COUNT; n++)
         {
             const bool is_selected = (form.type1 == n);
             if (ImGui::Selectable(Pokemon::Type_Strings[n], is_selected) && n != Pokemon::NO_TYPE)
             {
-                form.type1 = static_cast<Pokemon::Type>(n);
+                form.type1 = static_cast<Pokemon::eType>(n);
             }
 
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -82,12 +83,12 @@ void RenderFormData(Pokemon::Form& form)
 
     if (ImGui::BeginCombo("Type 2", Pokemon::Type_Strings[form.type2]))
     {
-        for (int n = 0; n < Pokemon::Type::TYPE_ENUM_COUNT; n++)
+        for (int n = 0; n < Pokemon::eType::TYPE_ENUM_COUNT; n++)
         {
             const bool is_selected = (form.type2 == n);
             if (ImGui::Selectable(Pokemon::Type_Strings[n], is_selected))
             {
-                form.type2 = static_cast<Pokemon::Type>(n);
+                form.type2 = static_cast<Pokemon::eType>(n);
             }
 
             // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -238,13 +239,27 @@ void RenderImgui()
                 fogColor[1] = &weatherManager->fogColor.g;
                 fogColor[2] = &weatherManager->fogColor.b;
 
-                ImGui::ColorEdit3("Color", *fogColor);
-                ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
-                ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
-                if (ImGui::Button("Change weather"))
+                if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
                 {
-                    weatherManager->SetWeather(HAIL);
+                    for (int n = 0; n < eWeather::ENUM_COUNT; n++)
+                    {
+                        const bool is_selected = (selectedWeather == n);
+                        if (ImGui::Selectable(Weather_Strings[n], is_selected))
+                        {
+                            selectedWeather = static_cast<eWeather>(n);
+                            weatherManager->SetWeather(selectedWeather);
+                        }
+
+                        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                        if (is_selected)
+                            ImGui::SetItemDefaultFocus();
+                    }
+                    ImGui::EndCombo();
                 }
+                ImGui::ColorEdit3("Color", *fogColor);
+                ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f, 0.f);
+                ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
+
                 ImGui::EndTabItem();
             }
 
@@ -272,8 +287,8 @@ void RenderImgui()
             selectedSpecies.defaultForm.baseStats.spAtk = 50;
             selectedSpecies.defaultForm.baseStats.spDef = 70;
             selectedSpecies.defaultForm.baseStats.spd = 55;
-            selectedSpecies.defaultForm.type1 = Pokemon::Type::GRASS;
-            selectedSpecies.defaultForm.type2 = Pokemon::Type::POISON;
+            selectedSpecies.defaultForm.type1 = Pokemon::eType::GRASS;
+            selectedSpecies.defaultForm.type2 = Pokemon::eType::POISON;
             selectedSpecies.defaultForm.height = 0.2f;
             selectedSpecies.defaultForm.weight = 1.2f;
 
@@ -304,12 +319,12 @@ void RenderImgui()
 
                 if (ImGui::BeginCombo("Egg Group 1", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup1]))
                 {
-                    for (int n = 0; n < Pokemon::EggGroup::EGG_ENUM_COUNT; n++)
+                    for (int n = 0; n < Pokemon::eEggGroup::EGG_ENUM_COUNT; n++)
                     {
                         const bool is_selected = (selectedSpecies.eggGroup1 == n && n != Pokemon::EGG_NO_EGG_GROUP);
                         if (ImGui::Selectable(Pokemon::EggGroup_Strings[n], is_selected))
                         {
-                            selectedSpecies.eggGroup1 = static_cast<Pokemon::EggGroup>(n);
+                            selectedSpecies.eggGroup1 = static_cast<Pokemon::eEggGroup>(n);
                         }
 
                         // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -321,12 +336,12 @@ void RenderImgui()
 
                 if (ImGui::BeginCombo("Egg Group 2", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup2]))
                 {
-                    for (int n = 0; n < Pokemon::EggGroup::EGG_ENUM_COUNT; n++)
+                    for (int n = 0; n < Pokemon::eEggGroup::EGG_ENUM_COUNT; n++)
                     {
                         const bool is_selected = (selectedSpecies.eggGroup2 == n);
                         if (ImGui::Selectable(Pokemon::EggGroup_Strings[n], is_selected))
                         {
-                            selectedSpecies.eggGroup2 = static_cast<Pokemon::EggGroup>(n);
+                            selectedSpecies.eggGroup2 = static_cast<Pokemon::eEggGroup>(n);
                         }
 
                         // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)

@@ -171,7 +171,7 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="source\PokemonData.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Pokemon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
