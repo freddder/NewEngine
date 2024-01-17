@@ -23,6 +23,7 @@
 #include "PokemonData.h"
 
 #include "cPlayerCharacter.h"
+#include "cUIManager.h"
 
 GLFWwindow* window;
 float deltaTime = 0.f;
@@ -117,7 +118,7 @@ void RenderImgui()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::ShowDemoWindow();
+    //ImGui::ShowDemoWindow();
     
     static int currentSelectedResolutionIndex = 3;
 
@@ -365,6 +366,43 @@ void RenderImgui()
         }
     }
 
+    if (ImGui::CollapsingHeader("UI"))
+    {
+        if (ImGui::BeginCombo("Button UI Anchor", Anchors_Strings[Engine::button->anchor]))
+        {
+            for (int n = 0; n < eAnchors::ANCHOR_ENUM_COUNT; n++)
+            {
+                const bool is_selected = (Engine::button->anchor == n);
+                if (ImGui::Selectable(Anchors_Strings[n], is_selected))
+                {
+                    Engine::button->anchor = static_cast<eAnchors>(n);
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        if (ImGui::BeginCombo("Sprite UI Anchor", Anchors_Strings[Engine::sprite->anchor]))
+        {
+            for (int n = 0; n < eAnchors::ANCHOR_ENUM_COUNT; n++)
+            {
+                const bool is_selected = (Engine::sprite->anchor == n);
+                if (ImGui::Selectable(Anchors_Strings[n], is_selected))
+                {
+                    Engine::sprite->anchor = static_cast<eAnchors>(n);
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+    }
+
     ImGui::End();
 
     ImGui::Render();
@@ -381,6 +419,8 @@ void ShutdownImgui()
 namespace Engine
 {
     cPlayerCharacter* playerChar;
+    cUIStaticImage* button;
+    cUIStaticImage* sprite;
 
     // camera
     float lastX = 1200 / 2.0f;

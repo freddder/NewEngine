@@ -12,7 +12,21 @@ enum eAnchors
 	MIDDLE_RIGHT,
 	BOTTOM_LEFT,
 	BOTTOM_MIDDLE,
-	BOTTOM_RIGHT
+	BOTTOM_RIGHT,
+	ANCHOR_ENUM_COUNT
+};
+
+const static char* Anchors_Strings[] =
+{
+	"Top Left",
+	"Top Middle",
+	"Top Right",
+	"Middle Left",
+	"Middle Middle",
+	"Middle Right",
+	"Bottom Left",
+	"Bottom Middle",
+	"Bottom Right"
 };
 
 class cUIWidget

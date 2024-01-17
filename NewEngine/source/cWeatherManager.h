@@ -28,21 +28,6 @@ const static char* Weather_Strings[] =
 	"Leaves"
 };
 
-//struct sWeatherParticlePosition
-//{
-//	glm::vec2 position;
-//	glm::vec2 speedOffset;
-//};
-
-//struct sWeatherParticleType
-//{
-//	std::string textureName;
-//	std::string modelName;
-//
-//	std::vector<sWeatherParticlePosition> positions;
-//	unsigned int positionsBufferId;
-//};
-
 class cWeatherManager
 {
 	static cWeatherManager* singleton;
@@ -77,10 +62,6 @@ public:
 	glm::vec3 fogColor;
 
 	std::vector<cParticleSpawner> particleSpawners;
-
-	//std::vector<sWeatherParticleType> particleTypes;
-	//glm::vec2 particleSpeed;
-	//float offsetDegree;
 
 	void SetWeather(eWeather newWeather);
 };

@@ -6,13 +6,13 @@
 #include "cAnimationManager.h"
 #include "cLightManager.h"
 #include "cTextureManager.h"
+#include "cUIManager.h"
 
 #include "cCamera.h"
 #include "cOverworldPokemon.h"
 #include "cPlayerCharacter.h"
 
 #include "Engine.h"
-#include "cUIManager.h"
 
 int main()
 {
@@ -35,7 +35,6 @@ int main()
     renderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
     renderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
     renderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
-    //renderManager->CreateShadderProgram("2dsnow", "2DSnowVertShader.glsl", "2DSnowFragShader.glsl");
     renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
     renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "3DParticleFragShader.glsl");
     renderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
@@ -80,35 +79,35 @@ int main()
     textureManager->LoadGeneralTexture("SnowFlake3.png");
 
     textureManager->LoadGeneralTexture("PartyMemberButtonBackground.png", "ui/");
-    textureManager->LoadGeneralTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
+    textureManager->LoadGeneralTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
 
     animationManager->InitializeAnimationsPresets();
 
     
     // UI testing
     {
-        //cUICanvas* canvas = new cUICanvas();
-        //cUIStaticImage* button = new cUIStaticImage();
-        //button->anchor = MIDDLE_LEFT;
-        //button->textureName = "PartyMemberButtonBackground.png";
-        //button->aspectRatio = 0.365f;
-        //button->heightPercent = 1.f / 9.f;
+        cUICanvas* canvas = new cUICanvas();
+        Engine::button = new cUIStaticImage();
+        Engine::button->anchor = MIDDLE_LEFT;
+        Engine::button->textureName = "PartyMemberButtonBackground.png";
+        Engine::button->aspectRatio = 0.365f;
+        Engine::button->heightPercent = 1.f / 9.f;
 
-        //cUIStaticImage* sprite = new cUIStaticImage();
-        //sprite->anchor = MIDDLE_LEFT;
-        //sprite->aspectRatio = 3.f / 4.f;
-        //sprite->heightPercent = 3.f / 4.f;
-        //sprite->textureName = "ico_3ds_646-white.png";
+        Engine::sprite = new cUIStaticImage();
+        Engine::sprite->anchor = MIDDLE_LEFT;
+        Engine::sprite->aspectRatio = 3.f / 4.f;
+        Engine::sprite->heightPercent = 3.f / 4.f;
+        Engine::sprite->textureName = "ico_3ds_722.png";
 
-        //// Make sure to add back gound items last
-        //button->AddChild(sprite);
+        // Make sure to add back gound items last
+        Engine::button->AddChild(Engine::sprite);
 
-        //canvas->AddWidget(button);
-        //cUIManager::GetInstance()->AddCanvas(canvas);
+        canvas->AddWidget(Engine::button);
+        cUIManager::GetInstance()->AddCanvas(canvas);
     }
 
-    Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
-    cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(0.f, 0.f, 3.f), "722.png");
+    Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 1.f, 5.f));
+    cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(0.f, 1.f, 4.f), "722.png");
     Engine::playerChar->SetFollower(follower);
     camera->playerPosition = &Engine::playerChar->model->position;
 
