@@ -16,7 +16,7 @@ Current technologies:
 3. Run the project
 
 # How to import maps
-(video incoming)
+[(Video Demo)](https://youtu.be/UP4oKdRICbQ)
 
 # Planned features
 - Release build
