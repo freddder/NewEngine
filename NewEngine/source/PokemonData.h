@@ -134,13 +134,13 @@ namespace Pokemon
 		// Learnset as a pair of int (level) and int (move id)
 	};
 
+	// Mostly used for storing the data in json
 	struct SpeciesData
 	{
 		std::string name;
 		int nationalDexNumber = 0;
 
-		bool isGenderless = false;
-		float genderRatio = 0.5f; // chance to be male (0 to 1)
+		int genderRatio = 50; // chance to be male (0 to 100 and <0 for genderless)
 		EggGroup eggGroup1 = EGG_NO_EGGS_DISCOVERED;
 		EggGroup eggGroup2 = EGG_NO_EGG_GROUP;
 		int hatchCycles; // Not sure what this means, but its related to the amount of steps to hatch
@@ -158,7 +158,15 @@ namespace Pokemon
 	void SaveSpecieData(const int nationalDexNumber, const SpeciesData& data);
 	void LoadSpecieData(const int nationalDexNumber, SpeciesData& data);
 
-	struct OverworldPokemonData
+	struct SpawnData
+	{
+		int nationalDexNumber = 0;
+		std::string formName = "";
+
+		int genderRatio = 50;
+	};
+
+	struct IndividualData
 	{
 		int nationalDexNumber = 0;
 		std::string formName = "";

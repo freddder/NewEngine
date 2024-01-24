@@ -2,6 +2,7 @@
 
 // purpose: load necessary textures and 3d models and deal with rendering
 #include <string>
+#include "PokemonData.h"
 
 class cSceneManager
 {
@@ -27,4 +28,7 @@ public:
 			singleton = NULL;
 		}
 	}
+
+private:
+	std::vector<Pokemon::SpawnData> loadedSpawnData;
 };

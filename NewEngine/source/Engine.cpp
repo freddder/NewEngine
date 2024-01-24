@@ -294,13 +294,8 @@ void RenderImgui()
 
                 ImGui::TableNextColumn();
 
-                ImGui::Checkbox("Is genderless", &selectedSpecies.isGenderless);
-                if (!selectedSpecies.isGenderless)
-                {
-                    ImGui::Checkbox("Are stats gender based", &selectedSpecies.isStatsGenderBased);
-
-                    ImGui::DragFloat("Gender ratio", &selectedSpecies.genderRatio, 0.1f, 0, 1);
-                }
+                ImGui::Checkbox("Are stats gender based", &selectedSpecies.isStatsGenderBased);
+                ImGui::DragInt("Gender ratio", &selectedSpecies.genderRatio, 1, -1, 100);
 
                 if (ImGui::BeginCombo("Egg Group 1", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup1]))
                 {
