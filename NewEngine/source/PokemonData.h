@@ -164,9 +164,26 @@ namespace Pokemon
 		std::string formName = "";
 
 		int genderRatio = 50;
+
+		bool isStatsGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
+		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
+
+		int spawnChance = 0; // Number of "entries"
+
+		int minLevel;
+		int maxLevel;
 	};
 
-	struct IndividualData
+	struct OverworldData
+	{
+		int nationalDexNumber = 0;
+		std::string formName = "";
+
+		Gender gender = NO_GENDER;
+		bool isShiny = false;
+	};
+
+	struct BattleData
 	{
 		int nationalDexNumber = 0;
 		std::string formName = "";
