@@ -112,7 +112,7 @@ void cUIStaticImage::DrawWidget()
 	cRenderManager::GetInstance()->setFloat("widthTranslate", widthTranslate);
 	cRenderManager::GetInstance()->setFloat("heightTranslate", heightTranslate);
 
-	glBindVertexArray(cRenderManager::GetInstance()->quadVAO);
+	glBindVertexArray(cRenderManager::GetInstance()->UIQuadVAO);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }

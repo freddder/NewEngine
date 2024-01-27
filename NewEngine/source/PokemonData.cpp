@@ -42,7 +42,6 @@ namespace Pokemon
 		d.AddMember("name", name, allocator);
 		d.AddMember("nationalDexNumber", data.nationalDexNumber, allocator);
 
-		d.AddMember("isGenderless", data.isGenderless, allocator);
 		d.AddMember("genderRatio", data.genderRatio, allocator);
 		d.AddMember("eggGroup1", data.eggGroup1, allocator);
 		d.AddMember("eggGroup2", data.eggGroup2, allocator);

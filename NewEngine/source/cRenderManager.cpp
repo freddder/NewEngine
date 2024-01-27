@@ -169,16 +169,16 @@ cRenderManager::cRenderManager()
     };
 
     // setup plane VAO
-    glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
-    glGenBuffers(1, &quadEBO);
+    glGenVertexArrays(1, &UIQuadVAO);
+    glGenBuffers(1, &UIQuadVBO);
+    glGenBuffers(1, &UIQuadEBO);
 
-    glBindVertexArray(quadVAO);
+    glBindVertexArray(UIQuadVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, UIQuadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, UIQuadEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndicies), quadIndicies, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
