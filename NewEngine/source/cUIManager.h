@@ -15,7 +15,8 @@ private:
 public:
     void AddWidget(cUIWidget* newWidget);
 
-    friend class cUIManager;
+    //friend class cUIManager;
+    friend class cRenderManager;
 };
 
 class cUIManager
@@ -48,6 +49,5 @@ private:
 public:
     void AddCanvas(cUICanvas* newCanvas);
 
-public:
-    void DrawUI();
+    friend class cRenderManager;
 };

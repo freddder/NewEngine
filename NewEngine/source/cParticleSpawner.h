@@ -14,12 +14,12 @@ class cParticleSpawner
 {
 public:
 
-	// spawn position
+	// Spawn position
 	glm::vec3 spawnPosition;
 	glm::vec3 minPositionOffset;
 	glm::vec3 maxPositionOffset;
 
-	// spawn speed
+	// Spawn speed
 	glm::vec3 spawnSpeed;
 	glm::vec3 minSpeedOffset;
 	glm::vec3 maxSpeedOffset;
@@ -30,11 +30,13 @@ public:
 	float timer;
 	float particleLifeTime;
 
+	// Model
 	std::shared_ptr<cRenderModel> model;
 	unsigned int particleBufferId;
 
 	std::vector<sParticle> particles;
 
+	// Randomizers
 	cLinearCongruentialGenerator lcgX;
 	cLinearCongruentialGenerator lcgY;
 	cLinearCongruentialGenerator lcgZ;
@@ -44,5 +46,5 @@ public:
 
 	void Update(float deltaTime);
 
-	void DrawParticles();
+	//void DrawParticles();
 };

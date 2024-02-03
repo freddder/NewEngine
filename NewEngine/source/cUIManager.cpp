@@ -34,14 +34,14 @@ void cUIManager::AddCanvas(cUICanvas* newCanvas)
 	canvases.push(newCanvas);
 }
 
-void cUIManager::DrawUI()
-{
-	if (canvases.empty()) return;
-
-	const cUICanvas* canvasToDraw = canvases.top();
-
-	for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
-	{
-		canvasToDraw->anchoredWidgets[i]->DrawWidget();
-	}
-}
+//void cUIManager::DrawUI()
+//{
+//	if (canvases.empty()) return;
+//
+//	const cUICanvas* canvasToDraw = canvases.top();
+//
+//	for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
+//	{
+//		canvasToDraw->anchoredWidgets[i]->DrawWidget();
+//	}
+//}

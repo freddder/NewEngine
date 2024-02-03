@@ -9,6 +9,8 @@
 
 class cSpriteModel;
 class cAnimatedModel;
+class cParticleSpawner;
+class cUIWidget;
 
 const std::string SHADER_PATH = "assets/shaders/";
 const std::string MODEL_PATH = "assets/models/";
@@ -53,62 +55,6 @@ public:
             singleton = NULL;
         }
     }
-
-//private:
-//
-//    unsigned int notInstancedOffsetBufferId;
-//
-//    unsigned int skyboxVAO, skyboxVBO;
-//
-//    unsigned int depthMapID;
-//    unsigned int depthMapFBO;
-//
-//    unsigned int cubemapTextureID;
-//
-//    unsigned int uboMatricesID;
-//    unsigned int uboFogID;
-//
-//    std::string currShader;
-//	std::map<std::string, sShaderProgram> programMap;
-//
-//    void checkCompileErrors(unsigned int shader, std::string type);
-//
-//    std::vector< std::shared_ptr<cRenderModel> > models;
-//
-//    std::string lastError;
-//    void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
-//
-//public:
-//
-//	void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
-//    void use(std::string programName);
-//    unsigned int GetCurrentShaderId();
-//    unsigned int GetShaderIdByName(std::string programName);
-//    unsigned int GetDepthMapId();
-//
-//    bool LoadModel(std::string fileName, std::string programName);
-//    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
-//    std::string GetLastError(bool clear);
-//
-//    void setBool(const std::string& name, bool value);
-//    void setInt(const std::string& name, int value);
-//    void setFloat(const std::string& name, float value);
-//    void setMat4(const std::string& name, const glm::mat4& mat);
-//    void setVec2(const std::string& name, const glm::vec2& value);
-//    void setVec3(const std::string& name, const glm::vec3& value);
-//    void setVec4(const std::string& name, const glm::vec4& value);
-//
-//    static std::shared_ptr<cRenderModel> CreateRenderModel();
-//    static std::shared_ptr<cSpriteModel> CreateSpriteModel();
-//    static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModels modelType);
-//    static void RemoveModel(std::shared_ptr<cRenderModel> model);
-//    void DrawObject(std::shared_ptr<cRenderModel> model);
-//    void DrawScene();
-//
-//    // UI quad
-//    unsigned int UIQuadVAO;
-//    unsigned int UIQuadVBO;
-//    unsigned int UIQuadEBO;
 
 private:
     unsigned int notInstancedOffsetBufferId;
@@ -157,9 +103,12 @@ public:
     std::string GetLastError(bool clear);
 
     // Drawing
-public:
+private:
     void DrawObject(std::shared_ptr<cRenderModel> model);
-    void DrawScene();
+    void DrawParticles();
+    void DrawWidget(cUIWidget* widget);
+public:
+    void DrawFrame();
 
     // Uniform Buffer Objects
 private:
@@ -167,7 +116,7 @@ private:
     unsigned int uboFogID;
 
     // UI quad
-public:
+private:
     unsigned int UIQuadVAO;
     unsigned int UIQuadVBO;
     unsigned int UIQuadEBO;

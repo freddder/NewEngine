@@ -2,7 +2,6 @@
 #include "cCamera.h"
 
 // Should be removed (maybe?)
-#include "cRenderManager.h"
 #include "cTextureManager.h"
 
 cUIWidget::~cUIWidget()
@@ -13,12 +12,9 @@ cUIWidget::~cUIWidget()
 	}
 }
 
-void cUIWidget::DrawWidget()
+void cUIWidget::SetupWidget()
 {
-	for (int i = 0; i < children.size(); i++)
-	{
-		children[i]->DrawWidget();
-	}
+	
 }
 
 void cUIWidget::AddChild(cUIWidget* newChild)
@@ -93,26 +89,9 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	return parentHorizontalTranslation + widgetPercentTranslate;
 }
 
-void cUIStaticImage::DrawWidget()
+void cUIStaticImage::SetupWidget()
 {
-	cUIWidget::DrawWidget();
+	cUIWidget::SetupWidget();
 
-	cRenderManager::GetInstance()->use("debug");
 	cTextureManager::GetInstance()->SetupTexture(textureName);
-
-	float widthPercent = CalculateWidthScreenPercent();
-	float heightPercent = CalculateHeightScreenPercent();
-
-	cRenderManager::GetInstance()->setFloat("widthPercent", widthPercent);
-	cRenderManager::GetInstance()->setFloat("heightPercent", heightPercent);
-
-	float widthTranslate = CalculateHorizontalTranslate();
-	float heightTranslate = CalculateVerticalTranslate();
-
-	cRenderManager::GetInstance()->setFloat("widthTranslate", widthTranslate);
-	cRenderManager::GetInstance()->setFloat("heightTranslate", heightTranslate);
-
-	glBindVertexArray(cRenderManager::GetInstance()->UIQuadVAO);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
 }

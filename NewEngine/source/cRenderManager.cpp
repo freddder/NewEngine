@@ -13,8 +13,7 @@
 
 #include "cSpriteModel.h"
 #include "cAnimatedModel.h"
-#include "cParticleManager.h"
-#include "cWeatherManager.h"
+#include "cEnvironmentManager.h"
 #include "cLightManager.h"
 #include "cTextureManager.h"
 #include "cCamera.h"
@@ -741,14 +740,87 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
     }    
 }
 
-void cRenderManager::DrawScene()
+void cRenderManager::DrawParticles()
+{
+    cEnvironmentManager* envManager = cEnvironmentManager::GetInstance();
+    for (int i = 0; i < envManager->particleSpawners.size(); i++)
+    {
+        const cParticleSpawner* spawner = envManager->particleSpawners[i];
+
+        sModelDrawInfo drawInfo;
+        if (!FindModelByName(spawner->model->meshName, "snow", drawInfo)) continue;
+
+        use("snow");
+        setVec3("cameraPosition", cCamera::GetInstance()->position);
+        setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model->scale));
+        setBool("useWholeColor", spawner->model->useWholeColor);
+        setVec4("wholeColor", spawner->model->wholeColor);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, GetDepthMapId());
+        setInt("shadowMap", 1);
+
+        // Might change this to use a constant quad instead of a custom mesh
+        for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
+        {
+            // Setup texture
+            std::string textureToUse = spawner->model->textureName;
+            cTextureManager::GetInstance()->SetupTexture(textureToUse);
+
+            // Bind VAO
+            glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
+
+            glBindBuffer(GL_ARRAY_BUFFER, spawner->particleBufferId);
+
+            GLint offset_location = glGetAttribLocation(GetCurrentShaderId(), "oOffset");
+            glEnableVertexAttribArray(offset_location);
+            glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+            glVertexAttribDivisor(offset_location, 1);
+
+            glDrawElementsInstanced(GL_TRIANGLES,
+                drawInfo.allMeshesData[i].numberOfIndices,
+                GL_UNSIGNED_INT,
+                (void*)0,
+                spawner->particles.size());
+
+            glBindVertexArray(0);
+        }
+    }
+}
+
+void cRenderManager::DrawWidget(cUIWidget* widget)
+{
+    for (int i = 0; i < widget->children.size(); i++)
+    {
+        DrawWidget(widget->children[i]);
+    }
+
+    use("debug"); // TODO: change to use custom shaders
+    
+    widget->SetupWidget();
+
+    float widthPercent = widget->CalculateWidthScreenPercent();
+    float heightPercent = widget->CalculateHeightScreenPercent();
+    setFloat("widthPercent", widthPercent);
+    setFloat("heightPercent", heightPercent);
+
+    float widthTranslate = widget->CalculateHorizontalTranslate();
+    float heightTranslate = widget->CalculateVerticalTranslate(); 
+    setFloat("widthTranslate", widthTranslate);
+    setFloat("heightTranslate", heightTranslate);
+
+    glBindVertexArray(UIQuadVAO);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void cRenderManager::DrawFrame()
 {
     //********************** Shadow pass ********************************
 
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
-
     
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
@@ -804,9 +876,9 @@ void cRenderManager::DrawScene()
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*cCamera::GetInstance()->playerPosition, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cWeatherManager::GetInstance()->fogColor, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cWeatherManager::GetInstance()->fogDensity);
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cWeatherManager::GetInstance()->fogGradient);
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cEnvironmentManager::GetInstance()->fogColor, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cEnvironmentManager::GetInstance()->fogDensity);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cEnvironmentManager::GetInstance()->fogGradient);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
@@ -815,10 +887,22 @@ void cRenderManager::DrawScene()
         DrawObject(*it);
     }
 
-    // Draw weather particles
-    cParticleManager::GetInstance()->DrawSpawnerParticles();
+    // Draw particles
+    DrawParticles();
 
-    cUIManager::GetInstance()->DrawUI();
+    // Draw UI
+    cUIManager* uiManager = cUIManager::GetInstance();
+
+    if (!uiManager->canvases.empty())
+    {
+        const cUICanvas* canvasToDraw = uiManager->canvases.top();
+
+        for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
+        {
+            //canvasToDraw->anchoredWidgets[i]->SetupWidget();
+            DrawWidget(canvasToDraw->anchoredWidgets[i]);
+        }
+    }
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

@@ -1,13 +1,11 @@
 #include "cParticleSpawner.h"
-#include <glad/glad.h>
-#include <time.h>
-#include <glm/gtc/type_ptr.hpp>
 
 #include "cLinearCongruentialGenerator.h"
-#include "cRenderManager.h"
-#include "cTextureManager.h"
-//#include "cModelManager.h"
-#include "cCamera.h"
+#include <time.h>
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 cParticleSpawner::cParticleSpawner(glm::vec3 position, std::shared_ptr<cRenderModel> _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
 {
@@ -20,6 +18,7 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, std::shared_ptr<cRenderMo
 	maxSpeedOffset = glm::vec3(0.f);
 	gravity = glm::vec3(0.f);
 
+	particles.reserve(_maxParticles);
 	maxParticles = _maxParticles; // if -1, no limit
 	spawnRate = 0.1f; // particles spawned per second
 	timer = 0.f;
@@ -46,13 +45,14 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, std::shared_ptr<cRenderMo
 
 cParticleSpawner::~cParticleSpawner()
 {
+	particles.clear();
 }
 
 void cParticleSpawner::Update(float deltaTime)
 {
 	timer += deltaTime;
 
-	if (timer > spawnRate)
+	if (timer > spawnRate /*&& particles.size() < particles.capacity()*/)
 	{
 		// add new particle
 		double randomPosX;
@@ -99,51 +99,50 @@ void cParticleSpawner::Update(float deltaTime)
 
 		// update speed for gravity stuff		
 
-		//update buffer
+		// update buffer
 		glBufferSubData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * i, sizeof(glm::vec4), glm::value_ptr(glm::vec4(particles[i].position, particles[i].timer)));
 	}
 }
 
-void cParticleSpawner::DrawParticles()
-{
-	cRenderManager* renderManager = cRenderManager::GetInstance();
-    
-	sModelDrawInfo drawInfo;
-    if (!renderManager->FindModelByName(model->meshName, "snow", drawInfo))
-        return;
-
-	renderManager->use("snow");
-	renderManager->setVec3("cameraPosition", cCamera::GetInstance()->position);
-	renderManager->setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
-	renderManager->setBool("useWholeColor", model->useWholeColor);
-	renderManager->setVec4("wholeColor", model->wholeColor);
-
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, renderManager->GetDepthMapId());
-	renderManager->setInt("shadowMap", 1);
-
-    for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
-    {
-        // Setup texture
-        std::string textureToUse = model->textureName;
-		cTextureManager::GetInstance()->SetupTexture(textureToUse);
-
-        // Bind VAO
-        glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
-
-		glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
-
-		GLint offset_location = glGetAttribLocation(renderManager->GetCurrentShaderId(), "oOffset");
-		glEnableVertexAttribArray(offset_location);
-		glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-		glVertexAttribDivisor(offset_location, 1);
-
-		glDrawElementsInstanced(GL_TRIANGLES,
-			drawInfo.allMeshesData[i].numberOfIndices,
-			GL_UNSIGNED_INT,
-			(void*)0,
-			particles.size());
-
-        glBindVertexArray(0);
-    }
-}
+//void cParticleSpawner::DrawParticles()
+//{
+//	cRenderManager* renderManager = cRenderManager::GetInstance();
+//    
+//	sModelDrawInfo drawInfo;
+//    if (!renderManager->FindModelByName(model->meshName, "snow", drawInfo)) return;
+//
+//	renderManager->use("snow");
+//	renderManager->setVec3("cameraPosition", cCamera::GetInstance()->position);
+//	renderManager->setMat4("modelScale", glm::scale(glm::mat4(1.0f), model->scale));
+//	renderManager->setBool("useWholeColor", model->useWholeColor);
+//	renderManager->setVec4("wholeColor", model->wholeColor);
+//
+//    glActiveTexture(GL_TEXTURE1);
+//    glBindTexture(GL_TEXTURE_2D, renderManager->GetDepthMapId());
+//	renderManager->setInt("shadowMap", 1);
+//
+//    for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
+//    {
+//        // Setup texture
+//        std::string textureToUse = model->textureName;
+//		cTextureManager::GetInstance()->SetupTexture(textureToUse);
+//
+//        // Bind VAO
+//        glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
+//
+//		glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
+//
+//		GLint offset_location = glGetAttribLocation(renderManager->GetCurrentShaderId(), "oOffset");
+//		glEnableVertexAttribArray(offset_location);
+//		glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+//		glVertexAttribDivisor(offset_location, 1);
+//
+//		glDrawElementsInstanced(GL_TRIANGLES,
+//			drawInfo.allMeshesData[i].numberOfIndices,
+//			GL_UNSIGNED_INT,
+//			(void*)0,
+//			particles.size());
+//
+//        glBindVertexArray(0);
+//    }
+//}

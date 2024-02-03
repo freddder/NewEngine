@@ -17,8 +17,7 @@
 #include "cAnimationManager.h"
 #include "cRenderManager.h"
 #include "cMapManager.h"
-#include "cWeatherManager.h"
-#include "cParticleManager.h"
+#include "cEnvironmentManager.h"
 #include "cUIManager.h"
 #include "PokemonData.h"
 
@@ -231,19 +230,19 @@ void RenderImgui()
             }
             if (ImGui::BeginTabItem("Fog"))
             {
-                cWeatherManager* weatherManager = cWeatherManager::GetInstance();
+                cEnvironmentManager* environmentManager = cEnvironmentManager::GetInstance();
 
                 float* fogColor[3];
-                fogColor[0] = &weatherManager->fogColor.r;
-                fogColor[1] = &weatherManager->fogColor.g;
-                fogColor[2] = &weatherManager->fogColor.b;
+                fogColor[0] = &environmentManager->fogColor.r;
+                fogColor[1] = &environmentManager->fogColor.g;
+                fogColor[2] = &environmentManager->fogColor.b;
 
                 ImGui::ColorEdit3("Color", *fogColor);
-                ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f);
-                ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
+                ImGui::DragFloat("Density", &environmentManager->fogDensity, 0.005f);
+                ImGui::DragFloat("Gradient", &environmentManager->fogGradient, 0.03f);
                 if (ImGui::Button("Change weather"))
                 {
-                    weatherManager->SetWeather(HAIL);
+                    environmentManager->SetWeather(HAIL);
                 }
                 ImGui::EndTabItem();
             }
@@ -417,9 +416,7 @@ namespace Engine
 
         cMapManager::GetInstance();
 
-        cWeatherManager::GetInstance();
-
-        cParticleManager::GetInstance();
+        cEnvironmentManager::GetInstance();
 
         cUIManager::GetInstance();
     }
@@ -438,9 +435,7 @@ namespace Engine
 
         cMapManager::DestroyInstance();
 
-        cWeatherManager::DestroyInstance();
-
-        cParticleManager::DestroyInstance();
+        cEnvironmentManager::DestroyInstance();
 
         cUIManager::DestroyInstance();
     }
@@ -467,9 +462,9 @@ namespace Engine
 
             cAnimationManager::GetInstance()->Process(deltaTime);
 
-            cParticleManager::GetInstance()->UpdateSpawners(deltaTime);
+            cEnvironmentManager::GetInstance()->Process(deltaTime);
 
-            cRenderManager::GetInstance()->DrawScene();
+            cRenderManager::GetInstance()->DrawFrame();
 
             if (renderDebugInfo) RenderImgui();
 

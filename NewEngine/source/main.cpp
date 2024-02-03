@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "cWeatherManager.h"
+#include "cEnvironmentManager.h"
 #include "cRenderManager.h"
 #include "cMapManager.h"
 #include "cAnimationManager.h"
@@ -26,7 +26,7 @@ int main()
     cAnimationManager* animationManager = cAnimationManager::GetInstance();
     cRenderManager* renderManager = cRenderManager::GetInstance();
     cMapManager* mapManager = cMapManager::GetInstance();
-    cWeatherManager* weatherManager = cWeatherManager::GetInstance();
+    cEnvironmentManager* environmentManager = cEnvironmentManager::GetInstance();
 
     // Setup shader programs
     renderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
@@ -93,24 +93,24 @@ int main()
     //g_RenderManager->AddModel(tree);
 
     {
-        //cUICanvas* canvas = new cUICanvas();
-        //cUIStaticImage* button = new cUIStaticImage();
-        //button->anchor = MIDDLE_LEFT;
-        //button->textureName = "PartyMemberButtonBackground.png";
-        //button->aspectRatio = 0.365f;
-        //button->heightPercent = 1.f / 9.f;
+        cUICanvas* canvas = new cUICanvas();
+        cUIStaticImage* button = new cUIStaticImage();
+        button->anchor = MIDDLE_LEFT;
+        button->textureName = "PartyMemberButtonBackground.png";
+        button->aspectRatio = 0.365f;
+        button->heightPercent = 1.f / 9.f;
 
-        //cUIStaticImage* sprite = new cUIStaticImage();
-        //sprite->anchor = MIDDLE_LEFT;
-        //sprite->aspectRatio = 3.f / 4.f;
-        //sprite->heightPercent = 3.f / 4.f;
-        //sprite->textureName = "ico_3ds_646-white.png";
+        cUIStaticImage* sprite = new cUIStaticImage();
+        sprite->anchor = MIDDLE_LEFT;
+        sprite->aspectRatio = 3.f / 4.f;
+        sprite->heightPercent = 3.f / 4.f;
+        sprite->textureName = "ico_3ds_646-white.png";
 
-        //// Make sure to add back gound items last
-        //button->AddChild(sprite);
+        // Make sure to add back gound items last
+        button->AddChild(sprite);
 
-        //canvas->AddWidget(button);
-        //cUIManager::GetInstance()->AddCanvas(canvas);
+        canvas->AddWidget(button);
+        cUIManager::GetInstance()->AddCanvas(canvas);
     }
 
     Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 0.f, 2.f));
@@ -122,7 +122,7 @@ int main()
     mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
 
-    weatherManager->SetWeather(SNOW);
+    environmentManager->SetWeather(SNOW);
 
     Engine::GameLoop(true);
 
