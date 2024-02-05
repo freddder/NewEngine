@@ -17,7 +17,7 @@
 #include "cAnimationManager.h"
 #include "cRenderManager.h"
 #include "cMapManager.h"
-#include "cEnvironmentManager.h"
+#include "cSceneManager.h"
 #include "cUIManager.h"
 #include "PokemonData.h"
 
@@ -230,19 +230,19 @@ void RenderImgui()
             }
             if (ImGui::BeginTabItem("Fog"))
             {
-                cEnvironmentManager* environmentManager = cEnvironmentManager::GetInstance();
+                cSceneManager* sceneManager = cSceneManager::GetInstance();
 
                 float* fogColor[3];
-                fogColor[0] = &environmentManager->fogColor.r;
-                fogColor[1] = &environmentManager->fogColor.g;
-                fogColor[2] = &environmentManager->fogColor.b;
+                fogColor[0] = &sceneManager->fogColor.r;
+                fogColor[1] = &sceneManager->fogColor.g;
+                fogColor[2] = &sceneManager->fogColor.b;
 
                 ImGui::ColorEdit3("Color", *fogColor);
-                ImGui::DragFloat("Density", &environmentManager->fogDensity, 0.005f);
-                ImGui::DragFloat("Gradient", &environmentManager->fogGradient, 0.03f);
+                ImGui::DragFloat("Density", &sceneManager->fogDensity, 0.005f);
+                ImGui::DragFloat("Gradient", &sceneManager->fogGradient, 0.03f);
                 if (ImGui::Button("Change weather"))
                 {
-                    environmentManager->SetWeather(HAIL);
+                    sceneManager->SetWeather(HAIL);
                 }
                 ImGui::EndTabItem();
             }
@@ -416,7 +416,7 @@ namespace Engine
 
         cMapManager::GetInstance();
 
-        cEnvironmentManager::GetInstance();
+        cSceneManager::GetInstance();
 
         cUIManager::GetInstance();
     }
@@ -435,7 +435,7 @@ namespace Engine
 
         cMapManager::DestroyInstance();
 
-        cEnvironmentManager::DestroyInstance();
+        cSceneManager::DestroyInstance();
 
         cUIManager::DestroyInstance();
     }
@@ -462,7 +462,7 @@ namespace Engine
 
             cAnimationManager::GetInstance()->Process(deltaTime);
 
-            cEnvironmentManager::GetInstance()->Process(deltaTime);
+            cSceneManager::GetInstance()->Process(deltaTime);
 
             cRenderManager::GetInstance()->DrawFrame();
 

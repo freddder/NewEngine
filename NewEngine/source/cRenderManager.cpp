@@ -13,7 +13,7 @@
 
 #include "cSpriteModel.h"
 #include "cAnimatedModel.h"
-#include "cEnvironmentManager.h"
+#include "cSceneManager.h"
 #include "cLightManager.h"
 #include "cTextureManager.h"
 #include "cCamera.h"
@@ -736,10 +736,10 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 
 void cRenderManager::DrawParticles()
 {
-    cEnvironmentManager* envManager = cEnvironmentManager::GetInstance();
-    for (int i = 0; i < envManager->particleSpawners.size(); i++)
+    cSceneManager* sceneManager = cSceneManager::GetInstance();
+    for (int i = 0; i < sceneManager->particleSpawners.size(); i++)
     {
-        const cParticleSpawner* spawner = envManager->particleSpawners[i];
+        const cParticleSpawner* spawner = sceneManager->particleSpawners[i];
 
         sModelDrawInfo drawInfo;
         if (!FindModelByName(spawner->model.meshName, spawner->model.shaderName, drawInfo)) continue;
@@ -865,9 +865,9 @@ void cRenderManager::DrawFrame()
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*cCamera::GetInstance()->playerPosition, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cEnvironmentManager::GetInstance()->fogColor, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cEnvironmentManager::GetInstance()->fogDensity);
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cEnvironmentManager::GetInstance()->fogGradient);
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cSceneManager::GetInstance()->fogColor, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cSceneManager::GetInstance()->fogDensity);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cSceneManager::GetInstance()->fogGradient);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene

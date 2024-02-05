@@ -177,7 +177,6 @@
     <ClCompile Include="source\cTextureManager.cpp" />
     <ClCompile Include="source\cSinAnimation.cpp" />
     <ClCompile Include="source\cUIManager.cpp" />
-    <ClCompile Include="source\cEnvironmentManager.cpp" />
     <ClCompile Include="source\Engine.cpp" />
     <ClCompile Include="source\glad.c" />
     <ClCompile Include="source\Global.cpp" />
@@ -216,7 +215,6 @@
     <ClInclude Include="source\cSpriteModel.h" />
     <ClInclude Include="source\cTextureManager.h" />
     <ClInclude Include="source\cSinAnimation.h" />
-    <ClInclude Include="source\cEnvironmentManager.h" />
     <ClInclude Include="source\DrawInfo.h" />
     <ClInclude Include="source\Engine.h" />
     <ClInclude Include="source\Global.h" />

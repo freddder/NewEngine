@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "cEnvironmentManager.h"
+#include "cSceneManager.h"
 #include "cRenderManager.h"
 #include "cMapManager.h"
 #include "cAnimationManager.h"
@@ -26,7 +26,7 @@ int main()
     cAnimationManager* animationManager = cAnimationManager::GetInstance();
     cRenderManager* renderManager = cRenderManager::GetInstance();
     cMapManager* mapManager = cMapManager::GetInstance();
-    cEnvironmentManager* environmentManager = cEnvironmentManager::GetInstance();
+    cSceneManager* sceneManager = cSceneManager::GetInstance();
 
     // Setup shader programs
     renderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
@@ -122,7 +122,7 @@ int main()
     mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
 
-    environmentManager->SetWeather(SNOW);
+    sceneManager->SetWeather(SNOW);
 
     Engine::GameLoop(true);
 

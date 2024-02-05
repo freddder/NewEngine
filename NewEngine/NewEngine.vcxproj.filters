@@ -57,9 +57,6 @@
     <Filter Include="Pokemon">
       <UniqueIdentifier>{bc6c6b07-fea1-48f3-847f-6ac28a200d0c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Envoirnment">
-      <UniqueIdentifier>{1ec55a6f-951b-4529-b104-1e326af473a5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -127,9 +124,6 @@
     </ClCompile>
     <ClCompile Include="source\cSpriteModel.cpp">
       <Filter>Render System\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cEnvironmentManager.cpp">
-      <Filter>Envoirnment</Filter>
     </ClCompile>
     <ClCompile Include="source\cLinearCongruentialGenerator.cpp">
       <Filter>RNG</Filter>
@@ -246,9 +240,6 @@
     </ClInclude>
     <ClInclude Include="source\cSpriteModel.h">
       <Filter>Render System\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cEnvironmentManager.h">
-      <Filter>Envoirnment</Filter>
     </ClInclude>
     <ClInclude Include="source\cRandomNumberGenerator.h">
       <Filter>RNG</Filter>
