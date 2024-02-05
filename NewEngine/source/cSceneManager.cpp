@@ -13,3 +13,8 @@ cSceneManager::cSceneManager()
 
 	loadedSpawnData.push_back(meowstic);
 }
+
+void cSceneManager::SpawnWildPokemon()
+{
+
+}

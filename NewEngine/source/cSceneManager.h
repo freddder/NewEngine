@@ -3,7 +3,8 @@
 // purpose: load necessary textures and 3d models and deal with rendering
 #include <string>
 #include "PokemonData.h"
-#include "cParticleSpawner.h"
+
+class cOverworldPokemon;
 
 class cSceneManager
 {
@@ -32,4 +33,7 @@ public:
 
 private:
 	std::vector<Pokemon::SpawnData> loadedSpawnData;
+	//std::vector<cOverworldPokemon> roamingWildPokemon;
+public:
+	void SpawnWildPokemon();
 };

@@ -88,7 +88,18 @@ private:
     unsigned int skyboxVAO, skyboxVBO;
     unsigned int cubemapTextureID;
 
-    // Models
+    // Uniform Buffer Objects
+private:
+    unsigned int uboMatricesID;
+    unsigned int uboFogID;
+
+    // UI quad
+private:
+    unsigned int UIQuadVAO;
+    unsigned int UIQuadVBO;
+    unsigned int UIQuadEBO;
+
+    // Models loading
 private:
     std::vector< std::shared_ptr<cRenderModel> > models;    
     void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
@@ -109,15 +120,4 @@ private:
     void DrawWidget(cUIWidget* widget);
 public:
     void DrawFrame();
-
-    // Uniform Buffer Objects
-private:
-    unsigned int uboMatricesID;
-    unsigned int uboFogID;
-
-    // UI quad
-private:
-    unsigned int UIQuadVAO;
-    unsigned int UIQuadVBO;
-    unsigned int UIQuadEBO;
 };

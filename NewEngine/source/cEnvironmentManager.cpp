@@ -19,8 +19,7 @@ cEnvironmentManager::~cEnvironmentManager()
 
 void cEnvironmentManager::SetWeather(eEnvironmentWeather newWeather)
 {
-	if (newWeather == currWeather)
-		return;
+	if (newWeather == currWeather) return;
 
 	if ((currWeather == SNOW || currWeather == HAIL || currWeather == SNOWSTORM) // snow transition
 		&& (newWeather == SNOW || newWeather == HAIL || newWeather == SNOWSTORM))
@@ -54,13 +53,13 @@ void cEnvironmentManager::SetWeather(eEnvironmentWeather newWeather)
 			fogGradient = 1.59f;
 			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
 
-			std::shared_ptr<cRenderModel> prtcl = cRenderManager::CreateRenderModel();
-			prtcl->meshName = "SpriteHolder.obj";
-			prtcl->shaderName = "particle";
-			prtcl->textureName = "SnowFlake3.png";
-			prtcl->scale = glm::vec3(0.3f);
+			cRenderModel prtcl;
+			prtcl.meshName = "SpriteHolder.obj";
+			prtcl.shaderName = "snow";
+			prtcl.textureName = "SnowFlake3.png";
+			prtcl.scale = glm::vec3(0.3f);
 
-			cParticleSpawner* weatherSpawner = new cParticleSpawner(glm::vec3(0.f, 20.f, 0.f), prtcl, 1000);
+			cParticleSpawner* weatherSpawner = new cParticleSpawner(glm::vec3(0.f, 20.f, 0.f), prtcl, 500);
 			weatherSpawner->minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);
 			weatherSpawner->maxPositionOffset = glm::vec3(20.f, 0.f, 20.f);
 			weatherSpawner->spawnSpeed = glm::vec3(0.f, -3.f, 0.f);

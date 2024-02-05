@@ -3,11 +3,12 @@
 
 class cOverworldPokemon : public cCharacter
 {
-	eDirection lastDesiredDirection;
-
 public:
 	cOverworldPokemon(glm::vec3 position, std::string textureName);
 	~cOverworldPokemon();
 
+private:
+	eDirection lastDesiredDirection;
+public:
 	virtual void Move(eDirection dir, bool run);
 };

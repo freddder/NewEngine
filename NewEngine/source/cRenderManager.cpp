@@ -302,14 +302,10 @@ unsigned int cRenderManager::GetDepthMapId()
 bool cRenderManager::LoadModel(std::string fileName, std::string programName)
 {
     std::map<std::string, sShaderProgram>::iterator itPrograms = programMap.find(programName);
-    
-    if (itPrograms == programMap.end())
-        return false;
+    if (itPrograms == programMap.end()) return false;
 
     std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programMap[programName].modelsLoaded.find(fileName);
-
-    if (itDrawInfo != programMap[programName].modelsLoaded.end()) // Find it? 
-        return true; // already loaded
+    if (itDrawInfo != programMap[programName].modelsLoaded.end()) return true; // already loaded
 
     Assimp::Importer importer;
 
@@ -402,8 +398,6 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
 
             aiString path;
             material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
-
-            //std::string texture = path.C_Str();
             newMeshInfo.textureName = path.C_Str();
 
             // maybe try to load texture in the texture manager right here
@@ -748,13 +742,13 @@ void cRenderManager::DrawParticles()
         const cParticleSpawner* spawner = envManager->particleSpawners[i];
 
         sModelDrawInfo drawInfo;
-        if (!FindModelByName(spawner->model->meshName, "snow", drawInfo)) continue;
+        if (!FindModelByName(spawner->model.meshName, spawner->model.shaderName, drawInfo)) continue;
 
-        use("snow");
+        use(spawner->model.shaderName);
         setVec3("cameraPosition", cCamera::GetInstance()->position);
-        setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model->scale));
-        setBool("useWholeColor", spawner->model->useWholeColor);
-        setVec4("wholeColor", spawner->model->wholeColor);
+        setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model.scale));
+        setBool("useWholeColor", spawner->model.useWholeColor);
+        setVec4("wholeColor", spawner->model.wholeColor);
 
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, GetDepthMapId());
@@ -764,7 +758,7 @@ void cRenderManager::DrawParticles()
         for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
         {
             // Setup texture
-            std::string textureToUse = spawner->model->textureName;
+            std::string textureToUse = spawner->model.textureName;
             cTextureManager::GetInstance()->SetupTexture(textureToUse);
 
             // Bind VAO
@@ -841,7 +835,6 @@ void cRenderManager::DrawFrame()
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-
     //Draw scene
     for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
     {
@@ -851,22 +844,18 @@ void cRenderManager::DrawFrame()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     //*********************** Regular pass ******************************
-    // reset viewport
+    // Reset viewport
     glViewport(0, 0, cCamera::GetInstance()->SCR_WIDTH, cCamera::GetInstance()->SCR_HEIGHT);
     glClearColor(0.89f, 0.89f, 0.89f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    //g_LightManager->SetUnimormValues(programMap[currShader].ID);
     cLightManager::GetInstance()->SetUnimormValues();
 
-    // pass projection matrix to shader
+    // Set camera and fog UBOs
     glm::mat4 projection = cCamera::GetInstance()->GetProjectionMatrix();
-
-    // camera/view transformation
     glm::mat4 view = cCamera::GetInstance()->GetViewMatrix();
 
     bruh = 0;
-
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
@@ -892,7 +881,6 @@ void cRenderManager::DrawFrame()
 
     // Draw UI
     cUIManager* uiManager = cUIManager::GetInstance();
-
     if (!uiManager->canvases.empty())
     {
         const cUICanvas* canvasToDraw = uiManager->canvases.top();
