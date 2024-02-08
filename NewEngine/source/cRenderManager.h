@@ -56,9 +56,6 @@ public:
         }
     }
 
-private:
-    unsigned int notInstancedOffsetBufferId;
-
     // Shaders
 private:
     std::string currShader;
@@ -67,7 +64,6 @@ private:
 public:
     void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
     unsigned int GetCurrentShaderId();
-    unsigned int GetShaderIdByName(std::string programName);
     void use(std::string programName);
     void setBool(const std::string& name, bool value);
     void setInt(const std::string& name, int value);
@@ -101,17 +97,19 @@ private:
 
     // Models loading
 private:
-    std::vector< std::shared_ptr<cRenderModel> > models;    
+    unsigned int notInstancedOffsetBufferId;
     void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
-    std::string lastError;
+public:
+    bool LoadModel(std::string fileName, std::string programName);
+    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
+
+private:
+    std::vector< std::shared_ptr<cRenderModel> > models;
 public:
     static std::shared_ptr<cRenderModel> CreateRenderModel();
     static std::shared_ptr<cSpriteModel> CreateSpriteModel();
     static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModels modelType);
     static void RemoveModel(std::shared_ptr<cRenderModel> model);
-    bool LoadModel(std::string fileName, std::string programName);
-    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
-    std::string GetLastError(bool clear);
 
     // Drawing
 private:

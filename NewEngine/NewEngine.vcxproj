@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\cAssetManager.cpp" />
     <ClCompile Include="source\cSceneManager.cpp" />
     <ClCompile Include="source\cAnimatedModel.cpp" />
     <ClCompile Include="source\cAnimation.cpp" />
@@ -192,6 +193,7 @@
     <ClCompile Include="source\UIWidgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\cAssetManager.h" />
     <ClInclude Include="source\PokemonData.h" />
     <ClInclude Include="source\cUIManager.h" />
     <ClInclude Include="source\cAnimatedModel.h" />

@@ -164,6 +164,9 @@
     <ClCompile Include="source\PokemonData.cpp">
       <Filter>Pokemon</Filter>
     </ClCompile>
+    <ClCompile Include="source\cAssetManager.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Global.h">
@@ -276,6 +279,9 @@
     </ClInclude>
     <ClInclude Include="source\PokemonData.h">
       <Filter>Pokemon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cAssetManager.h">
+      <Filter>Render System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

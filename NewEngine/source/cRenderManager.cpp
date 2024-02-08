@@ -155,7 +155,7 @@ cRenderManager::cRenderManager()
 
     //********************** Setup on screen texture ****************************
     float quadVertices[] = {
-        // positions        // texture Coords (x, y)
+        // x, y, z, u(x), v(y)
          1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
          1.0f, -1.0f, 0.0f, 1.0f, 1.0f, // bottom right
         -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
@@ -289,11 +289,6 @@ unsigned int cRenderManager::GetCurrentShaderId()
     return programMap[currShader].ID;
 }
 
-unsigned int cRenderManager::GetShaderIdByName(std::string programName)
-{
-    return programMap[programName].ID;
-}
-
 unsigned int cRenderManager::GetDepthMapId()
 {
     return depthMapID;
@@ -419,26 +414,14 @@ bool cRenderManager::FindModelByName(std::string fileName, std::string programNa
 {
     std::map<std::string, sShaderProgram>::iterator itProgram = programMap.find(programName);
 
-    if (itProgram == programMap.end()) // Find it? 
-        return false; // Nope
+    if (itProgram == programMap.end()) return false; // Didn't find it
 
     std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programMap[programName].modelsLoaded.find(fileName);
 
-    if (itDrawInfo == programMap[programName].modelsLoaded.end()) // Find it? 
-        return false; // Nope
+    if (itDrawInfo == programMap[programName].modelsLoaded.end()) return false; // Didn't find it
 
     modelInfo = itDrawInfo->second;
     return true;
-}
-
-std::string cRenderManager::GetLastError(bool clear)
-{
-    std::string error = lastError;
-
-    if (clear)
-        lastError = "";
-
-    return error;
 }
 
 void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)
@@ -534,8 +517,7 @@ void cRenderManager::CreateModelVAOs(sModelDrawInfo& newModel, unsigned int prog
 
 void cRenderManager::use(std::string programName)
 {
-    if (programMap.count(programName) == 0) // doesnt exists
-        return;
+    if (programMap.count(programName) == 0) return; // Doesn't exists
 
     currShader = programName;
     glUseProgram(programMap[currShader].ID);

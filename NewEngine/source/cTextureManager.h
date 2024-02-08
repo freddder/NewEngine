@@ -52,7 +52,7 @@ public:
 private:
 	std::map<std::string, sSpriteSheet> spriteSheetsMap;
 public:
-	void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory = "");
+	void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
 	void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
 
 	void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);
