@@ -20,22 +20,11 @@ struct sMeshDrawInfo
 	unsigned int numberOfIndices;
 	unsigned int numberOfTriangles;
 
-	sVertexData* verticesData;
-	unsigned int* indiciesData;
-
 	std::string textureName;
-
-	//~sMeshDrawInfo()
-	//{
-	//	delete[] verticesData;
-	//	delete[] indiciesData;
-	//}
 };
 
 struct sModelDrawInfo // for map usage
 {
-	//std::string name;
-
 	unsigned int numMeshes;
 	std::vector<sMeshDrawInfo> allMeshesData;
 

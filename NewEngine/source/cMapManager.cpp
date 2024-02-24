@@ -133,6 +133,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		meshPosOffset.y = currInstancedTile["meshOffset"]["y"].GetFloat();
 		meshPosOffset.z = currInstancedTile["meshOffset"]["z"].GetFloat();
 
+		// TODO: change this to use new enum technique
 		std::string animationType = currInstancedTile["animationType"].GetString();
 		if (animationType == "ocean")
 		{

@@ -98,7 +98,6 @@ private:
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;
-    void CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program);
 public:
     bool LoadModel(std::string fileName, std::string programName);
     bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);

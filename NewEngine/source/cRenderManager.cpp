@@ -321,8 +321,9 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
     if (!scene->HasMeshes())
         return false;
 
-    sModelDrawInfo newModel;
+    use(programName);
 
+    sModelDrawInfo newModel;
     newModel.numMeshes = scene->mNumMeshes;
 
     for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++) // per mesh
@@ -330,8 +331,8 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
         aiMesh* currMesh = scene->mMeshes[meshIndex];
 
         sMeshDrawInfo newMeshInfo;
-        newMeshInfo.verticesData = new sVertexData[currMesh->mNumVertices];
         newMeshInfo.numberOfVertices = currMesh->mNumVertices;
+        sVertexData* verticesData = new sVertexData[currMesh->mNumVertices];
 
         for (unsigned int vertexIndex = 0; vertexIndex < currMesh->mNumVertices; vertexIndex++) // per vertex
         {
@@ -367,14 +368,14 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             //newVertexInfo.b = 1.f;
             //newVertexInfo.a = 1.f;
 
-            newMeshInfo.verticesData[vertexIndex] = newVertexInfo;
+            verticesData[vertexIndex] = newVertexInfo;
 
         } // end of per vertex
 
         newMeshInfo.numberOfIndices = currMesh->mNumFaces * 3;
         newMeshInfo.numberOfTriangles = currMesh->mNumFaces;
 
-        newMeshInfo.indiciesData = new unsigned int[newMeshInfo.numberOfIndices];
+        unsigned int* indiciesData = new unsigned int[newMeshInfo.numberOfIndices];
 
         unsigned int indiceIndex = 0;
         for (unsigned int i = 0; i < currMesh->mNumFaces; i++)
@@ -382,7 +383,7 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             aiFace currFace = currMesh->mFaces[i];
             for (unsigned int j = 0; j < currFace.mNumIndices; j++)
             {
-                newMeshInfo.indiciesData[indiceIndex + j] = currFace.mIndices[j];
+                indiciesData[indiceIndex + j] = currFace.mIndices[j];
             }
             indiceIndex += currFace.mNumIndices;
         }
@@ -399,12 +400,79 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             cTextureManager::GetInstance()->LoadGeneralTexture(newMeshInfo.textureName);
         }
 
+#pragma region VAO_Creation
+
+        // Generate VAO and VBO
+        glGenVertexArrays(1, &(newMeshInfo.VAO_ID));
+        glGenBuffers(1, &(newMeshInfo.VBO_ID));
+
+        // Bind VAO and VBO
+        glBindVertexArray(newMeshInfo.VAO_ID);
+        glBindBuffer(GL_ARRAY_BUFFER, newMeshInfo.VBO_ID);
+
+        // Specify VBO data
+        glBufferData(GL_ARRAY_BUFFER,
+            sizeof(sVertexData) * newMeshInfo.numberOfVertices,
+            (GLvoid*)verticesData,
+            GL_STATIC_DRAW);
+
+        // Generate, bind and set indeces buffer
+        glGenBuffers(1, &(newMeshInfo.INDEX_ID));
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newMeshInfo.INDEX_ID);
+
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+            sizeof(unsigned int) * newMeshInfo.numberOfIndices,
+            (GLvoid*)indiciesData,
+            GL_STATIC_DRAW);
+
+        //*************************************************************
+
+        // Set vertex ins for shader
+
+        unsigned int shaderID = GetCurrentShaderId();
+
+        // Position
+        GLint vPos_location = glGetAttribLocation(shaderID, "vPosition");
+        glEnableVertexAttribArray(vPos_location);
+        glVertexAttribPointer(vPos_location, 4,
+            GL_FLOAT, GL_FALSE,
+            sizeof(sVertexData),
+            (void*)offsetof(sVertexData, x));
+
+        // Normal
+        GLint vNormal_location = glGetAttribLocation(shaderID, "vNormal");
+        glEnableVertexAttribArray(vNormal_location);
+        glVertexAttribPointer(vNormal_location, 4,
+            GL_FLOAT, GL_FALSE,
+            sizeof(sVertexData),
+            (void*)offsetof(sVertexData, nx));
+
+        // UVs
+        GLint vUVx2_location = glGetAttribLocation(shaderID, "vUVx2");
+        glEnableVertexAttribArray(vUVx2_location);
+        glVertexAttribPointer(vUVx2_location, 4,
+            GL_FLOAT, GL_FALSE,
+            sizeof(sVertexData),
+            (void*)offsetof(sVertexData, u1));
+
+        // Unbind buffers
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+        glDisableVertexAttribArray(vPos_location);
+        glDisableVertexAttribArray(vNormal_location);
+        glDisableVertexAttribArray(vUVx2_location);
+
+#pragma endregion VAO_Creation
+
+        delete[] verticesData;
+        delete[] indiciesData;
+
         newModel.allMeshesData.push_back(newMeshInfo);
     } // end of per mesh
 
-    use(programName);
-
-    CreateModelVAOs(newModel, GetCurrentShaderId());
     programMap[programName].modelsLoaded.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
 
     return true;
@@ -445,73 +513,6 @@ void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)
             glGetProgramInfoLog(shader, 1024, NULL, infoLog);
             std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n ------------------------------------------------------- " << std::endl;
         }
-    }
-}
-
-void cRenderManager::CreateModelVAOs(sModelDrawInfo& newModel, unsigned int program)
-{
-    for (unsigned int i = 0; i < newModel.numMeshes; i++)
-    {
-        // Generate VAO and VBO
-        glGenVertexArrays(1, &(newModel.allMeshesData[i].VAO_ID));
-        glGenBuffers(1, &(newModel.allMeshesData[i].VBO_ID));
-
-        // Bind VAO and VBO
-        glBindVertexArray(newModel.allMeshesData[i].VAO_ID);
-        glBindBuffer(GL_ARRAY_BUFFER, newModel.allMeshesData[i].VBO_ID);
-
-        // Specify VBO data
-        glBufferData(GL_ARRAY_BUFFER,
-            sizeof(sVertexData) * newModel.allMeshesData[i].numberOfVertices,
-            (GLvoid*)newModel.allMeshesData[i].verticesData,
-            GL_STATIC_DRAW);
-
-        // Generate, bind and set indeces buffer
-        glGenBuffers(1, &(newModel.allMeshesData[i].INDEX_ID));
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, newModel.allMeshesData[i].INDEX_ID);
-
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-            sizeof(unsigned int) * newModel.allMeshesData[i].numberOfIndices,
-            (GLvoid*)newModel.allMeshesData[i].indiciesData,
-            GL_STATIC_DRAW);
-
-        //*************************************************************
-
-        // Set vertex ins for shader
-
-        // Position
-        GLint vPos_location = glGetAttribLocation(program, "vPosition");
-        glEnableVertexAttribArray(vPos_location);
-        glVertexAttribPointer(vPos_location, 4,
-            GL_FLOAT, GL_FALSE,
-            sizeof(sVertexData),
-            (void*)offsetof(sVertexData, x));
-
-        // Normal
-        GLint vNormal_location = glGetAttribLocation(program, "vNormal");
-        glEnableVertexAttribArray(vNormal_location);
-        glVertexAttribPointer(vNormal_location, 4,
-            GL_FLOAT, GL_FALSE,
-            sizeof(sVertexData),
-            (void*)offsetof(sVertexData, nx));
-
-        // UVs
-        GLint vUVx2_location = glGetAttribLocation(program, "vUVx2");
-        glEnableVertexAttribArray(vUVx2_location);
-        glVertexAttribPointer(vUVx2_location, 4,
-            GL_FLOAT, GL_FALSE,
-            sizeof(sVertexData),
-            (void*)offsetof(sVertexData, u1));
-
-        // Unbind buffers
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        glDisableVertexAttribArray(vPos_location);
-        glDisableVertexAttribArray(vNormal_location);
-        glDisableVertexAttribArray(vUVx2_location);
     }
 }
 
