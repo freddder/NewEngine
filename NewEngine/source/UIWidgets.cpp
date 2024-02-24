@@ -2,7 +2,7 @@
 #include "cCamera.h"
 
 // Should be removed (maybe?)
-#include "cTextureManager.h"
+#include "cRenderManager.h"
 
 cUIWidget::~cUIWidget()
 {
@@ -93,5 +93,5 @@ void cUIStaticImage::SetupWidget()
 {
 	cUIWidget::SetupWidget();
 
-	cTextureManager::GetInstance()->SetupTexture(textureName);
+	cRenderManager::GetInstance()->SetupTexture(textureName);
 }

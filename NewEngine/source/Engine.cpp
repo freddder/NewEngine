@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include "cCamera.h"
-#include "cTextureManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
 #include "cRenderManager.h"
@@ -406,8 +405,6 @@ namespace Engine
     {
         cCamera::GetInstance();
 
-        cTextureManager::GetInstance();
-
         cLightManager::GetInstance();
 
         cAnimationManager::GetInstance();
@@ -424,8 +421,6 @@ namespace Engine
     void ShutdownManagers()
     {
         cCamera::DestroyInstance();
-
-        cTextureManager::DestroyInstance();
 
         cLightManager::DestroyInstance();
 

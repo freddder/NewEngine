@@ -1,7 +1,7 @@
 #include "cRenderModel.h"
 #include <glad/glad.h>
 
-#include "cTextureManager.h"
+#include "cRenderManager.h"
 
 cRenderModel::cRenderModel()
 {
@@ -58,5 +58,5 @@ void cRenderModel::SetUpUniforms()
 {
 	if (textureName == "") return;
 
-	cTextureManager::GetInstance()->SetupTexture(textureName);
+	cRenderManager::GetInstance()->SetupTexture(textureName);
 }

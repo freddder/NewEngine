@@ -14,6 +14,7 @@ class cUIWidget;
 
 const std::string SHADER_PATH = "assets/shaders/";
 const std::string MODEL_PATH = "assets/models/";
+const std::string TEXTURE_PATH = "assets/textures/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
 
@@ -29,6 +30,14 @@ enum eAnimatedModels
     OCEAN,
     FOAM,
     WAVE
+};
+
+struct sSpriteSheet
+{
+    unsigned int textureId;
+    unsigned int numCols;
+    unsigned int numRows;
+    bool isSymmetrical;
 };
 
 class cRenderManager
@@ -109,6 +118,23 @@ public:
     static std::shared_ptr<cSpriteModel> CreateSpriteModel();
     static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModels modelType);
     static void RemoveModel(std::shared_ptr<cRenderModel> model);
+
+    // Textures
+private:
+    std::map<std::string, unsigned int> generalTexturesMap;
+    unsigned int CreateTexture(const std::string fullPath, int& width, int& height);
+public:
+    void LoadGeneralTexture(const std::string fileName, const std::string subdirectory = "");
+    bool GetGeneralTexureId(const std::string texture, unsigned int& textureID);
+    unsigned int CreateCubemap(const std::vector<std::string> faces);
+
+private:
+    std::map<std::string, sSpriteSheet> spriteSheetsMap;
+public:
+    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
+    void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
+
+    void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);
 
     // Drawing
 private:

@@ -5,7 +5,6 @@
 #include "cMapManager.h"
 #include "cAnimationManager.h"
 #include "cLightManager.h"
-#include "cTextureManager.h"
 
 #include "cCamera.h"
 #include "cOverworldPokemon.h"
@@ -21,7 +20,6 @@ int main()
     Engine::StartUpManagers();
 
     cCamera* camera = cCamera::GetInstance();
-    cTextureManager* textureManager = cTextureManager::GetInstance();
     cLightManager* lightManager = cLightManager::GetInstance();
     cAnimationManager* animationManager = cAnimationManager::GetInstance();
     cRenderManager* renderManager = cRenderManager::GetInstance();
@@ -72,17 +70,17 @@ int main()
     renderManager->LoadModel("Foam_bl2.obj", "foam");
     renderManager->LoadModel("Foam_c2.obj", "foam");
 
-    textureManager->LoadSpriteSheet("Nate.png", 3, 8, false);
-    textureManager->LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
-    textureManager->LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-    textureManager->LoadSpriteSheet("722.png", 4, 4, false);
+    renderManager->LoadSpriteSheet("Nate.png", 3, 8, false);
+    renderManager->LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
+    renderManager->LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+    renderManager->LoadSpriteSheet("722.png", 4, 4, false);
 
-    textureManager->LoadGeneralTexture("SnowFlake1.png");
-    textureManager->LoadGeneralTexture("SnowFlake2.png");
-    textureManager->LoadGeneralTexture("SnowFlake3.png");
+    renderManager->LoadGeneralTexture("SnowFlake1.png");
+    renderManager->LoadGeneralTexture("SnowFlake2.png");
+    renderManager->LoadGeneralTexture("SnowFlake3.png");
 
-    textureManager->LoadGeneralTexture("PartyMemberButtonBackground.png", "ui/");
-    textureManager->LoadGeneralTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
+    renderManager->LoadGeneralTexture("PartyMemberButtonBackground.png", "ui/");
+    renderManager->LoadGeneralTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
 
     animationManager->InitializeAnimationsPresets();
 

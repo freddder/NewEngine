@@ -1,6 +1,6 @@
 #include "cSpriteModel.h"
 #include "cRenderManager.h"
-#include "cTextureManager.h"
+#include "cRenderManager.h"
 
 cSpriteModel::cSpriteModel()
 {
@@ -10,5 +10,5 @@ cSpriteModel::cSpriteModel()
 
 void cSpriteModel::SetUpUniforms()
 {
-	cTextureManager::GetInstance()->SetupSpriteSheet(textureName, currSpriteId);
+	cRenderManager::GetInstance()->SetupSpriteSheet(textureName, currSpriteId);
 }
