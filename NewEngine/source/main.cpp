@@ -56,8 +56,9 @@ int main()
 
     renderManager->LoadModel("r0_treePine.obj", "scene");
     renderManager->LoadModel("WaterTest3.obj", "scene");
-    renderManager->LoadModel("WinterTest.obj", "scene");
-    renderManager->LoadModel("SlopeTest.obj", "scene");
+    renderManager->LoadModel("GrassRouteDemo.obj", "scene");
+    //renderManager->LoadModel("WinterTest.obj", "scene");
+    //renderManager->LoadModel("SlopeTest.obj", "scene");
     //modelManager->LoadModel("TestMapWater.obj", "scene");
     //modelManager->LoadModel("FallTree.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
@@ -75,12 +76,12 @@ int main()
     renderManager->LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
     renderManager->LoadSpriteSheet("722.png", 4, 4, false);
 
-    renderManager->LoadGeneralTexture("SnowFlake1.png");
-    renderManager->LoadGeneralTexture("SnowFlake2.png");
-    renderManager->LoadGeneralTexture("SnowFlake3.png");
+    renderManager->LoadSceneTexture("SnowFlake1.png");
+    renderManager->LoadSceneTexture("SnowFlake2.png");
+    renderManager->LoadSceneTexture("SnowFlake3.png");
 
-    renderManager->LoadGeneralTexture("PartyMemberButtonBackground.png", "ui/");
-    renderManager->LoadGeneralTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/");
+    renderManager->LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
+    renderManager->LoadSceneTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/", false);
 
     animationManager->InitializeAnimationsPresets();
 
@@ -117,8 +118,9 @@ int main()
     camera->playerPosition = &Engine::playerChar->model->position;
 
     //mapManager->LoadMap("WinterTestDesc.json");
-    mapManager->LoadMap("WaterTest3Desc.json");
+    //mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
+    mapManager->LoadMap("GrassRouteDemoDesc.json");
 
     sceneManager->SetWeather(SNOW);
 

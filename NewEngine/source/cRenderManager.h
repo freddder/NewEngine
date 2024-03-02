@@ -32,9 +32,14 @@ enum eAnimatedModels
     WAVE
 };
 
-struct sSpriteSheet
+struct sTexture
 {
     unsigned int textureId;
+    bool isPermanent = false; // if false, deleted when scene changes 
+};
+
+struct sSpriteSheet : sTexture
+{
     unsigned int numCols;
     unsigned int numRows;
     bool isSymmetrical;
@@ -121,17 +126,16 @@ public:
 
     // Textures
 private:
-    std::map<std::string, unsigned int> generalTexturesMap;
+    std::map<std::string, sTexture> sceneTextures;
     unsigned int CreateTexture(const std::string fullPath, int& width, int& height);
 public:
-    void LoadGeneralTexture(const std::string fileName, const std::string subdirectory = "");
-    bool GetGeneralTexureId(const std::string texture, unsigned int& textureID);
+    void LoadSceneTexture(const std::string fileName, const std::string subdirectory = "", bool isPermanent = false);
     unsigned int CreateCubemap(const std::vector<std::string> faces);
 
 private:
-    std::map<std::string, sSpriteSheet> spriteSheetsMap;
+    std::map<std::string, sSpriteSheet> sceneSpriteSheets;
 public:
-    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
+    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "", bool isPermanent = false);
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
 
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);

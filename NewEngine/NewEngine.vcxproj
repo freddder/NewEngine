@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -155,7 +155,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\cAssetManager.cpp" />
     <ClCompile Include="source\cSceneManager.cpp" />
     <ClCompile Include="source\cAnimatedModel.cpp" />
     <ClCompile Include="source\cAnimation.cpp" />
@@ -175,7 +174,6 @@
     <ClCompile Include="source\cRenderManager.cpp" />
     <ClCompile Include="source\cSpriteAnimation.cpp" />
     <ClCompile Include="source\cSpriteModel.cpp" />
-    <ClCompile Include="source\cTextureManager.cpp" />
     <ClCompile Include="source\cSinAnimation.cpp" />
     <ClCompile Include="source\cUIManager.cpp" />
     <ClCompile Include="source\Engine.cpp" />
@@ -193,7 +191,6 @@
     <ClCompile Include="source\UIWidgets.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\cAssetManager.h" />
     <ClInclude Include="source\PokemonData.h" />
     <ClInclude Include="source\cUIManager.h" />
     <ClInclude Include="source\cAnimatedModel.h" />
@@ -215,7 +212,6 @@
     <ClInclude Include="source\cSceneManager.h" />
     <ClInclude Include="source\cSpriteAnimation.h" />
     <ClInclude Include="source\cSpriteModel.h" />
-    <ClInclude Include="source\cTextureManager.h" />
     <ClInclude Include="source\cSinAnimation.h" />
     <ClInclude Include="source\DrawInfo.h" />
     <ClInclude Include="source\Engine.h" />

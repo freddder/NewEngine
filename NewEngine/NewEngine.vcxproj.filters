@@ -68,9 +68,6 @@
     <ClCompile Include="source\Global.cpp">
       <Filter>Globals</Filter>
     </ClCompile>
-    <ClCompile Include="source\cTextureManager.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
     <ClCompile Include="source\cCamera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -164,16 +161,10 @@
     <ClCompile Include="source\PokemonData.cpp">
       <Filter>Pokemon</Filter>
     </ClCompile>
-    <ClCompile Include="source\cAssetManager.cpp">
-      <Filter>Render System</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Global.h">
       <Filter>Globals</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cTextureManager.h">
-      <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="source\cRenderModel.h">
       <Filter>Render System\Model</Filter>
@@ -279,9 +270,6 @@
     </ClInclude>
     <ClInclude Include="source\PokemonData.h">
       <Filter>Pokemon</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cAssetManager.h">
-      <Filter>Render System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

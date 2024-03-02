@@ -1,6 +1,5 @@
 #include "cSpriteModel.h"
 #include "cRenderManager.h"
-#include "cRenderManager.h"
 
 cSpriteModel::cSpriteModel()
 {

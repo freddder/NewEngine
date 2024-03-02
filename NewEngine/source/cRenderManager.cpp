@@ -18,7 +18,6 @@
 #include "cAnimatedModel.h"
 #include "cSceneManager.h"
 #include "cLightManager.h"
-#include "cTextureManager.h"
 #include "cCamera.h"
 #include "cUIManager.h"
 
@@ -400,7 +399,7 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             newMeshInfo.textureName = path.C_Str();
 
             // maybe try to load texture right here
-            LoadGeneralTexture(newMeshInfo.textureName);
+            LoadSceneTexture(newMeshInfo.textureName);
         }
 
 #pragma region VAO_Creation
@@ -681,25 +680,25 @@ unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& widt
     return textureId;
 }
 
-void cRenderManager::LoadGeneralTexture(const std::string fileName, const std::string subdirectory)
+void cRenderManager::LoadSceneTexture(const std::string fileName, const std::string subdirectory, bool isPermanent)
 {
-    if (generalTexturesMap.count(fileName) || fileName == "") return; // texture already created
+    if (fileName == "") return;
+
+    if (sceneTextures.count(fileName)) // texture already created
+    {
+        if (isPermanent) sceneTextures[fileName].isPermanent = true;
+
+        return;
+    }
 
     std::string fullPath = TEXTURE_PATH + subdirectory + fileName;
     int width, height;
-    unsigned int textureId = CreateTexture(fullPath, width, height);
+    sTexture newTexture;
+    newTexture.textureId = CreateTexture(fullPath, width, height);
+    newTexture.isPermanent = isPermanent;
 
-    if (textureId != 0)
-        generalTexturesMap.insert(std::pair<std::string, unsigned int>(fileName, textureId));
-}
-
-bool cRenderManager::GetGeneralTexureId(const std::string texture, unsigned int& textureID)
-{
-    if (generalTexturesMap.find(texture) == generalTexturesMap.end()) // texture doesnt exists
-        return false;
-
-    textureID = generalTexturesMap[texture];
-    return true;
+    if (newTexture.textureId != 0)
+        sceneTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
 }
 
 unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
@@ -733,35 +732,36 @@ unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
     return textureID;
 }
 
-void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory)
+void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory, bool isPermanent)
 {
-    if (spriteSheetsMap.count(spriteSheetName)) return; // texture already created
+    if (sceneSpriteSheets.count(spriteSheetName)) return; // texture already created
 
     sSpriteSheet newSheet;
     newSheet.numCols = cols;
     newSheet.numRows = rows;
     newSheet.isSymmetrical = sym;
+    newSheet.isPermanent = isPermanent;
 
     std::string fullPath = TEXTURE_PATH + subdirectory + spriteSheetName;
     int width, height;
     newSheet.textureId = CreateTexture(fullPath, width, height);
 
     if (newSheet.textureId != 0)
-        spriteSheetsMap[spriteSheetName] = newSheet;
+        sceneSpriteSheets[spriteSheetName] = newSheet;
 }
 
 void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit)
 {
-    if (spriteSheetsMap.find(sheetName) == spriteSheetsMap.end()) return; // texture doesn't exists
+    if (sceneSpriteSheets.find(sheetName) == sceneSpriteSheets.end()) return; // texture doesn't exists
 
-    sSpriteSheet sheet = spriteSheetsMap[sheetName];
+    sSpriteSheet sheet = sceneSpriteSheets[sheetName];
 
     cRenderManager* renderManager = cRenderManager::GetInstance();
     renderManager->setInt("spriteId", spriteId);
     renderManager->setInt("numCols", sheet.numCols);
     renderManager->setInt("numRows", sheet.numRows);
 
-    unsigned int textureId = spriteSheetsMap[sheetName].textureId;
+    unsigned int textureId = sceneSpriteSheets[sheetName].textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
@@ -773,9 +773,9 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
 
 void cRenderManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
 {
-    if (generalTexturesMap.find(textureToSetup) == generalTexturesMap.end()) return; // texture doesn't exists
+    if (sceneTextures.find(textureToSetup) == sceneTextures.end()) return; // texture doesn't exists
 
-    unsigned int textureId = generalTexturesMap[textureToSetup];
+    unsigned int textureId = sceneTextures[textureToSetup].textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984

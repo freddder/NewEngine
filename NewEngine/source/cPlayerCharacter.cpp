@@ -3,7 +3,6 @@
 #include "cRenderManager.h"
 #include "cMapManager.h"
 #include "cAnimationManager.h"
-#include "cTextureManager.h"
 
 cPlayerCharacter::cPlayerCharacter(glm::vec3 position) : cCharacter(position, "Nate.png")
 {

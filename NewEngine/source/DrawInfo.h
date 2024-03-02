@@ -23,10 +23,10 @@ struct sMeshDrawInfo
 	std::string textureName;
 };
 
-struct sModelDrawInfo // for map usage
+struct sModelDrawInfo
 {
 	unsigned int numMeshes;
-	std::vector<sMeshDrawInfo> allMeshesData;
-
 	unsigned int totalNumOfVertices;
+
+	std::vector<sMeshDrawInfo> allMeshesData;
 };
