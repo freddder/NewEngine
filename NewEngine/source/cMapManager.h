@@ -11,7 +11,6 @@ struct sInstancedTile
 	std::shared_ptr<cAnimatedModel> instancedModel;
 	std::vector<glm::vec4> instanceOffsets;
 	glm::vec3 modelOffset;
-	//cAnimation* animation;
 };
 
 struct sCorrectionTiles
@@ -29,14 +28,10 @@ struct sTile
 
 struct sQuadrant
 {
-	//sTile quadData[32][32][31];
+	int posX;
+	int posZ;
 
-	int quadX;
-	int quadZ;
-
-	std::map<int, std::map<
-		int, std::map<
-		int, sTile>>> quadData;
+	std::map<int, sTile> data;
 };
 
 class cMapManager
@@ -69,6 +64,7 @@ private:
 	std::map<int, sCorrectionTiles> walkableTiles;
 	std::shared_ptr<cRenderModel> mapModel;
 	std::map<int, sInstancedTile> instancedTiles;
+	int ToTileIndex(int x, int z, int height);
 public:
 	void LoadMap(std::string mapDescriptionFile);
 

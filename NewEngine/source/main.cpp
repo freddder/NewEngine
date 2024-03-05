@@ -56,6 +56,7 @@ int main()
 
     renderManager->LoadModel("r0_treePine.obj", "scene");
     renderManager->LoadModel("WaterTest3.obj", "scene");
+    renderManager->LoadModel("MultiTest.obj", "scene");
     renderManager->LoadModel("GrassRouteDemo.obj", "scene");
     //renderManager->LoadModel("WinterTest.obj", "scene");
     //renderManager->LoadModel("SlopeTest.obj", "scene");
@@ -118,9 +119,10 @@ int main()
     camera->playerPosition = &Engine::playerChar->model->position;
 
     //mapManager->LoadMap("WinterTestDesc.json");
-    //mapManager->LoadMap("WaterTest3Desc.json");
+    mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
-    mapManager->LoadMap("GrassRouteDemoDesc.json");
+    //mapManager->LoadMap("MultiTestDesc.json");
+    //mapManager->LoadMap("GrassRouteDemoDesc.json");
 
     sceneManager->SetWeather(SNOW);
 

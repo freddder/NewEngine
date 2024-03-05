@@ -1,0 +1,11 @@
+{
+    "mapModelFileName": "MultiTest.obj",
+    "mapCollisionFileName": "MultiTest.pdsmap",
+    "walkableTiles": [100],
+    "correctionTiles": [
+        
+    ],
+    "instancedTiles": [
+        
+    ] 
+}

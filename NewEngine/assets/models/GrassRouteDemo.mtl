@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
 # Material Count: 11
 
-newmtl grass01ax
+newmtl grass01ax.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -13,7 +13,7 @@ illum 1
 map_Kd grass01ax.png
 map_d grass01ax.png
 
-newmtl ki02ax
+newmtl ki02ax.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -25,7 +25,7 @@ illum 1
 map_Kd ki02ax.png
 map_d ki02ax.png
 
-newmtl ki02bx
+newmtl ki02bx.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -37,7 +37,7 @@ illum 1
 map_Kd ki02bx.png
 map_d ki02bx.png
 
-newmtl ki02c
+newmtl ki02c.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -49,7 +49,7 @@ illum 1
 map_Kd ki02c.png
 map_d ki02c.png
 
-newmtl ki02dx
+newmtl ki02dx.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -61,7 +61,7 @@ illum 1
 map_Kd ki02dx.png
 map_d ki02dx.png
 
-newmtl kusa_ec1
+newmtl kusa_ec1.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -73,7 +73,7 @@ illum 1
 map_Kd kusa_ec1.png
 map_d kusa_ec1.png
 
-newmtl kusa_ec2
+newmtl kusa_ec2.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -85,7 +85,7 @@ illum 1
 map_Kd kusa_ec2.png
 map_d kusa_ec2.png
 
-newmtl kusa_ec3
+newmtl kusa_ec3.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -97,7 +97,7 @@ illum 1
 map_Kd kusa_ec3.png
 map_d kusa_ec3.png
 
-newmtl michi01a
+newmtl michi01a.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -109,7 +109,7 @@ illum 1
 map_Kd michi01a.png
 map_d michi01a.png
 
-newmtl michi01b
+newmtl michi01b.002
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000
@@ -121,7 +121,7 @@ illum 1
 map_Kd michi01b.png
 map_d michi01b.png
 
-newmtl yamagrs01
+newmtl yamagrs01.001
 Ns 0.000000
 Ka 1.000000 1.000000 1.000000
 Kd 0.800000 0.800000 0.800000

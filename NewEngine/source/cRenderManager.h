@@ -25,11 +25,11 @@ struct sShaderProgram
     std::map<std::string, unsigned int> uniformLocations;
 };
 
-enum eAnimatedModels
+enum eAnimatedModel
 {
-    OCEAN,
+    OCEAN = 0,
     FOAM,
-    WAVE
+    WAVE,
 };
 
 struct sTexture
@@ -121,7 +121,7 @@ private:
 public:
     static std::shared_ptr<cRenderModel> CreateRenderModel();
     static std::shared_ptr<cSpriteModel> CreateSpriteModel();
-    static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModels modelType);
+    static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
     static void RemoveModel(std::shared_ptr<cRenderModel> model);
 
     // Textures

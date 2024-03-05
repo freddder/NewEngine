@@ -133,24 +133,9 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		meshPosOffset.y = currInstancedTile["meshOffset"]["y"].GetFloat();
 		meshPosOffset.z = currInstancedTile["meshOffset"]["z"].GetFloat();
 
-		// TODO: change this to use new enum technique
-		std::string animationType = currInstancedTile["animationType"].GetString();
-		if (animationType == "ocean")
-		{
-			instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(OCEAN);
-			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-		}
-		else if (animationType == "wave")
-		{
-			instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(WAVE);
-			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-		}
-		else if (animationType == "foam")
-		{
-			instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(FOAM);
-			instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-		}
-
+		int animationType = currInstancedTile["animationType"].GetInt();
+		instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(static_cast<eAnimatedModel>(animationType));
+		instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		instancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
 		instancedTiles[tileId].modelOffset = meshPosOffset;
 	}
@@ -172,12 +157,13 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	// start here
 	while (currToken == "mapstart")
 	{
-		sQuadrant newQuad;
+		quads.emplace_back();
+		sQuadrant& newQuad = quads.back();
 		int tempLayers[32][32][8];
 
 		// set quadrant coords
-		pdsmap >> newQuad.quadZ;
-		pdsmap >> newQuad.quadX;
+		pdsmap >> newQuad.posX;
+		pdsmap >> newQuad.posZ;
 
 		// skip areaindex
 		pdsmap >> currToken;
@@ -211,56 +197,58 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 					int currHeight;
 					pdsmap >> currHeight;
 
-					int currTile = tempLayers[x][z][layerId];
+					int tileId = tempLayers[x][z][layerId];
 
-					if (walkableTiles.find(currTile) != walkableTiles.end()) // contains
-					{
-						if (!newQuad.quadData[x][z][currHeight].isUnchangeable)
+					if (tileId == -1) continue;
+
+					sTile& currTile = newQuad.data[ToTileIndex(x, z, currHeight)];
+
+					if (walkableTiles.find(tileId) != walkableTiles.end() && !currTile.isUnchangeable) // is walkable
+					{						
+						currTile.isWalkable = true;
+
+						// Walkable correction tiles
+						for (unsigned int i = 0; i < walkableTiles[tileId].walkableOffsets.size(); i++)
 						{
-							newQuad.quadData[x][z][currHeight].isWalkable = true;
+							int correctionX = x + (int)walkableTiles[tileId].walkableOffsets[i].x;
+							int correctionZ = z + (int)walkableTiles[tileId].walkableOffsets[i].z;
+							int correctionHeight = currHeight + (int)walkableTiles[tileId].walkableOffsets[i].y;
 
-							for (unsigned int i = 0; i < walkableTiles[currTile].walkableOffsets.size(); i++)
-							{
-								newQuad.quadData[x + (int)walkableTiles[currTile].walkableOffsets[i].x]
-												[z + (int)walkableTiles[currTile].walkableOffsets[i].z]
-												[currHeight + (int)walkableTiles[currTile].walkableOffsets[i].y].isWalkable = true;
-							}
+							newQuad.data[ToTileIndex(correctionX, correctionZ, correctionHeight)].isWalkable = true;
+						}
 
-							for (unsigned int i = 0; i < walkableTiles[currTile].unwalkableOffsets.size(); i++)
-							{
-								newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
-												[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
-												[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isWalkable = false;
+						// Unwalkable correction tiles
+						for (unsigned int i = 0; i < walkableTiles[tileId].unwalkableOffsets.size(); i++)
+						{
+							int correctionX = x + (int)walkableTiles[tileId].unwalkableOffsets[i].x;
+							int correctionZ = z + (int)walkableTiles[tileId].unwalkableOffsets[i].z;
+							int correctionHeight = currHeight + (int)walkableTiles[tileId].unwalkableOffsets[i].y;
 
-								newQuad.quadData[(x + (int)walkableTiles[currTile].unwalkableOffsets[i].x)]
-												[(z + (int)walkableTiles[currTile].unwalkableOffsets[i].z)]
-												[(currHeight + (int)walkableTiles[currTile].unwalkableOffsets[i].y)].isUnchangeable = true;
-							}
+							newQuad.data[ToTileIndex(correctionX, correctionZ, correctionHeight)].isWalkable = false;
+							newQuad.data[ToTileIndex(correctionX, correctionZ, correctionHeight)].isUnchangeable = true;
 						}
 					}
-					else if (tempLayers[x][z][layerId] != -1) // desn't contain
+					else // is NOT walkable
 					{
-						newQuad.quadData[x][z][currHeight].isWalkable = false;
-						newQuad.quadData[x][z][currHeight].isUnchangeable = true;
+						currTile.isWalkable = false;
+						currTile.isUnchangeable = true;
 					}
 
-					if (instancedTiles.find(currTile) != instancedTiles.end()) // it exists
+					if (instancedTiles.find(tileId) != instancedTiles.end()) // it exists
 					{
-						glm::vec4 newOffset = glm::vec4((newQuad.quadX * 32 - 15 + x), currHeight, (newQuad.quadX * 32 - 15 + z), 1.f);
-						newOffset.x += instancedTiles[currTile].modelOffset.x;
-						newOffset.y += instancedTiles[currTile].modelOffset.y;
-						newOffset.z += instancedTiles[currTile].modelOffset.z;
+						glm::vec4 newOffset = glm::vec4((newQuad.posX * 32 - 15 + x), currHeight, (newQuad.posX * 32 - 15 + z), 1.f);
+						newOffset.x += instancedTiles[tileId].modelOffset.x;
+						newOffset.y += instancedTiles[tileId].modelOffset.y;
+						newOffset.z += instancedTiles[tileId].modelOffset.z;
 
-						instancedTiles[currTile].instanceOffsets.push_back(newOffset);
+						instancedTiles[tileId].instanceOffsets.push_back(newOffset);
 					}
 				}
 			}
 		}
 
-		quads.push_back(newQuad);
-
 		pdsmap >> currToken; // this should be mapend
-		pdsmap >> currToken; // if there is another map, this will be mapstart
+		pdsmap >> currToken; // if there is another quad, this will be mapstart
 	}
 	// end here
 
@@ -281,37 +269,38 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 {
-	glm::vec3 desiredLocation = currPosition;
+	int desiredX = currPosition.x;
+	int desiredZ = currPosition.z;
 
 	if (direction == eDirection::UP)
-		desiredLocation.x += 1.f;
+		desiredX += 1;
 	else if (direction == eDirection::DOWN)
-		desiredLocation.x -= 1.f;
+		desiredX -= 1;
 	else if (direction == eDirection::LEFT)
-		desiredLocation.z -= 1.f;
+		desiredZ -= 1;
 	else if (direction == eDirection::RIGHT)
-		desiredLocation.z += 1.f;
+		desiredZ += 1;
 
-	if (desiredLocation.x + 15 < 0 || desiredLocation.z + 15 < 0) return 0;
+	if (desiredX + 15 < 0 || desiredZ + 15 < 0) return 0;
 
-	desiredLocation.x += 15;
-	desiredLocation.z += 15;
+	desiredX += 15;
+	desiredZ += 15;
 
-	int quadXCoord = ((int)desiredLocation.x) / 32;
-	int quadZCoord = ((int)desiredLocation.z) / 32;
+	int quadXCoord = desiredX / 32;
+	int quadZCoord = desiredZ / 32;
 
 	for (std::vector<sQuadrant>::iterator it = quads.begin(); it != quads.end(); it++)
 	{
-		if (quadXCoord == it->quadX && quadZCoord == it->quadZ)
+		if (quadXCoord == it->posX && quadZCoord == it->posZ)
 		{
-			desiredLocation.z -= 32 * quadZCoord;
-			desiredLocation.x -= 32 * quadXCoord;
+			desiredZ -= 32 * quadZCoord;
+			desiredX -= 32 * quadXCoord;
 
-			if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y].isWalkable) // same height
+			if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y)].isWalkable) // same height
 				return 1;
-			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y + 1].isWalkable) // go up
+			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y + 1)].isWalkable) // go up
 				return 2;
-			else if (it->quadData[(int)desiredLocation.x][(int)desiredLocation.z][(int)desiredLocation.y - 1].isWalkable) // go down
+			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y - 1)].isWalkable) // go down
 				return 3;
 
 			return 0;
@@ -319,4 +308,16 @@ int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 	}
 
 	return 0;
+}
+
+int cMapManager::ToTileIndex(int x, int z, int height)
+{
+	if (x > 31 || x < 0
+		|| z > 31 || z < 0
+		|| height > 15 || height < -15) return -1;
+
+	int heightIndex = (height + 15) * (32 * 32);
+	int layerIndex = 32 * x + z;
+
+	return heightIndex + layerIndex;
 }

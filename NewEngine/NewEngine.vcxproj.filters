@@ -8,9 +8,6 @@
     <Filter Include="Globals">
       <UniqueIdentifier>{b7be64d0-52aa-426e-aa16-5f7ce6c06a9d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{e9ef2838-107a-4676-a711-599e99ec7ad1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{c6f38401-7c8c-47e6-8415-590048876612}</UniqueIdentifier>
     </Filter>

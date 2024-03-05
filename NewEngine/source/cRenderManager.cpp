@@ -617,7 +617,7 @@ std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
     return newModel;
 }
 
-std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModels modelType)
+std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModel modelType)
 {
     std::shared_ptr<cAnimatedModel> newModel;
 

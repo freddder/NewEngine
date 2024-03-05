@@ -11,175 +11,175 @@
             "meshName": "sea_water2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 0, 
-            "animationType": "ocean"
+            "animationType": 0
         },
         {
             "tileId": 118,
             "meshName": "Water_b2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 0, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 120,
             "meshName": "Water_b2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
             "meshYOrientation": 90, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 122,
             "meshName": "Water_b2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": -90, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 124,
             "meshName": "Water_b2.obj",
             "meshOffset": { "x": 2.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 180, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 119,
             "meshName": "Water_c2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 0, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 117,
             "meshName": "Water_c2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
             "meshYOrientation": 90, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 123,
             "meshName": "Water_c2.obj",
             "meshOffset": { "x": 2.5, "y": 0, "z": 2.5 },
             "meshYOrientation": 180, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 125,
             "meshName": "Water_c2.obj",
             "meshOffset": { "x": 2.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 270, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 138,
             "meshName": "Water_bl2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 0, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 136,
             "meshName": "Water_bl2.obj",
             "meshOffset": { "x": 2.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 270, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 137,
             "meshName": "Water_bl2.obj",
             "meshOffset": { "x": 2.5, "y": 0, "z": 2.5 },
             "meshYOrientation": 180, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 139,
             "meshName": "Water_bl2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
             "meshYOrientation": 90, 
-            "animationType": "wave"
+            "animationType": 2
         },
         {
             "tileId": 144,
             "meshName": "Foam_b2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 180, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 145,
             "meshName": "Foam_b2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": -90, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 146,
             "meshName": "Foam_b2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 0, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 147,
             "meshName": "Foam_b2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 90, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 148,
             "meshName": "Foam_bl2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": -90, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 149,
             "meshName": "Foam_bl2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 180, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 150,
             "meshName": "Foam_bl2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 0, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 151,
             "meshName": "Foam_bl2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 90, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 152,
             "meshName": "Foam_c2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": 180, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 153,
             "meshName": "Foam_c2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
             "meshYOrientation": -90, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 154,
             "meshName": "Foam_c2.obj",
             "meshOffset": { "x": 0.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 90, 
-            "animationType": "foam"
+            "animationType": 1
         },
         {
             "tileId": 155,
             "meshName": "Foam_c2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 0.5 },
             "meshYOrientation": 0, 
-            "animationType": "foam"
+            "animationType": 1
         }
     ] 
 }
