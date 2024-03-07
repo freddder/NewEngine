@@ -3,11 +3,14 @@
 #include <GLFW/glfw3.h>
 
 class cPlayerCharacter;
+class cUIStaticImage;
 
 namespace Engine
 {
 	// TEMPORARY
 	extern cPlayerCharacter* playerChar;
+	extern cUIStaticImage* button;
+	extern cUIStaticImage* sprite;
 
 	bool InitializeGLFW();
 

@@ -4,7 +4,7 @@
 
 namespace Pokemon
 {
-	enum Type
+	enum eType
 	{
 		NORMAL = 0,
 		FIRE,
@@ -51,7 +51,7 @@ namespace Pokemon
 		"No Type"
 	};
 
-	enum EggGroup
+	enum eEggGroup
 	{
 		EGG_AMORPHOUS,
 		EGG_BUG,
@@ -125,8 +125,8 @@ namespace Pokemon
 		// Ability ability2
 		// Ability hiddenAbility
 
-		Type type1;
-		Type type2 = NO_TYPE;
+		eType type1;
+		eType type2 = NO_TYPE;
 
 		float height; // in meters
 		float weight; // in kilograms
@@ -134,7 +134,6 @@ namespace Pokemon
 		// Learnset as a pair of int (level) and int (move id)
 	};
 
-	// Mostly used for storing the data in json
 	struct SpeciesData
 	{
 		std::string name;
