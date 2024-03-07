@@ -288,9 +288,6 @@
     <None Include="assets\shaders\DebugVertShader.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="assets\shaders\SpriteFragShader.glsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="assets\shaders\SpriteVertShader.glsl">
       <Filter>Shaders</Filter>
     </None>
@@ -316,9 +313,6 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\FoamVertShader.glsl">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\3DParticleFragShader.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\3DParticleVertShader.glsl">

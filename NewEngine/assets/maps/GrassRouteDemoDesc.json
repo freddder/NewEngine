@@ -1,7 +1,7 @@
 {
     "mapModelFileName": "GrassRouteDemo.obj",
     "mapCollisionFileName": "GrassRouteDemo.pdsmap",
-    "walkableTiles": [52,53,54,55,56,57,58,59,92,93,94,95,100,101,109],
+    "walkableTiles": [52,53,54,55,56,57,58,59,92,93,94,95,100,101,107,109],
     "correctionTiles": [
         {
             "tileId": [143,144,145,175,176,177,178,179,180,181,182,183,184,185,186],

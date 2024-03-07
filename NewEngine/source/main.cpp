@@ -29,13 +29,13 @@ int main()
     // Setup shader programs
     renderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
-    renderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "SpriteFragShader.glsl");
+    renderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
     renderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
     renderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
     //renderManager->CreateShadderProgram("2dsnow", "2DSnowVertShader.glsl", "2DSnowFragShader.glsl");
     renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
-    renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "3DParticleFragShader.glsl");
+    renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
 
     // configure global opengl state
@@ -85,12 +85,6 @@ int main()
     renderManager->LoadSceneTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/", false);
 
     animationManager->InitializeAnimationsPresets();
-
-    //cRenderModel* tree = new cRenderModel();
-    //tree->meshName = "FallTree.obj";
-    //tree->position.x = -0.5f;
-    //tree->position.z = -0.5f;
-    //g_RenderManager->AddModel(tree);
 
     {
         cUICanvas* canvas = new cUICanvas();

@@ -229,7 +229,6 @@
     <ClInclude Include="source\UIWidgets.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\3DParticleFragShader.glsl" />
     <None Include="assets\shaders\3DParticleVertShader.glsl" />
     <None Include="assets\shaders\DebugFragShader.glsl" />
     <None Include="assets\shaders\DebugVertShader.glsl" />
@@ -244,7 +243,6 @@
     <None Include="assets\shaders\2DSnowVertShader.glsl" />
     <None Include="assets\shaders\SnowFragShader.glsl" />
     <None Include="assets\shaders\SnowVertShader.glsl" />
-    <None Include="assets\shaders\SpriteFragShader.glsl" />
     <None Include="assets\shaders\SpriteVertShader.glsl" />
     <None Include="assets\shaders\VertShader1.glsl" />
     <None Include="assets\shaders\WaveFragShader.glsl" />

@@ -439,9 +439,6 @@ namespace Engine
     {
         if (renderDebugInfo) InitializeImgui();
 
-        float noiseTimer = 0.f;
-        float waterThreshold = 0.7;
-
         while (!glfwWindowShouldClose(window))
         {
             // per-frame time logic
@@ -451,9 +448,6 @@ namespace Engine
 
             // input
             processInput(window);
-
-            cLightManager* lightManager = cLightManager::GetInstance();
-            lightManager->lights[0].direction = -(lightManager->lights[0].position);
 
             cAnimationManager::GetInstance()->Process(deltaTime);
 

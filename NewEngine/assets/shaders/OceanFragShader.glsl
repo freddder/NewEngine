@@ -18,18 +18,18 @@ struct sLight
 							// 2 = directional light
 };
 
+layout (std140) uniform Lights
+{
+    sLight theLights[20];
+	int shadowSampleRadius;
+};
+
 layout (std140) uniform Fog
 {
 	vec4 fogViewOrigin;
 	vec4 fogColor;
 	float fogDensity;
 	float fogGradient;
-};
-
-layout (std140) uniform Lights
-{
-    sLight theLights[20];
-	int shadowSampleRadius;
 };
 
 // texture samplers

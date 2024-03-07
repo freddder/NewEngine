@@ -21,6 +21,9 @@
 #include "cCamera.h"
 #include "cUIManager.h"
 
+#include "Engine.h"
+#include "cPlayerCharacter.h"
+
 cRenderManager* cRenderManager::singleton = NULL;
 
 cRenderManager::cRenderManager()
@@ -941,8 +944,8 @@ void cRenderManager::DrawFrame()
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(cLightManager::GetInstance()->lights[0].position);// + pSprite->positionXYZ;
-    glm::vec3 lightAt = glm::vec3(0.f, 0.f, 0.f);// pSprite->positionXYZ;
+    glm::vec3 lightPos = glm::vec3(cLightManager::GetInstance()->lights[0].position) + Engine::playerChar->model->position;
+    glm::vec3 lightAt = Engine::playerChar->model->position;
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
