@@ -5,6 +5,7 @@
 #include "cMapManager.h"
 #include "cAnimationManager.h"
 #include "cLightManager.h"
+#include "cUIManager.h"
 
 #include "cCamera.h"
 #include "cOverworldPokemon.h"
@@ -56,6 +57,7 @@ int main()
     renderManager->LoadModel("WaterTest3.obj", "scene");
     renderManager->LoadModel("MultiTest.obj", "scene");
     renderManager->LoadModel("GrassRouteDemo.obj", "scene");
+    renderManager->LoadModel("WinterTest.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
     renderManager->LoadModel("Water_c2.obj", "wave");
@@ -76,11 +78,10 @@ int main()
     renderManager->LoadSceneTexture("SnowFlake3.png");
 
     renderManager->LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
-    renderManager->LoadSceneTexture("ico_3ds_646-white.png", "ui/PokemonPartySprites/", false);
+    renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
 
     animationManager->InitializeAnimationsPresets();
 
-    // UI testing
     {
         cUICanvas* canvas = new cUICanvas();
         Engine::button = new cUIStaticImage();
@@ -102,18 +103,16 @@ int main()
         cUIManager::GetInstance()->AddCanvas(canvas);
     }
 
-    Engine::playerChar = new cPlayerCharacter(glm::vec3(0.f, 1.f, 5.f));
-    cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(0.f, 1.f, 4.f), "722.png");
+    Engine::playerChar = new cPlayerCharacter(glm::vec3(5.f, 0.f, 5.f));
+    cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(5.f, 0.f, 4.f), "722.png");
     Engine::playerChar->SetFollower(follower);
     camera->playerPosition = &Engine::playerChar->model->position;
 
-    mapManager->LoadMap("WinterTestDesc.json");
+    //mapManager->LoadMap("WinterTestDesc.json");
     //mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
     //mapManager->LoadMap("MultiTestDesc.json");
-    //mapManager->LoadMap("GrassRouteDemoDesc.json");
-
-    //weatherManager->SetWeather(SNOW);
+    mapManager->LoadMap("GrassRouteDemoDesc.json");
 
     Engine::GameLoop(true);
 

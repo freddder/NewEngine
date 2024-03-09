@@ -21,7 +21,6 @@
 #include "PokemonData.h"
 
 #include "cPlayerCharacter.h"
-#include "cUIManager.h"
 
 GLFWwindow* window;
 float deltaTime = 0.f;
@@ -31,7 +30,7 @@ static bool isFullscreen = false;
 
 static int searchNationalDexNumber = 0;
 static Pokemon::SpeciesData selectedSpecies;
-static eWeather selectedWeather = NONE;
+static eEnvironmentWeather selectedWeather = NONE;
 
 const char* resolutions[] = {
     "2560x1400",
@@ -240,13 +239,13 @@ void RenderImgui()
 
                 if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
                 {
-                    for (int n = 0; n < eWeather::ENUM_COUNT; n++)
+                    for (int n = 0; n < eEnvironmentWeather::ENUM_COUNT; n++)
                     {
                         const bool is_selected = (selectedWeather == n);
                         if (ImGui::Selectable(Weather_Strings[n], is_selected))
                         {
-                            selectedWeather = static_cast<eWeather>(n);
-                            weatherManager->SetWeather(selectedWeather);
+                            selectedWeather = static_cast<eEnvironmentWeather>(n);
+                            sceneManager->SetWeather(selectedWeather);
                         }
 
                         // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -256,8 +255,8 @@ void RenderImgui()
                     ImGui::EndCombo();
                 }
                 ImGui::ColorEdit3("Color", *fogColor);
-                ImGui::DragFloat("Density", &weatherManager->fogDensity, 0.005f, 0.f);
-                ImGui::DragFloat("Gradient", &weatherManager->fogGradient, 0.03f);
+                ImGui::DragFloat("Density", &sceneManager->fogDensity, 0.005f, 0.f);
+                ImGui::DragFloat("Gradient", &sceneManager->fogGradient, 0.03f);
 
                 ImGui::EndTabItem();
             }
@@ -363,12 +362,12 @@ void RenderImgui()
     {
         if (ImGui::BeginCombo("Button UI Anchor", Anchors_Strings[Engine::button->anchor]))
         {
-            for (int n = 0; n < eAnchors::ANCHOR_ENUM_COUNT; n++)
+            for (int n = 0; n < eAnchor::ANCHOR_ENUM_COUNT; n++)
             {
                 const bool is_selected = (Engine::button->anchor == n);
                 if (ImGui::Selectable(Anchors_Strings[n], is_selected))
                 {
-                    Engine::button->anchor = static_cast<eAnchors>(n);
+                    Engine::button->anchor = static_cast<eAnchor>(n);
                 }
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -380,12 +379,12 @@ void RenderImgui()
 
         if (ImGui::BeginCombo("Sprite UI Anchor", Anchors_Strings[Engine::sprite->anchor]))
         {
-            for (int n = 0; n < eAnchors::ANCHOR_ENUM_COUNT; n++)
+            for (int n = 0; n < eAnchor::ANCHOR_ENUM_COUNT; n++)
             {
                 const bool is_selected = (Engine::sprite->anchor == n);
                 if (ImGui::Selectable(Anchors_Strings[n], is_selected))
                 {
-                    Engine::sprite->anchor = static_cast<eAnchors>(n);
+                    Engine::sprite->anchor = static_cast<eAnchor>(n);
                 }
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)

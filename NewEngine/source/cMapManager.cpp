@@ -29,9 +29,6 @@ cMapManager::cMapManager()
 	// left stair - 152
 	// mid stair - 153
 	// right stair - 154
-
-	//walkableTiles[184].walkableOffsets.push_back(glm::vec3(1.f, 0.f, 0.f));
-	//walkableTiles[184].walkableOffsets.push_back(glm::vec3(2.f, 0.f, 0.f));
 }
 
 cMapManager::~cMapManager()

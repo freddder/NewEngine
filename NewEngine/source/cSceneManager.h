@@ -16,7 +16,20 @@ enum eEnvironmentWeather
 	RAIN,
 	HEAVYRAIN,
 	SANDSTORM,
-	LEAVES
+	LEAVES,
+	ENUM_COUNT
+};
+
+const static char* Weather_Strings[] =
+{
+	"None",
+	"Snow",
+	"Hail",
+	"Snowstorm",
+	"Rain",
+	"Heavy Rain",
+	"Sandstorm",
+	"Leaves"
 };
 
 class cSceneManager
