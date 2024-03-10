@@ -40,7 +40,6 @@ void main()
     uv.y += oOffset.w / 2.f;
 	
 	float f = 0.0;
-
     uv *= .7;
     mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
 	f  = 0.5000*noise( uv ); uv = m*uv;
@@ -50,11 +49,11 @@ void main()
 
 	finalModelPosition.z += f * 7.f;
 
-	vec3 playerDir = finalModelPosition - cameraPosition;
+	vec3 cameraDir = finalModelPosition - cameraPosition;
 
-	float distance2D = sqrt(playerDir.x * playerDir.x + playerDir.y * playerDir.y);
-	float theta = atan(playerDir.y, playerDir.x);
-	float phi = atan(-playerDir.z, distance2D);
+	float distance2D = sqrt(cameraDir.x * cameraDir.x + cameraDir.y * cameraDir.y);
+	float theta = atan(cameraDir.y, cameraDir.x);
+	float phi = atan(-cameraDir.z, distance2D);
 
 	mat4 model = mat4(1.f);
 	model[3] = vec4(finalModelPosition, 1.f);

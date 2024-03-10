@@ -244,6 +244,7 @@
     <None Include="assets\shaders\SnowFragShader.glsl" />
     <None Include="assets\shaders\SnowVertShader.glsl" />
     <None Include="assets\shaders\SpriteVertShader.glsl" />
+    <None Include="assets\shaders\TreeVertShader.glsl" />
     <None Include="assets\shaders\VertShader1.glsl" />
     <None Include="assets\shaders\WaveFragShader.glsl" />
     <None Include="assets\shaders\WaveVertShader.glsl" />

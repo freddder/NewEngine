@@ -324,5 +324,8 @@
     <None Include="assets\shaders\SnowVertShader.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="assets\shaders\TreeVertShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

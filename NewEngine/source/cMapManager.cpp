@@ -233,7 +233,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 					if (instancedTiles.find(tileId) != instancedTiles.end()) // it exists
 					{
-						glm::vec4 newOffset = glm::vec4((newQuad.posX * 32 - 15 + x), currHeight, (newQuad.posX * 32 - 15 + z), 1.f);
+						glm::vec4 newOffset = glm::vec4((newQuad.posX * 32 - 15 + x), currHeight, (newQuad.posZ * 32 - 15 + z), 1.f);
 						newOffset.x += instancedTiles[tileId].modelOffset.x;
 						newOffset.y += instancedTiles[tileId].modelOffset.y;
 						newOffset.z += instancedTiles[tileId].modelOffset.z;
@@ -255,7 +255,9 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		if (it->second.instanceOffsets.size() != 0)
 		{
 			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, cRenderManager::GetInstance()->GetCurrentShaderId());
-			cAnimationManager::AddAnimation(it->second.instancedModel->animation);
+
+			if (it->second.instancedModel->animation)
+				cAnimationManager::AddAnimation(it->second.instancedModel->animation);
 
 			it->second.instanceOffsets.clear();
 		}

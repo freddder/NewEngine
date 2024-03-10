@@ -1,6 +1,7 @@
 #include "cAnimatedModel.h"
 #include "cSinAnimation.h"
 #include "cRenderManager.h"
+#include "cSceneManager.h"
 
 cAnimatedModel::cAnimatedModel()
 {
@@ -79,4 +80,24 @@ void cWaveModel::SetUpUniforms()
 	cRenderManager* renderManager = cRenderManager::GetInstance();
 	renderManager->setVec2("UVoffset", textureOffset);
 	renderManager->setFloat("timer", timer);
+}
+
+cTreeModel::cTreeModel()
+{
+	shaderName = "tree";
+	timer = 0.f;
+}
+
+cTreeModel::~cTreeModel()
+{
+}
+
+void cTreeModel::SetUpUniforms()
+{
+	timer += 0.0043f;
+
+	cRenderManager* renderManager = cRenderManager::GetInstance();
+	cSceneManager* sceneManager = cSceneManager::GetInstance();
+	renderManager->setFloat("timer", timer);
+	renderManager->setFloat("windSpeed", sceneManager->windSpeed);
 }

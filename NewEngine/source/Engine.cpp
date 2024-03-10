@@ -199,6 +199,28 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Enviornment"))
     {
+        cSceneManager* sceneManager = cSceneManager::GetInstance();
+
+        if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
+        {
+            for (int n = 0; n < eEnvironmentWeather::ENUM_COUNT; n++)
+            {
+                const bool is_selected = (selectedWeather == n);
+                if (ImGui::Selectable(Weather_Strings[n], is_selected))
+                {
+                    selectedWeather = static_cast<eEnvironmentWeather>(n);
+                    sceneManager->SetWeather(selectedWeather);
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+
+        ImGui::DragFloat("Wind Speed", &sceneManager->windSpeed, 0.01f, 0.01f, 10.f);
+
         if (ImGui::BeginTabBar("Tabs"))
         {
             if (ImGui::BeginTabItem("Light"))
@@ -228,32 +250,14 @@ void RenderImgui()
 
                 ImGui::EndTabItem();
             }
+
             if (ImGui::BeginTabItem("Fog"))
             {
-                cSceneManager* sceneManager = cSceneManager::GetInstance();
-
                 float* fogColor[3];
                 fogColor[0] = &sceneManager->fogColor.r;
                 fogColor[1] = &sceneManager->fogColor.g;
                 fogColor[2] = &sceneManager->fogColor.b;
 
-                if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
-                {
-                    for (int n = 0; n < eEnvironmentWeather::ENUM_COUNT; n++)
-                    {
-                        const bool is_selected = (selectedWeather == n);
-                        if (ImGui::Selectable(Weather_Strings[n], is_selected))
-                        {
-                            selectedWeather = static_cast<eEnvironmentWeather>(n);
-                            sceneManager->SetWeather(selectedWeather);
-                        }
-
-                        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                        if (is_selected)
-                            ImGui::SetItemDefaultFocus();
-                    }
-                    ImGui::EndCombo();
-                }
                 ImGui::ColorEdit3("Color", *fogColor);
                 ImGui::DragFloat("Density", &sceneManager->fogDensity, 0.005f, 0.f);
                 ImGui::DragFloat("Gradient", &sceneManager->fogGradient, 0.03f);

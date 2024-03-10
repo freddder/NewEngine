@@ -50,3 +50,16 @@ public:
 
 	virtual void SetUpUniforms();
 };
+
+class cTreeModel : public cAnimatedModel
+{
+public:
+
+	float timer;
+	glm::vec3 dummy;
+
+	cTreeModel();
+	~cTreeModel();
+
+	virtual void SetUpUniforms();
+};

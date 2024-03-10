@@ -8,6 +8,7 @@ cSceneManager::cSceneManager()
 
 	fogDensity = 0.f;
 	fogGradient = 0.1f;
+	windSpeed = 0.25f;
 
 	Pokemon::SpawnData meowstic;
 	meowstic.nationalDexNumber = 678;

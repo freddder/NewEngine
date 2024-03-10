@@ -65,6 +65,7 @@ public:
 	float fogDensity;
 	float fogGradient;
 	glm::vec3 fogColor;
+	float windSpeed;
 	void SetWeather(eEnvironmentWeather newWeather);
 
 private:

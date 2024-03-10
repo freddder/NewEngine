@@ -27,9 +27,10 @@ struct sShaderProgram
 
 enum eAnimatedModel
 {
-    OCEAN = 0,
-    FOAM,
-    WAVE,
+    OCEAN,  // 0
+    FOAM,   // 1
+    WAVE,   // 2
+    TREE    // 3
 };
 
 struct sTexture

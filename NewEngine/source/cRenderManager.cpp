@@ -635,6 +635,9 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedMod
     case WAVE:
         newModel = std::make_shared<cWaveModel>();
         break;
+    case TREE:
+        newModel = std::make_shared<cTreeModel>();
+        break;
     }
     singleton->models.push_back(newModel);
 

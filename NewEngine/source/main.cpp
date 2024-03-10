@@ -33,6 +33,7 @@ int main()
     renderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
     renderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
     renderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
+    renderManager->CreateShadderProgram("tree", "TreeVertShader.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
     renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
@@ -53,7 +54,6 @@ int main()
 
     //********************** Load models and textures ***************************
 
-    renderManager->LoadModel("r0_treePine.obj", "scene");
     renderManager->LoadModel("WaterTest3.obj", "scene");
     renderManager->LoadModel("MultiTest.obj", "scene");
     renderManager->LoadModel("GrassRouteDemo.obj", "scene");
@@ -67,6 +67,8 @@ int main()
     renderManager->LoadModel("Foam_b2.obj", "foam");
     renderManager->LoadModel("Foam_bl2.obj", "foam");
     renderManager->LoadModel("Foam_c2.obj", "foam");
+    renderManager->LoadModel("Foam_c2.obj", "foam");
+    renderManager->LoadModel("r0_treePine.obj", "tree");
 
     renderManager->LoadSpriteSheet("Nate.png", 3, 8, false);
     renderManager->LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
@@ -107,6 +109,11 @@ int main()
     cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(5.f, 0.f, 4.f), "722.png");
     Engine::playerChar->SetFollower(follower);
     camera->playerPosition = &Engine::playerChar->model->position;
+
+    //std::shared_ptr<cRenderModel> tree = cRenderManager::CreateRenderModel();
+    //tree->meshName = "r0_treePine.obj";
+    //tree->shaderName = "scene";
+    //tree->position = glm::vec3(0.f, 0.f, 0.f);
 
     //mapManager->LoadMap("WinterTestDesc.json");
     //mapManager->LoadMap("WaterTest3Desc.json");
