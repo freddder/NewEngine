@@ -4,7 +4,7 @@
     "walkableTiles": [52,53,54,55,56,57,58,59,92,93,94,95,100,101,109],
     "correctionTiles": [
         {
-            "tileIds": [143,144,145],
+            "tileId": [143,144,145],
             "walkableTiles": [
                 { "x": 0, "y": 1, "z": 0 }
             ],
@@ -13,7 +13,7 @@
             ]
         },
         {
-            "tileIds": [197],
+            "tileId": [197],
             "walkableTiles": [],
             "unwalkableTiles": [
                 { "x": 0, "y": 0, "z": 0 },
@@ -21,7 +21,7 @@
             ]
         },
         {
-            "tileIds": [0],
+            "tileId": [0],
             "walkableTiles": [],
             "unwalkableTiles": [
                 { "x": 0, "y": 0, "z": 0 },

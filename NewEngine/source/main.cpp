@@ -58,6 +58,7 @@ int main()
     renderManager->LoadModel("MultiTest.obj", "scene");
     renderManager->LoadModel("GrassRouteDemo.obj", "scene");
     renderManager->LoadModel("WinterTest.obj", "scene");
+    renderManager->LoadModel("SlopeTest.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
     renderManager->LoadModel("Water_c2.obj", "wave");
@@ -109,11 +110,6 @@ int main()
     cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(5.f, 0.f, 4.f), "722.png");
     Engine::playerChar->SetFollower(follower);
     camera->playerPosition = &Engine::playerChar->model->position;
-
-    //std::shared_ptr<cRenderModel> tree = cRenderManager::CreateRenderModel();
-    //tree->meshName = "r0_treePine.obj";
-    //tree->shaderName = "scene";
-    //tree->position = glm::vec3(0.f, 0.f, 0.f);
 
     //mapManager->LoadMap("WinterTestDesc.json");
     //mapManager->LoadMap("WaterTest3Desc.json");

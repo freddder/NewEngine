@@ -78,7 +78,7 @@ void RenderFormData(Pokemon::Form& form)
         }
         ImGui::EndCombo();
     }
-
+    ImGui::SameLine();
     if (ImGui::BeginCombo("Type 2", Pokemon::Type_Strings[form.type2]))
     {
         for (int n = 0; n < Pokemon::eType::TYPE_ENUM_COUNT; n++)
@@ -311,15 +311,19 @@ void RenderImgui()
 
                 ImGui::TableNextColumn();
 
-                ImGui::Checkbox("Are stats gender based", &selectedSpecies.isStatsGenderBased);
                 ImGui::DragInt("Gender ratio", &selectedSpecies.genderRatio, 1, -1, 100);
+                if (ImGui::IsItemHovered()) ImGui::SetTooltip("Chance to be male (-1 for genderless)");
+                if (selectedSpecies.genderRatio != -1)
+                {
+                    ImGui::Checkbox("Are stats gender based", &selectedSpecies.isStatsGenderBased);
+                }
 
                 if (ImGui::BeginCombo("Egg Group 1", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup1]))
                 {
                     for (int n = 0; n < Pokemon::eEggGroup::EGG_ENUM_COUNT; n++)
                     {
-                        const bool is_selected = (selectedSpecies.eggGroup1 == n && n != Pokemon::EGG_NO_EGG_GROUP);
-                        if (ImGui::Selectable(Pokemon::EggGroup_Strings[n], is_selected))
+                        const bool is_selected = (selectedSpecies.eggGroup1 == n);
+                        if (ImGui::Selectable(Pokemon::EggGroup_Strings[n], is_selected) && n != Pokemon::EGG_NO_EGG_GROUP)
                         {
                             selectedSpecies.eggGroup1 = static_cast<Pokemon::eEggGroup>(n);
                         }
