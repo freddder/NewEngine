@@ -1,0 +1,182 @@
+{
+    "mapModelFileName": "CostalWinter.obj",
+    "mapCollisionFileName": "CostalWinter.pdsmap",
+    "walkableTiles": [101,107,203,204,205,206,207,208,209,210,211,212,213,214,215],
+    "correctionTiles": [
+        {
+            "tileId": [0],
+            "walkableTiles": [],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 1 },
+                { "x": 1, "y": 0, "z": 0 },
+                { "x": 1, "y": 0, "z": 1 }
+            ]
+        },
+        {
+            "tileId": [164,165,166],
+            "walkableTiles": [
+                { "x": 0, "y": 1, "z": 0 }
+            ],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 }
+            ]
+        },
+        {
+            "tileId": [195],
+            "walkableTiles": [
+                { "x": 0, "y": 0, "z": 1 },
+                { "x": 0, "y": 0, "z": 2 }
+            ],
+            "unwalkableTiles": []
+        },
+        {
+            "tileId": [160],
+            "walkableTiles": [
+                { "x": 0, "y": 1, "z": 1 },
+                { "x": 1, "y": 2, "z": 1 },
+                { "x": 2, "y": 3, "z": 1 },
+                { "x": 3, "y": 4, "z": 1 },
+                { "x": 4, "y": 5, "z": 1 }
+            ],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 1 },
+                { "x": 1, "y": 0, "z": 0 },
+                { "x": 2, "y": 0, "z": 0 },
+                { "x": 3, "y": 0, "z": 0 }
+            ]
+        },
+        {
+            "tileId": [161],
+            "walkableTiles": [
+                { "x": 0, "y": 1, "z": 0 },
+                { "x": 1, "y": 2, "z": 0 },
+                { "x": 2, "y": 3, "z": 0 },
+                { "x": 3, "y": 4, "z": 0 },
+                { "x": 4, "y": 5, "z": 0 }
+            ],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 }
+            ]
+        },
+        {
+            "tileId": [162],
+            "walkableTiles": [
+                { "x": 0, "y": 1, "z": 0 },
+                { "x": 1, "y": 2, "z": 0 },
+                { "x": 2, "y": 3, "z": 0 },
+                { "x": 3, "y": 4, "z": 0 },
+                { "x": 4, "y": 5, "z": 0 }
+            ],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 1 },
+                { "x": 1, "y": 0, "z": 1 },
+                { "x": 2, "y": 0, "z": 1 },
+                { "x": 3, "y": 0, "z": 1 },
+                { "x": 4, "y": 0, "z": 1 }
+            ]
+        }
+    ],
+    "instancedTiles": [
+        {
+            "tileId": 130,
+            "meshName": "sea_water2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 0
+        },
+        {
+            "tileId": 144,
+            "meshName": "Foam_b2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 180, 
+            "animationType": 1
+        },
+        {
+            "tileId": 145,
+            "meshName": "Foam_b2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": -90, 
+            "animationType": 1
+        },
+        {
+            "tileId": 146,
+            "meshName": "Foam_b2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 1
+        },
+        {
+            "tileId": 147,
+            "meshName": "Foam_b2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 90, 
+            "animationType": 1
+        },
+        {
+            "tileId": 148,
+            "meshName": "Foam_bl2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": -90, 
+            "animationType": 1
+        },
+        {
+            "tileId": 149,
+            "meshName": "Foam_bl2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 180, 
+            "animationType": 1
+        },
+        {
+            "tileId": 150,
+            "meshName": "Foam_bl2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 1
+        },
+        {
+            "tileId": 151,
+            "meshName": "Foam_bl2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 90, 
+            "animationType": 1
+        },
+        {
+            "tileId": 152,
+            "meshName": "Foam_c2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 180, 
+            "animationType": 1
+        },
+        {
+            "tileId": 153,
+            "meshName": "Foam_c2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": -90, 
+            "animationType": 1
+        },
+        {
+            "tileId": 154,
+            "meshName": "Foam_c2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 90, 
+            "animationType": 1
+        },
+        {
+            "tileId": 155,
+            "meshName": "Foam_c2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 1
+        },
+        {
+            "tileId": 0,
+            "meshName": "r0_treePine.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 3
+        }
+    ] 
+}

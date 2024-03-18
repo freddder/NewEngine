@@ -95,12 +95,6 @@
     <ClCompile Include="source\cLightManager.cpp">
       <Filter>Light</Filter>
     </ClCompile>
-    <ClCompile Include="source\cModelAnimation.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cSpriteAnimation.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
     <ClCompile Include="source\cAnimationManager.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
@@ -110,9 +104,6 @@
     <ClCompile Include="source\cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
-    <ClCompile Include="source\cSinAnimation.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
     <ClCompile Include="source\cRenderManager.cpp">
       <Filter>Render System</Filter>
     </ClCompile>
@@ -121,9 +112,6 @@
     </ClCompile>
     <ClCompile Include="source\cLinearCongruentialGenerator.cpp">
       <Filter>RNG</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cFloatAnimation.cpp">
-      <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="source\cParticleSpawner.cpp">
       <Filter>Particles</Filter>
@@ -208,12 +196,6 @@
     <ClInclude Include="source\cAnimation.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="source\cSpriteAnimation.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cModelAnimation.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
     <ClInclude Include="source\cAnimationManager.h">
       <Filter>Animation</Filter>
     </ClInclude>
@@ -222,9 +204,6 @@
     </ClInclude>
     <ClInclude Include="source\cMapManager.h">
       <Filter>Map</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cSinAnimation.h">
-      <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="source\cRenderManager.h">
       <Filter>Render System</Filter>
@@ -237,9 +216,6 @@
     </ClInclude>
     <ClInclude Include="source\cLinearCongruentialGenerator.h">
       <Filter>RNG</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cFloatAnimation.h">
-      <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="source\cParticleSpawner.h">
       <Filter>Particles</Filter>

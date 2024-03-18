@@ -18,6 +18,7 @@ public:
 	glm::vec3 spawnPosition;
 	glm::vec3 minPositionOffset;
 	glm::vec3 maxPositionOffset;
+	bool isPositionPlayerRelative;
 
 	// Spawn speed
 	glm::vec3 spawnSpeed;

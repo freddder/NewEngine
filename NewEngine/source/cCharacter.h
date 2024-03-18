@@ -1,7 +1,6 @@
 #pragma once
 #include "cSpriteModel.h"
-#include "cSpriteAnimation.h"
-#include "cModelAnimation.h"
+#include "cAnimation.h"
 #include <memory>
 
 class cCharacter

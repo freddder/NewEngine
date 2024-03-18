@@ -6,7 +6,6 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/document.h>
 
-#include "cFloatAnimation.h"
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cAnimatedModel.h"

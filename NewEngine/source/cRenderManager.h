@@ -117,6 +117,7 @@ public:
     bool LoadModel(std::string fileName, std::string programName);
     bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 
+    // Scene models
 private:
     std::vector< std::shared_ptr<cRenderModel> > models;
 public:
@@ -144,7 +145,7 @@ public:
     // Drawing
 private:
     void DrawObject(std::shared_ptr<cRenderModel> model);
-    void DrawParticles();
+    void DrawParticles(cParticleSpawner* spawner);
     void DrawWidget(cUIWidget* widget);
 public:
     void DrawFrame();

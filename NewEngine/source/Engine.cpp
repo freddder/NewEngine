@@ -30,7 +30,7 @@ static bool isFullscreen = false;
 
 static int searchNationalDexNumber = 0;
 static Pokemon::SpeciesData selectedSpecies;
-static eEnvironmentWeather selectedWeather = NONE;
+static eEnvironmentWeather selectedWeather = SNOW;
 
 const char* resolutions[] = {
     "2560x1400",
@@ -200,6 +200,11 @@ void RenderImgui()
     if (ImGui::CollapsingHeader("Enviornment"))
     {
         cSceneManager* sceneManager = cSceneManager::GetInstance();
+
+        if (ImGui::Button("Change Scene"))
+        {
+            sceneManager->ChangeScene();
+        }
 
         if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
         {

@@ -862,51 +862,45 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
     }    
 }
 
-void cRenderManager::DrawParticles()
+void cRenderManager::DrawParticles(cParticleSpawner* spawner)
 {
-    cSceneManager* sceneManager = cSceneManager::GetInstance();
-    for (int i = 0; i < sceneManager->particleSpawners.size(); i++)
+    sModelDrawInfo drawInfo;
+    if (!FindModelByName(spawner->model.meshName, spawner->model.shaderName, drawInfo)) return;
+    
+    use(spawner->model.shaderName);
+    setVec3("cameraPosition", cCamera::GetInstance()->position);
+    setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model.scale));
+    setBool("useWholeColor", spawner->model.useWholeColor);
+    setVec4("wholeColor", spawner->model.wholeColor);
+    
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, GetDepthMapId());
+    setInt("shadowMap", 1);
+    
+    // Might change this to use a constant quad instead of a custom mesh
+    for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
-        const cParticleSpawner* spawner = sceneManager->particleSpawners[i];
-
-        sModelDrawInfo drawInfo;
-        if (!FindModelByName(spawner->model.meshName, spawner->model.shaderName, drawInfo)) continue;
-
-        use(spawner->model.shaderName);
-        setVec3("cameraPosition", cCamera::GetInstance()->position);
-        setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model.scale));
-        setBool("useWholeColor", spawner->model.useWholeColor);
-        setVec4("wholeColor", spawner->model.wholeColor);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, GetDepthMapId());
-        setInt("shadowMap", 1);
-
-        // Might change this to use a constant quad instead of a custom mesh
-        for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
-        {
-            // Setup texture
-            std::string textureToUse = spawner->model.textureName;
-            SetupTexture(textureToUse);
-
-            // Bind VAO
-            glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
-
-            glBindBuffer(GL_ARRAY_BUFFER, spawner->particleBufferId);
-
-            GLint offset_location = glGetAttribLocation(GetCurrentShaderId(), "oOffset");
-            glEnableVertexAttribArray(offset_location);
-            glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-            glVertexAttribDivisor(offset_location, 1);
-
-            glDrawElementsInstanced(GL_TRIANGLES,
-                drawInfo.allMeshesData[i].numberOfIndices,
-                GL_UNSIGNED_INT,
-                (void*)0,
-                spawner->particles.size());
-
-            glBindVertexArray(0);
-        }
+        // Setup texture
+        std::string textureToUse = spawner->model.textureName;
+        SetupTexture(textureToUse);
+    
+        // Bind VAO
+        glBindVertexArray(drawInfo.allMeshesData[i].VAO_ID);
+    
+        glBindBuffer(GL_ARRAY_BUFFER, spawner->particleBufferId);
+    
+        GLint offset_location = glGetAttribLocation(GetCurrentShaderId(), "oOffset");
+        glEnableVertexAttribArray(offset_location);
+        glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+        glVertexAttribDivisor(offset_location, 1);
+    
+        glDrawElementsInstanced(GL_TRIANGLES,
+            drawInfo.allMeshesData[i].numberOfIndices,
+            GL_UNSIGNED_INT,
+            (void*)0,
+            spawner->particles.size());
+    
+        glBindVertexArray(0);
     }
 }
 
@@ -1005,7 +999,15 @@ void cRenderManager::DrawFrame()
     }
 
     // Draw particles
-    DrawParticles();
+    cSceneManager* sceneManager = cSceneManager::GetInstance();
+    if (sceneManager->weatherParticleSpawner)
+    {
+        DrawParticles(sceneManager->weatherParticleSpawner);
+    }
+    for (int i = 0; i < sceneManager->particleSpawners.size(); i++)
+    {
+        DrawParticles(sceneManager->particleSpawners[i]);
+    }
 
     // Draw UI
     cUIManager* uiManager = cUIManager::GetInstance();

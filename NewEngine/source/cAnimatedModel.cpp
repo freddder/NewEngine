@@ -1,5 +1,5 @@
 #include "cAnimatedModel.h"
-#include "cSinAnimation.h"
+
 #include "cRenderManager.h"
 #include "cSceneManager.h"
 

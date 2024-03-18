@@ -1,5 +1,8 @@
 #include "cParticleSpawner.h"
 
+#include "Engine.h"
+#include "cPlayerCharacter.h"
+
 #include "cLinearCongruentialGenerator.h"
 #include <time.h>
 
@@ -12,6 +15,7 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, int 
 	spawnPosition = position;
 	minPositionOffset = glm::vec3(0.f);
 	maxPositionOffset = glm::vec3(0.f);
+	isPositionPlayerRelative = false;
 
 	spawnSpeed = glm::vec3(0.f, -1.f, 0.f);
 	minSpeedOffset = glm::vec3(0.f);
@@ -76,6 +80,11 @@ void cParticleSpawner::Update(float deltaTime)
 		newParticle.position = newParticlePosOffset + spawnPosition;
 		newParticle.speed = spawnSpeed;
 		newParticle.timer = 0.f;
+
+		if (isPositionPlayerRelative)
+		{
+			newParticle.position += Engine::playerChar->model->position;
+		}
 
 		particles.push_back(newParticle);
 

@@ -161,7 +161,6 @@
     <ClCompile Include="source\cAnimationManager.cpp" />
     <ClCompile Include="source\cCamera.cpp" />
     <ClCompile Include="source\cCharacter.cpp" />
-    <ClCompile Include="source\cFloatAnimation.cpp" />
     <ClCompile Include="source\cLightManager.cpp" />
     <ClCompile Include="source\cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="source\cMapManager.cpp" />
@@ -170,11 +169,8 @@
     <ClCompile Include="source\cParticleSpawner.cpp" />
     <ClCompile Include="source\cPlayerCharacter.cpp" />
     <ClCompile Include="source\cRenderModel.cpp" />
-    <ClCompile Include="source\cModelAnimation.cpp" />
     <ClCompile Include="source\cRenderManager.cpp" />
-    <ClCompile Include="source\cSpriteAnimation.cpp" />
     <ClCompile Include="source\cSpriteModel.cpp" />
-    <ClCompile Include="source\cSinAnimation.cpp" />
     <ClCompile Include="source\cUIManager.cpp" />
     <ClCompile Include="source\Engine.cpp" />
     <ClCompile Include="source\glad.c" />
@@ -198,7 +194,6 @@
     <ClInclude Include="source\cAnimationManager.h" />
     <ClInclude Include="source\cCamera.h" />
     <ClInclude Include="source\cCharacter.h" />
-    <ClInclude Include="source\cFloatAnimation.h" />
     <ClInclude Include="source\cLightManager.h" />
     <ClInclude Include="source\cLinearCongruentialGenerator.h" />
     <ClInclude Include="source\cMapManager.h" />
@@ -207,12 +202,9 @@
     <ClInclude Include="source\cPlayerCharacter.h" />
     <ClInclude Include="source\cRandomNumberGenerator.h" />
     <ClInclude Include="source\cRenderModel.h" />
-    <ClInclude Include="source\cModelAnimation.h" />
     <ClInclude Include="source\cRenderManager.h" />
     <ClInclude Include="source\cSceneManager.h" />
-    <ClInclude Include="source\cSpriteAnimation.h" />
     <ClInclude Include="source\cSpriteModel.h" />
-    <ClInclude Include="source\cSinAnimation.h" />
     <ClInclude Include="source\DrawInfo.h" />
     <ClInclude Include="source\Engine.h" />
     <ClInclude Include="source\Global.h" />

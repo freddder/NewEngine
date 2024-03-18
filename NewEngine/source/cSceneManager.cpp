@@ -20,6 +20,14 @@ cSceneManager::cSceneManager()
 	loadedSpawnData.push_back(meowstic);
 }
 
+cSceneManager::~cSceneManager()
+{
+	for (int i = 0; i < particleSpawners.size(); i++)
+	{
+		delete particleSpawners[i];
+	}
+}
+
 void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 {
 	if (newWeather == currWeather) return;
@@ -45,6 +53,12 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 	}
 	else // no transition
 	{
+		if (weatherParticleSpawner)
+		{
+			delete weatherParticleSpawner;
+			weatherParticleSpawner = nullptr;
+		}
+
 		if (newWeather == NONE)
 		{
 			fogDensity = 0.f;
@@ -52,8 +66,8 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 		}
 		else if (newWeather == SNOW)
 		{
-			fogDensity = 0.037f;
-			fogGradient = 1.59f;
+			fogDensity = 0.057f;
+			fogGradient = 0.57f;
 			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
 
 			cRenderModel prtcl;
@@ -62,13 +76,13 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 			prtcl.textureName = "SnowFlake3.png";
 			prtcl.scale = glm::vec3(0.3f);
 
-			cParticleSpawner* weatherSpawner = new cParticleSpawner(glm::vec3(0.f, 20.f, 0.f), prtcl, 500);
-			weatherSpawner->minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);
-			weatherSpawner->maxPositionOffset = glm::vec3(20.f, 0.f, 20.f);
-			weatherSpawner->spawnSpeed = glm::vec3(0.f, -3.f, 0.f);
-			weatherSpawner->spawnRate = 0.05f;
-			weatherSpawner->particleLifeTime = 10.f;
-			particleSpawners.push_back(weatherSpawner);
+			weatherParticleSpawner = new cParticleSpawner(glm::vec3(0.f, 13.f, 0.f), prtcl, 500);
+			weatherParticleSpawner->minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);
+			weatherParticleSpawner->maxPositionOffset = glm::vec3(20.f, 0.f, 20.f);
+			weatherParticleSpawner->isPositionPlayerRelative = true;
+			weatherParticleSpawner->spawnSpeed = glm::vec3(0.f, -3.f, 0.f);
+			weatherParticleSpawner->spawnRate = 0.05f;
+			weatherParticleSpawner->particleLifeTime = 10.f;
 		}
 		else if (newWeather == HAIL)
 		{
@@ -108,8 +122,25 @@ void cSceneManager::SpawnWildPokemon()
 
 }
 
+void cSceneManager::ChangeScene()
+{
+	// Things this should do (not ordered):
+	// - unload current map model
+	// - unload map textures
+	// - unload map data
+	// - despawn entities
+	// - unload despawn data
+	// - move player and follower to appropriate place
+	// - remove render objects from vector
+}
+
 void cSceneManager::Process(float deltaTime)
 {
+	if (weatherParticleSpawner)
+	{
+		weatherParticleSpawner->Update(deltaTime);
+	}
+
 	for (int i = 0; i < particleSpawners.size(); i++)
 	{
 		particleSpawners[i]->Update(deltaTime);

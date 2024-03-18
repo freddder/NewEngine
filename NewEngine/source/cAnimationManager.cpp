@@ -18,7 +18,9 @@ void cAnimationManager::Process(float deltaTime)
 		if (animations[i]->timer >= animations[i]->maxDuration)
 		{
 			if (animations[i]->isRepeat)
+			{
 				animations[i]->timer = 0.f;
+			}
 			else
 			{
 				animations[i]->isDone = true;
