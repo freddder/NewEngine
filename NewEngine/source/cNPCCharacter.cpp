@@ -4,6 +4,8 @@
 
 cNPCCharacter::cNPCCharacter(glm::vec3 position, std::string textureName) : cCharacter(position, textureName)
 {
+	blocksTile = true;
+
 	switchLeg = false;
 }
 
@@ -15,7 +17,7 @@ void cNPCCharacter::Move(eDirection dir, bool run)
 {
 	if (!modelAnimation->isDone) return;
 
-	int moveResult = ProcessMovement(dir, run);
+	eEntityMoveResult moveResult = ProcessMovement(dir, run);
 
 	spriteAnimation->Reset();
 	std::string animationName;
@@ -48,5 +50,8 @@ void cNPCCharacter::Move(eDirection dir, bool run)
 	if (run) spriteAnimation->speed = 2.f;
 	else spriteAnimation->speed = 1.f;
 
-	if (follower && moveResult != 0) MoveFollower(model->position, run);
+	if (follower && moveResult != eEntityMoveResult::FAILURE)
+	{
+		MoveFollower(model->position, run);
+	}
 }

@@ -6,7 +6,7 @@
 
 cCharacter::cCharacter(glm::vec3 position, std::string textureName)
 {
-	model = std::static_pointer_cast<cSpriteModel>(cRenderManager::CreateSpriteModel());
+	model = cRenderManager::CreateSpriteModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = position;
 	model->textureName = textureName;
@@ -26,15 +26,15 @@ cCharacter::~cCharacter()
 	cAnimationManager::RemoveAnimation(modelAnimation);
 }
 
-int cCharacter::ProcessMovement(eDirection dir, bool run)
+eEntityMoveResult cCharacter::ProcessMovement(eDirection dir, bool run)
 {
 	modelAnimation->Reset(model->position, model->orientation, model->scale);
 
 	// Make model animation
-	int moveResult = cMapManager::GetInstance()->TryMoveEntity(model->position, dir);
+	eEntityMoveResult moveResult = cMapManager::GetInstance()->TryMoveEntity(model->position, dir);
 	glm::vec3 newPosition = model->position;
 
-	if (moveResult != 0)
+	if (moveResult != eEntityMoveResult::FAILURE)
 	{
 		if (dir == UP) newPosition.x += 1.f;
 		else if (dir == DOWN) newPosition.x -= 1.f;
@@ -43,8 +43,8 @@ int cCharacter::ProcessMovement(eDirection dir, bool run)
 	}
 
 	// Ajust height
-	if (moveResult == 2) newPosition.y += 1.f;
-	else if (moveResult == 3) newPosition.y -= 1.f;
+	if (moveResult == eEntityMoveResult::SUCCESS_UP) newPosition.y += 1.f;
+	else if (moveResult == eEntityMoveResult::SUCCESS_DOWN) newPosition.y -= 1.f;
 
 	if (!run || moveResult == 0) modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 	else modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));

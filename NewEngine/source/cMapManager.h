@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include "cAnimatedModel.h"
+#include "cEntity.h"
 
 struct sInstancedTile
 {
@@ -21,7 +22,7 @@ struct sCorrectionTiles
 
 struct sTile
 {
-	//cEntity* entity;
+	cEntity* entity = nullptr;
 	bool isWalkable = false;
 	bool isUnchangeable = false;
 };
@@ -32,6 +33,14 @@ struct sQuadrant
 	int posZ;
 
 	std::map<int, sTile> data;
+};
+
+enum eEntityMoveResult
+{
+	FAILURE,
+	SUCCESS,
+	SUCCESS_UP,
+	SUCCESS_DOWN
 };
 
 class cMapManager
@@ -68,5 +77,6 @@ private:
 public:
 	void LoadMap(std::string mapDescriptionFile);
 
-	int TryMoveEntity(glm::vec3 currPosition, eDirection direction);
+
+	eEntityMoveResult TryMoveEntity(glm::vec3 currPosition, eDirection direction);
 };

@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Globals">
-      <UniqueIdentifier>{b7be64d0-52aa-426e-aa16-5f7ce6c06a9d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{c6f38401-7c8c-47e6-8415-590048876612}</UniqueIdentifier>
     </Filter>
@@ -22,9 +19,6 @@
     </Filter>
     <Filter Include="Animation">
       <UniqueIdentifier>{dccddf09-2992-4ad2-956e-7a568a22d87d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Character">
-      <UniqueIdentifier>{2cda900d-6d06-49b2-916b-ee5c17f14b47}</UniqueIdentifier>
     </Filter>
     <Filter Include="Map">
       <UniqueIdentifier>{766c04b9-247a-4af6-a2ce-ba43a5e1401b}</UniqueIdentifier>
@@ -54,6 +48,12 @@
     <Filter Include="Pokemon">
       <UniqueIdentifier>{bc6c6b07-fea1-48f3-847f-6ac28a200d0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{45e84ef8-2c28-4877-b8b7-132eb537470d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity\Character">
+      <UniqueIdentifier>{2cda900d-6d06-49b2-916b-ee5c17f14b47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -61,9 +61,6 @@
     </ClCompile>
     <ClCompile Include="source\glad.c">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Global.cpp">
-      <Filter>Globals</Filter>
     </ClCompile>
     <ClCompile Include="source\cCamera.cpp">
       <Filter>Camera</Filter>
@@ -99,7 +96,7 @@
       <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="source\cCharacter.cpp">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClCompile>
     <ClCompile Include="source\cMapManager.cpp">
       <Filter>Map</Filter>
@@ -117,7 +114,7 @@
       <Filter>Particles</Filter>
     </ClCompile>
     <ClCompile Include="source\cPlayerCharacter.cpp">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClCompile>
     <ClCompile Include="source\cAnimatedModel.cpp">
       <Filter>Render System\Model</Filter>
@@ -126,10 +123,10 @@
       <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="source\cOverworldPokemon.cpp">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClCompile>
     <ClCompile Include="source\cNPCCharacter.cpp">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClCompile>
     <ClCompile Include="source\Engine.cpp">
       <Filter>Source Files</Filter>
@@ -146,11 +143,14 @@
     <ClCompile Include="source\PokemonData.cpp">
       <Filter>Pokemon</Filter>
     </ClCompile>
+    <ClCompile Include="source\cEntity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Global.h">
-      <Filter>Globals</Filter>
-    </ClInclude>
     <ClInclude Include="source\cRenderModel.h">
       <Filter>Render System\Model</Filter>
     </ClInclude>
@@ -200,7 +200,7 @@
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="source\cCharacter.h">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClInclude>
     <ClInclude Include="source\cMapManager.h">
       <Filter>Map</Filter>
@@ -221,16 +221,16 @@
       <Filter>Particles</Filter>
     </ClInclude>
     <ClInclude Include="source\cPlayerCharacter.h">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClInclude>
     <ClInclude Include="source\cAnimatedModel.h">
       <Filter>Render System\Model</Filter>
     </ClInclude>
     <ClInclude Include="source\cOverworldPokemon.h">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClInclude>
     <ClInclude Include="source\cNPCCharacter.h">
-      <Filter>Character</Filter>
+      <Filter>Entity\Character</Filter>
     </ClInclude>
     <ClInclude Include="source\Engine.h">
       <Filter>Source Files</Filter>
@@ -243,6 +243,12 @@
     </ClInclude>
     <ClInclude Include="source\PokemonData.h">
       <Filter>Pokemon</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cEntity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Player.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

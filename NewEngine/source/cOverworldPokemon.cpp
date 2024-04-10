@@ -20,7 +20,7 @@ void cOverworldPokemon::Move(eDirection dir, bool run)
 {
 	if (!modelAnimation->isDone) return;
 
-	int moveResult = ProcessMovement(dir, run);
+	eEntityMoveResult moveResult = ProcessMovement(dir, run);
 
 	// Change sprite animation
 	if (lastDesiredDirection != dir)
@@ -39,5 +39,8 @@ void cOverworldPokemon::Move(eDirection dir, bool run)
 
 	lastDesiredDirection = dir;
 
-	if (follower && moveResult != 0) MoveFollower(model->position, run);
+	if (follower && moveResult != eEntityMoveResult::FAILURE)
+	{
+		MoveFollower(model->position, run);
+	}
 }

@@ -7,11 +7,6 @@
 #include "DrawInfo.h"
 #include "cRenderModel.h"
 
-class cSpriteModel;
-class cAnimatedModel;
-class cParticleSpawner;
-class cUIWidget;
-
 const std::string SHADER_PATH = "assets/shaders/";
 const std::string MODEL_PATH = "assets/models/";
 const std::string TEXTURE_PATH = "assets/textures/";
@@ -122,8 +117,8 @@ private:
     std::vector< std::shared_ptr<cRenderModel> > models;
 public:
     static std::shared_ptr<cRenderModel> CreateRenderModel();
-    static std::shared_ptr<cSpriteModel> CreateSpriteModel();
-    static std::shared_ptr<cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
+    static std::shared_ptr<class cSpriteModel> CreateSpriteModel();
+    static std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
     static void RemoveModel(std::shared_ptr<cRenderModel> model);
 
     // Textures
@@ -145,8 +140,8 @@ public:
     // Drawing
 private:
     void DrawObject(std::shared_ptr<cRenderModel> model);
-    void DrawParticles(cParticleSpawner* spawner);
-    void DrawWidget(cUIWidget* widget);
+    void DrawParticles(class cParticleSpawner* spawner);
+    void DrawWidget(class cUIWidget* widget);
 public:
     void DrawFrame();
 };

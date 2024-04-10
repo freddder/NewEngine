@@ -10,6 +10,8 @@
 #include "cAnimationManager.h"
 #include "cAnimatedModel.h"
 
+#include "Player.h"
+
 cMapManager* cMapManager::singleton = NULL;
 
 cMapManager::cMapManager()
@@ -57,8 +59,10 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	fclose(fp);
 
 	// unload old map (how to unload textures?)
+	
 	// load new map
-	// update model mesh name
+	std::string mapModelName = d["mapModelFileName"].GetString();
+	cRenderManager::GetInstance()->LoadModel(mapModelName, "scene");
 
 	// Load map model
 	if (!mapModel)
@@ -67,7 +71,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 	}
 
-	mapModel->meshName = d["mapModelFileName"].GetString();
+	mapModel->meshName = mapModelName;
 
 	// Load simple walkable tiles
 	rapidjson::Value& walkableTileData = d["walkableTiles"];
@@ -265,7 +269,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	pdsmap.close();
 }
 
-int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
+eEntityMoveResult cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 {
 	int desiredX = currPosition.x;
 	int desiredZ = currPosition.z;
@@ -279,7 +283,7 @@ int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 	else if (direction == eDirection::RIGHT)
 		desiredZ += 1;
 
-	if (desiredX + 15 < 0 || desiredZ + 15 < 0) return 0;
+	if (desiredX + 15 < 0 || desiredZ + 15 < 0) return eEntityMoveResult::FAILURE;
 
 	desiredX += 15;
 	desiredZ += 15;
@@ -294,25 +298,43 @@ int cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
 			desiredZ -= 32 * quadZCoord;
 			desiredX -= 32 * quadXCoord;
 
-			if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y)].isWalkable) // same height
-				return 1;
-			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y + 1)].isWalkable) // go up
-				return 2;
-			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y - 1)].isWalkable) // go down
-				return 3;
+			eEntityMoveResult moveResult = eEntityMoveResult::FAILURE;
+			int newTileId = 0;
 
-			return 0;
+			if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y)].isWalkable) // same height
+			{
+				moveResult = eEntityMoveResult::SUCCESS;
+				newTileId = ToTileIndex(desiredX, desiredZ, (int)currPosition.y);
+			}
+			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y + 1)].isWalkable) // go up
+			{
+				moveResult = eEntityMoveResult::SUCCESS_UP;
+				newTileId = ToTileIndex(desiredX, desiredZ, (int)currPosition.y + 1);
+			}
+			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y - 1)].isWalkable) // go down
+			{
+				moveResult = eEntityMoveResult::SUCCESS_DOWN;
+				newTileId = ToTileIndex(desiredX, desiredZ, (int)currPosition.y - 1);
+			}
+
+			glm::vec3 playerPos = Player::GetPlayerPosition();
+			if (moveResult != eEntityMoveResult::FAILURE && ToTileIndex(playerPos.x, playerPos.z, playerPos.y) == newTileId)
+			{
+
+			}
+
+			return moveResult;
 		}
 	}
 
-	return 0;
+	return eEntityMoveResult::FAILURE;
 }
 
 int cMapManager::ToTileIndex(int x, int z, int height)
 {
-	if (x > 31 || x < 0
-		|| z > 31 || z < 0
-		|| height > 15 || height < -15) return -1;
+	if (x > 31 || x < 0 || 
+		z > 31 || z < 0 || 
+		height > 15 || height < -15) return -1;
 
 	int heightIndex = (height + 15) * (32 * 32);
 	int layerIndex = 32 * x + z;

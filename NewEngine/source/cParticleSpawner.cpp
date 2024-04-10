@@ -1,7 +1,6 @@
 #include "cParticleSpawner.h"
 
-#include "Engine.h"
-#include "cPlayerCharacter.h"
+#include "Player.h"
 
 #include "cLinearCongruentialGenerator.h"
 #include <time.h>
@@ -83,7 +82,7 @@ void cParticleSpawner::Update(float deltaTime)
 
 		if (isPositionPlayerRelative)
 		{
-			newParticle.position += Engine::playerChar->model->position;
+			newParticle.position += Player::GetPlayerPosition();
 		}
 
 		particles.push_back(newParticle);

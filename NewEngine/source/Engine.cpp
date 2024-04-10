@@ -20,6 +20,7 @@
 #include "cUIManager.h"
 #include "PokemonData.h"
 
+#include "Player.h"
 #include "cPlayerCharacter.h"
 
 GLFWwindow* window;
@@ -193,8 +194,8 @@ void RenderImgui()
         ImGui::DragFloat3("Position", *cameraPosition);
         ImGui::Checkbox("Player Cam", &camera->usePlayerCamera);
         ImGui::DragFloat("FOV", &camera->FOV);
-        ImGui::DragFloat("Distance", &camera->PLY_DISTANCE);
-        ImGui::DragFloat("Angle", &camera->PLY_ANGLE);
+        ImGui::DragFloat("Distance", &camera->targetDistance);
+        ImGui::DragFloat("Angle", &camera->targetAngle);
     }
 
     if (ImGui::CollapsingHeader("Enviornment"))
@@ -423,7 +424,6 @@ void ShutdownImgui()
 
 namespace Engine
 {
-    cPlayerCharacter* playerChar;
     cUIStaticImage* button;
     cUIStaticImage* sprite;
 
@@ -584,13 +584,13 @@ namespace Engine
         if (playerDesiresMovement)
         {
             if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-                playerChar->Move(playerDesiredDirection, true);
+                Player::playerChar->Move(playerDesiredDirection, true);
             else
-                playerChar->Move(playerDesiredDirection, false);
+                Player::playerChar->Move(playerDesiredDirection, false);
         }
         else
         {
-            playerChar->StopMovement();
+            Player::playerChar->StopMovement();
         }
     }
 

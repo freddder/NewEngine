@@ -12,6 +12,7 @@
 #include "cPlayerCharacter.h"
 
 #include "Engine.h"
+#include "Player.h"
 
 int main()
 {
@@ -53,27 +54,29 @@ int main()
     lightManager->lights[0].diffuse = glm::vec4(1.f, 0.717f, 0.43f, 1.f);
     lightManager->lights[0].extraParam.w = 1.f; // turn on
 
+    // Position
     std::shared_ptr<cFloatAnimation> lightPosAnim = std::make_shared<cFloatAnimation>(lightManager->lights[0].position.z);
     lightPosAnim->AddKeyFrame(sKeyFrameFloat(60.f, -17.f));
     lightPosAnim->speed = 5.f;
     lightPosAnim->isRepeat = true;
-    cAnimationManager::GetInstance()->AddAnimation(lightPosAnim);
+    //cAnimationManager::GetInstance()->AddAnimation(lightPosAnim);
 
+    // Color
     std::shared_ptr<cVec4Animation> lightColorAnim = std::make_shared<cVec4Animation>(lightManager->lights[0].diffuse);
     lightColorAnim->AddKeyFrame(sKeyFrameVec4(30.f, glm::vec4(1.f, 1.f, 1.f, 1.f)));
     lightColorAnim->AddKeyFrame(sKeyFrameVec4(60.f, glm::vec4(0.12f, 0.22f, 0.5f, 1.f)));
     lightColorAnim->speed = 5.f;
     lightColorAnim->isRepeat = true;
-    cAnimationManager::GetInstance()->AddAnimation(lightColorAnim);
+    //cAnimationManager::GetInstance()->AddAnimation(lightColorAnim);
 
     //********************** Load models and textures ***************************
 
-    renderManager->LoadModel("WaterTest3.obj", "scene");
-    renderManager->LoadModel("MultiTest.obj", "scene");
-    renderManager->LoadModel("GrassRouteDemo.obj", "scene");
-    renderManager->LoadModel("CostalWinter.obj", "scene");
-    renderManager->LoadModel("WinterTest.obj", "scene");
-    renderManager->LoadModel("SlopeTest.obj", "scene");
+    //renderManager->LoadModel("WaterTest3.obj", "scene");
+    //renderManager->LoadModel("MultiTest.obj", "scene");
+    //renderManager->LoadModel("GrassRouteDemo.obj", "scene");
+    //renderManager->LoadModel("CostalWinter.obj", "scene");
+    //renderManager->LoadModel("WinterTest.obj", "scene");
+    //renderManager->LoadModel("SlopeTest.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
     renderManager->LoadModel("Water_c2.obj", "wave");
@@ -121,23 +124,23 @@ int main()
         cUIManager::GetInstance()->AddCanvas(canvas);
     }
 
-    Engine::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
+    Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
     cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(22.f, 1.f, 25.f), "722.png");
-    Engine::playerChar->SetFollower(follower);
-    camera->playerPosition = &Engine::playerChar->model->position;
+    Player::playerChar->SetFollower(follower);
+    camera->targetPosRef = Player::GetPlayerPositionRef();
 
     //mapManager->LoadMap("WinterTestDesc.json");
     //mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
     //mapManager->LoadMap("MultiTestDesc.json");
-    //mapManager->LoadMap("GrassRouteDemoDesc.json");
-    mapManager->LoadMap("CostalWinterDesc.json");
+    mapManager->LoadMap("GrassRouteDemoDesc.json");
+    //mapManager->LoadMap("CostalWinterDesc.json");
 
-    sceneManager->SetWeather(SNOW);
+    //sceneManager->SetWeather(SNOW);
 
     Engine::GameLoop(true);
 
-    delete Engine::playerChar;
+    delete Player::playerChar;
     delete follower;
 
     Engine::ShutdownManagers();

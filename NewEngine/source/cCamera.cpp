@@ -32,8 +32,8 @@ void cCamera::UpdateCameraVectors()
 	right = glm::normalize(glm::cross(front, glm::vec3(0.f, 1.f, 0.f)));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
 	up = glm::normalize(glm::cross(right, front));
 
-	PLY_DISTANCE =25.f; //17.f;
-	PLY_ANGLE = 35.f;
+	targetDistance =25.f; //17.f;
+	targetAngle = 35.f;
 }
 
 void cCamera::MoveForward(float deltaTime)
@@ -92,14 +92,14 @@ glm::mat4 cCamera::GetViewMatrix()
 	if (usePlayerCamera)
 	{
 		glm::vec3 newPosition;
-		newPosition.x = playerPosition->x - (glm::cos(glm::radians(PLY_ANGLE)) * PLY_DISTANCE);
-		newPosition.y = playerPosition->y + (glm::sin(glm::radians(PLY_ANGLE)) * PLY_DISTANCE);
-		newPosition.z = playerPosition->z;
+		newPosition.x = targetPosRef->x - (glm::cos(glm::radians(targetAngle)) * targetDistance);
+		newPosition.y = targetPosRef->y + (glm::sin(glm::radians(targetAngle)) * targetDistance);
+		newPosition.z = targetPosRef->z;
 
 		position = newPosition;
 
 		return glm::lookAt(newPosition,
-			*playerPosition,
+			*targetPosRef,
 			up);
 	}
 	else

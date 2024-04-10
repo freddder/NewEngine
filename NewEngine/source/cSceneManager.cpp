@@ -1,4 +1,5 @@
 #include "cSceneManager.h"
+#include "cOverworldPokemon.h"
 
 cSceneManager* cSceneManager::singleton = NULL;
 
@@ -10,14 +11,13 @@ cSceneManager::cSceneManager()
 	fogGradient = 0.1f;
 	windSpeed = 0.25f;
 
-	Pokemon::SpawnData meowstic;
-	meowstic.nationalDexNumber = 678;
-	meowstic.isStatsGenderBased = true;
-	meowstic.minLevel = 20;
-	meowstic.minLevel = 30;
-	meowstic.spawnChance = 1;
-
-	loadedSpawnData.push_back(meowstic);
+	//Pokemon::SpawnData meowstic;
+	//meowstic.nationalDexNumber = 678;
+	//meowstic.isStatsGenderBased = true;
+	//meowstic.minLevel = 20;
+	//meowstic.minLevel = 30;
+	//meowstic.spawnChance = 1;
+	//loadedSpawnData.push_back(meowstic);
 }
 
 cSceneManager::~cSceneManager()
@@ -117,9 +117,18 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 	currWeather = newWeather;
 }
 
-void cSceneManager::SpawnWildPokemon()
+std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(const int nationalDexId, glm::vec3 location)
 {
+	// TODO: check if location is available
+	// TODO: check if data is loaded
+	// TODO: consider moving OWPokemon/Character constructor code here
 
+	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "722.png");
+	singleton->roamingWildPokemon.push_back(newWildPokemon);
+
+
+
+	return newWildPokemon;
 }
 
 void cSceneManager::ChangeScene()

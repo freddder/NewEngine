@@ -71,11 +71,15 @@ public:
 	void SetWeather(eEnvironmentWeather newWeather);
 
 	// Wild pokemon
-private:
-	std::vector<Pokemon::SpawnData> loadedSpawnData;
+//private:
+	//std::vector<Pokemon::SpawnData> loadedSpawnData;
 	//std::vector<cOverworldPokemon> roamingWildPokemon;
+
+	// Entities
+private:
+	std::vector<std::shared_ptr<class cOverworldPokemon>> roamingWildPokemon;
 public:
-	void SpawnWildPokemon();
+	static std::shared_ptr<cOverworldPokemon> CreateRoamingWildPokemon(const int nationalDexId, glm::vec3 location);
 
 public:
 	void ChangeScene();

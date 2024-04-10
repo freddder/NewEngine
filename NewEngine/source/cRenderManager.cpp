@@ -21,8 +21,7 @@
 #include "cCamera.h"
 #include "cUIManager.h"
 
-#include "Engine.h"
-#include "cPlayerCharacter.h"
+#include "Player.h"
 
 cRenderManager* cRenderManager::singleton = NULL;
 
@@ -762,10 +761,9 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
 
     sSpriteSheet sheet = sceneSpriteSheets[sheetName];
 
-    cRenderManager* renderManager = cRenderManager::GetInstance();
-    renderManager->setInt("spriteId", spriteId);
-    renderManager->setInt("numCols", sheet.numCols);
-    renderManager->setInt("numRows", sheet.numRows);
+    setInt("spriteId", spriteId);
+    setInt("numCols", sheet.numCols);
+    setInt("numRows", sheet.numRows);
 
     unsigned int textureId = sceneSpriteSheets[sheetName].textureId;
 
@@ -774,7 +772,7 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
-    cRenderManager::GetInstance()->setInt(shaderVariable, shaderTextureUnit);
+    setInt(shaderVariable, shaderTextureUnit);
 }
 
 void cRenderManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
@@ -788,7 +786,7 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
     glBindTexture(GL_TEXTURE_2D, textureId);
 
     std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
-    cRenderManager::GetInstance()->setInt(shaderVariable, shaderTextureUnit);
+    setInt(shaderVariable, shaderTextureUnit);
 }
 
 void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
@@ -941,8 +939,8 @@ void cRenderManager::DrawFrame()
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(cLightManager::GetInstance()->lights[0].position) + Engine::playerChar->model->position;
-    glm::vec3 lightAt = Engine::playerChar->model->position;
+    glm::vec3 lightPos = glm::vec3(cLightManager::GetInstance()->lights[0].position) + Player::GetPlayerPosition();
+    glm::vec3 lightAt = Player::GetPlayerPosition();
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
@@ -986,7 +984,7 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*cCamera::GetInstance()->playerPosition, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*cCamera::GetInstance()->targetPosRef, 1.f)));
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cSceneManager::GetInstance()->fogColor, 1.f)));
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cSceneManager::GetInstance()->fogDensity);
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cSceneManager::GetInstance()->fogGradient);

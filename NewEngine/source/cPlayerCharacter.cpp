@@ -6,6 +6,8 @@
 
 cPlayerCharacter::cPlayerCharacter(glm::vec3 position) : cCharacter(position, "Nate.png")
 {
+	blocksTile = true;
+
 	spriteAnimation->isRepeat = true;
 	lastDesiredDirection = DOWN;
 }
@@ -18,14 +20,17 @@ void cPlayerCharacter::Move(eDirection dir, bool run)
 {
 	if (!modelAnimation->isDone) return;
 
-	int moveResult = ProcessMovement(dir, run);
+	eEntityMoveResult moveResult = ProcessMovement(dir, run);
 
 	if (!run || moveResult == 0) SetupSpriteWalk(dir);
 	else SetupSpriteRun(dir);
 
 	lastDesiredDirection = dir;
 
-	if (follower && moveResult != 0) MoveFollower(model->position, run);
+	if (follower && moveResult != eEntityMoveResult::FAILURE)
+	{
+		MoveFollower(model->position, run);
+	}
 }
 
 void cPlayerCharacter::StopMovement()

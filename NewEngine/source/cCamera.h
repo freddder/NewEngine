@@ -44,9 +44,9 @@ public:
 	unsigned int SCR_HEIGHT;
 
 	bool usePlayerCamera;
-	glm::vec3* playerPosition;
-	float PLY_DISTANCE;
-	float PLY_ANGLE;
+	glm::vec3* targetPosRef;
+	float targetDistance;
+	float targetAngle;
 
 	float FOV;
 	float nearPlane;
