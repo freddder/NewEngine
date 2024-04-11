@@ -4,11 +4,13 @@
 #include "cAnimationManager.h"
 #include "cMapManager.h"
 
-cCharacter::cCharacter(glm::vec3 position, std::string textureName)
+cCharacter::cCharacter(glm::vec3 pos, std::string textureName)
 {
+	position = pos;
+
 	model = cRenderManager::CreateSpriteModel();
 	model->meshName = "SpriteHolder.obj";
-	model->position = position;
+	model->position = pos;
 	model->textureName = textureName;
 
 	spriteAnimation = std::make_shared<cSpriteAnimation>(model->currSpriteId, model->scale);
@@ -31,7 +33,7 @@ eEntityMoveResult cCharacter::ProcessMovement(eDirection dir, bool run)
 	modelAnimation->Reset(model->position, model->orientation, model->scale);
 
 	// Make model animation
-	eEntityMoveResult moveResult = cMapManager::GetInstance()->TryMoveEntity(model->position, dir);
+	eEntityMoveResult moveResult = cMapManager::GetInstance()->TryMoveEntity(this, dir);
 	glm::vec3 newPosition = model->position;
 
 	if (moveResult != eEntityMoveResult::FAILURE)
@@ -48,6 +50,8 @@ eEntityMoveResult cCharacter::ProcessMovement(eDirection dir, bool run)
 
 	if (!run || moveResult == 0) modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 	else modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));
+
+	position = newPosition;
 
 	return moveResult;
 }

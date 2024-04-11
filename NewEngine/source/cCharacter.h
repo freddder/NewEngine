@@ -9,7 +9,7 @@ enum eEntityMoveResult;
 class cCharacter : public cEntity
 {
 public:
-	cCharacter(glm::vec3 position, std::string textureName);
+	cCharacter(glm::vec3 pos, std::string textureName);
 	~cCharacter();
 
 #pragma region MOVE

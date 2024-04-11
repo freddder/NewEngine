@@ -14,6 +14,18 @@
 
 cMapManager* cMapManager::singleton = NULL;
 
+sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
+{
+	if (localPos.x > 31 || localPos.x < 0 ||
+		localPos.z > 31 || localPos.z < 0 ||
+		localPos.y > 15 || localPos.y < -15) return nullptr;
+
+	int heightIndex = (localPos.y + 15) * (32 * 32);
+	int layerIndex = 32 * localPos.x + localPos.z;
+
+	return &data[heightIndex + layerIndex];
+}
+
 cMapManager::cMapManager()
 {
 	//	^ x
@@ -41,6 +53,24 @@ cMapManager::~cMapManager()
 	{
 		cRenderManager::GetInstance()->RemoveModel(it->second.instancedModel);
 	}
+}
+
+sQuadrant* cMapManager::GetQuad(int worldX, int worldZ)
+{
+	if (worldX + 15 < 0 || worldZ + 15 < 0) return nullptr;
+
+	worldX += 15;
+	worldZ += 15;
+
+	int quadXCoord = worldX / 32;
+	int quadZCoord = worldZ / 32;
+
+	for (int i = 0; i < quads.size(); i++)
+	{
+		if (quadXCoord == quads[i].posX && quadZCoord == quads[i].posZ) return &quads[i];
+	}
+
+	return nullptr;
 }
 
 void cMapManager::LoadMap(std::string mapDescriptionFile)
@@ -201,11 +231,12 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 					if (tileId == -1) continue;
 
-					sTile& currTile = newQuad.data[ToTileIndex(x, z, currHeight)];
+					//sTile& currTile = newQuad.data[ToQuadTileIndex(x, z, currHeight)];
+					sTile* currTile = newQuad.GetTileFromLocalPosition(glm::vec3(x, currHeight, z));
 
-					if (walkableTiles.find(tileId) != walkableTiles.end() && !currTile.isUnchangeable) // is walkable
+					if (!currTile->isUnchangeable && walkableTiles.find(tileId) != walkableTiles.end()) // is walkable
 					{						
-						currTile.isWalkable = true;
+						currTile->isWalkable = true;
 
 						// Walkable correction tiles
 						for (unsigned int i = 0; i < walkableTiles[tileId].walkableOffsets.size(); i++)
@@ -214,7 +245,8 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 							int correctionZ = z + (int)walkableTiles[tileId].walkableOffsets[i].z;
 							int correctionHeight = currHeight + (int)walkableTiles[tileId].walkableOffsets[i].y;
 
-							newQuad.data[ToTileIndex(correctionX, correctionZ, correctionHeight)].isWalkable = true;
+							//newQuad.data[ToQuadTileIndex(correctionX, correctionZ, correctionHeight)].isWalkable = true;
+							newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ))->isWalkable = true;
 						}
 
 						// Unwalkable correction tiles
@@ -224,14 +256,16 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 							int correctionZ = z + (int)walkableTiles[tileId].unwalkableOffsets[i].z;
 							int correctionHeight = currHeight + (int)walkableTiles[tileId].unwalkableOffsets[i].y;
 
-							newQuad.data[ToTileIndex(correctionX, correctionZ, correctionHeight)].isWalkable = false;
-							newQuad.data[ToTileIndex(correctionX, correctionZ, correctionHeight)].isUnchangeable = true;
+							//sTile& tileToCorrect = newQuad.data[ToQuadTileIndex(correctionX, correctionZ, correctionHeight)];
+							sTile* tileToCorrect = newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ));
+							tileToCorrect->isWalkable = false;
+							tileToCorrect->isUnchangeable = true;
 						}
 					}
 					else // is NOT walkable
 					{
-						currTile.isWalkable = false;
-						currTile.isUnchangeable = true;
+						currTile->isWalkable = false;
+						currTile->isUnchangeable = true;
 					}
 
 					if (instancedTiles.find(tileId) != instancedTiles.end()) // it exists
@@ -269,75 +303,48 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	pdsmap.close();
 }
 
-eEntityMoveResult cMapManager::TryMoveEntity(glm::vec3 currPosition, eDirection direction)
+eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection direction)
 {
-	int desiredX = currPosition.x;
-	int desiredZ = currPosition.z;
+	int desiredPosX = entityToMove->position.x;
+	int desiredPosY = entityToMove->position.y;
+	int desiredPosZ = entityToMove->position.z;
 
 	if (direction == eDirection::UP)
-		desiredX += 1;
+		desiredPosX += 1;
 	else if (direction == eDirection::DOWN)
-		desiredX -= 1;
+		desiredPosX -= 1;
 	else if (direction == eDirection::LEFT)
-		desiredZ -= 1;
+		desiredPosZ -= 1;
 	else if (direction == eDirection::RIGHT)
-		desiredZ += 1;
+		desiredPosZ += 1;
 
-	if (desiredX + 15 < 0 || desiredZ + 15 < 0) return eEntityMoveResult::FAILURE;
+	sQuadrant* quad = GetQuad(desiredPosX, desiredPosZ);
+	if (!quad) return eEntityMoveResult::FAILURE; // Tries to walk on a quad that doesn't exists
 
-	desiredX += 15;
-	desiredZ += 15;
+	desiredPosX += 15 - 32 * quad->posX;
+	desiredPosZ += 15 - 32 * quad->posZ;
 
-	int quadXCoord = desiredX / 32;
-	int quadZCoord = desiredZ / 32;
-
-	for (std::vector<sQuadrant>::iterator it = quads.begin(); it != quads.end(); it++)
+	eEntityMoveResult moveResult = eEntityMoveResult::FAILURE;
+	if (quad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY, desiredPosZ))->IsAvailable()) // same height
 	{
-		if (quadXCoord == it->posX && quadZCoord == it->posZ)
-		{
-			desiredZ -= 32 * quadZCoord;
-			desiredX -= 32 * quadXCoord;
-
-			eEntityMoveResult moveResult = eEntityMoveResult::FAILURE;
-			int newTileId = 0;
-
-			if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y)].isWalkable) // same height
-			{
-				moveResult = eEntityMoveResult::SUCCESS;
-				newTileId = ToTileIndex(desiredX, desiredZ, (int)currPosition.y);
-			}
-			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y + 1)].isWalkable) // go up
-			{
-				moveResult = eEntityMoveResult::SUCCESS_UP;
-				newTileId = ToTileIndex(desiredX, desiredZ, (int)currPosition.y + 1);
-			}
-			else if (it->data[ToTileIndex(desiredX, desiredZ, (int)currPosition.y - 1)].isWalkable) // go down
-			{
-				moveResult = eEntityMoveResult::SUCCESS_DOWN;
-				newTileId = ToTileIndex(desiredX, desiredZ, (int)currPosition.y - 1);
-			}
-
-			glm::vec3 playerPos = Player::GetPlayerPosition();
-			if (moveResult != eEntityMoveResult::FAILURE && ToTileIndex(playerPos.x, playerPos.z, playerPos.y) == newTileId)
-			{
-
-			}
-
-			return moveResult;
-		}
+		moveResult = eEntityMoveResult::SUCCESS;
+	}
+	else if (quad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY + 1, desiredPosZ))->IsAvailable()) // go up
+	{
+		moveResult = eEntityMoveResult::SUCCESS_UP;
+		desiredPosY++;
+	}
+	else if (quad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY - 1, desiredPosZ))->IsAvailable()) // go down
+	{
+		moveResult = eEntityMoveResult::SUCCESS_DOWN;
+		desiredPosY--;
 	}
 
-	return eEntityMoveResult::FAILURE;
-}
+	if (moveResult != eEntityMoveResult::FAILURE)
+	{
+		// TODO: check if new tile has an entity and trigger their on walk
+		// TODO: move this entity pointer
+	}
 
-int cMapManager::ToTileIndex(int x, int z, int height)
-{
-	if (x > 31 || x < 0 || 
-		z > 31 || z < 0 || 
-		height > 15 || height < -15) return -1;
-
-	int heightIndex = (height + 15) * (32 * 32);
-	int layerIndex = 32 * x + z;
-
-	return heightIndex + layerIndex;
+	return moveResult;
 }

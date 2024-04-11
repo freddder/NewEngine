@@ -25,6 +25,16 @@ struct sTile
 	cEntity* entity = nullptr;
 	bool isWalkable = false;
 	bool isUnchangeable = false;
+
+	// For walking or spawning
+	bool IsAvailable()
+	{
+		if (!isWalkable) return false;
+
+		if (entity && entity->blocksTile) return false;
+
+		return true;
+	}
 };
 
 struct sQuadrant
@@ -33,6 +43,8 @@ struct sQuadrant
 	int posZ;
 
 	std::map<int, sTile> data;
+
+	sTile* GetTileFromLocalPosition(glm::vec3 localPos);
 };
 
 enum eEntityMoveResult
@@ -73,10 +85,9 @@ private:
 	std::map<int, sCorrectionTiles> walkableTiles;
 	std::shared_ptr<cRenderModel> mapModel;
 	std::map<int, sInstancedTile> instancedTiles;
-	int ToTileIndex(int x, int z, int height);
+	sQuadrant* GetQuad(int worldX, int worldZ);
 public:
 	void LoadMap(std::string mapDescriptionFile);
 
-
-	eEntityMoveResult TryMoveEntity(glm::vec3 currPosition, eDirection direction);
+	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
 };

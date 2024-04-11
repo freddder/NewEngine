@@ -126,7 +126,7 @@ int main()
 
     Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
     cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(22.f, 1.f, 25.f), "722.png");
-    Player::playerChar->SetFollower(follower);
+    //Player::playerChar->SetFollower(follower);
     camera->targetPosRef = Player::GetPlayerPositionRef();
 
     //mapManager->LoadMap("WinterTestDesc.json");

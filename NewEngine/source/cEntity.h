@@ -7,7 +7,7 @@ public:
 	cEntity();
 	~cEntity();
 
-	//glm::vec3 position;
+	glm::vec3 position;
 	bool blocksTile = false;
 
 	// Interact
