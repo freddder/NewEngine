@@ -491,8 +491,6 @@ namespace Engine
 
         cLightManager::DestroyInstance();
 
-        cAnimationManager::DestroyInstance();
-
         cRenderManager::DestroyInstance();
 
         cMapManager::DestroyInstance();
@@ -500,6 +498,8 @@ namespace Engine
         cSceneManager::DestroyInstance();
 
         cUIManager::DestroyInstance();
+
+        cAnimationManager::DestroyInstance();
     }
 
     void GameLoop(bool renderDebugInfo)

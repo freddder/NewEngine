@@ -124,11 +124,6 @@ int main()
         cUIManager::GetInstance()->AddCanvas(canvas);
     }
 
-    Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
-    cOverworldPokemon* follower = new cOverworldPokemon(glm::vec3(22.f, 1.f, 25.f), "722.png");
-    //Player::playerChar->SetFollower(follower);
-    camera->targetPosRef = Player::GetPlayerPositionRef();
-
     //mapManager->LoadMap("WinterTestDesc.json");
     //mapManager->LoadMap("WaterTest3Desc.json");
     //mapManager->LoadMap("SlopeTestDesc.json");
@@ -136,12 +131,18 @@ int main()
     mapManager->LoadMap("GrassRouteDemoDesc.json");
     //mapManager->LoadMap("CostalWinterDesc.json");
 
+    {
+        Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
+        std::shared_ptr<cOverworldPokemon> follower = cSceneManager::CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f)); //new cOverworldPokemon(glm::vec3(22.f, 1.f, 25.f), "722.png");
+        Player::playerChar->SetFollower(follower.get());
+        camera->targetPosRef = Player::GetPlayerPositionRef();
+    }
+
     //sceneManager->SetWeather(SNOW);
 
     Engine::GameLoop(true);
 
     delete Player::playerChar;
-    delete follower;
 
     Engine::ShutdownManagers();
 

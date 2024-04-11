@@ -1,5 +1,6 @@
 #include "cSceneManager.h"
 #include "cOverworldPokemon.h"
+#include "cMapManager.h"
 
 cSceneManager* cSceneManager::singleton = NULL;
 
@@ -26,6 +27,8 @@ cSceneManager::~cSceneManager()
 	{
 		delete particleSpawners[i];
 	}
+
+	roamingWildPokemon.clear();
 }
 
 void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
@@ -119,16 +122,20 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 
 std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(const int nationalDexId, glm::vec3 location)
 {
-	// TODO: check if location is available
 	// TODO: check if data is loaded
 	// TODO: consider moving OWPokemon/Character constructor code here
 
-	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "722.png");
-	singleton->roamingWildPokemon.push_back(newWildPokemon);
+	if (sTile* tile = cMapManager::GetInstance()->GetTile(location))
+	{
+		std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "722.png");
+		singleton->roamingWildPokemon.push_back(newWildPokemon);
 
+		tile->entity = newWildPokemon.get();
 
+		return newWildPokemon;
+	}
 
-	return newWildPokemon;
+	return nullptr;
 }
 
 void cSceneManager::ChangeScene()

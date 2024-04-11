@@ -18,6 +18,8 @@ cCharacter::cCharacter(glm::vec3 pos, std::string textureName)
 
 	cAnimationManager::AddAnimation(spriteAnimation);
 	cAnimationManager::AddAnimation(modelAnimation);
+
+	follower = nullptr;
 }
 
 cCharacter::~cCharacter()

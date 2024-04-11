@@ -11,6 +11,7 @@
 #include "cAnimatedModel.h"
 
 #include "Player.h"
+#include "cPlayerCharacter.h"
 
 cMapManager* cMapManager::singleton = NULL;
 
@@ -303,6 +304,21 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	pdsmap.close();
 }
 
+sTile* cMapManager::GetTile(glm::vec3 worldPosition)
+{
+	if (sQuadrant* quad = GetQuad(worldPosition.x, worldPosition.z))
+	{
+		// TODO: probably a good idea to make a world to local function
+		glm::vec3 localPosition = worldPosition;
+		localPosition.x += 15 - 32 * quad->posX;
+		localPosition.z += 15 - 32 * quad->posZ;
+
+		return quad->GetTileFromLocalPosition(localPosition);
+	}
+
+	return nullptr;
+}
+
 eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection direction)
 {
 	int desiredPosX = entityToMove->position.x;
@@ -318,23 +334,23 @@ eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection d
 	else if (direction == eDirection::RIGHT)
 		desiredPosZ += 1;
 
-	sQuadrant* quad = GetQuad(desiredPosX, desiredPosZ);
-	if (!quad) return eEntityMoveResult::FAILURE; // Tries to walk on a quad that doesn't exists
+	sQuadrant* desiredQuad = GetQuad(desiredPosX, desiredPosZ);
+	if (!desiredQuad) return eEntityMoveResult::FAILURE; // Tries to walk on a quad that doesn't exists
 
-	desiredPosX += 15 - 32 * quad->posX;
-	desiredPosZ += 15 - 32 * quad->posZ;
+	desiredPosX += 15 - 32 * desiredQuad->posX;
+	desiredPosZ += 15 - 32 * desiredQuad->posZ;
 
 	eEntityMoveResult moveResult = eEntityMoveResult::FAILURE;
-	if (quad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY, desiredPosZ))->IsAvailable()) // same height
+	if (desiredQuad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY, desiredPosZ))->IsAvailable()) // same height
 	{
 		moveResult = eEntityMoveResult::SUCCESS;
 	}
-	else if (quad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY + 1, desiredPosZ))->IsAvailable()) // go up
+	else if (desiredQuad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY + 1, desiredPosZ))->IsAvailable()) // go up
 	{
 		moveResult = eEntityMoveResult::SUCCESS_UP;
 		desiredPosY++;
 	}
-	else if (quad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY - 1, desiredPosZ))->IsAvailable()) // go down
+	else if (desiredQuad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY - 1, desiredPosZ))->IsAvailable()) // go down
 	{
 		moveResult = eEntityMoveResult::SUCCESS_DOWN;
 		desiredPosY--;
@@ -342,8 +358,38 @@ eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection d
 
 	if (moveResult != eEntityMoveResult::FAILURE)
 	{
-		// TODO: check if new tile has an entity and trigger their on walk
-		// TODO: move this entity pointer
+
+		// OPTIMIZATION: it might be better to have a check on position x and z and direction to easily check
+		// if entity will be changing quad and not have to search for quads twice with a single function call
+		if (sQuadrant* currQuad = GetQuad(entityToMove->position.x, entityToMove->position.z))
+		{
+			int currLocalX = entityToMove->position.x + 15 - 32 * currQuad->posX;
+			int currLocalZ = entityToMove->position.z + 15 - 32 * currQuad->posZ;
+			if (sTile* currTile = currQuad->GetTileFromLocalPosition(glm::vec3(currLocalX, entityToMove->position.y, currLocalZ)))
+			{
+				if (currTile->entity == entityToMove)
+				{
+					currTile->entity = nullptr;
+				}
+			}
+		}
+
+		sTile* tileToWalk = desiredQuad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY, desiredPosZ));
+		if (tileToWalk->entity)
+		{
+			if (dynamic_cast<cPlayerCharacter*>(entityToMove) == Player::playerChar) // Player walk into it
+			{
+				tileToWalk->entity->WalkInteract();
+			}
+			else if (dynamic_cast<cPlayerCharacter*>(tileToWalk->entity) == Player::playerChar) // It walk into player
+			{
+				entityToMove->WalkInteract();
+			}
+		}
+		else
+		{
+			tileToWalk->entity = entityToMove;
+		}
 	}
 
 	return moveResult;

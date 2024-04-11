@@ -89,5 +89,6 @@ private:
 public:
 	void LoadMap(std::string mapDescriptionFile);
 
+	sTile* GetTile(glm::vec3 worldPosition);
 	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
 };
