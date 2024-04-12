@@ -21,8 +21,8 @@ sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
 		localPos.z > 31 || localPos.z < 0 ||
 		localPos.y > 15 || localPos.y < -15) return nullptr;
 
-	int heightIndex = (localPos.y + 15) * (32 * 32);
-	int layerIndex = 32 * localPos.x + localPos.z;
+	int heightIndex = ((int)localPos.y + 15) * (32 * 32);
+	int layerIndex = 32 * (int)localPos.x + (int)localPos.z;
 
 	return &data[heightIndex + layerIndex];
 }
@@ -232,7 +232,6 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 					if (tileId == -1) continue;
 
-					//sTile& currTile = newQuad.data[ToQuadTileIndex(x, z, currHeight)];
 					sTile* currTile = newQuad.GetTileFromLocalPosition(glm::vec3(x, currHeight, z));
 
 					if (!currTile->isUnchangeable && walkableTiles.find(tileId) != walkableTiles.end()) // is walkable
@@ -246,7 +245,6 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 							int correctionZ = z + (int)walkableTiles[tileId].walkableOffsets[i].z;
 							int correctionHeight = currHeight + (int)walkableTiles[tileId].walkableOffsets[i].y;
 
-							//newQuad.data[ToQuadTileIndex(correctionX, correctionZ, correctionHeight)].isWalkable = true;
 							newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ))->isWalkable = true;
 						}
 
@@ -257,7 +255,6 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 							int correctionZ = z + (int)walkableTiles[tileId].unwalkableOffsets[i].z;
 							int correctionHeight = currHeight + (int)walkableTiles[tileId].unwalkableOffsets[i].y;
 
-							//sTile& tileToCorrect = newQuad.data[ToQuadTileIndex(correctionX, correctionZ, correctionHeight)];
 							sTile* tileToCorrect = newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ));
 							tileToCorrect->isWalkable = false;
 							tileToCorrect->isUnchangeable = true;
@@ -306,7 +303,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 sTile* cMapManager::GetTile(glm::vec3 worldPosition)
 {
-	if (sQuadrant* quad = GetQuad(worldPosition.x, worldPosition.z))
+	if (sQuadrant* quad = GetQuad((int)worldPosition.x, (int)worldPosition.z))
 	{
 		// TODO: probably a good idea to make a world to local function
 		glm::vec3 localPosition = worldPosition;
@@ -321,9 +318,9 @@ sTile* cMapManager::GetTile(glm::vec3 worldPosition)
 
 eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection direction)
 {
-	int desiredPosX = entityToMove->position.x;
-	int desiredPosY = entityToMove->position.y;
-	int desiredPosZ = entityToMove->position.z;
+	int desiredPosX = (int)entityToMove->position.x;
+	int desiredPosY = (int)entityToMove->position.y;
+	int desiredPosZ = (int)entityToMove->position.z;
 
 	if (direction == eDirection::UP)
 		desiredPosX += 1;
@@ -361,10 +358,10 @@ eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection d
 
 		// OPTIMIZATION: it might be better to have a check on position x and z and direction to easily check
 		// if entity will be changing quad and not have to search for quads twice with a single function call
-		if (sQuadrant* currQuad = GetQuad(entityToMove->position.x, entityToMove->position.z))
+		if (sQuadrant* currQuad = GetQuad((int)entityToMove->position.x, (int)entityToMove->position.z))
 		{
-			int currLocalX = entityToMove->position.x + 15 - 32 * currQuad->posX;
-			int currLocalZ = entityToMove->position.z + 15 - 32 * currQuad->posZ;
+			int currLocalX = (int)entityToMove->position.x + 15 - 32 * currQuad->posX;
+			int currLocalZ = (int)entityToMove->position.z + 15 - 32 * currQuad->posZ;
 			if (sTile* currTile = currQuad->GetTileFromLocalPosition(glm::vec3(currLocalX, entityToMove->position.y, currLocalZ)))
 			{
 				if (currTile->entity == entityToMove)

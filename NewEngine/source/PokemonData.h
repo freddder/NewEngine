@@ -128,8 +128,8 @@ namespace Pokemon
 		eType type1;
 		eType type2 = NO_TYPE;
 
-		float height; // in meters
-		float weight; // in kilograms
+		float height = 0.f; // in meters
+		float weight = 0.f; // in kilograms
 
 		// Learnset as a pair of int (level) and int (move id)
 	};
@@ -142,7 +142,7 @@ namespace Pokemon
 		int genderRatio = 50; // chance to be male (0 to 100 and <0 for genderless)
 		eEggGroup eggGroup1 = EGG_NO_EGGS_DISCOVERED;
 		eEggGroup eggGroup2 = EGG_NO_EGG_GROUP;
-		int hatchCycles; // Not sure what this means, but its related to the amount of steps to hatch
+		int hatchCycles = 0; // Not sure what this means, but its related to the amount of steps to hatch
 
 		float catchRate; // Not sure how this will work either
 
