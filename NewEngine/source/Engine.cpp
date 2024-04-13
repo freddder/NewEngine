@@ -30,7 +30,7 @@ float lastFrame = 0.f;
 static bool isFullscreen = false;
 
 static int searchNationalDexNumber = 0;
-static Pokemon::SpeciesData selectedSpecies;
+static Pokemon::sSpeciesData selectedSpecies;
 static eEnvironmentWeather selectedWeather = SNOW;
 
 const char* resolutions[] = {
@@ -59,7 +59,7 @@ void InitializeImgui()
     ImGui_ImplOpenGL3_Init("#version 330");
 }
 
-void RenderFormData(Pokemon::Form& form)
+void RenderFormData(Pokemon::sForm& form)
 {
     std::string typePreviewValue = Pokemon::Type_Strings[form.type1];
     ImGui::PushItemWidth(100);

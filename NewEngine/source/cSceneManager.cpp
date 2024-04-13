@@ -120,22 +120,39 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 	currWeather = newWeather;
 }
 
+void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const int spawnChance, const std::string formName)
+{
+	for (int i = 0; i < loadedSpawnData.size(); i++)
+	{
+		if (loadedSpawnData[i].nationalDexNumber == nationalDexId && loadedSpawnData[i].formName == formName)
+		{
+			return; // Already loaded
+		}
+	}
+
+	Pokemon::sSpeciesData specieData;
+	Pokemon::LoadSpecieData(nationalDexId, specieData);
+
+	Pokemon::sSpawnData spawnData;
+	spawnData.nationalDexNumber = nationalDexId;
+	spawnData.formName = formName;
+}
+
 std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(const int nationalDexId, glm::vec3 location)
 {
 	// TODO: check if data is loaded
 	// TODO: consider moving OWPokemon/Character constructor code here
 
-	if (sTile* tile = cMapManager::GetInstance()->GetTile(location))
-	{
-		std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "722.png");
-		singleton->roamingWildPokemon.push_back(newWildPokemon);
+	// Check if location is available
+	sTile* tile = cMapManager::GetInstance()->GetTile(location);
+	if (!tile) return nullptr;
+	
+	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "722.png");
+	singleton->roamingWildPokemon.push_back(newWildPokemon);
 
-		tile->entity = newWildPokemon.get();
+	tile->entity = newWildPokemon.get();
 
-		return newWildPokemon;
-	}
-
-	return nullptr;
+	return newWildPokemon;
 }
 
 void cSceneManager::ChangeScene()

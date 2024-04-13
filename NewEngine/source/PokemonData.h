@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <map>
 
 namespace Pokemon
 {
+	const static float BASE_SHINY_ODDS = 1.f / 8192.f;
+
 	enum eType
 	{
 		NORMAL = 0,
@@ -92,14 +94,14 @@ namespace Pokemon
 		"No Egg Group"
 	};
 
-	enum Gender
+	enum eGender
 	{
 		MALE,
 		FEMALE,
 		NO_GENDER
 	};
 
-	struct Stats
+	struct eStats
 	{
 		int hp = 0;		// Health
 		int atk = 0;	// Attack
@@ -114,12 +116,9 @@ namespace Pokemon
 		}
 	};
 
-	struct Form
+	struct sForm
 	{
-		//std::string formName = ""; // Display name for Pokedex (same as species if not set) (might remove later)
-		std::string formId = "default"; // Name for looking up sprite file name
-
-		Stats baseStats;
+		eStats baseStats;
 		
 		// Ability ability1
 		// Ability ability2
@@ -134,7 +133,7 @@ namespace Pokemon
 		// Learnset as a pair of int (level) and int (move id)
 	};
 
-	struct SpeciesData
+	struct sSpeciesData
 	{
 		std::string name;
 		int nationalDexNumber = 0;
@@ -149,21 +148,21 @@ namespace Pokemon
 		bool isStatsGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
 		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
 
-		Form defaultForm;
-		std::vector<Form> alternateForms;
+		sForm defaultForm;
+		std::map<std::string, sForm> alternateForms;
 	};
 
 	const static unsigned int JSON_DATA_VERSION = 1;
-	void SaveSpecieData(const int nationalDexNumber, const SpeciesData& data);
-	void LoadSpecieData(const int nationalDexNumber, SpeciesData& data);
+	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data);
+	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data);
 
-	struct SpawnData
+	struct sSpawnData
 	{
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
+		// These should be the same as the species data
 		int genderRatio = 50;
-
 		bool isStatsGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
 		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
 
@@ -178,7 +177,7 @@ namespace Pokemon
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
-		Gender gender = NO_GENDER;
+		eGender gender = NO_GENDER;
 		bool isShiny = false;
 	};
 
@@ -187,13 +186,13 @@ namespace Pokemon
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
-		Gender gender;
+		eGender gender;
 		bool shiny = false;
 
 		// Ability ability;
 		// Natire nature;
-		Stats IVs; // Individial values
-		Stats EVs; // Effort values
+		eStats IVs; // Individial values
+		eStats EVs; // Effort values
 
 		// HeldItem item;
 

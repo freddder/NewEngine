@@ -70,15 +70,12 @@ public:
 	float windSpeed;
 	void SetWeather(eEnvironmentWeather newWeather);
 
-	// Wild pokemon
-//private:
-	//std::vector<Pokemon::SpawnData> loadedSpawnData;
-	//std::vector<cOverworldPokemon> roamingWildPokemon;
-
 	// Entities
 private:
+	std::vector<Pokemon::sSpawnData> loadedSpawnData;
 	std::vector<std::shared_ptr<class cOverworldPokemon>> roamingWildPokemon;
 public:
+	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const int spawnChance, const std::string formName = "default");
 	static std::shared_ptr<cOverworldPokemon> CreateRoamingWildPokemon(const int nationalDexId, glm::vec3 location);
 
 public:

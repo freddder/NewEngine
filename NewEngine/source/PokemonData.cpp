@@ -10,7 +10,7 @@
 
 namespace Pokemon
 {
-	void SaveSpecieData(const int nationalDexNumber, const SpeciesData& data)
+	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
 	{
 		// Isn't a valid national dex number
 		if (nationalDexNumber <= 0 || nationalDexNumber >= 1008) return;
@@ -53,10 +53,6 @@ namespace Pokemon
 		d.AddMember("isSpriteGenderBased", data.isSpriteGenderBased, allocator);
 
 		rapidjson::Value defaultForm(rapidjson::kObjectType);
-		//rapidjson::Value formName(data.defaultForm.formName.c_str(), allocator);
-		//defaultForm.AddMember("formName", formName, allocator);
-		rapidjson::Value formId(data.defaultForm.formId.c_str(), allocator);
-		defaultForm.AddMember("formId", formId, allocator);
 
 		defaultForm.AddMember("baseHp", data.defaultForm.baseStats.hp, allocator);
 		defaultForm.AddMember("baseAtk", data.defaultForm.baseStats.atk, allocator);
@@ -74,26 +70,24 @@ namespace Pokemon
 		d.AddMember("defaultForm", defaultForm, allocator);
 
 		rapidjson::Value alternateForms(rapidjson::kArrayType);
-		for (int i = 0; i < data.alternateForms.size(); i++)
+		for (std::map<std::string, sForm>::const_iterator it = data.alternateForms.begin(); it != data.alternateForms.end(); it++)
 		{
 			rapidjson::Value newAlternateForm(rapidjson::kObjectType);
-			//rapidjson::Value alternateFormName(data.alternateForms[i].formName.c_str(), allocator);
-			//newAlternateForm.AddMember("formName", alternateFormName, allocator);
-			rapidjson::Value alternateFormId(data.alternateForms[i].formId.c_str(), allocator);
+			rapidjson::Value alternateFormId(it->first.c_str(), allocator);
 			newAlternateForm.AddMember("formId", alternateFormId, allocator);
 
-			newAlternateForm.AddMember("baseHp", data.alternateForms[i].baseStats.hp, allocator);
-			newAlternateForm.AddMember("baseAtk", data.alternateForms[i].baseStats.atk, allocator);
-			newAlternateForm.AddMember("baseSpAtk", data.alternateForms[i].baseStats.spAtk, allocator);
-			newAlternateForm.AddMember("baseDef", data.alternateForms[i].baseStats.def, allocator);
-			newAlternateForm.AddMember("baseSpDef", data.alternateForms[i].baseStats.spDef, allocator);
-			newAlternateForm.AddMember("baseSpd", data.alternateForms[i].baseStats.spd, allocator);
+			newAlternateForm.AddMember("baseHp", it->second.baseStats.hp, allocator);
+			newAlternateForm.AddMember("baseAtk", it->second.baseStats.atk, allocator);
+			newAlternateForm.AddMember("baseSpAtk", it->second.baseStats.spAtk, allocator);
+			newAlternateForm.AddMember("baseDef", it->second.baseStats.def, allocator);
+			newAlternateForm.AddMember("baseSpDef", it->second.baseStats.spDef, allocator);
+			newAlternateForm.AddMember("baseSpd", it->second.baseStats.spd, allocator);
 
-			newAlternateForm.AddMember("type1", data.alternateForms[i].type1, allocator);
-			newAlternateForm.AddMember("type2", data.alternateForms[i].type2, allocator);
+			newAlternateForm.AddMember("type1", it->second.type1, allocator);
+			newAlternateForm.AddMember("type2", it->second.type2, allocator);
 
-			newAlternateForm.AddMember("height", data.alternateForms[i].height, allocator);
-			newAlternateForm.AddMember("weight", data.alternateForms[i].weight, allocator);
+			newAlternateForm.AddMember("height", it->second.height, allocator);
+			newAlternateForm.AddMember("weight", it->second.weight, allocator);
 
 			alternateForms.PushBack(newAlternateForm, allocator);
 		}
@@ -105,7 +99,7 @@ namespace Pokemon
 		fclose(fp);	
 	}
 	
-	void LoadSpecieData(const int nationalDexNumber, SpeciesData& data)
+	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data)
 	{
 		if (nationalDexNumber == 0 || nationalDexNumber >= 1008)
 		{
@@ -141,5 +135,7 @@ namespace Pokemon
 		{
 			std::cout << "WARNING: loader function has a different version as json data" << std::endl;
 		}
+
+		// TODO: actually load it
 	}
 }

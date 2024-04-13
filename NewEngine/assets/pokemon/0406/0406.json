@@ -1,1 +1,25 @@
-{"data_version":1,"name":"Budew","nationalDexNumber":406,"genderRatio":50,"eggGroup1":14,"eggGroup2":15,"hatchCycles":20,"catchRate":255.0,"isStatsGenderBased":false,"isSpriteGenderBased":false,"defaultForm":{"formId":"default","baseHp":40,"baseAtk":30,"baseSpAtk":50,"baseDef":35,"baseSpDef":70,"baseSpd":55,"type1":4,"type2":7,"height":0.20000000298023224,"weight":1.2000000476837158},"alternateForms":[]}
+{
+    "data_version": 1,
+    "name": "Budew",
+    "nationalDexNumber": 406,
+    "genderRatio": 50,
+    "eggGroup1": 14,
+    "eggGroup2": 15,
+    "hatchCycles": 20,
+    "catchRate": 255.0,
+    "isStatsGenderBased": false,
+    "isSpriteGenderBased": false,
+    "defaultForm": {
+        "baseHp": 40,
+        "baseAtk": 30,
+        "baseSpAtk": 50,
+        "baseDef": 35,
+        "baseSpDef": 70,
+        "baseSpd": 55,
+        "type1": 4,
+        "type2": 7,
+        "height": 0.20000000298023224,
+        "weight": 1.2000000476837158
+    },
+    "alternateForms": []
+}
