@@ -7,9 +7,10 @@
 #include "DrawInfo.h"
 #include "cRenderModel.h"
 
-const std::string SHADER_PATH = "assets/shaders/";
-const std::string MODEL_PATH = "assets/models/";
-const std::string TEXTURE_PATH = "assets/textures/";
+const static std::string SHADER_PATH = "assets/shaders/";
+const static std::string MODEL_PATH = "assets/models/";
+const static std::string TEXTURE_PATH = "assets/textures/";
+const static std::string PKM_SPRITES_PATH = "assets/pokemon/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
 
@@ -133,8 +134,9 @@ private:
     std::map<std::string, sSpriteSheet> sceneSpriteSheets;
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "", bool isPermanent = false);
-    void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
+    void LoadOverworldPokemonSpriteSheet(const int nationalDexId, const std::string formTag = "");
 
+    void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);
 
     // Drawing

@@ -131,9 +131,11 @@ int main()
     mapManager->LoadMap("GrassRouteDemoDesc.json");
     //mapManager->LoadMap("CostalWinterDesc.json");
 
+    sceneManager->LoadSpawnData(678, 0, 0, 0, "");
+
     {
         Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
-        std::shared_ptr<cOverworldPokemon> follower = cSceneManager::CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f)); //new cOverworldPokemon(glm::vec3(22.f, 1.f, 25.f), "722.png");
+        std::shared_ptr<cOverworldPokemon> follower = cSceneManager::CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
         camera->targetPosRef = Player::GetPlayerPositionRef();
     }

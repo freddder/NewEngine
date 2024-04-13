@@ -737,6 +737,51 @@ unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
     return textureID;
 }
 
+void cRenderManager::LoadOverworldPokemonSpriteSheet(const int nationalDexId, const std::string formTag)
+{
+    std::string dexIdString = std::to_string(nationalDexId);
+    while (dexIdString.length() < 4)
+    {
+        dexIdString = "0" + dexIdString;
+    }
+    std::string texturePath = PKM_SPRITES_PATH + dexIdString + "/";
+
+    std::string textureName = std::to_string(nationalDexId);
+    if (formTag != "")
+    {
+        textureName = textureName + "_" + formTag;
+    }
+    std::string shinyTextureName = textureName + "_s.png";
+    textureName = textureName + ".png";
+
+    // Create sprite sheet
+    sSpriteSheet newSheet;
+    newSheet.numCols = 4;
+    newSheet.numRows = 4;
+    newSheet.isSymmetrical = false;
+    newSheet.isPermanent = false;
+
+    std::string fullPath = texturePath + textureName;
+    int width, height;
+    newSheet.textureId = CreateTexture(fullPath, width, height);
+
+    if (newSheet.textureId != 0)
+        sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSheet));
+
+    // Create shiny sprite sheet
+    sSpriteSheet newShinySheet;
+    newShinySheet.numCols = 4;
+    newShinySheet.numRows = 4;
+    newShinySheet.isSymmetrical = false;
+    newShinySheet.isPermanent = false;
+
+    std::string shinyFullPath = texturePath + shinyTextureName;
+    newShinySheet.textureId = CreateTexture(shinyFullPath, width, height);
+
+    if (newShinySheet.textureId != 0)
+        sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
+}
+
 void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory, bool isPermanent)
 {
     if (sceneSpriteSheets.count(spriteSheetName)) return; // texture already created

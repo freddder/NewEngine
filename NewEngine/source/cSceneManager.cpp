@@ -1,6 +1,7 @@
 #include "cSceneManager.h"
 #include "cOverworldPokemon.h"
 #include "cMapManager.h"
+#include "cRenderManager.h"
 
 cSceneManager* cSceneManager::singleton = NULL;
 
@@ -12,13 +13,6 @@ cSceneManager::cSceneManager()
 	fogGradient = 0.1f;
 	windSpeed = 0.25f;
 
-	//Pokemon::SpawnData meowstic;
-	//meowstic.nationalDexNumber = 678;
-	//meowstic.isStatsGenderBased = true;
-	//meowstic.minLevel = 20;
-	//meowstic.minLevel = 30;
-	//meowstic.spawnChance = 1;
-	//loadedSpawnData.push_back(meowstic);
 }
 
 cSceneManager::~cSceneManager()
@@ -133,21 +127,40 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	Pokemon::sSpeciesData specieData;
 	Pokemon::LoadSpecieData(nationalDexId, specieData);
 
+	// Load overworld sprite texture
+	cRenderManager* renderManager = cRenderManager::GetInstance();
+	renderManager->LoadOverworldPokemonSpriteSheet(nationalDexId, formName);
+
+	// Load female varient if there is one
+	if (specieData.isSpriteGenderBased && formName == "")
+	{
+		renderManager->LoadOverworldPokemonSpriteSheet(nationalDexId, "f");
+	}
+
 	Pokemon::sSpawnData spawnData;
 	spawnData.nationalDexNumber = nationalDexId;
 	spawnData.formName = formName;
+	spawnData.minLevel = minLevel;
+	spawnData.maxLevel = maxLevel;
+	spawnData.spawnChance = spawnChance;
+	spawnData.genderRatio = specieData.genderRatio;
+	spawnData.isStatsGenderBased = specieData.isStatsGenderBased;
+	spawnData.isSpriteGenderBased = specieData.isSpriteGenderBased;
+
+	loadedSpawnData.push_back(spawnData);
 }
 
-std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(const int nationalDexId, glm::vec3 location)
+std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location)
 {
-	// TODO: check if data is loaded
 	// TODO: consider moving OWPokemon/Character constructor code here
+
+	const Pokemon::sSpawnData& spawnData = singleton->loadedSpawnData[dataId];
 
 	// Check if location is available
 	sTile* tile = cMapManager::GetInstance()->GetTile(location);
 	if (!tile) return nullptr;
 	
-	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "722.png");
+	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "678_s.png");
 	singleton->roamingWildPokemon.push_back(newWildPokemon);
 
 	tile->entity = newWildPokemon.get();
