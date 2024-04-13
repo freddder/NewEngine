@@ -163,7 +163,7 @@ namespace Pokemon
 		rapidjson::Value& alternateForms = d["alternateForms"];
 		for (unsigned int i = 0; i < alternateForms.Size(); i++)
 		{
-			std::string formName = alternateForms[i]["type1"].GetString();
+			std::string formName = alternateForms[i]["name"].GetString();
 			sForm newForm;
 
 			newForm.type1 = static_cast<eType>(alternateForms[i]["type1"].GetInt());

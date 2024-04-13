@@ -284,6 +284,7 @@ void RenderImgui()
         ImGui::SameLine();
         if (ImGui::Button("Load Species Data"))
         {
+            selectedSpecies.alternateForms.clear();
             Pokemon::LoadSpecieData(searchNationalDexNumber, selectedSpecies);
         }
 
@@ -346,8 +347,17 @@ void RenderImgui()
             }
             ImGui::Separator();
 
-            ImGui::Text("Default Form");
+            ImGui::Text("Default form");
             RenderFormData(selectedSpecies.defaultForm);
+            ImGui::Separator();
+
+            for (std::map<std::string, Pokemon::sForm>::iterator it = selectedSpecies.alternateForms.begin(); it != selectedSpecies.alternateForms.end(); it++)
+            {
+                std::string formTitle = it->first + " form";
+                ImGui::Text(formTitle.c_str());
+                RenderFormData(it->second);
+                ImGui::Separator();
+            }
 
             if (ImGui::Button("Save Species Data"))
             {

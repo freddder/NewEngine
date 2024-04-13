@@ -1,0 +1,39 @@
+{
+    "data_version": 1,
+    "name": "Meowstic",
+    "nationalDexNumber": 678,
+    "genderRatio": 50,
+    "eggGroup1": 5,
+    "eggGroup2": 15,
+    "hatchCycles": 0,
+    "catchRate": 0.0,
+    "isStatsGenderBased": true,
+    "isSpriteGenderBased": false,
+    "defaultForm": {
+        "type1": 10,
+        "type2": 18,
+        "baseHp": 74,
+        "baseAtk": 48,
+        "baseSpAtk": 83,
+        "baseDef": 76,
+        "baseSpDef": 81,
+        "baseSpd": 104,
+        "height": 0.6000000238418579,
+        "weight": 8.5
+    },
+    "alternateForms": [
+        {
+            "name": "female",
+            "type1": 10,
+            "type2": 18,
+            "baseHp": 74,
+            "baseAtk": 48,
+            "baseSpAtk": 83,
+            "baseDef": 76,
+            "baseSpDef": 81,
+            "baseSpd": 104,
+            "height": 0.6000000238418579,
+            "weight": 8.5
+        }
+    ]
+}
