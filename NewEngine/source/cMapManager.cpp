@@ -80,7 +80,8 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	FILE* fp = 0;
 	fopen_s(&fp, ("assets/maps/" + mapDescriptionFile).c_str(), "rb"); // non-Windows use "r"
 
-	char readBuffer[65536];
+	// OPTIMIZATION: best buffer size might be different
+	char readBuffer[4096];
 	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
 
 	rapidjson::Document d;
@@ -151,7 +152,6 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 	// Load tile animations
 	rapidjson::Value& instancedTileData = d["instancedTiles"];
-
 	for (unsigned int i = 0; i < instancedTileData.Size(); i++)
 	{
 		rapidjson::Value& currInstancedTile = d["instancedTiles"][i];

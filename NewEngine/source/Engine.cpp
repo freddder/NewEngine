@@ -284,26 +284,10 @@ void RenderImgui()
         ImGui::SameLine();
         if (ImGui::Button("Load Species Data"))
         {
-            searchNationalDexNumber = 406;
-            selectedSpecies.nationalDexNumber = 406;
-            selectedSpecies.name = "Budew";
-            selectedSpecies.hatchCycles = 20;
-            selectedSpecies.catchRate = 255;
-            selectedSpecies.defaultForm.baseStats.hp = 40;
-            selectedSpecies.defaultForm.baseStats.atk = 30;
-            selectedSpecies.defaultForm.baseStats.def = 35;
-            selectedSpecies.defaultForm.baseStats.spAtk = 50;
-            selectedSpecies.defaultForm.baseStats.spDef = 70;
-            selectedSpecies.defaultForm.baseStats.spd = 55;
-            selectedSpecies.defaultForm.type1 = Pokemon::eType::GRASS;
-            selectedSpecies.defaultForm.type2 = Pokemon::eType::POISON;
-            selectedSpecies.defaultForm.height = 0.2f;
-            selectedSpecies.defaultForm.weight = 1.2f;
-
-            //Pokemon::LoadSpecieData(1, selectedSpecies);
+            Pokemon::LoadSpecieData(searchNationalDexNumber, selectedSpecies);
         }
 
-        if (searchNationalDexNumber != 0)
+        if (selectedSpecies.nationalDexNumber != 0)
         {
             std::string title = selectedSpecies.name + " #" + std::to_string(selectedSpecies.nationalDexNumber);
             ImGui::Text(title.c_str());
