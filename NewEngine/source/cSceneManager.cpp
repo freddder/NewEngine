@@ -154,14 +154,14 @@ std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(/*con
 {
 	// TODO: consider moving OWPokemon/Character constructor code here
 
-	const Pokemon::sSpawnData& spawnData = singleton->loadedSpawnData[dataId];
+	const Pokemon::sSpawnData& spawnData = loadedSpawnData[dataId];
 
 	// Check if location is available
 	sTile* tile = cMapManager::GetInstance()->GetTile(location);
 	if (!tile) return nullptr;
 	
 	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "678_s.png");
-	singleton->roamingWildPokemon.push_back(newWildPokemon);
+	roamingWildPokemon.push_back(newWildPokemon);
 
 	tile->entity = newWildPokemon.get();
 

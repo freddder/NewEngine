@@ -77,7 +77,7 @@ private:
 public:
 	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const int spawnChance, const std::string formName = "");
 	// TODO: use spawn data instead of a temporary dataId
-	static std::shared_ptr<cOverworldPokemon> CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location);
+	std::shared_ptr<cOverworldPokemon> CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location);
 
 public:
 	void ChangeScene();

@@ -135,7 +135,7 @@ int main()
 
     {
         Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
-        std::shared_ptr<cOverworldPokemon> follower = cSceneManager::CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
+        std::shared_ptr<cOverworldPokemon> follower = sceneManager->CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
         camera->targetPosRef = Player::GetPlayerPositionRef();
     }
