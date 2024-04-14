@@ -3,12 +3,10 @@
 // This uses the Park & Miller algorithm found in "Numerical Recipes"
 
 // Define the constants for the Park & Miller algorithm
-
 const unsigned long a = 16807;       // 7^5
 const unsigned long m = 2147483647;  // 2^32 - 1 (and thus prime)
 
 // Schrage's algorithm constants
-
 const unsigned long q = 127773;
 const unsigned long r = 2836;
 

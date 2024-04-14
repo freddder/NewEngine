@@ -306,7 +306,7 @@ void RenderImgui()
                 if (ImGui::IsItemHovered()) ImGui::SetTooltip("Chance to be male (-1 for genderless)");
                 if (selectedSpecies.genderRatio != -1)
                 {
-                    ImGui::Checkbox("Are stats gender based", &selectedSpecies.isStatsGenderBased);
+                    ImGui::Checkbox("Are stats gender based", &selectedSpecies.isFormGenderBased);
                 }
 
                 if (ImGui::BeginCombo("Egg Group 1", Pokemon::EggGroup_Strings[selectedSpecies.eggGroup1]))

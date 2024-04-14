@@ -71,12 +71,6 @@ int main()
 
     //********************** Load models and textures ***************************
 
-    //renderManager->LoadModel("WaterTest3.obj", "scene");
-    //renderManager->LoadModel("MultiTest.obj", "scene");
-    //renderManager->LoadModel("GrassRouteDemo.obj", "scene");
-    //renderManager->LoadModel("CostalWinter.obj", "scene");
-    //renderManager->LoadModel("WinterTest.obj", "scene");
-    //renderManager->LoadModel("SlopeTest.obj", "scene");
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
     renderManager->LoadModel("Water_c2.obj", "wave");
@@ -100,6 +94,8 @@ int main()
 
     renderManager->LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
     renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
+
+    //***************************************************************************
 
     animationManager->InitializeAnimationsPresets();
 
@@ -131,6 +127,7 @@ int main()
     mapManager->LoadMap("GrassRouteDemoDesc.json");
     //mapManager->LoadMap("CostalWinterDesc.json");
 
+    sceneManager->LoadSpawnData(406, 0, 0, 0, "");
     sceneManager->LoadSpawnData(678, 0, 0, 0, "");
 
     {
@@ -138,6 +135,15 @@ int main()
         std::shared_ptr<cOverworldPokemon> follower = sceneManager->CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
         camera->targetPosRef = Player::GetPlayerPositionRef();
+
+        // TODO: find a good place to seed the rand
+        srand((int)time(0));
+        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 26.f));
+        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 27.f));
+        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 28.f));
+        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 29.f));
+        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 30.f));
+        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 31.f));
     }
 
     //sceneManager->SetWeather(SNOW);

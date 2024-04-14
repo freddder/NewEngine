@@ -145,7 +145,7 @@ namespace Pokemon
 
 		float catchRate; // Not sure how this will work either
 
-		bool isStatsGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
+		bool isFormGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
 		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
 
 		sForm defaultForm;
@@ -163,7 +163,7 @@ namespace Pokemon
 
 		// These should be the same as the species data
 		int genderRatio = 50;
-		bool isStatsGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
+		bool isFormGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
 		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
 
 		int spawnChance = 0; // Number of "entries"

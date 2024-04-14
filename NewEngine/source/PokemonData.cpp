@@ -49,7 +49,7 @@ namespace Pokemon
 
 		d.AddMember("catchRate", data.catchRate, allocator);
 
-		d.AddMember("isStatsGenderBased", data.isStatsGenderBased, allocator);
+		d.AddMember("isStatsGenderBased", data.isFormGenderBased, allocator);
 		d.AddMember("isSpriteGenderBased", data.isSpriteGenderBased, allocator);
 
 		rapidjson::Value defaultForm(rapidjson::kObjectType);
@@ -144,7 +144,7 @@ namespace Pokemon
 		data.eggGroup2 = static_cast<eEggGroup>(d["eggGroup2"].GetInt());
 		data.hatchCycles = d["hatchCycles"].GetInt();
 		data.catchRate = d["catchRate"].GetFloat();
-		data.isStatsGenderBased = d["isStatsGenderBased"].GetBool();
+		data.isFormGenderBased = d["isStatsGenderBased"].GetBool();
 		data.isSpriteGenderBased = d["isSpriteGenderBased"].GetBool();
 
 		data.defaultForm.type1 = static_cast<eType>(d["defaultForm"]["type1"].GetInt());

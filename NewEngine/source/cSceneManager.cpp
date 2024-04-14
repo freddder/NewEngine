@@ -3,6 +3,8 @@
 #include "cMapManager.h"
 #include "cRenderManager.h"
 
+#include <time.h>
+
 cSceneManager* cSceneManager::singleton = NULL;
 
 cSceneManager::cSceneManager()
@@ -132,7 +134,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	renderManager->LoadOverworldPokemonSpriteSheet(nationalDexId, formName);
 
 	// Load female varient if there is one
-	if (specieData.isSpriteGenderBased && formName == "")
+	if (formName == "" && (specieData.isSpriteGenderBased || specieData.isFormGenderBased))
 	{
 		renderManager->LoadOverworldPokemonSpriteSheet(nationalDexId, "f");
 	}
@@ -144,7 +146,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	spawnData.maxLevel = maxLevel;
 	spawnData.spawnChance = spawnChance;
 	spawnData.genderRatio = specieData.genderRatio;
-	spawnData.isStatsGenderBased = specieData.isStatsGenderBased;
+	spawnData.isFormGenderBased = specieData.isFormGenderBased;
 	spawnData.isSpriteGenderBased = specieData.isSpriteGenderBased;
 
 	loadedSpawnData.push_back(spawnData);
@@ -159,8 +161,34 @@ std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(/*con
 	// Check if location is available
 	sTile* tile = cMapManager::GetInstance()->GetTile(location);
 	if (!tile) return nullptr;
+
+	// Determine gender
+	Pokemon::eGender gender = Pokemon::NO_GENDER;
+	if (spawnData.genderRatio >= 0)
+	{		
+		int genderRandom = (rand() % 100); // [0-99]
+
+		if (spawnData.genderRatio < genderRandom) gender = Pokemon::MALE;
+		else gender = Pokemon::FEMALE;
+	}
+
+	std::string textureName = std::to_string(spawnData.nationalDexNumber);
+	if (gender == Pokemon::FEMALE && (spawnData.isSpriteGenderBased || spawnData.isFormGenderBased))
+	{
+		textureName = textureName + "_f";
+	}
+	else if (spawnData.formName != "")
+	{
+		textureName = textureName + "_" + spawnData.formName;
+	}
 	
-	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, "678_s.png");
+	// Determine shiny
+	int shinyRandom = (rand() % 100); // [0-99]
+	if (shinyRandom < 50) textureName = textureName + "_s";
+
+	textureName = textureName + ".png";
+	
+	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, textureName);
 	roamingWildPokemon.push_back(newWildPokemon);
 
 	tile->entity = newWildPokemon.get();
