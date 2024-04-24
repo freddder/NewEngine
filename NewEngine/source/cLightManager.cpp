@@ -2,7 +2,7 @@
 #include <sstream>
 #include <glad/glad.h>
 
-cLightManager* cLightManager::singleton = NULL;
+cLightManager* cLightManager::sgtn = NULL;
 
 cLightManager::cLightManager()
 {

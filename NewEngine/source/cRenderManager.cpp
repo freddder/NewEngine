@@ -23,7 +23,7 @@
 
 #include "Player.h"
 
-cRenderManager* cRenderManager::singleton = NULL;
+cRenderManager* cRenderManager::sgtn = NULL;
 
 cRenderManager::cRenderManager()
 {
@@ -606,7 +606,7 @@ void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
 std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
 {
     std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
-    singleton->models.push_back(newModel);
+    sgtn->models.push_back(newModel);
 
     return newModel;
 }
@@ -614,7 +614,7 @@ std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
 std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
 {
     std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
-    singleton->models.push_back(newModel);
+    sgtn->models.push_back(newModel);
 
     return newModel;
 }
@@ -638,17 +638,17 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedMod
         newModel = std::make_shared<cTreeModel>();
         break;
     }
-    singleton->models.push_back(newModel);
+    sgtn->models.push_back(newModel);
 
     return newModel;
 }
 
 void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
 {
-    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(singleton->models.begin(), singleton->models.end(), model);
+    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(sgtn->models.begin(), sgtn->models.end(), model);
     
-    if(it != singleton->models.end())
-        singleton->models.erase(it);
+    if(it != sgtn->models.end())
+        sgtn->models.erase(it);
 }
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)

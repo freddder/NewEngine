@@ -35,26 +35,26 @@ const static char* Weather_Strings[] =
 class cSceneManager
 {
 	// Singleton
-	static cSceneManager* singleton;
+	static cSceneManager* sgtn;
 	cSceneManager();
 	~cSceneManager();
 	cSceneManager(const cSceneManager& obj) = delete;
 public:
 	static cSceneManager* GetInstance()
 	{
-		if (singleton == NULL)
+		if (sgtn == NULL)
 		{
-			singleton = new cSceneManager();
+			sgtn = new cSceneManager();
 		}
 
-		return singleton;
+		return sgtn;
 	}
 	static void DestroyInstance()
 	{
-		if (singleton != NULL)
+		if (sgtn != NULL)
 		{
-			delete singleton;
-			singleton = NULL;
+			delete sgtn;
+			sgtn = NULL;
 		}
 	}
 

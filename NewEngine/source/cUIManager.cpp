@@ -1,6 +1,6 @@
 #include "cUIManager.h"
 
-cUIManager* cUIManager::singleton = NULL;
+cUIManager* cUIManager::sgtn = NULL;
 
 cUIManager::cUIManager()
 {

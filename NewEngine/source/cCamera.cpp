@@ -1,7 +1,7 @@
 #include "cCamera.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-cCamera* cCamera::singleton = NULL;
+cCamera* cCamera::sgtn = NULL;
 
 cCamera::cCamera()
 {

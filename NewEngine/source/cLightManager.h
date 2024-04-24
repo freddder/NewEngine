@@ -25,26 +25,26 @@ struct sLight
 
 class cLightManager
 {
-	static cLightManager* singleton;
+	static cLightManager* sgtn;
 	cLightManager();
 	~cLightManager();
 	cLightManager(const cLightManager& obj) = delete;
 public:
 	static cLightManager* GetInstance()
 	{
-		if (singleton == NULL)
+		if (sgtn == NULL)
 		{
-			singleton = new cLightManager();
+			sgtn = new cLightManager();
 		}
 
-		return singleton;
+		return sgtn;
 	}
 	static void DestroyInstance()
 	{
-		if (singleton != NULL)
+		if (sgtn != NULL)
 		{
-			delete singleton;
-			singleton = NULL;
+			delete sgtn;
+			sgtn = NULL;
 		}
 	}
 

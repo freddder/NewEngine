@@ -13,25 +13,25 @@ struct sEntitySpriteAnimationPreset
 
 class cAnimationManager
 {
-	static cAnimationManager* singleton;
+	static cAnimationManager* sgtn;
 	cAnimationManager();
 	cAnimationManager(const cAnimationManager& obj) = delete;
 public:
 	static cAnimationManager* GetInstance()
 	{
-		if (singleton == NULL)
+		if (sgtn == NULL)
 		{
-			singleton = new cAnimationManager();
+			sgtn = new cAnimationManager();
 		}
 
-		return singleton;
+		return sgtn;
 	}
 	static void DestroyInstance()
 	{
-		if (singleton != NULL)
+		if (sgtn != NULL)
 		{
-			delete singleton;
-			singleton = NULL;
+			delete sgtn;
+			sgtn = NULL;
 		}
 	}
 

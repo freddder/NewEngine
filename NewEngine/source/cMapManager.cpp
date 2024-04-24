@@ -13,7 +13,7 @@
 #include "Player.h"
 #include "cPlayerCharacter.h"
 
-cMapManager* cMapManager::singleton = NULL;
+cMapManager* cMapManager::sgtn = NULL;
 
 sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
 {

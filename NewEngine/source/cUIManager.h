@@ -21,26 +21,26 @@ public:
 
 class cUIManager
 {
-    static cUIManager* singleton;
+    static cUIManager* sgtn;
     cUIManager();
     ~cUIManager();
     cUIManager(const cUIManager& obj) = delete;
 public:
     static cUIManager* GetInstance()
     {
-        if (singleton == NULL)
+        if (sgtn == NULL)
         {
-            singleton = new cUIManager();
+            sgtn = new cUIManager();
         }
 
-        return singleton;
+        return sgtn;
     }
     static void DestroyInstance()
     {
-        if (singleton != NULL)
+        if (sgtn != NULL)
         {
-            delete singleton;
-            singleton = NULL;
+            delete sgtn;
+            sgtn = NULL;
         }
     }
 

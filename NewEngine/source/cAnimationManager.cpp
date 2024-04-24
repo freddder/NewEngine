@@ -1,7 +1,7 @@
 #include "cAnimationManager.h"
 #include <vector>
 
-cAnimationManager* cAnimationManager::singleton = NULL;
+cAnimationManager* cAnimationManager::sgtn = NULL;
 
 cAnimationManager::cAnimationManager()
 {
@@ -10,7 +10,7 @@ cAnimationManager::cAnimationManager()
 
 void cAnimationManager::Process(float deltaTime)
 {
-	std::vector<std::shared_ptr<cAnimation>>& animations = singleton->animations;
+	std::vector<std::shared_ptr<cAnimation>>& animations = sgtn->animations;
 	for (int i = animations.size() - 1; i >= 0; i--)
 	{
 		animations[i]->Process(deltaTime);
@@ -210,12 +210,12 @@ void cAnimationManager::InitializeAnimationsPresets()
 
 void cAnimationManager::AddAnimation(std::shared_ptr<cAnimation> newAnimation)
 {
-	singleton->animations.push_back(newAnimation);
+	sgtn->animations.push_back(newAnimation);
 }
 
 void cAnimationManager::RemoveAnimation(std::shared_ptr<cAnimation> animationToRemove)
 {
-	std::vector<std::shared_ptr<cAnimation>>& animations = singleton->animations;
+	std::vector<std::shared_ptr<cAnimation>>& animations = sgtn->animations;
 	for (int i = 0; i < animations.size(); i++)
 	{
 		if (animationToRemove == animations[i])

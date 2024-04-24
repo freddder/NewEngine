@@ -3,25 +3,25 @@
 
 class cCamera
 {
-	static cCamera* singleton;
+	static cCamera* sgtn;
 	cCamera();
 	cCamera(const cCamera& obj) = delete;
 public:
 	static cCamera* GetInstance()
 	{
-		if (singleton == NULL)
+		if (sgtn == NULL)
 		{
-			singleton = new cCamera();
+			sgtn = new cCamera();
 		}
 
-		return singleton;
+		return sgtn;
 	}
 	static void DestroyInstance()
 	{
-		if (singleton != NULL)
+		if (sgtn != NULL)
 		{
-			delete singleton;
-			singleton = NULL;
+			delete sgtn;
+			sgtn = NULL;
 		}
 	}
 

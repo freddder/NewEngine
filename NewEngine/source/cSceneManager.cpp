@@ -5,7 +5,7 @@
 
 #include <time.h>
 
-cSceneManager* cSceneManager::singleton = NULL;
+cSceneManager* cSceneManager::sgtn = NULL;
 
 cSceneManager::cSceneManager()
 {

@@ -44,26 +44,26 @@ struct sSpriteSheet : sTexture
 
 class cRenderManager
 {
-    static cRenderManager* singleton;
+    static cRenderManager* sgtn;
     cRenderManager();
     ~cRenderManager();
     cRenderManager(const cRenderManager& obj) = delete;
 public:
     static cRenderManager* GetInstance()
     {
-        if (singleton == NULL)
+        if (sgtn == NULL)
         {
-            singleton = new cRenderManager();
+            sgtn = new cRenderManager();
         }
 
-        return singleton;
+        return sgtn;
     }
     static void DestroyInstance()
     {
-        if (singleton != NULL)
+        if (sgtn != NULL)
         {
-            delete singleton;
-            singleton = NULL;
+            delete sgtn;
+            sgtn = NULL;
         }
     }
 

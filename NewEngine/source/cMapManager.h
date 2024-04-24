@@ -57,26 +57,26 @@ enum eEntityMoveResult
 
 class cMapManager
 {
-	static cMapManager* singleton;
+	static cMapManager* sgtn;
 	cMapManager();
 	~cMapManager();
 	cMapManager(const cMapManager& obj) = delete;
 public:
 	static cMapManager* GetInstance()
 	{
-		if (singleton == NULL)
+		if (sgtn == NULL)
 		{
-			singleton = new cMapManager();
+			sgtn = new cMapManager();
 		}
 
-		return singleton;
+		return sgtn;
 	}
 	static void DestroyInstance()
 	{
-		if (singleton != NULL)
+		if (sgtn != NULL)
 		{
-			delete singleton;
-			singleton = NULL;
+			delete sgtn;
+			sgtn = NULL;
 		}
 	}
 
