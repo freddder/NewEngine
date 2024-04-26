@@ -11,7 +11,7 @@
 #include "cAnimatedModel.h"
 
 #include "Player.h"
-#include "cPlayerCharacter.h"
+#include "cPlayerEntity.h"
 
 cMapManager* cMapManager::sgtn = NULL;
 
@@ -374,11 +374,11 @@ eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection d
 		sTile* tileToWalk = desiredQuad->GetTileFromLocalPosition(glm::vec3(desiredPosX, desiredPosY, desiredPosZ));
 		if (tileToWalk->entity)
 		{
-			if (dynamic_cast<cPlayerCharacter*>(entityToMove) == Player::playerChar) // Player walk into it
+			if (dynamic_cast<cPlayerEntity*>(entityToMove) == Player::playerChar) // Player walk into it
 			{
 				tileToWalk->entity->WalkInteract();
 			}
-			else if (dynamic_cast<cPlayerCharacter*>(tileToWalk->entity) == Player::playerChar) // It walk into player
+			else if (dynamic_cast<cPlayerEntity*>(tileToWalk->entity) == Player::playerChar) // It walk into player
 			{
 				entityToMove->WalkInteract();
 			}

@@ -172,15 +172,6 @@ namespace Pokemon
 		int maxLevel;
 	};
 
-	struct OverworldData
-	{
-		int nationalDexNumber = 0;
-		std::string formName = "";
-
-		eGender gender = NO_GENDER;
-		bool isShiny = false;
-	};
-
 	struct BattleData
 	{
 		int nationalDexNumber = 0;

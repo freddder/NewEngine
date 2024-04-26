@@ -8,8 +8,8 @@
 #include "cUIManager.h"
 
 #include "cCamera.h"
-#include "cOverworldPokemon.h"
-#include "cPlayerCharacter.h"
+#include "cWildRoamingPokemon.h"
+#include "cPlayerEntity.h"
 
 #include "Engine.h"
 #include "Player.h"
@@ -131,8 +131,8 @@ int main()
     sceneManager->LoadSpawnData(678, 0, 0, 0, "");
 
     {
-        Player::playerChar = new cPlayerCharacter(glm::vec3(23.f, 1.f, 25.f));
-        std::shared_ptr<cOverworldPokemon> follower = sceneManager->CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
+        Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
+        std::shared_ptr<cWildRoamingPokemon> follower = sceneManager->CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
         camera->targetPosRef = Player::GetPlayerPositionRef();
 

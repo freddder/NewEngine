@@ -155,24 +155,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\CharacterSprite.cpp" />
+    <ClCompile Include="source\cCharacterEntity.cpp" />
     <ClCompile Include="source\cEntity.cpp" />
+    <ClCompile Include="source\cPlayerEntity.cpp" />
     <ClCompile Include="source\cSceneManager.cpp" />
     <ClCompile Include="source\cAnimatedModel.cpp" />
     <ClCompile Include="source\cAnimation.cpp" />
     <ClCompile Include="source\cAnimationManager.cpp" />
     <ClCompile Include="source\cCamera.cpp" />
-    <ClCompile Include="source\cCharacter.cpp" />
     <ClCompile Include="source\cLightManager.cpp" />
     <ClCompile Include="source\cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="source\cMapManager.cpp" />
-    <ClCompile Include="source\cNPCCharacter.cpp" />
-    <ClCompile Include="source\cOverworldPokemon.cpp" />
     <ClCompile Include="source\cParticleSpawner.cpp" />
-    <ClCompile Include="source\cPlayerCharacter.cpp" />
     <ClCompile Include="source\cRenderModel.cpp" />
     <ClCompile Include="source\cRenderManager.cpp" />
     <ClCompile Include="source\cSpriteModel.cpp" />
     <ClCompile Include="source\cUIManager.cpp" />
+    <ClCompile Include="source\cWildRoamingPokemon.cpp" />
     <ClCompile Include="source\Engine.cpp" />
     <ClCompile Include="source\glad.c" />
     <ClCompile Include="include\imgui\imgui.cpp" />
@@ -188,6 +188,11 @@
     <ClCompile Include="source\UIWidgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\cPlayerEntity.h" />
+    <ClInclude Include="source\cTamedRoamingPokemon.h" />
+    <ClInclude Include="source\cWildRoamingPokemon.h" />
+    <ClInclude Include="source\CharacterSprite.h" />
+    <ClInclude Include="source\cCharacterEntity.h" />
     <ClInclude Include="source\Player.h" />
     <ClInclude Include="source\cEntity.h" />
     <ClInclude Include="source\PokemonData.h" />
@@ -196,13 +201,10 @@
     <ClInclude Include="source\cAnimation.h" />
     <ClInclude Include="source\cAnimationManager.h" />
     <ClInclude Include="source\cCamera.h" />
-    <ClInclude Include="source\cCharacter.h" />
     <ClInclude Include="source\cLightManager.h" />
     <ClInclude Include="source\cLinearCongruentialGenerator.h" />
     <ClInclude Include="source\cMapManager.h" />
-    <ClInclude Include="source\cNPCCharacter.h" />
     <ClInclude Include="source\cParticleSpawner.h" />
-    <ClInclude Include="source\cPlayerCharacter.h" />
     <ClInclude Include="source\cRandomNumberGenerator.h" />
     <ClInclude Include="source\cRenderModel.h" />
     <ClInclude Include="source\cRenderManager.h" />
@@ -219,7 +221,6 @@
     <ClInclude Include="include\imgui\imstb_rectpack.h" />
     <ClInclude Include="include\imgui\imstb_textedit.h" />
     <ClInclude Include="include\imgui\imstb_truetype.h" />
-    <ClInclude Include="source\cOverworldPokemon.h" />
     <ClInclude Include="source\UIWidgets.h" />
   </ItemGroup>
   <ItemGroup>

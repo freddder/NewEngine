@@ -95,9 +95,6 @@
     <ClCompile Include="source\cAnimationManager.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
-    <ClCompile Include="source\cCharacter.cpp">
-      <Filter>Entity\Character</Filter>
-    </ClCompile>
     <ClCompile Include="source\cMapManager.cpp">
       <Filter>Map</Filter>
     </ClCompile>
@@ -113,20 +110,11 @@
     <ClCompile Include="source\cParticleSpawner.cpp">
       <Filter>Particles</Filter>
     </ClCompile>
-    <ClCompile Include="source\cPlayerCharacter.cpp">
-      <Filter>Entity\Character</Filter>
-    </ClCompile>
     <ClCompile Include="source\cAnimatedModel.cpp">
       <Filter>Render System\Model</Filter>
     </ClCompile>
     <ClCompile Include="source\cAnimation.cpp">
       <Filter>Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cOverworldPokemon.cpp">
-      <Filter>Entity\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="source\cNPCCharacter.cpp">
-      <Filter>Entity\Character</Filter>
     </ClCompile>
     <ClCompile Include="source\Engine.cpp">
       <Filter>Source Files</Filter>
@@ -148,6 +136,18 @@
     </ClCompile>
     <ClCompile Include="source\Player.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CharacterSprite.cpp">
+      <Filter>Entity\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cCharacterEntity.cpp">
+      <Filter>Entity\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cWildRoamingPokemon.cpp">
+      <Filter>Entity\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cPlayerEntity.cpp">
+      <Filter>Entity\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -199,9 +199,6 @@
     <ClInclude Include="source\cAnimationManager.h">
       <Filter>Animation</Filter>
     </ClInclude>
-    <ClInclude Include="source\cCharacter.h">
-      <Filter>Entity\Character</Filter>
-    </ClInclude>
     <ClInclude Include="source\cMapManager.h">
       <Filter>Map</Filter>
     </ClInclude>
@@ -220,17 +217,8 @@
     <ClInclude Include="source\cParticleSpawner.h">
       <Filter>Particles</Filter>
     </ClInclude>
-    <ClInclude Include="source\cPlayerCharacter.h">
-      <Filter>Entity\Character</Filter>
-    </ClInclude>
     <ClInclude Include="source\cAnimatedModel.h">
       <Filter>Render System\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cOverworldPokemon.h">
-      <Filter>Entity\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="source\cNPCCharacter.h">
-      <Filter>Entity\Character</Filter>
     </ClInclude>
     <ClInclude Include="source\Engine.h">
       <Filter>Source Files</Filter>
@@ -249,6 +237,21 @@
     </ClInclude>
     <ClInclude Include="source\Player.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CharacterSprite.h">
+      <Filter>Entity\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cCharacterEntity.h">
+      <Filter>Entity\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cWildRoamingPokemon.h">
+      <Filter>Entity\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cTamedRoamingPokemon.h">
+      <Filter>Entity\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cPlayerEntity.h">
+      <Filter>Entity\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

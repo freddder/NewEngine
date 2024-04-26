@@ -7,11 +7,11 @@
 // - items
 // - map location
 
-class cPlayerCharacter;
+class cPlayerEntity;
 
 namespace Player
 {
-	extern cPlayerCharacter* playerChar;
+	extern cPlayerEntity* playerChar;
 
 	glm::vec3 GetPlayerPosition();
 	glm::vec3* GetPlayerPositionRef();

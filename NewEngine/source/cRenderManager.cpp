@@ -196,6 +196,8 @@ cRenderManager::cRenderManager()
 
 cRenderManager::~cRenderManager()
 {
+    // TODO: unload loaded models from shaders
+
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVBO);
     glDeleteBuffers(1, &uboMatricesID);

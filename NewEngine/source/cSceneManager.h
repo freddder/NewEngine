@@ -5,7 +5,7 @@
 #include "cParticleSpawner.h"
 #include "PokemonData.h"
 
-class cOverworldPokemon;
+class cWildRoamingPokemon;
 
 enum eEnvironmentWeather
 {
@@ -73,11 +73,11 @@ public:
 	// Entities
 private:
 	std::vector<Pokemon::sSpawnData> loadedSpawnData;
-	std::vector<std::shared_ptr<class cOverworldPokemon>> roamingWildPokemon;
+	std::vector<std::shared_ptr<class cWildRoamingPokemon>> roamingWildPokemon;
 public:
 	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const int spawnChance, const std::string formName = "");
 	// TODO: use spawn data instead of a temporary dataId
-	std::shared_ptr<cOverworldPokemon> CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location);
+	std::shared_ptr<cWildRoamingPokemon> CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location);
 
 public:
 	void ChangeScene();

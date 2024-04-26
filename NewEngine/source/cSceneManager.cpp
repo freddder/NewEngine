@@ -1,5 +1,5 @@
 #include "cSceneManager.h"
-#include "cOverworldPokemon.h"
+#include "cWildRoamingPokemon.h"
 #include "cMapManager.h"
 #include "cRenderManager.h"
 
@@ -152,7 +152,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	loadedSpawnData.push_back(spawnData);
 }
 
-std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location)
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location)
 {
 	// TODO: consider moving OWPokemon/Character constructor code here
 
@@ -188,7 +188,7 @@ std::shared_ptr<cOverworldPokemon> cSceneManager::CreateRoamingWildPokemon(/*con
 
 	textureName = textureName + ".png";
 	
-	std::shared_ptr<cOverworldPokemon> newWildPokemon = std::make_shared<cOverworldPokemon>(location, textureName);
+	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(location, textureName);
 	roamingWildPokemon.push_back(newWildPokemon);
 
 	tile->entity = newWildPokemon.get();

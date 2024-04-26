@@ -21,7 +21,7 @@
 #include "PokemonData.h"
 
 #include "Player.h"
-#include "cPlayerCharacter.h"
+#include "cPlayerEntity.h"
 
 GLFWwindow* window;
 float deltaTime = 0.f;
@@ -578,9 +578,9 @@ namespace Engine
         if (playerDesiresMovement)
         {
             if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-                Player::playerChar->Move(playerDesiredDirection, true);
+                Player::playerChar->AttemptMovement(playerDesiredDirection, true);
             else
-                Player::playerChar->Move(playerDesiredDirection, false);
+                Player::playerChar->AttemptMovement(playerDesiredDirection, false);
         }
         else
         {

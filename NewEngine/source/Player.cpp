@@ -1,17 +1,17 @@
 #include "Player.h"
-#include "cPlayerCharacter.h"
+#include "cPlayerEntity.h"
 
 namespace Player 
 {
-    cPlayerCharacter* playerChar;
+    cPlayerEntity* playerChar;
 
     glm::vec3 GetPlayerPosition()
     {
-        return playerChar->model->position;
+        return playerChar->GetModelPosition();
     }
 
     glm::vec3* GetPlayerPositionRef()
     {
-        return &playerChar->model->position;
+        return &playerChar->GetModelPositionRef();
     }
 }
