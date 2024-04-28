@@ -127,23 +127,23 @@ int main()
     mapManager->LoadMap("GrassRouteDemoDesc.json");
     //mapManager->LoadMap("CostalWinterDesc.json");
 
-    sceneManager->LoadSpawnData(406, 0, 0, 0, "");
-    sceneManager->LoadSpawnData(678, 0, 0, 0, "");
+    sceneManager->LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
+    sceneManager->LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
 
     {
         Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
-        std::shared_ptr<cWildRoamingPokemon> follower = sceneManager->CreateRoamingWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
+        std::shared_ptr<cWildRoamingPokemon> follower = sceneManager->SpawnWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
         camera->targetPosRef = Player::GetPlayerPositionRef();
 
         // TODO: find a good place to seed the rand
         srand((int)time(0));
-        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 26.f));
-        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 27.f));
-        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 28.f));
-        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 29.f));
-        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 30.f));
-        sceneManager->CreateRoamingWildPokemon(1, glm::vec3(22.f, 1.f, 31.f));
+        sceneManager->SpawnWildPokemon(1, glm::vec3(22.f, 1.f, 26.f));
+        sceneManager->SpawnWildPokemon(1, glm::vec3(22.f, 1.f, 27.f));
+        sceneManager->SpawnWildPokemon(1, glm::vec3(22.f, 1.f, 28.f));
+        sceneManager->SpawnWildPokemon(1, glm::vec3(22.f, 1.f, 29.f));
+        sceneManager->SpawnWildPokemon(1, glm::vec3(22.f, 1.f, 30.f));
+        sceneManager->SpawnWildPokemon(1, glm::vec3(22.f, 1.f, 31.f));
     }
 
     //sceneManager->SetWeather(SNOW);

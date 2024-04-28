@@ -75,9 +75,9 @@ private:
 	std::vector<Pokemon::sSpawnData> loadedSpawnData;
 	std::vector<std::shared_ptr<class cWildRoamingPokemon>> roamingWildPokemon;
 public:
-	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const int spawnChance, const std::string formName = "");
-	// TODO: use spawn data instead of a temporary dataId
-	std::shared_ptr<cWildRoamingPokemon> CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location);
+	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const Pokemon::eSpawnType spawnType,  const int spawnChance, const std::string formName = "");
+	std::shared_ptr<cWildRoamingPokemon> SpawnRandomWildPokemon();
+	std::shared_ptr<cWildRoamingPokemon> SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 location);
 
 public:
 	void ChangeScene();

@@ -44,6 +44,10 @@ struct sQuadrant
 
 	std::map<int, sTile> data;
 
+	int wildPokemonCount = 0;
+	std::vector<int> localSpawnTiles;
+	
+	static int GetTileIdFromPosition(glm::vec3 localPos);
 	sTile* GetTileFromLocalPosition(glm::vec3 localPos);
 };
 
@@ -90,5 +94,7 @@ public:
 	void LoadMap(std::string mapDescriptionFile);
 
 	sTile* GetTile(glm::vec3 worldPosition);
+	sTile* GetRandomSpawnTile(glm::vec3& globalPositionOut);
+
 	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
 };

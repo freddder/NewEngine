@@ -156,6 +156,14 @@ namespace Pokemon
 	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data);
 	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data);
 
+	enum eSpawnType
+	{
+		TALL_GRASS,
+		ST_WATER,
+		CAVE,
+		ST_ENUM_COUNT
+	};
+
 	struct sSpawnData
 	{
 		int nationalDexNumber = 0;
@@ -166,6 +174,7 @@ namespace Pokemon
 		bool isFormGenderBased = false; // Use an alternate form if female. Will only be used a few times (ex: Meowstic, Indeedee)
 		bool isSpriteGenderBased = false; // Change sprite if its female (doesn't matter if isStatsGenderBased is true)
 
+		eSpawnType spawnType = TALL_GRASS;
 		int spawnChance = 0; // Number of "entries"
 
 		int minLevel;

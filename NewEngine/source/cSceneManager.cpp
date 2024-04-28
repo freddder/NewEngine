@@ -116,7 +116,7 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 	currWeather = newWeather;
 }
 
-void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const int spawnChance, const std::string formName)
+void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const Pokemon::eSpawnType spawnType, const int spawnChance, const std::string formName)
 {
 	for (int i = 0; i < loadedSpawnData.size(); i++)
 	{
@@ -144,6 +144,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	spawnData.formName = formName;
 	spawnData.minLevel = minLevel;
 	spawnData.maxLevel = maxLevel;
+	spawnData.spawnType = spawnType;
 	spawnData.spawnChance = spawnChance;
 	spawnData.genderRatio = specieData.genderRatio;
 	spawnData.isFormGenderBased = specieData.isFormGenderBased;
@@ -152,12 +153,24 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	loadedSpawnData.push_back(spawnData);
 }
 
-std::shared_ptr<cWildRoamingPokemon> cSceneManager::CreateRoamingWildPokemon(/*const Pokemon::sSpawnData& spawnData*/ int dataId, glm::vec3 location)
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 {
-	// TODO: consider moving OWPokemon/Character constructor code here
+	if (loadedSpawnData.size() == 0) return nullptr;
 
-	const Pokemon::sSpawnData& spawnData = loadedSpawnData[dataId];
+	// Pick a random spawn data
+	Pokemon::sSpawnData spawnData = loadedSpawnData[(rand() % loadedSpawnData.size() - 1)];
 
+	// Find a suitable tile
+	if (spawnData.spawnType == Pokemon::TALL_GRASS)
+	{
+
+	}
+	
+	return std::shared_ptr<cWildRoamingPokemon>();
+}
+
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 location)
+{
 	// Check if location is available
 	sTile* tile = cMapManager::GetInstance()->GetTile(location);
 	if (!tile) return nullptr;

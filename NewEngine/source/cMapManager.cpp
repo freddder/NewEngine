@@ -9,22 +9,32 @@
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cAnimatedModel.h"
+#include "cSceneManager.h"
 
 #include "Player.h"
 #include "cPlayerEntity.h"
 
 cMapManager* cMapManager::sgtn = NULL;
 
-sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
+int sQuadrant::GetTileIdFromPosition(glm::vec3 localPos)
 {
 	if (localPos.x > 31 || localPos.x < 0 ||
 		localPos.z > 31 || localPos.z < 0 ||
-		localPos.y > 15 || localPos.y < -15) return nullptr;
+		localPos.y > 15 || localPos.y < -15) return -1;
 
 	int heightIndex = ((int)localPos.y + 15) * (32 * 32);
 	int layerIndex = 32 * (int)localPos.x + (int)localPos.z;
 
-	return &data[heightIndex + layerIndex];
+	return heightIndex + layerIndex;
+}
+
+sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
+{
+	int localTileId = GetTileIdFromPosition(localPos);
+
+	if (localTileId == -1) return nullptr;
+
+	return &data[localTileId];
 }
 
 cMapManager::cMapManager()
@@ -92,11 +102,11 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 	// unload old map (how to unload textures?)
 	
-	// load new map
+	// Load new map
 	std::string mapModelName = d["mapModelFileName"].GetString();
 	cRenderManager::GetInstance()->LoadModel(mapModelName, "scene");
 
-	// Load map model
+	// Create map model
 	if (!mapModel)
 	{
 		mapModel = cRenderManager::CreateRenderModel();
@@ -169,6 +179,25 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		instancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
 		instancedTiles[tileId].modelOffset = meshPosOffset;
+	}
+
+	// Load spawn data
+	std::vector<int> spawnTileIds;
+	if (d.HasMember("wildSpawning"))
+	{
+		rapidjson::Value& spawnData = d["wildSpawning"];
+		for (unsigned int i = 0; i < spawnData.Size(); i++)
+		{
+			Pokemon::eSpawnType spawnType = static_cast<Pokemon::eSpawnType>(spawnData[i]["spawnType"].GetInt());
+			if (spawnType == Pokemon::TALL_GRASS)
+			{
+				rapidjson::Value& spawnTileId = spawnData[i]["spawnTileId"];
+				for (int j = 0; j < spawnTileId.Size(); j++)
+				{
+					spawnTileIds.push_back(spawnTileId[j].GetInt());
+				}
+			}
+		}
 	}
 
 	// Load collision map
@@ -259,6 +288,11 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 							tileToCorrect->isWalkable = false;
 							tileToCorrect->isUnchangeable = true;
 						}
+
+						if (std::find(spawnTileIds.begin(), spawnTileIds.end(), tileId) != spawnTileIds.end())
+						{
+							newQuad.localSpawnTiles.push_back(sQuadrant::GetTileIdFromPosition(glm::vec3(x, currHeight, z)));
+						}
 					}
 					else // is NOT walkable
 					{
@@ -312,6 +346,21 @@ sTile* cMapManager::GetTile(glm::vec3 worldPosition)
 
 		return quad->GetTileFromLocalPosition(localPosition);
 	}
+
+	return nullptr;
+}
+
+sTile* cMapManager::GetRandomSpawnTile(glm::vec3& globalPositionOut)
+{
+	// Semi random: make sure to pick a tile close to player
+
+	glm::vec3 playerPosition = Player::GetPlayerPosition();
+	int quadPosX = (playerPosition.x + 15) / 32;
+	int quadPosZ = (playerPosition.z + 15) / 32;
+
+	sQuadrant* playerQuad = GetQuad(quadPosX, quadPosZ);
+	
+	
 
 	return nullptr;
 }

@@ -31,5 +31,11 @@
             "meshYOrientation": 0, 
             "animationType": 3
         }
-    ] 
+    ],
+    "wildSpawning": [
+        {
+            "spawnType": 0,
+            "spawnTileId": [107]
+        }
+    ]
 }
