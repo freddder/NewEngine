@@ -2,6 +2,7 @@
 #include "cWildRoamingPokemon.h"
 #include "cMapManager.h"
 #include "cRenderManager.h"
+#include "Player.h"
 
 #include <time.h>
 
@@ -158,22 +159,26 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	if (loadedSpawnData.size() == 0) return nullptr;
 
 	// Pick a random spawn data
-	Pokemon::sSpawnData spawnData = loadedSpawnData[(rand() % loadedSpawnData.size() - 1)];
+	int randIndex = (rand() % loadedSpawnData.size());
+	Pokemon::sSpawnData spawnData = loadedSpawnData[randIndex];
+	std::shared_ptr<cWildRoamingPokemon> spawnedWildPokemon = nullptr;
 
 	// Find a suitable tile
 	if (spawnData.spawnType == Pokemon::TALL_GRASS)
 	{
+		glm::vec3 spawnTilePos;
+		sTile* spawnTile = cMapManager::GetInstance()->GetRandomSpawnTile(spawnTilePos);
 
+		if (spawnTile)
+			spawnedWildPokemon = SpawnWildPokemon(spawnData, spawnTilePos, spawnTile);
 	}
 	
-	return std::shared_ptr<cWildRoamingPokemon>();
+	return spawnedWildPokemon;
 }
 
-std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 location)
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
 {
-	// Check if location is available
-	sTile* tile = cMapManager::GetInstance()->GetTile(location);
-	if (!tile) return nullptr;
+	if (!spawnTile) return nullptr;
 
 	// Determine gender
 	Pokemon::eGender gender = Pokemon::NO_GENDER;
@@ -201,10 +206,10 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokem
 
 	textureName = textureName + ".png";
 	
-	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(location, textureName);
+	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(tileLocation, textureName);
 	roamingWildPokemon.push_back(newWildPokemon);
 
-	tile->entity = newWildPokemon.get();
+	spawnTile->entity = newWildPokemon.get();
 
 	return newWildPokemon;
 }

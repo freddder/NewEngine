@@ -46,9 +46,13 @@ struct sQuadrant
 
 	int wildPokemonCount = 0;
 	std::vector<int> localSpawnTiles;
+	sTile* GetRandomSpawnTile(glm::vec3& globalPos);
 	
 	static int GetTileIdFromPosition(glm::vec3 localPos);
 	sTile* GetTileFromLocalPosition(glm::vec3 localPos);
+
+	glm::vec3 LocalPositionToGlobalPosition(glm::vec3 localPos);
+	glm::vec3 TileIdToGlobalPosition(int tileId);
 };
 
 enum eEntityMoveResult

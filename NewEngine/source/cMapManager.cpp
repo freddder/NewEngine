@@ -16,6 +16,17 @@
 
 cMapManager* cMapManager::sgtn = NULL;
 
+sTile* sQuadrant::GetRandomSpawnTile(glm::vec3& globalPos)
+{
+	if (wildPokemonCount >= 5) return nullptr;
+
+	int tileId = localSpawnTiles[rand() % localSpawnTiles.size() - 1];
+
+	sTile* spawnTile = &data[tileId];
+	globalPos = TileIdToGlobalPosition(tileId);
+	return spawnTile;
+}
+
 int sQuadrant::GetTileIdFromPosition(glm::vec3 localPos)
 {
 	if (localPos.x > 31 || localPos.x < 0 ||
@@ -35,6 +46,23 @@ sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
 	if (localTileId == -1) return nullptr;
 
 	return &data[localTileId];
+}
+
+glm::vec3 sQuadrant::LocalPositionToGlobalPosition(glm::vec3 localPos)
+{
+	return glm::vec3(posX * 32 + localPos.x - 15, localPos.y, posZ * 32 + localPos.z - 15);
+}
+
+glm::vec3 sQuadrant::TileIdToGlobalPosition(int tileId)
+{
+	if (tileId < 0) return glm::vec3(0); // <- don't let this happen (like ever)
+
+	// Go to local first
+	int localY = tileId / (32 * 32) - 15;
+	int localX = (tileId % (32 * 32)) / 32;
+	int localZ = tileId % 32;
+
+	return LocalPositionToGlobalPosition(glm::vec3(localX, localY, localZ));
 }
 
 cMapManager::cMapManager()
@@ -353,16 +381,34 @@ sTile* cMapManager::GetTile(glm::vec3 worldPosition)
 sTile* cMapManager::GetRandomSpawnTile(glm::vec3& globalPositionOut)
 {
 	// Semi random: make sure to pick a tile close to player
+	glm::vec3 playerPos = Player::GetPlayerPosition();
 
-	glm::vec3 playerPosition = Player::GetPlayerPosition();
-	int quadPosX = (playerPosition.x + 15) / 32;
-	int quadPosZ = (playerPosition.z + 15) / 32;
+	sQuadrant* spawnQuad = nullptr;
+	int findQuadAttempts = 0;
+	bool foundValidQuad = false;
+	while (!foundValidQuad)
+	{
+		// Pick a random adjacent quad (assuming player quad is valid)
+		int randQuadOffsetX = (rand() % 3) - 1; // [-1,1]
+		int randQuadOffsetZ = (rand() % 3) - 1; // [-1,1]
 
-	sQuadrant* playerQuad = GetQuad(quadPosX, quadPosZ);
-	
-	
+		spawnQuad = GetQuad((int)playerPos.x + (randQuadOffsetX * 32), (int)playerPos.z + (randQuadOffsetZ * 32));
+		if (spawnQuad && spawnQuad->localSpawnTiles.size() != 0)
+			foundValidQuad = true;
 
-	return nullptr;
+		findQuadAttempts++;
+		if (findQuadAttempts >= 5) 
+			return nullptr;
+	}
+
+	glm::vec3 tilePos;
+	sTile* spawnTile = spawnQuad->GetRandomSpawnTile(tilePos);
+
+	if (spawnTile)
+		spawnQuad->wildPokemonCount++;
+
+	globalPositionOut = tilePos;
+	return spawnTile;
 }
 
 eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection direction)

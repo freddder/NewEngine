@@ -71,7 +71,7 @@ void main()
 	vec4 newVertPos = vPosition;
 	if (newVertPos.y > 0.1)
 	{
-		float shakeMultiplier = .5f;
+		float shakeMultiplier = .75f;
 		newVertPos.x += (f - 0.5f) * shakeMultiplier;
 		newVertPos.z += (f - 0.5f) * shakeMultiplier;
 	}
