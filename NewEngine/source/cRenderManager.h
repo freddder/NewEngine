@@ -14,6 +14,11 @@ const static std::string PKM_SPRITES_PATH = "assets/pokemon/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
 
+namespace Pokemon
+{
+    struct sSpeciesData;
+}
+
 struct sShaderProgram
 {
     unsigned int ID;
@@ -132,9 +137,10 @@ public:
 
 private:
     std::map<std::string, sSpriteSheet> sceneSpriteSheets;
+    void LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag = "");
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "", bool isPermanent = false);
-    void LoadOverworldPokemonSpriteSheet(const int nationalDexId, const std::string formTag = "");
+    void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);

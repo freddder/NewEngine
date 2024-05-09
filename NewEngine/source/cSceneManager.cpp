@@ -1,5 +1,6 @@
 #include "cSceneManager.h"
 #include "cWildRoamingPokemon.h"
+#include "cTamedRoamingPokemon.h"
 #include "cMapManager.h"
 #include "cRenderManager.h"
 #include "Player.h"
@@ -131,14 +132,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	Pokemon::LoadSpecieData(nationalDexId, specieData);
 
 	// Load overworld sprite texture
-	cRenderManager* renderManager = cRenderManager::GetInstance();
-	renderManager->LoadOverworldPokemonSpriteSheet(nationalDexId, formName);
-
-	// Load female varient if there is one
-	if (formName == "" && (specieData.isSpriteGenderBased || specieData.isFormGenderBased))
-	{
-		renderManager->LoadOverworldPokemonSpriteSheet(nationalDexId, "f");
-	}
+	cRenderManager::GetInstance()->LoadRoamingPokemonSpecieSpriteSheets(specieData);
 
 	Pokemon::sSpawnData spawnData;
 	spawnData.nationalDexNumber = nationalDexId;
@@ -176,42 +170,51 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	return spawnedWildPokemon;
 }
 
-std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
 {
 	if (!spawnTile) return nullptr;
 
+	Pokemon::sRoamingPokemonData individualData;
+	individualData.nationalDexNumber = spawnData.nationalDexNumber;
+	individualData.formName = spawnData.formName;
+
 	// Determine gender
-	Pokemon::eGender gender = Pokemon::NO_GENDER;
-	if (spawnData.genderRatio >= 0)
+	individualData.gender = Pokemon::NO_GENDER;
+	if (spawnData.genderRatio >= 0) // not genderless
 	{		
 		int genderRandom = (rand() % 100); // [0-99]
 
-		if (spawnData.genderRatio < genderRandom) gender = Pokemon::MALE;
-		else gender = Pokemon::FEMALE;
-	}
-
-	std::string textureName = std::to_string(spawnData.nationalDexNumber);
-	if (gender == Pokemon::FEMALE && (spawnData.isSpriteGenderBased || spawnData.isFormGenderBased))
-	{
-		textureName = textureName + "_f";
-	}
-	else if (spawnData.formName != "")
-	{
-		textureName = textureName + "_" + spawnData.formName;
+		if (spawnData.genderRatio < genderRandom) individualData.gender = Pokemon::MALE;
+		else individualData.gender = Pokemon::FEMALE;
 	}
 	
 	// Determine shiny
 	int shinyRandom = (rand() % 100); // [0-99]
-	if (shinyRandom < 50) textureName = textureName + "_s";
+	if (shinyRandom < 50) individualData.isShiny = true;
 
-	textureName = textureName + ".png";
+	std::string textureName = individualData.MakeTextureName(spawnData.isFormGenderBased, spawnData.isSpriteGenderBased);
 	
-	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(tileLocation, textureName);
+	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(individualData, tileLocation, textureName);
 	roamingWildPokemon.push_back(newWildPokemon);
 
 	spawnTile->entity = newWildPokemon.get();
 
 	return newWildPokemon;
+}
+
+std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 tileLocation)
+{
+	sTile* spawnTile = cMapManager::GetInstance()->GetTile(tileLocation);
+	if (!spawnTile || spawnTile->entity != nullptr) return nullptr;
+
+	std::string textureName = pokemonData.MakeTextureName(false, true);
+
+	std::shared_ptr<cTamedRoamingPokemon> newTamedPokemon = std::make_shared<cTamedRoamingPokemon>(pokemonData, tileLocation, textureName);
+	roamingTamedPokemon.push_back(newTamedPokemon);
+
+	spawnTile->entity = newTamedPokemon.get();
+
+	return newTamedPokemon;
 }
 
 void cSceneManager::ChangeScene()

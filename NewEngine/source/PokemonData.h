@@ -101,7 +101,7 @@ namespace Pokemon
 		NO_GENDER
 	};
 
-	struct eStats
+	struct sStats
 	{
 		int hp = 0;		// Health
 		int atk = 0;	// Attack
@@ -118,7 +118,7 @@ namespace Pokemon
 
 	struct sForm
 	{
-		eStats baseStats;
+		sStats baseStats;
 		
 		// Ability ability1
 		// Ability ability2
@@ -181,24 +181,45 @@ namespace Pokemon
 		int maxLevel;
 	};
 
-	struct BattleData
+	struct sRoamingPokemonData // Minimal data for rendering sprite in overworld
 	{
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
-		eGender gender;
-		bool shiny = false;
+		eGender gender = Pokemon::NO_GENDER;
+		bool isShiny = false;
+
+		const std::string MakeTextureName(bool isFormGenderBased, bool isSpriteGenderBased);
+	};
+
+	struct sPokemonData : public sRoamingPokemonData // Individual data (outside of battle)
+	{
+		std::string customName = "";
+
+		int level;
+
+		int maxHealth;
+		int currHealth;
+
+		int expToNextLevel;
+		int currExp;
 
 		// Ability ability;
 		// Natire nature;
-		eStats IVs; // Individial values
-		eStats EVs; // Effort values
+		sStats IVs; // Individial values
+		sStats EVs; // Effort values
 
+		// eStatus condition
 		// HeldItem item;
 
 		// Move move1;
 		// Move move2;
 		// Move move3;
 		// Move move4;
+	};
+
+	struct sBattleData : public sPokemonData // Individual data (in battle)
+	{
+		sStats statChanges;
 	};
 }

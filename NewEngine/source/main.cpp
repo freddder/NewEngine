@@ -9,6 +9,7 @@
 
 #include "cCamera.h"
 #include "cWildRoamingPokemon.h"
+#include "cTamedRoamingPokemon.h"
 #include "cPlayerEntity.h"
 
 #include "Engine.h"
@@ -133,8 +134,15 @@ int main()
     {
         Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
         camera->targetPosRef = Player::GetPlayerPositionRef();
-        //std::shared_ptr<cWildRoamingPokemon> follower = sceneManager->SpawnWildPokemon(0, glm::vec3(22.f, 1.f, 25.f));
-        //Player::playerChar->SetFollower(follower.get());
+
+        Pokemon::sSpeciesData followerSpecieData;
+        Pokemon::LoadSpecieData(445, followerSpecieData);
+        renderManager->LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
+        Player::partyMember1.nationalDexNumber = 445;
+        Player::partyMember1.gender = Pokemon::MALE;
+        Player::partyMember1.isShiny = true;
+        std::shared_ptr<cTamedRoamingPokemon> follower = sceneManager->SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
+        Player::playerChar->SetFollower(follower.get());
 
         // TODO: find a good place to seed the rand
         srand((int)time(0));

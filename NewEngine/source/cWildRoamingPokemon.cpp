@@ -1,9 +1,9 @@
 #include "cWildRoamingPokemon.h"
 
-cWildRoamingPokemon::cWildRoamingPokemon(glm::vec3 pos, std::string _formName) : cCharacterEntity(pos)
+cWildRoamingPokemon::cWildRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos, std::string textureName) : cCharacterEntity(pos)
 {
-	formName = _formName;
-	spriteModel = new cOverworldPokemonSprite(_formName, pos);
+	data = pokemonData;
+	spriteModel = new cOverworldPokemonSprite(textureName, pos);
 }
 
 cWildRoamingPokemon::~cWildRoamingPokemon()

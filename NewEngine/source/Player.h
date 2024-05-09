@@ -9,9 +9,21 @@
 
 class cPlayerEntity;
 
+namespace Pokemon
+{
+	struct sPokemonData;
+}
+
 namespace Player
 {
 	extern cPlayerEntity* playerChar;
+
+	extern Pokemon::sPokemonData partyMember1;
+	extern Pokemon::sPokemonData partyMember2;
+	extern Pokemon::sPokemonData partyMember3;
+	extern Pokemon::sPokemonData partyMember4;
+	extern Pokemon::sPokemonData partyMember5;
+	extern Pokemon::sPokemonData partyMember6;
 
 	glm::vec3 GetPlayerPosition();
 	glm::vec3* GetPlayerPositionRef();

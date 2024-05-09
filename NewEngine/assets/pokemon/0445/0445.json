@@ -1,0 +1,25 @@
+{
+    "data_version": 1,
+    "name": "Garchomp",
+    "nationalDexNumber": 445,
+    "genderRatio": 50,
+    "eggGroup1": 9,
+    "eggGroup2": 3,
+    "hatchCycles": 0,
+    "catchRate": 0.0,
+    "isStatsGenderBased": false,
+    "isSpriteGenderBased": true,
+    "defaultForm": {
+        "type1": 14,
+        "type2": 8,
+        "baseHp": 108,
+        "baseAtk": 130,
+        "baseSpAtk": 80,
+        "baseDef": 95,
+        "baseSpDef": 85,
+        "baseSpd": 102,
+        "height": 1.899999976158142,
+        "weight": 95.0
+    },
+    "alternateForms": []
+}

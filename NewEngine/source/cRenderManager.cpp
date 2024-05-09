@@ -20,6 +20,7 @@
 #include "cLightManager.h"
 #include "cCamera.h"
 #include "cUIManager.h"
+#include "PokemonData.h"
 
 #include "Player.h"
 
@@ -739,15 +740,8 @@ unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
     return textureID;
 }
 
-void cRenderManager::LoadOverworldPokemonSpriteSheet(const int nationalDexId, const std::string formTag)
+void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag)
 {
-    std::string dexIdString = std::to_string(nationalDexId);
-    while (dexIdString.length() < 4)
-    {
-        dexIdString = "0" + dexIdString;
-    }
-    std::string texturePath = PKM_SPRITES_PATH + dexIdString + "/";
-
     std::string textureName = std::to_string(nationalDexId);
     if (formTag != "")
     {
@@ -755,6 +749,16 @@ void cRenderManager::LoadOverworldPokemonSpriteSheet(const int nationalDexId, co
     }
     std::string shinyTextureName = textureName + "_s.png";
     textureName = textureName + ".png";
+
+    // Check if not already loaded
+    if (sceneSpriteSheets.find(textureName) != sceneSpriteSheets.end()) return;
+
+    std::string dexIdString = std::to_string(nationalDexId);
+    while (dexIdString.length() < 4)
+    {
+        dexIdString = "0" + dexIdString;
+    }
+    std::string texturePath = PKM_SPRITES_PATH + dexIdString + "/";
 
     // Create sprite sheet
     sSpriteSheet newSheet;
@@ -769,6 +773,9 @@ void cRenderManager::LoadOverworldPokemonSpriteSheet(const int nationalDexId, co
 
     if (newSheet.textureId != 0)
         sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSheet));
+
+    // Check if shiny not already loaded
+    if (sceneSpriteSheets.find(shinyTextureName) != sceneSpriteSheets.end()) return;
 
     // Create shiny sprite sheet
     sSpriteSheet newShinySheet;
@@ -800,6 +807,26 @@ void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned
 
     if (newSheet.textureId != 0)
         sceneSpriteSheets[spriteSheetName] = newSheet;
+}
+
+void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData)
+{
+    // Load default form
+    LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber);
+
+    // Load female varient if there is one
+    if (specieData.isSpriteGenderBased || specieData.isFormGenderBased)
+    {
+        LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, "f");
+    }
+    else
+    {
+        // Load all alternate forms
+        for (std::map<std::string, Pokemon::sForm>::const_iterator it = specieData.alternateForms.cbegin(); it != specieData.alternateForms.cend(); it++)
+        {
+            LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, it->first);
+        }
+    }
 }
 
 void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit)

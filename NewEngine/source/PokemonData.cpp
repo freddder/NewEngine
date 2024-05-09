@@ -182,4 +182,26 @@ namespace Pokemon
 			data.alternateForms.insert(std::pair<std::string, sForm>(formName, newForm));
 		}
 	}
+
+	const std::string sRoamingPokemonData::MakeTextureName(const bool isFormGenderBased, const bool isSpriteGenderBased)
+	{
+		std::string textureName = std::to_string(nationalDexNumber);
+		if (gender == FEMALE && (isSpriteGenderBased || isFormGenderBased))
+		{
+			textureName = textureName + "_f";
+		}
+		else if (formName != "") // There is no case where both will be true
+		{
+			textureName = textureName + "_" + formName;
+		}
+
+		if (isShiny)
+		{
+			textureName = textureName + "_s";
+		}
+
+		textureName = textureName + ".png";
+
+		return textureName;
+	}
 }

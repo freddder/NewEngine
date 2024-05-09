@@ -220,7 +220,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 			if (spawnType == Pokemon::TALL_GRASS)
 			{
 				rapidjson::Value& spawnTileId = spawnData[i]["spawnTileId"];
-				for (int j = 0; j < spawnTileId.Size(); j++)
+				for (unsigned int j = 0; j < spawnTileId.Size(); j++)
 				{
 					spawnTileIds.push_back(spawnTileId[j].GetInt());
 				}

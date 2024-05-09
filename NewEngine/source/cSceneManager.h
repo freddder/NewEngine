@@ -5,8 +5,9 @@
 #include "cParticleSpawner.h"
 #include "PokemonData.h"
 
-struct sTile;
 class cWildRoamingPokemon;
+class cTamedRoamingPokemon;
+struct sTile;
 
 enum eEnvironmentWeather
 {
@@ -74,11 +75,13 @@ public:
 	// Entities
 private:
 	std::vector<Pokemon::sSpawnData> loadedSpawnData;
-	std::vector<std::shared_ptr<class cWildRoamingPokemon>> roamingWildPokemon;
+	std::vector<std::shared_ptr<cWildRoamingPokemon>> roamingWildPokemon;
+	std::vector<std::shared_ptr<cTamedRoamingPokemon>> roamingTamedPokemon;
 public:
 	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const Pokemon::eSpawnType spawnType,  const int spawnChance, const std::string formName = "");
 	std::shared_ptr<cWildRoamingPokemon> SpawnRandomWildPokemon();
-	std::shared_ptr<cWildRoamingPokemon> SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile);
+	std::shared_ptr<cWildRoamingPokemon> SpawnWildPokemon(Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile);
+	std::shared_ptr<cTamedRoamingPokemon> SpawnTamedPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 tileLocation);
 
 public:
 	void ChangeScene();

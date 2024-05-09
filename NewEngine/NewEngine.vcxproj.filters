@@ -149,6 +149,9 @@
     <ClCompile Include="source\cPlayerEntity.cpp">
       <Filter>Entity\Character</Filter>
     </ClCompile>
+    <ClCompile Include="source\cTamedRoamingPokemon.cpp">
+      <Filter>Entity\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cRenderModel.h">

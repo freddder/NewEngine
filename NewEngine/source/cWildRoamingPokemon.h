@@ -5,13 +5,8 @@
 
 class cWildRoamingPokemon : public cCharacterEntity
 {
+	Pokemon::sRoamingPokemonData data;
 public:
-	cWildRoamingPokemon(glm::vec3 pos, std::string formName);
+	cWildRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos, std::string textureName);
 	~cWildRoamingPokemon();
-
-	int nationalDexNumber = 0;
-	std::string formName = "";
-
-	Pokemon::eGender gender = Pokemon::NO_GENDER;
-	bool isShiny = false;
 };

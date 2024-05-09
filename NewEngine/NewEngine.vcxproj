@@ -171,6 +171,7 @@
     <ClCompile Include="source\cRenderModel.cpp" />
     <ClCompile Include="source\cRenderManager.cpp" />
     <ClCompile Include="source\cSpriteModel.cpp" />
+    <ClCompile Include="source\cTamedRoamingPokemon.cpp" />
     <ClCompile Include="source\cUIManager.cpp" />
     <ClCompile Include="source\cWildRoamingPokemon.cpp" />
     <ClCompile Include="source\Engine.cpp" />
