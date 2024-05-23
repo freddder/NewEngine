@@ -20,7 +20,7 @@ sTile* sQuadrant::GetRandomSpawnTile(glm::vec3& globalPos)
 {
 	if (wildPokemonCount >= 5) return nullptr;
 
-	int tileId = localSpawnTiles[rand() % localSpawnTiles.size() - 1];
+	int tileId = localSpawnTiles[rand() % localSpawnTiles.size()];
 
 	sTile* spawnTile = &data[tileId];
 	globalPos = TileIdToGlobalPosition(tileId);
