@@ -14,6 +14,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include "cSpriteModel.h"
 #include "cAnimatedModel.h"
 #include "cSceneManager.h"
@@ -863,6 +866,77 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
     setInt(shaderVariable, shaderTextureUnit);
 }
 
+void cRenderManager::LoadFont(const std::string fontName)
+{
+    unsigned int atlasWidth = 10;
+    unsigned int atlasHeight = 10;
+    unsigned int glyphPixelSize = 24;
+
+    FT_Library ft;
+    // All functions return a value different than 0 whenever an error occurred
+    if (FT_Init_FreeType(&ft))
+    {
+        std::cout << "ERROR: Could not init FreeType Library" << std::endl;
+        return;
+    }
+
+    std::string fontPath = FONTS_PATH + fontName;
+    FT_Face face;
+    if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
+        std::cout << "ERROR: Failed to load font" << std::endl;
+        return;
+    }
+
+    // set size to load glyphs as
+    FT_Set_Pixel_Sizes(face, 0, glyphPixelSize);
+
+    sFontData newFont;
+    // Create empty black texture
+    glGenTextures(1, &newFont.textureAtlusId);
+    glBindTexture(GL_TEXTURE_2D, newFont.textureAtlusId);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, atlasWidth * glyphPixelSize, atlasHeight * glyphPixelSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    // Fill slots of atlus with individual characters
+    int i = 0;
+    for (unsigned char c = 32; c < 126; c++)
+    {
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+        {
+            std::cout << "ERROR: Failed to load Glyph " << c << std::endl;
+            continue;
+        }
+
+        sFontCharData newChar;
+        newChar.size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
+        newChar.bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
+        newChar.advance = face->glyph->advance.x;
+
+        glTexSubImage2D(GL_TEXTURE_2D, 0,
+            glyphPixelSize * (i % atlasWidth), 
+            glyphPixelSize * (i / atlasWidth),
+            face->glyph->bitmap.width, 
+            face->glyph->bitmap.rows, 
+            GL_RED, GL_UNSIGNED_BYTE, 
+            face->glyph->bitmap.buffer
+        );
+
+        newFont.characters.insert(std::pair<char, sFontCharData>(c, newChar));
+        i++;
+    }
+
+    fonts.insert(std::pair<std::string, sFontData>(fontName, newFont));
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    FT_Done_Face(face);
+    FT_Done_FreeType(ft);
+}
+
 void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 {
     sModelDrawInfo drawInfo;
@@ -932,6 +1006,11 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 
         glBindVertexArray(0);
     }    
+}
+
+unsigned int cRenderManager::GetFontTextureId(const std::string fontName)
+{
+    return fonts[fontName].textureAtlusId;
 }
 
 void cRenderManager::DrawParticles(cParticleSpawner* spawner)

@@ -402,6 +402,7 @@ void RenderImgui()
             ImGui::EndCombo();
         }
     }
+    ImGui::Image((void*)(intptr_t)cRenderManager::GetInstance()->GetFontTextureId("Truth And Ideals-Normal.ttf"), ImVec2(400, 400));
 
     ImGui::End();
 

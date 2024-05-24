@@ -11,6 +11,7 @@ const static std::string SHADER_PATH = "assets/shaders/";
 const static std::string MODEL_PATH = "assets/models/";
 const static std::string TEXTURE_PATH = "assets/textures/";
 const static std::string PKM_SPRITES_PATH = "assets/pokemon/";
+const static std::string FONTS_PATH = "assets/fonts/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
 
@@ -45,6 +46,19 @@ struct sSpriteSheet : sTexture
     unsigned int numCols;
     unsigned int numRows;
     bool isSymmetrical;
+};
+
+struct sFontCharData
+{
+    glm::ivec2   size;       // Size of glyph
+    glm::ivec2   bearing;    // Offset from baseline to left/top of glyph
+    unsigned int advance;    // Offset to advance to next glyph
+};
+
+struct sFontData
+{
+    unsigned int textureAtlusId;
+    std::map<char, sFontCharData> characters;
 };
 
 class cRenderManager
@@ -144,6 +158,13 @@ public:
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);
+
+    // Fonts
+private:
+    std::map<std::string, sFontData> fonts;
+public:
+    void LoadFont(const std::string fontName);
+    unsigned int GetFontTextureId(const std::string fontName); // TEMP
 
     // Drawing
 private:

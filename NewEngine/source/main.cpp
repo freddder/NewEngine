@@ -70,7 +70,7 @@ int main()
     lightColorAnim->isRepeat = true;
     //cAnimationManager::GetInstance()->AddAnimation(lightColorAnim);
 
-    //********************** Load models and textures ***************************
+    //********************** Load models, textures and fonts ***************************
 
     renderManager->LoadModel("SpriteHolder.obj", "sprite");
     renderManager->LoadModel("SpriteHolder.obj", "snow");
@@ -95,6 +95,8 @@ int main()
 
     renderManager->LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
     renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
+    
+    renderManager->LoadFont("Truth And Ideals-Normal.ttf");
 
     //***************************************************************************
 
