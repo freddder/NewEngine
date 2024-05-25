@@ -91,7 +91,6 @@ const float cUIWidget::CalculateHorizontalTranslate()
 
 void cUIStaticImage::SetupWidget()
 {
-	cUIWidget::SetupWidget();
-
+	cRenderManager::GetInstance()->use("ui");
 	cRenderManager::GetInstance()->SetupTexture(textureName);
 }

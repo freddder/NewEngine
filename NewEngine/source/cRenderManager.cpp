@@ -207,6 +207,11 @@ cRenderManager::~cRenderManager()
     glDeleteBuffers(1, &uboMatricesID);
     glDeleteBuffers(1, &uboFogID);
     glDeleteBuffers(1, &notInstancedOffsetBufferId);
+
+    for (std::map<std::string, sFontData>::iterator it = fonts.begin(); it != fonts.end(); it++)
+    {
+        glDeleteBuffers(1, &it->second.textureAtlusId);
+    }
 }
 
 void cRenderManager::CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
@@ -1061,8 +1066,6 @@ void cRenderManager::DrawWidget(cUIWidget* widget)
     {
         DrawWidget(widget->children[i]);
     }
-
-    use("debug"); // TODO: change to use custom shaders
     
     widget->SetupWidget();
 

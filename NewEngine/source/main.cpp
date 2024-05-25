@@ -38,7 +38,7 @@ int main()
     renderManager->CreateShadderProgram("tree", "TreeVertShader.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
     renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
-    renderManager->CreateShadderProgram("debug", "DebugVertShader.glsl", "DebugFragShader.glsl");
+    renderManager->CreateShadderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
