@@ -14,6 +14,10 @@ const static std::string PKM_SPRITES_PATH = "assets/pokemon/";
 const static std::string FONTS_PATH = "assets/fonts/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
+const int FONT_ATLAS_COLS = 10;
+const int FONT_ATLAS_ROWS = 10;
+
+class cUIText;
 
 namespace Pokemon
 {
@@ -163,7 +167,9 @@ public:
 private:
     std::map<std::string, sFontData> fonts;
 public:
+    cUIText* testWidget;
     void LoadFont(const std::string fontName);
+    void SetupFont(const std::string fontName);
     unsigned int GetFontTextureId(const std::string fontName); // TEMP
 
     // Drawing
@@ -172,5 +178,6 @@ private:
     void DrawParticles(class cParticleSpawner* spawner);
     void DrawWidget(class cUIWidget* widget);
 public:
+    void DrawText(cUIText* textWidget);
     void DrawFrame();
 };

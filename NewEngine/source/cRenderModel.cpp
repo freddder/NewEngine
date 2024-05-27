@@ -32,7 +32,6 @@ void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int 
 
 	// Generate offsets buffer
 	glGenBuffers(1, &(instanceOffsetsBufferId));
-
 	glBindBuffer(GL_ARRAY_BUFFER, instanceOffsetsBufferId);
 
 	glBufferData(GL_ARRAY_BUFFER,
@@ -49,7 +48,6 @@ void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int 
 	glVertexAttribDivisor(offset_location, 1);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 	glDisableVertexAttribArray(offset_location);
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <glm/glm.hpp>
 
 enum eAnchor
 {
@@ -74,4 +75,20 @@ class cUIAnimatedSprite : public cUIWidget
 public:
 	std::string spriteTextureName;
 	virtual void SetupWidget();
+};
+
+class cUIText : public cUIWidget
+{
+public:
+	unsigned int bufferDataId;
+	std::string fontName;
+	std::string text;
+	glm::vec3 color;
+	glm::vec2 startPointOffset = glm::vec2(0.f); // [0-1]
+	float scale;
+	float widthCutoffPercent = 1;
+
+	void CreateBufferData();
+
+	//virtual void SetupWidget();
 };

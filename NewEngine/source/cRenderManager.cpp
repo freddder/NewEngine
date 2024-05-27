@@ -163,7 +163,7 @@ cRenderManager::cRenderManager()
 
     //********************** Setup on screen texture ****************************
     float quadVertices[] = {
-        // x, y, z, u(x), v(y)
+        //  x,     y,    z, u(x), v(y)
          1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
          1.0f, -1.0f, 0.0f, 1.0f, 1.0f, // bottom right
         -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
@@ -873,8 +873,6 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
 
 void cRenderManager::LoadFont(const std::string fontName)
 {
-    unsigned int atlasWidth = 10;
-    unsigned int atlasHeight = 10;
     unsigned int glyphPixelSize = 24;
 
     FT_Library ft;
@@ -903,7 +901,7 @@ void cRenderManager::LoadFont(const std::string fontName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, atlasWidth * glyphPixelSize, atlasHeight * glyphPixelSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_COLS * glyphPixelSize, FONT_ATLAS_ROWS * glyphPixelSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -923,8 +921,8 @@ void cRenderManager::LoadFont(const std::string fontName)
         newChar.advance = face->glyph->advance.x;
 
         glTexSubImage2D(GL_TEXTURE_2D, 0,
-            glyphPixelSize * (i % atlasWidth), 
-            glyphPixelSize * (i / atlasWidth),
+            glyphPixelSize * (i % FONT_ATLAS_COLS),
+            glyphPixelSize * (i / FONT_ATLAS_ROWS),
             face->glyph->bitmap.width, 
             face->glyph->bitmap.rows, 
             GL_RED, GL_UNSIGNED_BYTE, 
@@ -1016,6 +1014,52 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 unsigned int cRenderManager::GetFontTextureId(const std::string fontName)
 {
     return fonts[fontName].textureAtlusId;
+}
+
+void cRenderManager::SetupFont(const std::string fontName)
+{
+    if (fonts.find(fontName) == fonts.end()) return; // font doesn't exists
+
+    unsigned int textureId = fonts[fontName].textureAtlusId;
+
+    glActiveTexture(GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    std::string shaderVariable = "texture_0";
+    setInt(shaderVariable, 0);
+
+    // TODO: remove this if other fonts use different numbers
+    setInt("atlasRowsNum", FONT_ATLAS_ROWS);
+    setInt("atlasColsNum", FONT_ATLAS_COLS);
+}
+
+void cRenderManager::DrawText(cUIText* textWidget)
+{
+    char c = testWidget->text[0] - 32;
+
+    use("text");
+    setInt("charId", c);
+    //setFloat("scale", testWidget.scale);
+    setVec3("color", testWidget->color);
+
+    //float widthPercent = textWidget->CalculateWidthScreenPercent();
+    //float heightPercent = textWidget->CalculateHeightScreenPercent();
+    setFloat("widthPercent", 0.5f);
+    setFloat("heightPercent", 0.5f);
+
+    //float widthTranslate = textWidget->CalculateHorizontalTranslate();
+    //float heightTranslate = textWidget->CalculateVerticalTranslate();
+    setFloat("widthTranslate", 0);
+    setFloat("heightTranslate", 0);
+
+    SetupFont(testWidget->fontName);
+
+    glBindVertexArray(UIQuadVAO);
+
+    //glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, model->instancedNum);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
 }
 
 void cRenderManager::DrawParticles(cParticleSpawner* spawner)
@@ -1175,6 +1219,8 @@ void cRenderManager::DrawFrame()
             DrawWidget(canvasToDraw->anchoredWidgets[i]);
         }
     }
+
+    DrawText(nullptr);
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

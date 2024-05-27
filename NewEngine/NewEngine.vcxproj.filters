@@ -321,5 +321,11 @@
     <None Include="assets\shaders\UIVertShader.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="assets\shaders\TextVertShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\TextFragShader.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

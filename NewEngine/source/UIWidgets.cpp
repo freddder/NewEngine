@@ -94,3 +94,17 @@ void cUIStaticImage::SetupWidget()
 	cRenderManager::GetInstance()->use("ui");
 	cRenderManager::GetInstance()->SetupTexture(textureName);
 }
+
+void cUIText::CreateBufferData()
+{
+	if (bufferDataId != 0)
+	{
+		glGenBuffers(1, &(bufferDataId));
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, bufferDataId);
+
+	//glBufferData(GL_ARRAY_BUFFER,
+	//	sizeof(glm::vec4) * offsets.size(),
+	//	(GLvoid*)&offsets[0],
+	//	GL_STATIC_DRAW);
+}

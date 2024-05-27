@@ -240,6 +240,8 @@
     <None Include="assets\shaders\SnowFragShader.glsl" />
     <None Include="assets\shaders\SnowVertShader.glsl" />
     <None Include="assets\shaders\SpriteVertShader.glsl" />
+    <None Include="assets\shaders\TextFragShader.glsl" />
+    <None Include="assets\shaders\TextVertShader.glsl" />
     <None Include="assets\shaders\TreeVertShader.glsl" />
     <None Include="assets\shaders\UIFragShader.glsl" />
     <None Include="assets\shaders\UIVertShader.glsl" />

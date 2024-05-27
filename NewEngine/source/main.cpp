@@ -39,6 +39,7 @@ int main()
     renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
     renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
     renderManager->CreateShadderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
+    renderManager->CreateShadderProgram("text", "TextVertShader.glsl", "TextFragShader.glsl");
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
@@ -97,6 +98,10 @@ int main()
     renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
     
     renderManager->LoadFont("Truth And Ideals-Normal.ttf");
+    renderManager->testWidget = new cUIText();
+    renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
+    renderManager->testWidget->text = "Testing";
+    renderManager->testWidget->color = glm::vec3(0.f, 1.f, 0.f);
 
     //***************************************************************************
 
@@ -160,6 +165,7 @@ int main()
     Engine::GameLoop(true);
 
     delete Player::playerChar;
+    delete renderManager->testWidget;
 
     Engine::ShutdownManagers();
 
