@@ -98,7 +98,7 @@ int main()
     renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
     
     renderManager->LoadFont("Truth And Ideals-Normal.ttf");
-    renderManager->testWidget = new cUIText();
+    renderManager->testWidget = new cUIText(nullptr);
     renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
     renderManager->testWidget->text = "Testing";
     renderManager->testWidget->color = glm::vec3(0.f, 1.f, 0.f);

@@ -95,6 +95,14 @@ void cUIStaticImage::SetupWidget()
 	cRenderManager::GetInstance()->SetupTexture(textureName);
 }
 
+cUIText::cUIText(cUIWidget* parent)
+{
+}
+
+cUIText::~cUIText()
+{
+}
+
 void cUIText::CreateBufferData()
 {
 	if (bufferDataId != 0)
