@@ -179,5 +179,5 @@ private:
     void DrawWidget(class cUIWidget* widget);
 public:
     void DrawText(cUIText* textWidget);
-    void DrawFrame();
+    void DrawFrame(); // TEMP
 };

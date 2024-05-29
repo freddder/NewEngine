@@ -77,9 +77,12 @@ public:
 	virtual void SetupWidget();
 };
 
-class cUIText : public cUIWidget
+class cUIText
 {
 public:
+	cUIText(cUIWidget* parent);
+	~cUIText();
+
 	unsigned int bufferDataId;
 	std::string fontName;
 	std::string text;

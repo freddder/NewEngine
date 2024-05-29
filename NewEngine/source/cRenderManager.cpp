@@ -890,7 +890,7 @@ void cRenderManager::LoadFont(const std::string fontName)
         return;
     }
 
-    // set size to load glyphs as
+    // Leave width as 0 to be calculated with height
     FT_Set_Pixel_Sizes(face, 0, glyphPixelSize);
 
     sFontData newFont;
@@ -1036,6 +1036,8 @@ void cRenderManager::SetupFont(const std::string fontName)
 void cRenderManager::DrawText(cUIText* textWidget)
 {
     char c = testWidget->text[0] - 32;
+
+    sFontCharData f = fonts[testWidget->fontName].characters[c];
 
     use("text");
     setInt("charId", c);
