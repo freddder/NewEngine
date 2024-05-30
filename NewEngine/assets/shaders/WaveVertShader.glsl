@@ -37,13 +37,13 @@ void main()
 	finalModelPosition.z += oOffset.z;
 
 	mat4 translateMatrix;
-	translateMatrix[0] = vec4(1,0,0,0); // who knows if this works
+	translateMatrix[0] = vec4(1,0,0,0);
 	translateMatrix[1] = vec4(0,1,0,0);
 	translateMatrix[2] = vec4(0,0,1,0);
 	translateMatrix[3] = vec4(finalModelPosition.x,finalModelPosition.y,finalModelPosition.z,1);
 
 	mat4 model;
-	model[0] = vec4(1,0,0,0); // who knows if this works
+	model[0] = vec4(1,0,0,0);
 	model[1] = vec4(0,1,0,0);
 	model[2] = vec4(0,0,1,0);
 	model[3] = vec4(0,0,0,1);
