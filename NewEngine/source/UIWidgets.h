@@ -77,21 +77,27 @@ public:
 	virtual void SetupWidget();
 };
 
+struct sCharBufferData
+{
+	float posX, posY, sizeX, sizeY;	// position from origin and screen percent size
+	//int charId;
+};
+
 class cUIText
 {
 public:
 	cUIText(cUIWidget* parent);
 	~cUIText();
 
+	cUIWidget* parentWidget;
 	unsigned int bufferDataId;
+	unsigned int drawCharCount = 0;
 	std::string fontName;
 	std::string text;
 	glm::vec3 color;
-	glm::vec2 startPointOffset = glm::vec2(0.f); // [0-1]
-	float scale;
+	glm::vec2 origin = glm::vec2(0.f); // [0-1]
+	float heightPercent; // to parent widget
 	float widthCutoffPercent = 1;
-
-	void CreateBufferData();
 
 	//virtual void SetupWidget();
 };

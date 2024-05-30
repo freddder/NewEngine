@@ -45,14 +45,6 @@ cRenderManager::cRenderManager()
         (GLvoid*)&originOffset,
         GL_STATIC_DRAW);
 
-    //GLint offset_location = glGetAttribLocation(g_ShaderManager->GetCurrentShaderId(), "oOffset");	    // program
-    //glEnableVertexAttribArray(offset_location);
-    //glVertexAttribPointer(offset_location, 4,
-    //    GL_FLOAT, GL_FALSE,
-    //    sizeof(glm::vec4),
-    //    (void*)0);
-    //glVertexAttribDivisor(offset_location, 1);
-
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     //*************** Setup skybox vertices and VAOs ***************************
@@ -161,7 +153,7 @@ cRenderManager::cRenderManager()
 
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
 
-    //********************** Setup on screen texture ****************************
+    //********************** Setup on UI quad ****************************
     float quadVertices[] = {
         //  x,     y,    z, u(x), v(y)
          1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
@@ -877,8 +869,7 @@ void cRenderManager::LoadFont(const std::string fontName)
 
     FT_Library ft;
     // All functions return a value different than 0 whenever an error occurred
-    if (FT_Init_FreeType(&ft))
-    {
+    if (FT_Init_FreeType(&ft)) {
         std::cout << "ERROR: Could not init FreeType Library" << std::endl;
         return;
     }
@@ -894,6 +885,7 @@ void cRenderManager::LoadFont(const std::string fontName)
     FT_Set_Pixel_Sizes(face, 0, glyphPixelSize);
 
     sFontData newFont;
+    newFont.glyphHeight = glyphPixelSize;
     // Create empty black texture
     glGenTextures(1, &newFont.textureAtlusId);
     glBindTexture(GL_TEXTURE_2D, newFont.textureAtlusId);
@@ -909,8 +901,7 @@ void cRenderManager::LoadFont(const std::string fontName)
     int i = 0;
     for (unsigned char c = 32; c < 126; c++)
     {
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cout << "ERROR: Failed to load Glyph " << c << std::endl;
             continue;
         }
@@ -943,8 +934,7 @@ void cRenderManager::LoadFont(const std::string fontName)
 void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 {
     sModelDrawInfo drawInfo;
-    if (!FindModelByName(model->meshName, model->shaderName, drawInfo))
-        return;
+    if (!FindModelByName(model->meshName, model->shaderName, drawInfo)) return;
 
     use(model->shaderName);
     
@@ -975,6 +965,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
         {
             glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
 
+            // OPTMIZATION: maybe figure out a way to not have to setup all these data every frame
             GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
             glEnableVertexAttribArray(offset_location);
             glVertexAttribPointer(offset_location, 4,
@@ -1033,32 +1024,104 @@ void cRenderManager::SetupFont(const std::string fontName)
     setInt("atlasColsNum", FONT_ATLAS_COLS);
 }
 
+void cRenderManager::CreateTextDataBuffer(cUIText* text)
+{
+    std::stringstream ss(text->text);
+    std::vector<std::string> words;
+    std::string s;
+    unsigned int charCount = 0; // no spaces
+    while (std::getline(ss, s, ' '))
+    {
+        words.push_back(s);
+        charCount += s.length();
+    }
+
+    float textHeighPixels = text->parentWidget->CalculateHeightPixels() * text->heightPercent;
+    sCharBufferData* data = new sCharBufferData[charCount];
+    sFontData& font = fonts[text->fontName];
+
+    unsigned int currChar = 0;
+    float advanceX = 0.f;
+    float advanceY = 0.f;
+    for (unsigned int i = 0; i < words.size(); i++)
+    {
+        //unsigned int wordPixelWidth = 0;  not yet
+        for (unsigned int j = 0; j < words[i].length(); j++)
+        {
+            sFontCharData& ch = font.characters[words[i][j]];
+
+            float posX = advanceX + ch.bearing.x * text->heightPercent;
+            float posY = advanceY - (ch.size.y - ch.bearing.y) * text->heightPercent;
+
+            //float w = ch.size.x * scale;
+            //float h = ch.size.y * scale;
+            float charHeightPixels = textHeighPixels * (float)ch.size.y / (float)font.glyphHeight;
+            float charWidthPixels = charHeightPixels * (float)ch.size.x / (float)ch.size.y;
+            float sizeX = charWidthPixels / cCamera::GetInstance()->SCR_WIDTH;
+            float sizeY = charHeightPixels / cCamera::GetInstance()->SCR_HEIGHT;
+
+            //data[currChar].charId = words[i][j];
+            data[currChar].posX = posX;
+            data[currChar].posY = posY;
+            data[currChar].sizeX = sizeX;
+            data[currChar].sizeY = sizeY;
+
+            currChar++;
+            advanceX += (ch.advance >> 6) * text->heightPercent;
+        }
+    }
+
+    unsigned int bufferDataId = 0;
+    glGenBuffers(1, &(bufferDataId));
+    glBindBuffer(GL_ARRAY_BUFFER, bufferDataId);
+
+    glBufferData(GL_ARRAY_BUFFER,
+        sizeof(sCharBufferData) * charCount,
+        (GLvoid*)&data[0],
+        GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    glVertexAttribDivisor(2, 1);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glDisableVertexAttribArray(2);
+
+    delete[] data;
+}
+
 void cRenderManager::DrawText(cUIText* textWidget)
 {
-    char c = testWidget->text[0] - 32;
+    char c = textWidget->text[0] - 32;
 
-    sFontCharData f = fonts[testWidget->fontName].characters[c];
+    sFontData& font = fonts[textWidget->fontName];
+    sFontCharData& ch = font.characters[textWidget->text[0]];
 
     use("text");
     setInt("charId", c);
-    //setFloat("scale", testWidget.scale);
-    setVec3("color", testWidget->color);
+    setVec3("color", textWidget->color);
 
-    //float widthPercent = textWidget->CalculateWidthScreenPercent();
-    //float heightPercent = textWidget->CalculateHeightScreenPercent();
-    setFloat("widthPercent", 0.5f);
-    setFloat("heightPercent", 0.5f);
+    float textHeighPixels = textWidget->parentWidget->CalculateHeightPixels() * textWidget->heightPercent;
+    float charHeightPixels = textHeighPixels * (float)ch.size.y / (float)font.glyphHeight;
+    float charWidthPixels = charHeightPixels * (float)ch.size.x / (float)ch.size.y;
+    float sizeX = charWidthPixels / cCamera::GetInstance()->SCR_WIDTH;
+    float sizeY = charHeightPixels / cCamera::GetInstance()->SCR_HEIGHT;
+    setFloat("widthPercent", sizeX);
+    setFloat("heightPercent", sizeY);
 
-    //float widthTranslate = textWidget->CalculateHorizontalTranslate();
-    //float heightTranslate = textWidget->CalculateVerticalTranslate();
-    setFloat("widthTranslate", 0);
-    setFloat("heightTranslate", 0);
+    float widthTranslate = textWidget->parentWidget->CalculateHorizontalTranslate();
+    float heightTranslate = textWidget->parentWidget->CalculateVerticalTranslate();
+    setFloat("widthTranslate", widthTranslate);
+    setFloat("heightTranslate", heightTranslate);
 
-    SetupFont(testWidget->fontName);
+    SetupFont(textWidget->fontName);
 
     glBindVertexArray(UIQuadVAO);
 
-    //glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, model->instancedNum);
+    glBindBuffer(GL_ARRAY_BUFFER, textWidget->bufferDataId);
+
+    //glEnableVertexAttribArray(2);
+    //glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, testWidget->drawCharCount);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
@@ -1209,6 +1272,8 @@ void cRenderManager::DrawFrame()
         DrawParticles(sceneManager->particleSpawners[i]);
     }
 
+    DrawText(testWidget);
+
     // Draw UI
     cUIManager* uiManager = cUIManager::GetInstance();
     if (!uiManager->canvases.empty())
@@ -1221,8 +1286,6 @@ void cRenderManager::DrawFrame()
             DrawWidget(canvasToDraw->anchoredWidgets[i]);
         }
     }
-
-    DrawText(nullptr);
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

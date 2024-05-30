@@ -62,6 +62,7 @@ struct sFontCharData
 struct sFontData
 {
     unsigned int textureAtlusId;
+    unsigned int glyphHeight;
     std::map<char, sFontCharData> characters;
 };
 
@@ -129,6 +130,12 @@ private:
     unsigned int UIQuadVBO;
     unsigned int UIQuadEBO;
 
+    // Text quad
+private:
+    unsigned int TextQuadVAO;
+    unsigned int TextQuadVBO;
+    unsigned int TextQuadEBO;
+
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;
@@ -171,6 +178,7 @@ public:
     void LoadFont(const std::string fontName);
     void SetupFont(const std::string fontName);
     unsigned int GetFontTextureId(const std::string fontName); // TEMP
+    void CreateTextDataBuffer(cUIText* text);
 
     // Drawing
 private:

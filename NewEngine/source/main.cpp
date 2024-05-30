@@ -98,10 +98,6 @@ int main()
     renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
     
     renderManager->LoadFont("Truth And Ideals-Normal.ttf");
-    renderManager->testWidget = new cUIText(nullptr);
-    renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
-    renderManager->testWidget->text = "Testing";
-    renderManager->testWidget->color = glm::vec3(0.f, 1.f, 0.f);
 
     //***************************************************************************
 
@@ -115,14 +111,21 @@ int main()
         Engine::button->aspectRatio = 0.365f;
         Engine::button->heightPercent = 1.f / 9.f;
 
-        Engine::sprite = new cUIStaticImage();
-        Engine::sprite->anchor = MIDDLE_LEFT;
-        Engine::sprite->aspectRatio = 3.f / 4.f;
-        Engine::sprite->heightPercent = 3.f / 4.f;
-        Engine::sprite->textureName = "ico_3ds_722.png";
+        //Engine::sprite = new cUIStaticImage();
+        //Engine::sprite->anchor = MIDDLE_LEFT;
+        //Engine::sprite->aspectRatio = 3.f / 4.f;
+        //Engine::sprite->heightPercent = 3.f / 4.f;
+        //Engine::sprite->textureName = "ico_3ds_722.png";
 
         // Make sure to add back gound items last
-        Engine::button->AddChild(Engine::sprite);
+        //Engine::button->AddChild(Engine::sprite);
+
+        renderManager->testWidget = new cUIText(Engine::button);
+        renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
+        renderManager->testWidget->text = "Testing, stuff!";
+        renderManager->testWidget->color = glm::vec3(0.f, 1.f, 0.f);
+        renderManager->testWidget->heightPercent = 0.5f;
+        //renderManager->CreateTextDataBuffer(renderManager->testWidget);
 
         canvas->AddWidget(Engine::button);
         cUIManager::GetInstance()->AddCanvas(canvas);

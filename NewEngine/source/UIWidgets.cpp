@@ -35,7 +35,6 @@ const float cUIWidget::CalculateHeightScreenPercent()
 	if (!parent) return heightPercent;
 
 	float heightInPixels = parent->CalculateHeightPixels() * heightPercent;
-
 	return heightInPixels / cCamera::GetInstance()->SCR_HEIGHT;
 }
 
@@ -97,22 +96,9 @@ void cUIStaticImage::SetupWidget()
 
 cUIText::cUIText(cUIWidget* parent)
 {
+	parentWidget = parent;
 }
 
 cUIText::~cUIText()
 {
-}
-
-void cUIText::CreateBufferData()
-{
-	if (bufferDataId != 0)
-	{
-		glGenBuffers(1, &(bufferDataId));
-	}
-	glBindBuffer(GL_ARRAY_BUFFER, bufferDataId);
-
-	//glBufferData(GL_ARRAY_BUFFER,
-	//	sizeof(glm::vec4) * offsets.size(),
-	//	(GLvoid*)&offsets[0],
-	//	GL_STATIC_DRAW);
 }

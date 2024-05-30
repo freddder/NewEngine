@@ -39,16 +39,7 @@ void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int 
 		(GLvoid*)&offsets[0],
 		GL_STATIC_DRAW);
 
-	GLint offset_location = glGetAttribLocation(program, "oOffset");
-	glEnableVertexAttribArray(offset_location);
-	glVertexAttribPointer(offset_location, 4,
-		GL_FLOAT, GL_FALSE,
-		sizeof(glm::vec4),
-		(void*)0);
-	glVertexAttribDivisor(offset_location, 1);
-
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glDisableVertexAttribArray(offset_location);
 }
 
 // This might change when dynamic map loading is implemented (not using a general texture map)
