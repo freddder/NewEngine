@@ -31,12 +31,12 @@ void main()
     newPos.y *= sizeY[gl_InstanceID] * glyphPixelRatio / float(screenHeight);
 
     float posTranslateX = posX[gl_InstanceID] * glyphPixelRatio * 2 / float(screenWidth) + originOffset.x;
-    float posTranslateY = posY[gl_InstanceID] * glyphPixelRatio * 2 / float(screenHeight) + originOffset.y;
+    float posTranslateY = originOffset.y - (posY[gl_InstanceID] * glyphPixelRatio * 2 / float(screenHeight));
 
     newPos.x *= 2.f;
     newPos.y *= 2.f;
     newPos.x += posTranslateX;
-    newPos.y -= posTranslateY;
+    newPos.y += posTranslateY;
 
     vec2 tileSize = vec2(1.f / float(atlasColsNum), 1.f / float(atlasRowsNum));
     float uvTranslateX = charId[gl_InstanceID] % atlasColsNum * tileSize.x;

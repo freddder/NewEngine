@@ -88,6 +88,17 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	return parentHorizontalTranslation + widgetPercentTranslate;
 }
 
+const glm::vec2 cUIWidget::CalculateBottomLeftTranslate()
+{
+	float horizontalTranslation = CalculateHorizontalTranslate();	
+	float verticalTranslation = CalculateVerticalTranslate();	
+
+	float finalHorizontalTranslation = horizontalTranslation - CalculateWidthPixels() / (float)cCamera::GetInstance()->SCR_WIDTH;
+	float finalVerticalTranslation = verticalTranslation - CalculateHeightPixels() / (float)cCamera::GetInstance()->SCR_HEIGHT;
+
+	return glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
+}
+
 void cUIStaticImage::SetupWidget()
 {
 	cRenderManager::GetInstance()->use("ui");

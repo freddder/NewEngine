@@ -58,6 +58,7 @@ protected:
 	const float CalculateWidthScreenPercent();
 	const float CalculateVerticalTranslate();
 	const float CalculateHorizontalTranslate();
+	const glm::vec2 CalculateBottomLeftTranslate();
 
 	friend class cRenderManager;
 };

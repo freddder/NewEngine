@@ -1099,9 +1099,7 @@ void cRenderManager::DrawText(cUIText* textWidget)
 
     SetupFont(textWidget->fontName);
 
-    glm::vec2 origin;
-    origin.x = textWidget->parentWidget->CalculateHorizontalTranslate();
-    origin.y = textWidget->parentWidget->CalculateVerticalTranslate();
+    glm::vec2 origin = textWidget->parentWidget->CalculateBottomLeftTranslate();
     setVec2("originOffset", origin);
 
     float glyphPixelRatio = textWidget->parentWidget->CalculateHeightPixels() * textWidget->heightPercent / (float)font.glyphHeight;
