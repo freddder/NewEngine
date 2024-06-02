@@ -79,7 +79,7 @@ public:
 
 struct sCharBufferData
 {
-	float posX, posY, sizeX, sizeY;	// position from origin and screen percent size
+	int posX, posY, sizeX, sizeY;	// position from origin and screen percent size
 	//int charId;
 };
 
@@ -90,7 +90,8 @@ public:
 	~cUIText();
 
 	cUIWidget* parentWidget;
-	unsigned int bufferDataId;
+	//unsigned int bufferDataId;
+	std::vector<sCharBufferData> data;
 	unsigned int drawCharCount = 0;
 	std::string fontName;
 	std::string text;

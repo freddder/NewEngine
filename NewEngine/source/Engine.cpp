@@ -385,24 +385,25 @@ void RenderImgui()
             ImGui::EndCombo();
         }
 
-        if (ImGui::BeginCombo("Sprite UI Anchor", Anchors_Strings[Engine::sprite->anchor]))
-        {
-            for (int n = 0; n < eAnchor::ANCHOR_ENUM_COUNT; n++)
-            {
-                const bool is_selected = (Engine::sprite->anchor == n);
-                if (ImGui::Selectable(Anchors_Strings[n], is_selected))
-                {
-                    Engine::sprite->anchor = static_cast<eAnchor>(n);
-                }
+        //if (ImGui::BeginCombo("Sprite UI Anchor", Anchors_Strings[Engine::sprite->anchor]))
+        //{
+        //    for (int n = 0; n < eAnchor::ANCHOR_ENUM_COUNT; n++)
+        //    {
+        //        const bool is_selected = (Engine::sprite->anchor == n);
+        //        if (ImGui::Selectable(Anchors_Strings[n], is_selected))
+        //        {
+        //            Engine::sprite->anchor = static_cast<eAnchor>(n);
+        //        }
 
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+        //        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+        //        if (is_selected)
+        //            ImGui::SetItemDefaultFocus();
+        //    }
+        //    ImGui::EndCombo();
+        //}
     }
     ImGui::Image((void*)(intptr_t)cRenderManager::GetInstance()->GetFontTextureId("Truth And Ideals-Normal.ttf"), ImVec2(400, 400));
+    ImGui::Checkbox("Debug text", &cRenderManager::GetInstance()->testFlip);
 
     ImGui::End();
 

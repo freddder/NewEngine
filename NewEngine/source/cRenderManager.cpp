@@ -1036,13 +1036,12 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
         charCount += s.length();
     }
 
-    float textHeighPixels = text->parentWidget->CalculateHeightPixels() * text->heightPercent;
-    sCharBufferData* data = new sCharBufferData[charCount];
+    //text->data = new sCharBufferData[charCount];
     sFontData& font = fonts[text->fontName];
 
     unsigned int currChar = 0;
-    float advanceX = 0.f;
-    float advanceY = 0.f;
+    int advanceX = 0;
+    int advanceY = 0;
     for (unsigned int i = 0; i < words.size(); i++)
     {
         //unsigned int wordPixelWidth = 0;  not yet
@@ -1050,79 +1049,86 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
         {
             sFontCharData& ch = font.characters[words[i][j]];
 
-            float posX = advanceX + ch.bearing.x * text->heightPercent;
-            float posY = advanceY - (ch.size.y - ch.bearing.y) * text->heightPercent;
+            int posX = advanceX + ch.bearing.x;
+            int posY = ch.size.y - ch.bearing.y + advanceY;
 
-            //float w = ch.size.x * scale;
-            //float h = ch.size.y * scale;
-            float charHeightPixels = textHeighPixels * (float)ch.size.y / (float)font.glyphHeight;
-            float charWidthPixels = charHeightPixels * (float)ch.size.x / (float)ch.size.y;
-            float sizeX = charWidthPixels / cCamera::GetInstance()->SCR_WIDTH;
-            float sizeY = charHeightPixels / cCamera::GetInstance()->SCR_HEIGHT;
+            int sizeX = ch.size.x;
+            int sizeY = ch.size.y;
 
             //data[currChar].charId = words[i][j];
-            data[currChar].posX = posX;
-            data[currChar].posY = posY;
-            data[currChar].sizeX = sizeX;
-            data[currChar].sizeY = sizeY;
+            sCharBufferData newData;
+            newData.posX = posX;
+            newData.posY = posY;
+            newData.sizeX = sizeX;
+            newData.sizeY = sizeY;
+            text->data.push_back(newData);
 
             currChar++;
-            advanceX += (ch.advance >> 6) * text->heightPercent;
+            advanceX += (ch.advance >> 6);
         }
     }
 
-    unsigned int bufferDataId = 0;
-    glGenBuffers(1, &(bufferDataId));
-    glBindBuffer(GL_ARRAY_BUFFER, bufferDataId);
+    //unsigned int bufferDataId = 0;
+    //glGenBuffers(1, &(bufferDataId));
+    //glBindBuffer(GL_ARRAY_BUFFER, bufferDataId);
 
-    glBufferData(GL_ARRAY_BUFFER,
-        sizeof(sCharBufferData) * charCount,
-        (GLvoid*)&data[0],
-        GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER,
+    //    sizeof(sCharBufferData) * charCount,
+    //    (GLvoid*)&data[0],
+    //    GL_STATIC_DRAW);
 
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-    glVertexAttribDivisor(2, 1);
+    //glEnableVertexAttribArray(2);
+    //glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    //glVertexAttribDivisor(2, 1);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glDisableVertexAttribArray(2);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    //glDisableVertexAttribArray(2);
 
-    delete[] data;
+    //delete[] data;
 }
 
 void cRenderManager::DrawText(cUIText* textWidget)
 {
-    char c = textWidget->text[0] - 32;
-
+    //char c = textWidget->text[0] - 32;
     sFontData& font = fonts[textWidget->fontName];
-    sFontCharData& ch = font.characters[textWidget->text[0]];
+    //sFontCharData& ch = font.characters[textWidget->text[0]];
 
     use("text");
-    setInt("charId", c);
     setVec3("color", textWidget->color);
-
-    float textHeighPixels = textWidget->parentWidget->CalculateHeightPixels() * textWidget->heightPercent;
-    float charHeightPixels = textHeighPixels * (float)ch.size.y / (float)font.glyphHeight;
-    float charWidthPixels = charHeightPixels * (float)ch.size.x / (float)ch.size.y;
-    float sizeX = charWidthPixels / cCamera::GetInstance()->SCR_WIDTH;
-    float sizeY = charHeightPixels / cCamera::GetInstance()->SCR_HEIGHT;
-    setFloat("widthPercent", sizeX);
-    setFloat("heightPercent", sizeY);
-
-    float widthTranslate = textWidget->parentWidget->CalculateHorizontalTranslate();
-    float heightTranslate = textWidget->parentWidget->CalculateVerticalTranslate();
-    setFloat("widthTranslate", widthTranslate);
-    setFloat("heightTranslate", heightTranslate);
+    setBool("testFlip", testFlip);
 
     SetupFont(textWidget->fontName);
 
+    glm::vec2 origin;
+    origin.x = textWidget->parentWidget->CalculateHorizontalTranslate();
+    origin.y = textWidget->parentWidget->CalculateVerticalTranslate();
+    setVec2("originOffset", origin);
+
+    float glyphPixelRatio = textWidget->parentWidget->CalculateHeightPixels() * textWidget->heightPercent / (float)font.glyphHeight;
+    setFloat("glyphPixelRatio", glyphPixelRatio);
+    setInt("glyphSize", font.glyphHeight);
+    setInt("screenWidth", cCamera::GetInstance()->SCR_WIDTH);
+    setInt("screenHeight", cCamera::GetInstance()->SCR_HEIGHT);
+
+    for (int i = 0; i < 7; i++)
+    {
+        char c = textWidget->text[i] - 32;
+        sFontCharData& ch = font.characters[textWidget->text[i]];
+
+        setInt("charId[" + std::to_string(i) + "]", c);
+        setInt("sizeX[" + std::to_string(i) + "]", textWidget->data[i].sizeX);
+        setInt("sizeY[" + std::to_string(i) + "]", textWidget->data[i].sizeY);
+        setInt("posX[" + std::to_string(i) + "]", textWidget->data[i].posX);
+        setInt("posY[" + std::to_string(i) + "]", textWidget->data[i].posY);
+    }
+
     glBindVertexArray(UIQuadVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, textWidget->bufferDataId);
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, 7);
 
+    //glBindBuffer(GL_ARRAY_BUFFER, textWidget->bufferDataId);
     //glEnableVertexAttribArray(2);
-    //glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, testWidget->drawCharCount);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
 }

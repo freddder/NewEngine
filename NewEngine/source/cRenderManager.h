@@ -174,6 +174,7 @@ public:
 private:
     std::map<std::string, sFontData> fonts;
 public:
+    bool testFlip = false;
     cUIText* testWidget;
     void LoadFont(const std::string fontName);
     void SetupFont(const std::string fontName);

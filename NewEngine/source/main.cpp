@@ -123,9 +123,9 @@ int main()
         renderManager->testWidget = new cUIText(Engine::button);
         renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
         renderManager->testWidget->text = "Testing, stuff!";
-        renderManager->testWidget->color = glm::vec3(0.f, 1.f, 0.f);
+        renderManager->testWidget->color = glm::vec3(1.f);
         renderManager->testWidget->heightPercent = 0.5f;
-        //renderManager->CreateTextDataBuffer(renderManager->testWidget);
+        renderManager->CreateTextDataBuffer(renderManager->testWidget);
 
         canvas->AddWidget(Engine::button);
         cUIManager::GetInstance()->AddCanvas(canvas);
