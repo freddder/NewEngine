@@ -97,7 +97,7 @@ int main()
     renderManager->LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
     renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
     
-    renderManager->LoadFont("Truth And Ideals-Normal.ttf");
+    renderManager->LoadFont("Truth And Ideals-Normal.ttf", 24);
 
     //***************************************************************************
 
@@ -124,7 +124,9 @@ int main()
         renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
         renderManager->testWidget->text = "Testing, stuff!";
         renderManager->testWidget->color = glm::vec3(1.f);
-        renderManager->testWidget->heightPercent = 0.5f;
+        renderManager->testWidget->heightPercent = 0.34f;
+        renderManager->testWidget->origin.y = 0.5f;
+        renderManager->testWidget->origin.x = 0.5f;
         renderManager->CreateTextDataBuffer(renderManager->testWidget);
 
         canvas->AddWidget(Engine::button);

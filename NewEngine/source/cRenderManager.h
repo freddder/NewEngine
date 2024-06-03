@@ -176,7 +176,7 @@ private:
 public:
     bool testFlip = false;
     cUIText* testWidget;
-    void LoadFont(const std::string fontName);
+    void LoadFont(const std::string fontName, const unsigned int glyphSize);
     void SetupFont(const std::string fontName);
     unsigned int GetFontTextureId(const std::string fontName); // TEMP
     void CreateTextDataBuffer(cUIText* text);

@@ -863,10 +863,8 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
     setInt(shaderVariable, shaderTextureUnit);
 }
 
-void cRenderManager::LoadFont(const std::string fontName)
+void cRenderManager::LoadFont(const std::string fontName, const unsigned int glyphSize)
 {
-    unsigned int glyphPixelSize = 24;
-
     FT_Library ft;
     // All functions return a value different than 0 whenever an error occurred
     if (FT_Init_FreeType(&ft)) {
@@ -882,10 +880,10 @@ void cRenderManager::LoadFont(const std::string fontName)
     }
 
     // Leave width as 0 to be calculated with height
-    FT_Set_Pixel_Sizes(face, 0, glyphPixelSize);
+    FT_Set_Pixel_Sizes(face, 0, glyphSize);
 
     sFontData newFont;
-    newFont.glyphHeight = glyphPixelSize;
+    newFont.glyphHeight = glyphSize;
     // Create empty black texture
     glGenTextures(1, &newFont.textureAtlusId);
     glBindTexture(GL_TEXTURE_2D, newFont.textureAtlusId);
@@ -893,7 +891,7 @@ void cRenderManager::LoadFont(const std::string fontName)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_COLS * glyphPixelSize, FONT_ATLAS_ROWS * glyphPixelSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_COLS * glyphSize, FONT_ATLAS_ROWS * glyphSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -912,8 +910,8 @@ void cRenderManager::LoadFont(const std::string fontName)
         newChar.advance = face->glyph->advance.x;
 
         glTexSubImage2D(GL_TEXTURE_2D, 0,
-            glyphPixelSize * (i % FONT_ATLAS_COLS),
-            glyphPixelSize * (i / FONT_ATLAS_ROWS),
+            glyphSize * (i % FONT_ATLAS_COLS),
+            glyphSize * (i / FONT_ATLAS_ROWS),
             face->glyph->bitmap.width, 
             face->glyph->bitmap.rows, 
             GL_RED, GL_UNSIGNED_BYTE, 
@@ -1039,15 +1037,32 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
     //text->data = new sCharBufferData[charCount];
     sFontData& font = fonts[text->fontName];
 
+    float glyphPixelRatio = text->parentWidget->CalculateHeightPixels() * text->heightPercent / (float)font.glyphHeight;
+    float pixelCutoff = text->parentWidget->CalculateWidthPixels() * text->widthCutoffPercent;
+
     unsigned int currChar = 0;
     int advanceX = 0;
     int advanceY = 0;
     for (unsigned int i = 0; i < words.size(); i++)
     {
-        //unsigned int wordPixelWidth = 0;  not yet
+        // Check if this word is too big for this line
+        int wordAdvance = 0;
         for (unsigned int j = 0; j < words[i].length(); j++)
         {
             sFontCharData& ch = font.characters[words[i][j]];
+            wordAdvance += ch.advance >> 6;
+        }
+
+        if ((advanceX + wordAdvance) * glyphPixelRatio > pixelCutoff)
+        {
+            advanceX = 0;
+            advanceY += font.glyphHeight * 1.1f;
+        }
+        
+        for (unsigned int j = 0; j < words[i].length(); j++)
+        {
+            char c = words[i][j];
+            sFontCharData& ch = font.characters[c];
 
             int posX = advanceX + ch.bearing.x;
             int posY = ch.size.y - ch.bearing.y + advanceY;
@@ -1055,17 +1070,19 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
             int sizeX = ch.size.x;
             int sizeY = ch.size.y;
 
-            //data[currChar].charId = words[i][j];
+            //data[currChar].charId = c;
             sCharBufferData newData;
             newData.posX = posX;
             newData.posY = posY;
             newData.sizeX = sizeX;
             newData.sizeY = sizeY;
+            newData.charId = c;
             text->data.push_back(newData);
 
             currChar++;
-            advanceX += (ch.advance >> 6);
+            advanceX += ch.advance >> 6;
         }
+        advanceX += font.characters[' '].advance >> 6;
     }
 
     //unsigned int bufferDataId = 0;
@@ -1099,7 +1116,7 @@ void cRenderManager::DrawText(cUIText* textWidget)
 
     SetupFont(textWidget->fontName);
 
-    glm::vec2 origin = textWidget->parentWidget->CalculateBottomLeftTranslate();
+    glm::vec2 origin = textWidget->CalculateOriginOffset();
     setVec2("originOffset", origin);
 
     float glyphPixelRatio = textWidget->parentWidget->CalculateHeightPixels() * textWidget->heightPercent / (float)font.glyphHeight;
@@ -1108,9 +1125,9 @@ void cRenderManager::DrawText(cUIText* textWidget)
     setInt("screenWidth", cCamera::GetInstance()->SCR_WIDTH);
     setInt("screenHeight", cCamera::GetInstance()->SCR_HEIGHT);
 
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < textWidget->data.size(); i++)
     {
-        char c = textWidget->text[i] - 32;
+        char c = textWidget->data[i].charId - 32;
         sFontCharData& ch = font.characters[textWidget->text[i]];
 
         setInt("charId[" + std::to_string(i) + "]", c);
@@ -1122,7 +1139,7 @@ void cRenderManager::DrawText(cUIText* textWidget)
 
     glBindVertexArray(UIQuadVAO);
 
-    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, 7);
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, textWidget->data.size());
 
     //glBindBuffer(GL_ARRAY_BUFFER, textWidget->bufferDataId);
     //glEnableVertexAttribArray(2);

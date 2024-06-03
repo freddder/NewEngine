@@ -58,9 +58,9 @@ protected:
 	const float CalculateWidthScreenPercent();
 	const float CalculateVerticalTranslate();
 	const float CalculateHorizontalTranslate();
-	const glm::vec2 CalculateBottomLeftTranslate();
 
 	friend class cRenderManager;
+	friend class cUIText;
 };
 
 class cUIStaticImage : public cUIWidget
@@ -81,7 +81,7 @@ public:
 struct sCharBufferData
 {
 	int posX, posY, sizeX, sizeY;	// position from origin and screen percent size
-	//int charId;
+	int charId;
 };
 
 class cUIText
@@ -101,5 +101,5 @@ public:
 	float heightPercent; // to parent widget
 	float widthCutoffPercent = 1;
 
-	//virtual void SetupWidget();
+	const glm::vec2 CalculateOriginOffset();
 };

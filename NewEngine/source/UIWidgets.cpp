@@ -88,17 +88,6 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	return parentHorizontalTranslation + widgetPercentTranslate;
 }
 
-const glm::vec2 cUIWidget::CalculateBottomLeftTranslate()
-{
-	float horizontalTranslation = CalculateHorizontalTranslate();	
-	float verticalTranslation = CalculateVerticalTranslate();	
-
-	float finalHorizontalTranslation = horizontalTranslation - CalculateWidthPixels() / (float)cCamera::GetInstance()->SCR_WIDTH;
-	float finalVerticalTranslation = verticalTranslation - CalculateHeightPixels() / (float)cCamera::GetInstance()->SCR_HEIGHT;
-
-	return glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
-}
-
 void cUIStaticImage::SetupWidget()
 {
 	cRenderManager::GetInstance()->use("ui");
@@ -112,4 +101,20 @@ cUIText::cUIText(cUIWidget* parent)
 
 cUIText::~cUIText()
 {
+}
+
+const glm::vec2 cUIText::CalculateOriginOffset()
+{
+	float horizontalTranslation = parentWidget->CalculateHorizontalTranslate();
+	float verticalTranslation = parentWidget->CalculateVerticalTranslate();
+	float parentWidthPixels = parentWidget->CalculateWidthPixels();
+	float parentHeightPixels = parentWidget->CalculateHeightPixels();
+
+	float parentWidthPercent = parentWidthPixels / (float)cCamera::GetInstance()->SCR_WIDTH;
+	float parentHeightPercent = parentHeightPixels / (float)cCamera::GetInstance()->SCR_HEIGHT;
+
+	float finalHorizontalTranslation = horizontalTranslation - parentWidthPercent + (parentWidthPercent * origin.x * 2.f);
+	float finalVerticalTranslation = verticalTranslation - parentHeightPercent + (parentHeightPercent * origin.y * 2.f);
+
+	return glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
 }

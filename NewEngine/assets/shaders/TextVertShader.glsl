@@ -5,18 +5,19 @@ layout (location = 1) in vec2 aTextureCoords;
 out vec2 textureCoords;
 out float flip;
 
-uniform int charId[7];
-uniform int posX[7];
-uniform int posY[7];
-uniform int sizeX[7];
-uniform int sizeY[7];
+uniform int charId[15];
+uniform int posX[15];
+uniform int posY[15];
+uniform int sizeX[15];
+uniform int sizeY[15];
 
-uniform vec2 originOffset;
-uniform int glyphSize;
-uniform float glyphPixelRatio;
 uniform int screenWidth;
 uniform int screenHeight;
 
+uniform vec2 originOffset;
+
+uniform int glyphSize;
+uniform float glyphPixelRatio;
 uniform int atlasRowsNum;
 uniform int atlasColsNum;
 
@@ -30,7 +31,7 @@ void main()
     newPos.x *= sizeX[gl_InstanceID] * glyphPixelRatio / float(screenWidth);
     newPos.y *= sizeY[gl_InstanceID] * glyphPixelRatio / float(screenHeight);
 
-    float posTranslateX = posX[gl_InstanceID] * glyphPixelRatio * 2 / float(screenWidth) + originOffset.x;
+    float posTranslateX = originOffset.x + (posX[gl_InstanceID] * glyphPixelRatio * 2 / float(screenWidth));
     float posTranslateY = originOffset.y - (posY[gl_InstanceID] * glyphPixelRatio * 2 / float(screenHeight));
 
     newPos.x *= 2.f;
