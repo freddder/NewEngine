@@ -1111,15 +1111,10 @@ void cRenderManager::DrawText(cUIText* textWidget)
     unsigned int scrHeight = cCamera::GetInstance()->SCR_HEIGHT;
     float horizontalTranslation = textWidget->CalculateHorizontalTranslate();
     float verticalTranslation = textWidget->CalculateVerticalTranslate();
-    //float widthPixels = textWidget->CalculateWidthPixels();
-    //float heightPixels = textWidget->CalculateHeightPixels();
     float widthPercent = textWidget->CalculateWidthScreenPercent();
     float heightPercent = textWidget->CalculateHeightScreenPercent();
 
     float pixelGlyphRatio = heightPercent * scrHeight * textWidget->textSizePercent / (float)font.glyphSize;
-
-    //float widthPercent = widthPixels / (float)scrWidth;
-    //float heightPercent = heightPixels / (float)scrHeight;
 
     float finalHorizontalTranslation = horizontalTranslation - widthPercent;
     float finalVerticalTranslation = verticalTranslation + heightPercent - ((float)font.glyphSize * pixelGlyphRatio / (float)scrHeight * 2.f);
