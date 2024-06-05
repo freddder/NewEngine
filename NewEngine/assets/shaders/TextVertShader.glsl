@@ -41,7 +41,7 @@ void main()
 
     vec2 tileSize = vec2(1.f / float(atlasColsNum), 1.f / float(atlasRowsNum));
     float uvTranslateX = charId[gl_InstanceID] % atlasColsNum * tileSize.x;
-    float uvTranslateY = charId[gl_InstanceID] / atlasRowsNum * tileSize.y;
+    float uvTranslateY = charId[gl_InstanceID] / atlasColsNum * tileSize.y;
 
     textureCoords.x = aTextureCoords.x * tileSize.x * (sizeX[gl_InstanceID] / float(glyphSize));
     textureCoords.y = aTextureCoords.y * tileSize.y * (sizeY[gl_InstanceID] / float(glyphSize));

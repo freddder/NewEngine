@@ -897,7 +897,7 @@ void cRenderManager::LoadFont(const std::string fontName, const unsigned int gly
 
     // Fill slots of atlus with individual characters
     int i = 0;
-    for (unsigned char c = 32; c < 126; c++)
+    for (unsigned char c = 33; c < 126; c++)
     {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cout << "ERROR: Failed to load Glyph " << c << std::endl;
@@ -911,7 +911,7 @@ void cRenderManager::LoadFont(const std::string fontName, const unsigned int gly
 
         glTexSubImage2D(GL_TEXTURE_2D, 0,
             glyphSize * (i % FONT_ATLAS_COLS),
-            glyphSize * (i / FONT_ATLAS_ROWS),
+            glyphSize * (i / FONT_ATLAS_COLS),
             face->glyph->bitmap.width, 
             face->glyph->bitmap.rows, 
             GL_RED, GL_UNSIGNED_BYTE, 
@@ -1133,7 +1133,7 @@ void cRenderManager::DrawText(cUIText* textWidget)
 
     for (int i = 0; i < textWidget->data.size(); i++)
     {
-        char c = textWidget->data[i].charId - 32;
+        char c = textWidget->data[i].charId - 33;
         sFontCharData& ch = font.characters[textWidget->text[i]];
 
         setInt("charId[" + std::to_string(i) + "]", c);
