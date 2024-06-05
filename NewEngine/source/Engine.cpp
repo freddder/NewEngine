@@ -132,7 +132,7 @@ void RenderImgui()
             glfwSetWindowPos(window, mode->width/7, mode->height/7);
 
             std::string resolution = resolutions[currentSelectedResolutionIndex];
-            int pos = resolution.find('x');
+            size_t pos = resolution.find('x');
             int width = stoi(resolution.substr(0, pos));
             int height = stoi(resolution.substr(pos + 1));
             SetWindowResolution(width, height);
@@ -164,7 +164,7 @@ void RenderImgui()
             {
                 currentSelectedResolutionIndex = n;
                 std::string newResolution = resolutions[n];
-                int pos = newResolution.find('x');
+                size_t pos = newResolution.find('x');
                 int width = stoi(newResolution.substr(0, pos));
                 int height = stoi(newResolution.substr(pos + 1));
 

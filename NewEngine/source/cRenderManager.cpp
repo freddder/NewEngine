@@ -1027,7 +1027,7 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
     std::stringstream ss(text->text);
     std::vector<std::string> words;
     std::string s;
-    unsigned int charCount = 0; // no spaces
+    size_t charCount = 0; // no spaces
     while (std::getline(ss, s, ' '))
     {
         words.push_back(s);
