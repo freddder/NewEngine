@@ -883,7 +883,7 @@ void cRenderManager::LoadFont(const std::string fontName, const unsigned int gly
     FT_Set_Pixel_Sizes(face, 0, glyphSize);
 
     sFontData newFont;
-    newFont.glyphHeight = glyphSize;
+    newFont.glyphSize = glyphSize;
     // Create empty black texture
     glGenTextures(1, &newFont.textureAtlusId);
     glBindTexture(GL_TEXTURE_2D, newFont.textureAtlusId);
@@ -1037,8 +1037,8 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
     //text->data = new sCharBufferData[charCount];
     sFontData& font = fonts[text->fontName];
 
-    float glyphPixelRatio = text->parentWidget->CalculateHeightPixels() * text->heightPercent / (float)font.glyphHeight;
-    float pixelCutoff = text->parentWidget->CalculateWidthPixels() * text->widthCutoffPercent;
+    float glyphPixelRatio = text->CalculateHeightPixels() * text->textSizePercent / (float)font.glyphSize;
+    float pixelCutoff = text->CalculateWidthPixels();
 
     unsigned int currChar = 0;
     int advanceX = 0;
@@ -1056,7 +1056,7 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
         if ((advanceX + wordAdvance) * glyphPixelRatio > pixelCutoff)
         {
             advanceX = 0;
-            advanceY += font.glyphHeight * 1.1f;
+            advanceY += font.glyphSize * 1.1f;
         }
         
         for (unsigned int j = 0; j < words[i].length(); j++)
@@ -1106,24 +1106,35 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
 
 void cRenderManager::DrawText(cUIText* textWidget)
 {
-    //char c = textWidget->text[0] - 32;
     sFontData& font = fonts[textWidget->fontName];
-    //sFontCharData& ch = font.characters[textWidget->text[0]];
+    unsigned int scrWidth = cCamera::GetInstance()->SCR_WIDTH;
+    unsigned int scrHeight = cCamera::GetInstance()->SCR_HEIGHT;
+    float horizontalTranslation = textWidget->CalculateHorizontalTranslate();
+    float verticalTranslation = textWidget->CalculateVerticalTranslate();
+    //float widthPixels = textWidget->CalculateWidthPixels();
+    //float heightPixels = textWidget->CalculateHeightPixels();
+    float widthPercent = textWidget->CalculateWidthScreenPercent();
+    float heightPercent = textWidget->CalculateHeightScreenPercent();
+
+    float pixelGlyphRatio = heightPercent * scrHeight * textWidget->textSizePercent / (float)font.glyphSize;
+
+    //float widthPercent = widthPixels / (float)scrWidth;
+    //float heightPercent = heightPixels / (float)scrHeight;
+
+    float finalHorizontalTranslation = horizontalTranslation - widthPercent;
+    float finalVerticalTranslation = verticalTranslation + heightPercent - ((float)font.glyphSize * pixelGlyphRatio / (float)scrHeight * 2.f);
+    glm::vec2 origin = glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
 
     use("text");
+    SetupFont(textWidget->fontName);
     setVec3("color", textWidget->color);
     setBool("testFlip", testFlip);
 
-    SetupFont(textWidget->fontName);
-
-    glm::vec2 origin = textWidget->CalculateOriginOffset();
     setVec2("originOffset", origin);
-
-    float glyphPixelRatio = textWidget->parentWidget->CalculateHeightPixels() * textWidget->heightPercent / (float)font.glyphHeight;
-    setFloat("glyphPixelRatio", glyphPixelRatio);
-    setInt("glyphSize", font.glyphHeight);
-    setInt("screenWidth", cCamera::GetInstance()->SCR_WIDTH);
-    setInt("screenHeight", cCamera::GetInstance()->SCR_HEIGHT);
+    setFloat("glyphPixelRatio", pixelGlyphRatio);
+    setInt("glyphSize", font.glyphSize);
+    setInt("screenWidth", scrWidth);
+    setInt("screenHeight", scrHeight);
 
     for (int i = 0; i < textWidget->data.size(); i++)
     {

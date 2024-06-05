@@ -94,27 +94,10 @@ void cUIStaticImage::SetupWidget()
 	cRenderManager::GetInstance()->SetupTexture(textureName);
 }
 
-cUIText::cUIText(cUIWidget* parent)
+cUIText::cUIText()
 {
-	parentWidget = parent;
 }
 
 cUIText::~cUIText()
 {
-}
-
-const glm::vec2 cUIText::CalculateOriginOffset()
-{
-	float horizontalTranslation = parentWidget->CalculateHorizontalTranslate();
-	float verticalTranslation = parentWidget->CalculateVerticalTranslate();
-	float parentWidthPixels = parentWidget->CalculateWidthPixels();
-	float parentHeightPixels = parentWidget->CalculateHeightPixels();
-
-	float parentWidthPercent = parentWidthPixels / (float)cCamera::GetInstance()->SCR_WIDTH;
-	float parentHeightPercent = parentHeightPixels / (float)cCamera::GetInstance()->SCR_HEIGHT;
-
-	float finalHorizontalTranslation = horizontalTranslation - parentWidthPercent + (parentWidthPercent * origin.x * 2.f);
-	float finalVerticalTranslation = verticalTranslation - parentHeightPercent + (parentHeightPercent * origin.y * 2.f);
-
-	return glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
 }

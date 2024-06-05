@@ -120,14 +120,15 @@ int main()
         // Make sure to add back gound items last
         //Engine::button->AddChild(Engine::sprite);
 
-        renderManager->testWidget = new cUIText(Engine::button);
+        renderManager->testWidget = new cUIText();
         renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
         renderManager->testWidget->text = "Testing, stuff!";
         renderManager->testWidget->color = glm::vec3(1.f);
-        renderManager->testWidget->heightPercent = 0.34f;
-        renderManager->testWidget->origin.y = 0.5f;
-        renderManager->testWidget->origin.x = 0.5f;
+        renderManager->testWidget->aspectRatio = 0.365f;
+        renderManager->testWidget->heightPercent = 1.f;
+        renderManager->testWidget->textSizePercent = 0.5f;
         renderManager->CreateTextDataBuffer(renderManager->testWidget);
+        Engine::button->AddChild(renderManager->testWidget);
 
         canvas->AddWidget(Engine::button);
         cUIManager::GetInstance()->AddCanvas(canvas);
@@ -170,7 +171,7 @@ int main()
     Engine::GameLoop(true);
 
     delete Player::playerChar;
-    delete renderManager->testWidget;
+    //delete renderManager->testWidget;
 
     Engine::ShutdownManagers();
 

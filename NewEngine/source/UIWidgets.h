@@ -38,8 +38,10 @@ public:
 
 	bool focusable = false;
 	
-	float heightPercent = 1.f; // Number from 0 to 1 that represents percentage of vertical space this widget take from parent (or window height if parent is null)
-	float aspectRatio = 1.f; // Ratio between widget height and width (height / width)
+	// Number from 0 to 1 that represents percentage of vertical space this widget take from parent (or window height if parent is null)
+	float heightPercent = 1.f;
+	// Ratio between widget height and width (height / width)
+	float aspectRatio = 1.f;
 	eAnchor anchor = MIDDLE_MIDDLE;
 
 	virtual void SetupWidget();
@@ -56,6 +58,7 @@ protected:
 	const float CalculateHeightScreenPercent();
 	const float CalculateWidthPixels();
 	const float CalculateWidthScreenPercent();
+
 	const float CalculateVerticalTranslate();
 	const float CalculateHorizontalTranslate();
 
@@ -84,22 +87,17 @@ struct sCharBufferData
 	int charId;
 };
 
-class cUIText
+class cUIText : public cUIWidget
 {
 public:
-	cUIText(cUIWidget* parent);
+	cUIText();
 	~cUIText();
 
-	cUIWidget* parentWidget;
 	//unsigned int bufferDataId;
 	std::vector<sCharBufferData> data;
 	unsigned int drawCharCount = 0;
 	std::string fontName;
 	std::string text;
 	glm::vec3 color;
-	glm::vec2 origin = glm::vec2(0.f); // [0-1]
-	float heightPercent; // to parent widget
-	float widthCutoffPercent = 1;
-
-	const glm::vec2 CalculateOriginOffset();
+	float textSizePercent = 1.f; // Of this widget
 };

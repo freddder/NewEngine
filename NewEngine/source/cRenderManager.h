@@ -62,7 +62,7 @@ struct sFontCharData
 struct sFontData
 {
     unsigned int textureAtlusId;
-    unsigned int glyphHeight;
+    unsigned int glyphSize;
     std::map<char, sFontCharData> characters;
 };
 

@@ -31,8 +31,8 @@ void main()
     newPos.x *= sizeX[gl_InstanceID] * glyphPixelRatio / float(screenWidth);
     newPos.y *= sizeY[gl_InstanceID] * glyphPixelRatio / float(screenHeight);
 
-    float posTranslateX = originOffset.x + (posX[gl_InstanceID] * glyphPixelRatio * 2 / float(screenWidth));
-    float posTranslateY = originOffset.y - (posY[gl_InstanceID] * glyphPixelRatio * 2 / float(screenHeight));
+    float posTranslateX = originOffset.x + (posX[gl_InstanceID] * glyphPixelRatio / float(screenWidth) * 2);
+    float posTranslateY = originOffset.y - (posY[gl_InstanceID] * glyphPixelRatio / float(screenHeight) * 2);
 
     newPos.x *= 2.f;
     newPos.y *= 2.f;
