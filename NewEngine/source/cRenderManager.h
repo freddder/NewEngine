@@ -186,7 +186,7 @@ private:
     void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawParticles(class cParticleSpawner* spawner);
     void DrawWidget(class cUIWidget* widget);
-public:
     void DrawText(cUIText* textWidget);
+public:
     void DrawFrame(); // TEMP
 };

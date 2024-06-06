@@ -1200,7 +1200,10 @@ void cRenderManager::DrawWidget(cUIWidget* widget)
 {
     for (int i = 0; i < widget->children.size(); i++)
     {
-        DrawWidget(widget->children[i]);
+        cUIWidget* child = widget->children[i];
+
+        if (child->ShouldUseTextRenderer()) DrawText(dynamic_cast<cUIText*>(child));
+        else DrawWidget(child);
     }
     
     widget->SetupWidget();
@@ -1299,8 +1302,6 @@ void cRenderManager::DrawFrame()
         DrawParticles(sceneManager->particleSpawners[i]);
     }
 
-    DrawText(testWidget);
-
     // Draw UI
     cUIManager* uiManager = cUIManager::GetInstance();
     if (!uiManager->canvases.empty())
@@ -1309,8 +1310,8 @@ void cRenderManager::DrawFrame()
 
         for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
         {
-            //canvasToDraw->anchoredWidgets[i]->SetupWidget();
-            DrawWidget(canvasToDraw->anchoredWidgets[i]);
+            if (canvasToDraw->anchoredWidgets[i]->ShouldUseTextRenderer()) DrawText(dynamic_cast<cUIText*>(canvasToDraw->anchoredWidgets[i]));
+            else DrawWidget(canvasToDraw->anchoredWidgets[i]);
         }
     }
 

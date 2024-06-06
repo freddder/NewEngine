@@ -45,12 +45,12 @@ public:
 	eAnchor anchor = MIDDLE_MIDDLE;
 
 	virtual void SetupWidget();
+	virtual bool ShouldUseTextRenderer() { return false; }
 
 private:
 	std::vector<cUIWidget*> children;
 	cUIWidget* parent;
 public:
-	// Do NOT set manually, use AddChild functions
 	void AddChild(cUIWidget* newChild);
 
 protected:
@@ -100,4 +100,6 @@ public:
 	std::string text;
 	glm::vec3 color;
 	float textSizePercent = 1.f; // Of this widget
+
+	virtual bool ShouldUseTextRenderer() { return true; }
 };
