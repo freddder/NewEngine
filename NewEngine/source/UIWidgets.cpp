@@ -100,4 +100,8 @@ cUIText::cUIText()
 
 cUIText::~cUIText()
 {
+	if (dataBufferId != 0)
+	{
+		glDeleteBuffers(1, &dataBufferId);
+	}
 }

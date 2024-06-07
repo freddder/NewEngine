@@ -167,12 +167,9 @@ public:
     // Fonts
 private:
     std::map<std::string, sFontData> fonts;
-public:
-    bool testFlip = false;
-    cUIText* testWidget;
-    void LoadFont(const std::string fontName, const unsigned int glyphSize);
     void SetupFont(const std::string fontName);
-    unsigned int GetFontTextureId(const std::string fontName); // TEMP
+public:
+    void LoadFont(const std::string fontName, const unsigned int glyphSize);
     void CreateTextDataBuffer(cUIText* text);
 
     // Drawing
@@ -182,5 +179,5 @@ private:
     void DrawWidget(class cUIWidget* widget);
     void DrawText(cUIText* textWidget);
 public:
-    void DrawFrame(); // TEMP
+    void DrawFrame();
 };

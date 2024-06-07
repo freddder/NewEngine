@@ -111,24 +111,20 @@ int main()
         Engine::button->aspectRatio = 0.365f;
         Engine::button->heightPercent = 1.f / 9.f;
 
-        //Engine::sprite = new cUIStaticImage();
-        //Engine::sprite->anchor = MIDDLE_LEFT;
-        //Engine::sprite->aspectRatio = 3.f / 4.f;
-        //Engine::sprite->heightPercent = 3.f / 4.f;
-        //Engine::sprite->textureName = "ico_3ds_722.png";
+        Engine::sprite = new cUIStaticImage();
+        Engine::sprite->anchor = MIDDLE_LEFT;
+        Engine::sprite->aspectRatio = 3.f / 4.f;
+        Engine::sprite->heightPercent = 3.f / 4.f;
+        Engine::sprite->textureName = "ico_3ds_722.png";
+        Engine::button->AddChild(Engine::sprite);
 
-        // Make sure to add back gound items last
-        //Engine::button->AddChild(Engine::sprite);
-
-        renderManager->testWidget = new cUIText();
-        renderManager->testWidget->fontName = "Truth And Ideals-Normal.ttf";
-        renderManager->testWidget->text = "Testing, stuff!";
-        renderManager->testWidget->color = glm::vec3(1.f);
-        renderManager->testWidget->aspectRatio = 0.365f;
-        renderManager->testWidget->heightPercent = 1.f;
-        renderManager->testWidget->textSizePercent = 0.5f;
-        renderManager->CreateTextDataBuffer(renderManager->testWidget);
-        Engine::button->AddChild(renderManager->testWidget);
+        cUIText* textWidget = new cUIText();
+        textWidget->fontName = "Truth And Ideals-Normal.ttf";
+        textWidget->text = "Thatguy";
+        textWidget->color = glm::vec3(1.f);
+        textWidget->heightPercent = 0.3f;
+        Engine::button->AddChild(textWidget);
+        renderManager->CreateTextDataBuffer(textWidget); // make sure to call this after setting parent
 
         canvas->AddWidget(Engine::button);
         cUIManager::GetInstance()->AddCanvas(canvas);

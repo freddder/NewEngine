@@ -5,7 +5,6 @@ layout (location = 2) in vec4 charData;
 layout (location = 3) in float charId;
 
 out vec2 textureCoords;
-out float flip;
 
 uniform int screenWidth;
 uniform int screenHeight;
@@ -50,11 +49,6 @@ void main()
 
     textureCoords.x += uvTranslateX;
     textureCoords.y += uvTranslateY;
-    
-    flip = 0.f;
-    if (gl_InstanceID % 2 == 0) {
-        flip = 1.f;
-    }
 
     gl_Position = vec4(newPos, 1.0);
 }

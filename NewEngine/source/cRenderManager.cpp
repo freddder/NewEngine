@@ -896,7 +896,7 @@ void cRenderManager::LoadFont(const std::string fontName, const unsigned int gly
 
     // Fill slots of atlus with individual characters
     int i = 0;
-    for (unsigned char c = 33; c < 126; c++)
+    for (unsigned char c = 32; c < 126; c++)
     {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cout << "ERROR: Failed to load Glyph " << c << std::endl;
@@ -908,17 +908,22 @@ void cRenderManager::LoadFont(const std::string fontName, const unsigned int gly
         newChar.bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
         newChar.advance = face->glyph->advance.x;
 
-        glTexSubImage2D(GL_TEXTURE_2D, 0,
-            glyphSize * (i % FONT_ATLAS_COLS),
-            glyphSize * (i / FONT_ATLAS_COLS),
-            face->glyph->bitmap.width, 
-            face->glyph->bitmap.rows, 
-            GL_RED, GL_UNSIGNED_BYTE, 
-            face->glyph->bitmap.buffer
-        );
+        // No need to add space to texture
+        if (c != ' ')
+        {
+            glTexSubImage2D(GL_TEXTURE_2D, 0,
+                glyphSize * (i % FONT_ATLAS_COLS),
+                glyphSize * (i / FONT_ATLAS_COLS),
+                face->glyph->bitmap.width,
+                face->glyph->bitmap.rows,
+                GL_RED, GL_UNSIGNED_BYTE,
+                face->glyph->bitmap.buffer
+            );
+
+            i++;
+        }
 
         newFont.characters.insert(std::pair<char, sFontCharData>(c, newChar));
-        i++;
     }
 
     fonts.insert(std::pair<std::string, sFontData>(fontName, newFont));
@@ -999,11 +1004,6 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
     }    
 }
 
-unsigned int cRenderManager::GetFontTextureId(const std::string fontName)
-{
-    return fonts[fontName].textureAtlusId;
-}
-
 void cRenderManager::SetupFont(const std::string fontName)
 {
     if (fonts.find(fontName) == fonts.end()) return; // font doesn't exists
@@ -1016,13 +1016,15 @@ void cRenderManager::SetupFont(const std::string fontName)
     std::string shaderVariable = "texture_0";
     setInt(shaderVariable, 0);
 
-    // TODO: remove this if other fonts use different numbers
     setInt("atlasRowsNum", FONT_ATLAS_ROWS);
     setInt("atlasColsNum", FONT_ATLAS_COLS);
 }
 
 void cRenderManager::CreateTextDataBuffer(cUIText* text)
 {
+    if (fonts.find(text->fontName) == fonts.end()) return; // font doesn't exists
+    sFontData& font = fonts[text->fontName];
+
     std::stringstream ss(text->text);
     std::vector<std::string> words;
     std::string s;
@@ -1031,12 +1033,10 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
         words.push_back(s); // no spaces
     }
 
-    std::vector<sCharBufferData> data;
-    sFontData& font = fonts[text->fontName];
-
     float glyphPixelRatio = text->CalculateHeightPixels() * text->textSizePercent / (float)font.glyphSize;
     float pixelCutoff = text->CalculateWidthPixels();
 
+    std::vector<sCharBufferData> data;
     int advanceX = 0;
     int advanceY = 0;
     for (unsigned int i = 0; i < words.size(); i++)
@@ -1082,7 +1082,7 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
 
     text->drawCharCount = data.size();
 
-    glGenBuffers(1, &(text->dataBufferId));
+    glGenBuffers(1, &text->dataBufferId);
     glBindBuffer(GL_ARRAY_BUFFER, text->dataBufferId);
 
     glBufferData(GL_ARRAY_BUFFER,
@@ -1106,13 +1106,12 @@ void cRenderManager::DrawText(cUIText* textWidget)
     float pixelGlyphRatio = heightPercent * scrHeight * textWidget->textSizePercent / (float)font.glyphSize;
 
     float finalHorizontalTranslation = horizontalTranslation - widthPercent;
-    float finalVerticalTranslation = verticalTranslation + heightPercent - ((float)font.glyphSize * pixelGlyphRatio / (float)scrHeight * 2.f);
+    float finalVerticalTranslation = verticalTranslation + heightPercent;
     glm::vec2 origin = glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
 
     use("text");
     SetupFont(textWidget->fontName);
     setVec3("color", textWidget->color);
-    setBool("testFlip", testFlip);
 
     setVec2("originOffset", origin);
     setFloat("glyphPixelRatio", pixelGlyphRatio);

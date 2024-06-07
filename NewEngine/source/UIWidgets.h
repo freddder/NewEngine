@@ -93,7 +93,7 @@ public:
 	cUIText();
 	~cUIText();
 
-	unsigned int dataBufferId;
+	unsigned int dataBufferId = 0;
 	size_t drawCharCount = 0;
 	std::string fontName;
 	std::string text;
