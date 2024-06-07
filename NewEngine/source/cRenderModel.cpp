@@ -39,7 +39,7 @@ void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int 
 		(GLvoid*)&offsets[0],
 		GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); // isn't this supposed to be a GL_ARRAY_BUFFER ?
 }
 
 // This might change when dynamic map loading is implemented (not using a general texture map)

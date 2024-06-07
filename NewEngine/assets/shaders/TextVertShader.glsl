@@ -1,15 +1,11 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTextureCoords;
+layout (location = 2) in vec4 charData;
+layout (location = 3) in float charId;
 
 out vec2 textureCoords;
 out float flip;
-
-uniform int charId[15];
-uniform int posX[15];
-uniform int posY[15];
-uniform int sizeX[15];
-uniform int sizeY[15];
 
 uniform int screenWidth;
 uniform int screenHeight;
@@ -28,11 +24,17 @@ void main()
     newPos.x = (aPos.x + 1.f) / 2.f;
     newPos.y = (aPos.y + 1.f) / 2.f;
 
-    newPos.x *= sizeX[gl_InstanceID] * glyphPixelRatio / float(screenWidth);
-    newPos.y *= sizeY[gl_InstanceID] * glyphPixelRatio / float(screenHeight);
+    float charPosX = charData.x;
+    float charPosY = charData.y;
+    float charSizeX = charData.z;
+    float charSizeY = charData.a;
+    int charValue = int(charId) - 33;
 
-    float posTranslateX = originOffset.x + (posX[gl_InstanceID] * glyphPixelRatio / float(screenWidth) * 2);
-    float posTranslateY = originOffset.y - (posY[gl_InstanceID] * glyphPixelRatio / float(screenHeight) * 2);
+    newPos.x *= charSizeX * glyphPixelRatio / float(screenWidth);
+    newPos.y *= charSizeY * glyphPixelRatio / float(screenHeight);
+
+    float posTranslateX = originOffset.x + (charPosX * glyphPixelRatio / float(screenWidth) * 2);
+    float posTranslateY = originOffset.y - (charPosY * glyphPixelRatio / float(screenHeight) * 2);
 
     newPos.x *= 2.f;
     newPos.y *= 2.f;
@@ -40,11 +42,11 @@ void main()
     newPos.y += posTranslateY;
 
     vec2 tileSize = vec2(1.f / float(atlasColsNum), 1.f / float(atlasRowsNum));
-    float uvTranslateX = charId[gl_InstanceID] % atlasColsNum * tileSize.x;
-    float uvTranslateY = charId[gl_InstanceID] / atlasColsNum * tileSize.y;
+    float uvTranslateX = charValue % atlasColsNum * tileSize.x;
+    float uvTranslateY = charValue / atlasColsNum * tileSize.y;
 
-    textureCoords.x = aTextureCoords.x * tileSize.x * (sizeX[gl_InstanceID] / float(glyphSize));
-    textureCoords.y = aTextureCoords.y * tileSize.y * (sizeY[gl_InstanceID] / float(glyphSize));
+    textureCoords.x = aTextureCoords.x * tileSize.x * (charSizeX / float(glyphSize));
+    textureCoords.y = aTextureCoords.y * tileSize.y * (charSizeY / float(glyphSize));
 
     textureCoords.x += uvTranslateX;
     textureCoords.y += uvTranslateY;

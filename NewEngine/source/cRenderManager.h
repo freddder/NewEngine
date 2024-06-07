@@ -130,12 +130,6 @@ private:
     unsigned int UIQuadVBO;
     unsigned int UIQuadEBO;
 
-    // Text quad
-private:
-    unsigned int TextQuadVAO;
-    unsigned int TextQuadVBO;
-    unsigned int TextQuadEBO;
-
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;

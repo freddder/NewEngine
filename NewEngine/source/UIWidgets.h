@@ -83,8 +83,8 @@ public:
 
 struct sCharBufferData
 {
-	int posX, posY, sizeX, sizeY;	// position from origin and screen percent size
-	int charId;
+	float posX, posY, sizeX, sizeY;	// position from origin and screen percent size
+	float charId;/*colorR, colorG, colorB,*/  // maybe I will add character highlight color
 };
 
 class cUIText : public cUIWidget
@@ -93,9 +93,8 @@ public:
 	cUIText();
 	~cUIText();
 
-	//unsigned int bufferDataId;
-	std::vector<sCharBufferData> data;
-	unsigned int drawCharCount = 0;
+	unsigned int dataBufferId;
+	size_t drawCharCount = 0;
 	std::string fontName;
 	std::string text;
 	glm::vec3 color;

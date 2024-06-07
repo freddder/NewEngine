@@ -167,7 +167,6 @@ cRenderManager::cRenderManager()
         1, 2, 3    // second triangle
     };
 
-    // setup plane VAO
     glGenVertexArrays(1, &UIQuadVAO);
     glGenBuffers(1, &UIQuadVBO);
     glGenBuffers(1, &UIQuadEBO);
@@ -1027,20 +1026,17 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
     std::stringstream ss(text->text);
     std::vector<std::string> words;
     std::string s;
-    size_t charCount = 0; // no spaces
     while (std::getline(ss, s, ' '))
     {
-        words.push_back(s);
-        charCount += s.length();
+        words.push_back(s); // no spaces
     }
 
-    //text->data = new sCharBufferData[charCount];
+    std::vector<sCharBufferData> data;
     sFontData& font = fonts[text->fontName];
 
     float glyphPixelRatio = text->CalculateHeightPixels() * text->textSizePercent / (float)font.glyphSize;
     float pixelCutoff = text->CalculateWidthPixels();
 
-    unsigned int currChar = 0;
     int advanceX = 0;
     int advanceY = 0;
     for (unsigned int i = 0; i < words.size(); i++)
@@ -1053,6 +1049,7 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
             wordAdvance += ch.advance >> 6;
         }
 
+        // Jump to next line
         if ((advanceX + wordAdvance) * glyphPixelRatio > pixelCutoff)
         {
             advanceX = 0;
@@ -1070,38 +1067,30 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
             int sizeX = ch.size.x;
             int sizeY = ch.size.y;
 
-            //data[currChar].charId = c;
             sCharBufferData newData;
-            newData.posX = posX;
-            newData.posY = posY;
-            newData.sizeX = sizeX;
-            newData.sizeY = sizeY;
-            newData.charId = c;
-            text->data.push_back(newData);
+            newData.posX = (float)posX;
+            newData.posY = (float)posY;
+            newData.sizeX = (float)sizeX;
+            newData.sizeY = (float)sizeY;
+            newData.charId = (float)c;
+            data.push_back(newData);
 
-            currChar++;
             advanceX += ch.advance >> 6;
         }
         advanceX += font.characters[' '].advance >> 6;
     }
 
-    //unsigned int bufferDataId = 0;
-    //glGenBuffers(1, &(bufferDataId));
-    //glBindBuffer(GL_ARRAY_BUFFER, bufferDataId);
+    text->drawCharCount = data.size();
 
-    //glBufferData(GL_ARRAY_BUFFER,
-    //    sizeof(sCharBufferData) * charCount,
-    //    (GLvoid*)&data[0],
-    //    GL_STATIC_DRAW);
+    glGenBuffers(1, &(text->dataBufferId));
+    glBindBuffer(GL_ARRAY_BUFFER, text->dataBufferId);
 
-    //glEnableVertexAttribArray(2);
-    //glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-    //glVertexAttribDivisor(2, 1);
+    glBufferData(GL_ARRAY_BUFFER,
+        sizeof(sCharBufferData) * data.size(),
+        (GLvoid*)&data[0],
+        GL_STATIC_DRAW);
 
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    //glDisableVertexAttribArray(2);
-
-    //delete[] data;
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void cRenderManager::DrawText(cUIText* textWidget)
@@ -1131,25 +1120,21 @@ void cRenderManager::DrawText(cUIText* textWidget)
     setInt("screenWidth", scrWidth);
     setInt("screenHeight", scrHeight);
 
-    for (int i = 0; i < textWidget->data.size(); i++)
-    {
-        char c = textWidget->data[i].charId - 33;
-        sFontCharData& ch = font.characters[textWidget->text[i]];
-
-        setInt("charId[" + std::to_string(i) + "]", c);
-        setInt("sizeX[" + std::to_string(i) + "]", textWidget->data[i].sizeX);
-        setInt("sizeY[" + std::to_string(i) + "]", textWidget->data[i].sizeY);
-        setInt("posX[" + std::to_string(i) + "]", textWidget->data[i].posX);
-        setInt("posY[" + std::to_string(i) + "]", textWidget->data[i].posY);
-    }
-
     glBindVertexArray(UIQuadVAO);
 
-    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, textWidget->data.size());
+    // Setup buffer data as vertex atribute
+    // (ideally I would want this to be set on VAO creation, but I guess the data needs to be setup before hand... so here it goes)
+    glBindBuffer(GL_ARRAY_BUFFER, textWidget->dataBufferId);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, textWidget->bufferDataId);
-    //glEnableVertexAttribArray(2);
-    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribDivisor(2, 1);
+
+    glEnableVertexAttribArray(3);
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(4 * sizeof(float)));
+    glVertexAttribDivisor(3, 1);
+
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, textWidget->drawCharCount);
 
     glBindVertexArray(0);
 }
