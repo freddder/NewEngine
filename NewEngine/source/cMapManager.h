@@ -65,28 +65,6 @@ enum eEntityMoveResult
 
 class cMapManager
 {
-	static cMapManager* sgtn;
-	cMapManager();
-	~cMapManager();
-	cMapManager(const cMapManager& obj) = delete;
-public:
-	static cMapManager* GetInstance()
-	{
-		if (sgtn == NULL)
-		{
-			sgtn = new cMapManager();
-		}
-
-		return sgtn;
-	}
-	static void DestroyInstance()
-	{
-		if (sgtn != NULL)
-		{
-			delete sgtn;
-			sgtn = NULL;
-		}
-	}
 
 private:
 	std::vector<sQuadrant> quads;

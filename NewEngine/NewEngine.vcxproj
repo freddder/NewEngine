@@ -163,7 +163,7 @@
     <ClCompile Include="source\cAnimatedModel.cpp" />
     <ClCompile Include="source\cAnimation.cpp" />
     <ClCompile Include="source\cAnimationManager.cpp" />
-    <ClCompile Include="source\cCamera.cpp" />
+    <ClCompile Include="source\cCameraManager.cpp" />
     <ClCompile Include="source\cLightManager.cpp" />
     <ClCompile Include="source\cLinearCongruentialGenerator.cpp" />
     <ClCompile Include="source\cMapManager.cpp" />
@@ -201,7 +201,7 @@
     <ClInclude Include="source\cAnimatedModel.h" />
     <ClInclude Include="source\cAnimation.h" />
     <ClInclude Include="source\cAnimationManager.h" />
-    <ClInclude Include="source\cCamera.h" />
+    <ClInclude Include="source\cCameraManager.h" />
     <ClInclude Include="source\cLightManager.h" />
     <ClInclude Include="source\cLinearCongruentialGenerator.h" />
     <ClInclude Include="source\cMapManager.h" />

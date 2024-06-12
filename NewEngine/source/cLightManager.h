@@ -25,29 +25,11 @@ struct sLight
 
 class cLightManager
 {
-	static cLightManager* sgtn;
-	cLightManager();
-	~cLightManager();
-	cLightManager(const cLightManager& obj) = delete;
 public:
-	static cLightManager* GetInstance()
-	{
-		if (sgtn == NULL)
-		{
-			sgtn = new cLightManager();
-		}
+	void Startup();
+	void Shutdown();
 
-		return sgtn;
-	}
-	static void DestroyInstance()
-	{
-		if (sgtn != NULL)
-		{
-			delete sgtn;
-			sgtn = NULL;
-		}
-	}
-
+public:
 	const static unsigned int NUMBER_OF_LIGHTS = 20;
 	sLight lights[NUMBER_OF_LIGHTS];
 

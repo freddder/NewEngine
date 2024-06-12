@@ -2,9 +2,15 @@
 #include <sstream>
 #include <glad/glad.h>
 
-cLightManager* cLightManager::sgtn = NULL;
-
 cLightManager::cLightManager()
+{
+}
+
+cLightManager::~cLightManager()
+{	
+}
+
+void cLightManager::Startup()
 {
 	glGenBuffers(1, &uboLights);
 
@@ -17,7 +23,7 @@ cLightManager::cLightManager()
 	shadowSampleRadius = 5;
 }
 
-cLightManager::~cLightManager()
+void cLightManager::Shutdown()
 {
 	glDeleteBuffers(1, &uboLights);
 }

@@ -1,5 +1,6 @@
 #include "cCharacterEntity.h"
 
+#include "Engine.h"
 #include "cMapManager.h"
 
 cCharacterEntity::cCharacterEntity(glm::vec3 pos)
@@ -18,7 +19,7 @@ void cCharacterEntity::AttemptMovement(eDirection dir, bool run)
 {
 	if (!spriteModel->modelAnimation->isDone) return;
 
-	eEntityMoveResult moveResult = cMapManager::GetInstance()->TryMoveEntity(this, dir);
+	eEntityMoveResult moveResult = Manager::map.TryMoveEntity(this, dir);
 
 	glm::vec3 prevPos = position;
 	position = spriteModel->AnimateMovement(dir, run, moveResult);

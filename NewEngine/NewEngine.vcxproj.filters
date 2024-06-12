@@ -62,7 +62,7 @@
     <ClCompile Include="source\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\cCamera.cpp">
+    <ClCompile Include="source\cCameraManager.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
     <ClCompile Include="source\cRenderModel.cpp">
@@ -157,7 +157,7 @@
     <ClInclude Include="source\cRenderModel.h">
       <Filter>Render System\Model</Filter>
     </ClInclude>
-    <ClInclude Include="source\cCamera.h">
+    <ClInclude Include="source\cCameraManager.h">
       <Filter>Camera</Filter>
     </ClInclude>
     <ClInclude Include="source\DrawInfo.h">

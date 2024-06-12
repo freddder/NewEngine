@@ -1,5 +1,7 @@
 #include "UIWidgets.h"
-#include "cCamera.h"
+
+#include "Engine.h"
+#include "cCameraManager.h"
 
 // Should be removed (maybe?)
 #include "cRenderManager.h"
@@ -25,7 +27,7 @@ void cUIWidget::AddChild(cUIWidget* newChild)
 
 const float cUIWidget::CalculateHeightPixels()
 {
-	if (!parent) return heightPercent * cCamera::GetInstance()->SCR_HEIGHT;
+	if (!parent) return heightPercent * Manager::camera.SCR_HEIGHT;
 
 	return heightPercent * parent->CalculateHeightPixels();
 }
@@ -35,7 +37,7 @@ const float cUIWidget::CalculateHeightScreenPercent()
 	if (!parent) return heightPercent;
 
 	float heightInPixels = parent->CalculateHeightPixels() * heightPercent;
-	return heightInPixels / cCamera::GetInstance()->SCR_HEIGHT;
+	return heightInPixels / Manager::camera.SCR_HEIGHT;
 }
 
 const float cUIWidget::CalculateWidthPixels()
@@ -45,13 +47,13 @@ const float cUIWidget::CalculateWidthPixels()
 
 const float cUIWidget::CalculateWidthScreenPercent()
 {
-	return CalculateWidthPixels() / cCamera::GetInstance()->SCR_WIDTH;
+	return CalculateWidthPixels() / Manager::camera.SCR_WIDTH;
 }
 
 const float cUIWidget::CalculateVerticalTranslate()
 {
 	float parentVerticalTranslation = 0.f;
-	float parentHeightPixels = (float)cCamera::GetInstance()->SCR_HEIGHT;
+	float parentHeightPixels = (float)Manager::camera.SCR_HEIGHT;
 	if (parent)
 	{
 		parentVerticalTranslation = parent->CalculateVerticalTranslate();
@@ -61,7 +63,7 @@ const float cUIWidget::CalculateVerticalTranslate()
 	if (anchor == MIDDLE_LEFT || anchor == MIDDLE_MIDDLE || anchor == MIDDLE_RIGHT)	return parentVerticalTranslation;
 
 	float widgetPixelTranslate = parentHeightPixels - CalculateHeightPixels();
-	float widgetPercentTranslate = widgetPixelTranslate / (float)cCamera::GetInstance()->SCR_HEIGHT;
+	float widgetPercentTranslate = widgetPixelTranslate / (float)Manager::camera.SCR_HEIGHT;
 
 	if (anchor == BOTTOM_LEFT || anchor == BOTTOM_MIDDLE || anchor == BOTTOM_RIGHT) widgetPercentTranslate *= -1.f;
 
@@ -71,7 +73,7 @@ const float cUIWidget::CalculateVerticalTranslate()
 const float cUIWidget::CalculateHorizontalTranslate()
 {
 	float parentHorizontalTranslation = 0.f;
-	float parentWidthPixels = (float)cCamera::GetInstance()->SCR_WIDTH;
+	float parentWidthPixels = (float)Manager::camera.SCR_WIDTH;
 	if (parent)
 	{
 		parentHorizontalTranslation = parent->CalculateHorizontalTranslate();
@@ -81,7 +83,7 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	if (anchor == TOP_MIDDLE || anchor == MIDDLE_MIDDLE || anchor == BOTTOM_MIDDLE)	return parentHorizontalTranslation;
 
 	float widgetPixelTranslate = parentWidthPixels - CalculateWidthPixels();
-	float widgetPercentTranslate = widgetPixelTranslate / (float)cCamera::GetInstance()->SCR_WIDTH;
+	float widgetPercentTranslate = widgetPixelTranslate / (float)Manager::camera.SCR_WIDTH;
 
 	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) widgetPercentTranslate *= -1.f;
 
@@ -90,8 +92,8 @@ const float cUIWidget::CalculateHorizontalTranslate()
 
 void cUIStaticImage::SetupWidget()
 {
-	cRenderManager::GetInstance()->use("ui");
-	cRenderManager::GetInstance()->SetupTexture(textureName);
+	Manager::render.use("ui");
+	Manager::render.SetupTexture(textureName);
 }
 
 cUIText::cUIText()

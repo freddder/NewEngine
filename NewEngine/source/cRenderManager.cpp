@@ -17,22 +17,30 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-#include "cSpriteModel.h"
-#include "cAnimatedModel.h"
+#include "Engine.h"
 #include "cSceneManager.h"
 #include "cLightManager.h"
-#include "cCamera.h"
+#include "cCameraManager.h"
 #include "cUIManager.h"
+
+#include "cSpriteModel.h"
+#include "cAnimatedModel.h"
 #include "PokemonData.h"
 
 #include "Player.h"
 
-cRenderManager* cRenderManager::sgtn = NULL;
-
 cRenderManager::cRenderManager()
 {
-    cCamera::GetInstance()->SCR_WIDTH = 1280;
-    cCamera::GetInstance()->SCR_HEIGHT = 720;
+}
+
+cRenderManager::~cRenderManager()
+{
+}
+
+void cRenderManager::Startup()
+{
+    Manager::camera.SCR_WIDTH = 1280;
+    Manager::camera.SCR_HEIGHT = 720;
 
     //******* Create origin offset buffer for non instanced objects *************
     glm::vec4 originOffset = glm::vec4(0.f);
@@ -189,7 +197,7 @@ cRenderManager::cRenderManager()
     //***************************************************************************
 }
 
-cRenderManager::~cRenderManager()
+void cRenderManager::Shutdown()
 {
     // TODO: unload loaded models from shaders
 
@@ -283,7 +291,7 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
     glUniformBlockBinding(newShader.ID, ubMatricesIndex, 0);
 
     // add Lights block to matrices
-    cLightManager::GetInstance()->AddProgramToBlock(newShader.ID);
+    Manager::light.AddProgramToBlock(newShader.ID);
 
     // add Fog block to matrices
     unsigned int ubFogIndex = glGetUniformBlockIndex(newShader.ID, "Fog");
@@ -608,7 +616,7 @@ void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
 std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
 {
     std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
-    sgtn->models.push_back(newModel);
+    models.push_back(newModel);
 
     return newModel;
 }
@@ -616,7 +624,7 @@ std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
 std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
 {
     std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
-    sgtn->models.push_back(newModel);
+    models.push_back(newModel);
 
     return newModel;
 }
@@ -640,17 +648,17 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedMod
         newModel = std::make_shared<cTreeModel>();
         break;
     }
-    sgtn->models.push_back(newModel);
+    models.push_back(newModel);
 
     return newModel;
 }
 
 void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
 {
-    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(sgtn->models.begin(), sgtn->models.end(), model);
+    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(models.begin(), models.end(), model);
     
-    if(it != sgtn->models.end())
-        sgtn->models.erase(it);
+    if(it != models.end())
+        models.erase(it);
 }
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)
@@ -1096,8 +1104,8 @@ void cRenderManager::CreateTextDataBuffer(cUIText* text)
 void cRenderManager::DrawText(cUIText* textWidget)
 {
     sFontData& font = fonts[textWidget->fontName];
-    unsigned int scrWidth = cCamera::GetInstance()->SCR_WIDTH;
-    unsigned int scrHeight = cCamera::GetInstance()->SCR_HEIGHT;
+    unsigned int scrWidth = Manager::camera.SCR_WIDTH;
+    unsigned int scrHeight = Manager::camera.SCR_HEIGHT;
     float horizontalTranslation = textWidget->CalculateHorizontalTranslate();
     float verticalTranslation = textWidget->CalculateVerticalTranslate();
     float widthPercent = textWidget->CalculateWidthScreenPercent();
@@ -1144,7 +1152,7 @@ void cRenderManager::DrawParticles(cParticleSpawner* spawner)
     if (!FindModelByName(spawner->model.meshName, spawner->model.shaderName, drawInfo)) return;
     
     use(spawner->model.shaderName);
-    setVec3("cameraPosition", cCamera::GetInstance()->position);
+    setVec3("cameraPosition", Manager::camera.position);
     setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model.scale));
     setBool("useWholeColor", spawner->model.useWholeColor);
     setVec4("wholeColor", spawner->model.wholeColor);
@@ -1218,7 +1226,7 @@ void cRenderManager::DrawFrame()
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(cLightManager::GetInstance()->lights[0].position) + Player::GetPlayerPosition();
+    glm::vec3 lightPos = glm::vec3(Manager::light.lights[0].position) + Player::GetPlayerPosition();
     glm::vec3 lightAt = Player::GetPlayerPosition();
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
@@ -1244,15 +1252,15 @@ void cRenderManager::DrawFrame()
 
     //*********************** Regular pass ******************************
     // Reset viewport
-    glViewport(0, 0, cCamera::GetInstance()->SCR_WIDTH, cCamera::GetInstance()->SCR_HEIGHT);
+    glViewport(0, 0, Manager::camera.SCR_WIDTH, Manager::camera.SCR_HEIGHT);
     glClearColor(0.89f, 0.89f, 0.89f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    cLightManager::GetInstance()->SetUnimormValues();
+    Manager::light.SetUnimormValues();
 
     // Set camera and fog UBOs
-    glm::mat4 projection = cCamera::GetInstance()->GetProjectionMatrix();
-    glm::mat4 view = cCamera::GetInstance()->GetViewMatrix();
+    glm::mat4 projection = Manager::camera.GetProjectionMatrix();
+    glm::mat4 view = Manager::camera.GetViewMatrix();
 
     bruh = 0;
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
@@ -1263,10 +1271,10 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBuffer(GL_UNIFORM_BUFFER, uboFogID);
-    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*cCamera::GetInstance()->targetPosRef, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(cSceneManager::GetInstance()->fogColor, 1.f)));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &cSceneManager::GetInstance()->fogDensity);
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &cSceneManager::GetInstance()->fogGradient);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(*Manager::camera.targetPosRef, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::vec4), sizeof(glm::vec4), glm::value_ptr(glm::vec4(Manager::scene.fogColor, 1.f)));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &Manager::scene.fogDensity);
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &Manager::scene.fogGradient);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
@@ -1276,21 +1284,19 @@ void cRenderManager::DrawFrame()
     }
 
     // Draw particles
-    cSceneManager* sceneManager = cSceneManager::GetInstance();
-    if (sceneManager->weatherParticleSpawner)
+    if (Manager::scene.weatherParticleSpawner)
     {
-        DrawParticles(sceneManager->weatherParticleSpawner);
+        DrawParticles(Manager::scene.weatherParticleSpawner);
     }
-    for (int i = 0; i < sceneManager->particleSpawners.size(); i++)
+    for (int i = 0; i < Manager::scene.particleSpawners.size(); i++)
     {
-        DrawParticles(sceneManager->particleSpawners[i]);
+        DrawParticles(Manager::scene.particleSpawners[i]);
     }
 
     // Draw UI
-    cUIManager* uiManager = cUIManager::GetInstance();
-    if (!uiManager->canvases.empty())
+    if (!Manager::ui.canvases.empty())
     {
-        const cUICanvas* canvasToDraw = uiManager->canvases.top();
+        const cUICanvas* canvasToDraw = Manager::ui.canvases.top();
 
         for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
         {
@@ -1302,8 +1308,8 @@ void cRenderManager::DrawFrame()
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
     use("skybox");
-    view = glm::mat4(glm::mat3(cCamera::GetInstance()->GetViewMatrix())); // remove translation from the view matrix
-    projection = cCamera::GetInstance()->GetProjectionMatrix();
+    view = glm::mat4(glm::mat3(Manager::camera.GetViewMatrix())); // remove translation from the view matrix
+    projection = Manager::camera.GetProjectionMatrix();
 
     setMat4("view", view);
     setMat4("projection", projection);

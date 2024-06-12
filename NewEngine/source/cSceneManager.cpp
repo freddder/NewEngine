@@ -7,7 +7,7 @@
 
 #include <time.h>
 
-cSceneManager* cSceneManager::sgtn = NULL;
+#include "Engine.h"
 
 cSceneManager::cSceneManager()
 {
@@ -16,15 +16,19 @@ cSceneManager::cSceneManager()
 	fogDensity = 0.f;
 	fogGradient = 0.1f;
 	windSpeed = 0.25f;
-
 }
 
 cSceneManager::~cSceneManager()
+{
+}
+
+void cSceneManager::Shutdown()
 {
 	for (int i = 0; i < particleSpawners.size(); i++)
 	{
 		delete particleSpawners[i];
 	}
+	particleSpawners.clear();
 
 	roamingWildPokemon.clear();
 }
@@ -132,7 +136,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	Pokemon::LoadSpecieData(nationalDexId, specieData);
 
 	// Load overworld sprite texture
-	cRenderManager::GetInstance()->LoadRoamingPokemonSpecieSpriteSheets(specieData);
+	Manager::render.LoadRoamingPokemonSpecieSpriteSheets(specieData);
 
 	Pokemon::sSpawnData spawnData;
 	spawnData.nationalDexNumber = nationalDexId;
@@ -161,7 +165,7 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	if (spawnData.spawnType == Pokemon::TALL_GRASS)
 	{
 		glm::vec3 spawnTilePos;
-		sTile* spawnTile = cMapManager::GetInstance()->GetRandomSpawnTile(spawnTilePos);
+		sTile* spawnTile = Manager::map.GetRandomSpawnTile(spawnTilePos);
 
 		if (spawnTile)
 			spawnedWildPokemon = SpawnWildPokemon(spawnData, spawnTilePos, spawnTile);
@@ -204,7 +208,7 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sS
 
 std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 tileLocation)
 {
-	sTile* spawnTile = cMapManager::GetInstance()->GetTile(tileLocation);
+	sTile* spawnTile = Manager::map.GetTile(tileLocation);
 	if (!spawnTile || spawnTile->entity != nullptr) return nullptr;
 
 	std::string textureName = pokemonData.MakeTextureName(false, true);

@@ -1,5 +1,8 @@
 #include "Engine.h"
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
 #include <stb/stb_image.h>
 
 #include <glm/glm.hpp>
@@ -11,7 +14,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 
 #include <iostream>
-#include "cCamera.h"
+#include "cCameraManager.h"
 #include "cLightManager.h"
 #include "cAnimationManager.h"
 #include "cRenderManager.h"
@@ -43,8 +46,8 @@ const char* resolutions[] = {
 
 void SetWindowResolution(int width, int height)
 {
-    cCamera::GetInstance()->SCR_WIDTH = width;
-    cCamera::GetInstance()->SCR_HEIGHT = height;
+    Manager::camera.SCR_WIDTH = width;
+    Manager::camera.SCR_HEIGHT = height;
     glfwSetWindowSize(window, width, height);
 }
 
@@ -152,8 +155,8 @@ void RenderImgui()
     if (isFullscreen) ImGui::BeginDisabled();
 
     // Pass in the preview value visible before opening the combo (it could be anything)
-    std::string resolutionPreviewValue = std::to_string(cCamera::GetInstance()->SCR_WIDTH) + "x" + std::to_string(cCamera::GetInstance()->SCR_HEIGHT);
-    float aspectRatio = round(((float)cCamera::GetInstance()->SCR_WIDTH / (float)cCamera::GetInstance()->SCR_HEIGHT) * 100.f) / 100.f;
+    std::string resolutionPreviewValue = std::to_string(Manager::camera.SCR_WIDTH) + "x" + std::to_string(Manager::camera.SCR_HEIGHT);
+    float aspectRatio = round(((float)Manager::camera.SCR_WIDTH / (float)Manager::camera.SCR_HEIGHT) * 100.f) / 100.f;
     ImGui::SameLine(); ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x * 0.7f);
     if (ImGui::BeginCombo(std::to_string(aspectRatio).c_str(), resolutionPreviewValue.c_str()))
     {
@@ -184,27 +187,27 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Camera"))
     {
-        cCamera* camera = cCamera::GetInstance();
+        //cCamera* camera = cCamera::GetInstance();
 
         float* cameraPosition[3];
-        cameraPosition[0] = &camera->position.x;
-        cameraPosition[1] = &camera->position.y;
-        cameraPosition[2] = &camera->position.z;
+        cameraPosition[0] = &Manager::camera.position.x;
+        cameraPosition[1] = &Manager::camera.position.y;
+        cameraPosition[2] = &Manager::camera.position.z;
 
         ImGui::DragFloat3("Position", *cameraPosition);
-        ImGui::Checkbox("Player Cam", &camera->usePlayerCamera);
-        ImGui::DragFloat("FOV", &camera->FOV);
-        ImGui::DragFloat("Distance", &camera->targetDistance);
-        ImGui::DragFloat("Angle", &camera->targetAngle);
+        ImGui::Checkbox("Player Cam", &Manager::camera.usePlayerCamera);
+        ImGui::DragFloat("FOV", &Manager::camera.FOV);
+        ImGui::DragFloat("Distance", &Manager::camera.targetDistance);
+        ImGui::DragFloat("Angle", &Manager::camera.targetAngle);
     }
 
     if (ImGui::CollapsingHeader("Enviornment"))
     {
-        cSceneManager* sceneManager = cSceneManager::GetInstance();
+        //cSceneManager* sceneManager = cSceneManager::GetInstance();
 
         if (ImGui::Button("Change Scene"))
         {
-            sceneManager->ChangeScene();
+            Manager::scene.ChangeScene();
         }
 
         if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
@@ -215,7 +218,7 @@ void RenderImgui()
                 if (ImGui::Selectable(Weather_Strings[n], is_selected))
                 {
                     selectedWeather = static_cast<eEnvironmentWeather>(n);
-                    sceneManager->SetWeather(selectedWeather);
+                    Manager::scene.SetWeather(selectedWeather);
                 }
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -225,26 +228,26 @@ void RenderImgui()
             ImGui::EndCombo();
         }
 
-        ImGui::DragFloat("Wind Speed", &sceneManager->windSpeed, 0.01f, 0.01f, 10.f);
+        ImGui::DragFloat("Wind Speed", &Manager::scene.windSpeed, 0.01f, 0.01f, 10.f);
 
         if (ImGui::BeginTabBar("Tabs"))
         {
             if (ImGui::BeginTabItem("Light"))
             {
-                cLightManager* lightManager = cLightManager::GetInstance();
-                cRenderManager* renderManager = cRenderManager::GetInstance();
+                //cLightManager* lightManager = cLightManager::GetInstance();
+                //cRenderManager* renderManager = cRenderManager::GetInstance();
 
                 float* position[3];
-                position[0] = &lightManager->lights[0].position.x;
-                position[1] = &lightManager->lights[0].position.y;
-                position[2] = &lightManager->lights[0].position.z;
+                position[0] = &Manager::light.lights[0].position.x;
+                position[1] = &Manager::light.lights[0].position.y;
+                position[2] = &Manager::light.lights[0].position.z;
 
                 float* colors[3];
-                colors[0] = &lightManager->lights[0].diffuse.r;
-                colors[1] = &lightManager->lights[0].diffuse.g;
-                colors[2] = &lightManager->lights[0].diffuse.b;
+                colors[0] = &Manager::light.lights[0].diffuse.r;
+                colors[1] = &Manager::light.lights[0].diffuse.g;
+                colors[2] = &Manager::light.lights[0].diffuse.b;
 
-                int* shadowSmooth = &lightManager->shadowSampleRadius;
+                int* shadowSmooth = &Manager::light.shadowSampleRadius;
 
                 ImGui::ColorEdit3("Color", *colors);
                 ImGui::DragFloat3("Position", *position);
@@ -252,7 +255,7 @@ void RenderImgui()
                 //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
                 //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
                 //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
-                ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(200, 200));
+                ImGui::Image((void*)(intptr_t)Manager::render.GetDepthMapId(), ImVec2(200, 200));
 
                 ImGui::EndTabItem();
             }
@@ -260,13 +263,13 @@ void RenderImgui()
             if (ImGui::BeginTabItem("Fog"))
             {
                 float* fogColor[3];
-                fogColor[0] = &sceneManager->fogColor.r;
-                fogColor[1] = &sceneManager->fogColor.g;
-                fogColor[2] = &sceneManager->fogColor.b;
+                fogColor[0] = &Manager::scene.fogColor.r;
+                fogColor[1] = &Manager::scene.fogColor.g;
+                fogColor[2] = &Manager::scene.fogColor.b;
 
                 ImGui::ColorEdit3("Color", *fogColor);
-                ImGui::DragFloat("Density", &sceneManager->fogDensity, 0.005f, 0.f);
-                ImGui::DragFloat("Gradient", &sceneManager->fogGradient, 0.03f);
+                ImGui::DragFloat("Density", &Manager::scene.fogDensity, 0.005f, 0.f);
+                ImGui::DragFloat("Gradient", &Manager::scene.fogGradient, 0.03f);
 
                 ImGui::EndTabItem();
             }
@@ -297,8 +300,8 @@ void RenderImgui()
             {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
-                cRenderManager* renderManager = cRenderManager::GetInstance();
-                ImGui::Image((void*)(intptr_t)renderManager->GetDepthMapId(), ImVec2(120, 90));
+                //cRenderManager* renderManager = cRenderManager::GetInstance();
+                ImGui::Image((void*)(intptr_t)Manager::render.GetDepthMapId(), ImVec2(120, 90));
 
                 ImGui::TableNextColumn();
 
@@ -399,6 +402,17 @@ void ShutdownImgui()
     ImGui::DestroyContext();
 }
 
+namespace Manager
+{
+    cCameraManager camera;
+    cLightManager light;
+    cAnimationManager animation;
+    cRenderManager render;
+    cMapManager map;
+    cSceneManager scene;
+    cUIManager ui;
+}
+
 namespace Engine
 {
     cUIStaticImage* button;
@@ -447,36 +461,36 @@ namespace Engine
 
     void StartUpManagers()
     {
-        cCamera::GetInstance();
+        //cCamera::GetInstance();
+        //cLightManager::GetInstance();
+        //cAnimationManager::GetInstance();
+        //cRenderManager::GetInstance();
+        //cMapManager::GetInstance();
+        //cSceneManager::GetInstance();
+        //cUIManager::GetInstance();
 
-        cLightManager::GetInstance();
+        Manager::light.Startup();
 
-        cAnimationManager::GetInstance();
-
-        cRenderManager::GetInstance();
-
-        cMapManager::GetInstance();
-
-        cSceneManager::GetInstance();
-
-        cUIManager::GetInstance();
+        Manager::render.Startup();
     }
 
     void ShutdownManagers()
     {
-        cCamera::DestroyInstance();
+        //cCamera::DestroyInstance();
+        //cLightManager::DestroyInstance();
+        //cRenderManager::DestroyInstance();
+        //cMapManager::DestroyInstance();
+        //cSceneManager::DestroyInstance();
+        //cUIManager::DestroyInstance();
+        //cAnimationManager::DestroyInstance();
 
-        cLightManager::DestroyInstance();
+        Manager::light.Shutdown();
 
-        cRenderManager::DestroyInstance();
+        Manager::render.Shutdown();
 
-        cMapManager::DestroyInstance();
+        Manager::scene.Shutdown();
 
-        cSceneManager::DestroyInstance();
-
-        cUIManager::DestroyInstance();
-
-        cAnimationManager::DestroyInstance();
+        Manager::ui.Shutdown();
     }
 
     void GameLoop(bool renderDebugInfo)
@@ -493,11 +507,11 @@ namespace Engine
             // input
             processInput(window);
 
-            cAnimationManager::GetInstance()->Process(deltaTime);
+            Manager::animation.Process(deltaTime);
 
-            cSceneManager::GetInstance()->Process(deltaTime);
+            Manager::scene.Process(deltaTime);
 
-            cRenderManager::GetInstance()->DrawFrame();
+            Manager::render.DrawFrame();
 
             if (renderDebugInfo) RenderImgui();
 
@@ -522,17 +536,17 @@ namespace Engine
             glfwSetWindowShouldClose(window, true);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cCamera::GetInstance()->MoveForward(deltaTime);
+            Manager::camera.MoveForward(deltaTime);
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cCamera::GetInstance()->MoveBackward(deltaTime);
+            Manager::camera.MoveBackward(deltaTime);
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            cCamera::GetInstance()->MoveLeft(deltaTime);
+            Manager::camera.MoveLeft(deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            cCamera::GetInstance()->MoveRight(deltaTime);
+            Manager::camera.MoveRight(deltaTime);
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-            cCamera::GetInstance()->MoveUp(deltaTime);
+            Manager::camera.MoveUp(deltaTime);
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-            cCamera::GetInstance()->MoveDown(deltaTime);
+            Manager::camera.MoveDown(deltaTime);
 
         bool playerDesiresMovement = false;
         eDirection playerDesiredDirection = eDirection::UP;
@@ -583,8 +597,8 @@ namespace Engine
         // height will be significantly larger than specified on retina displays.
         //glViewport(0, 0, width, height);
 
-        cCamera::GetInstance()->SCR_WIDTH = width;
-        cCamera::GetInstance()->SCR_HEIGHT = height;
+        Manager::camera.SCR_WIDTH = width;
+        Manager::camera.SCR_HEIGHT = height;
     }
 
 
@@ -610,7 +624,7 @@ namespace Engine
             lastX = xpos;
             lastY = ypos;
 
-            cCamera::GetInstance()->ProcessMouseMovement(xoffset, yoffset);
+            Manager::camera.ProcessMouseMovement(xoffset, yoffset);
         }
     }
 

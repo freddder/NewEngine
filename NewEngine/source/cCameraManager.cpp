@@ -1,9 +1,7 @@
-#include "cCamera.h"
+#include "cCameraManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-cCamera* cCamera::sgtn = NULL;
-
-cCamera::cCamera()
+cCameraManager::cCameraManager()
 {
 	FOV = 30.f;//45.f;
 	nearPlane = 0.5f;
@@ -20,7 +18,11 @@ cCamera::cCamera()
 	UpdateCameraVectors();
 }
 
-void cCamera::UpdateCameraVectors()
+cCameraManager::~cCameraManager()
+{
+}
+
+void cCameraManager::UpdateCameraVectors()
 {
 	// calculate the new Front vector
 	glm::vec3 frontVec;
@@ -36,37 +38,37 @@ void cCamera::UpdateCameraVectors()
 	targetAngle = 35.f;
 }
 
-void cCamera::MoveForward(float deltaTime)
+void cCameraManager::MoveForward(float deltaTime)
 {
 	position += (cameraSpeed * deltaTime) * front;
 }
 
-void cCamera::MoveBackward(float deltaTime)
+void cCameraManager::MoveBackward(float deltaTime)
 {
 	position -= (cameraSpeed * deltaTime) * front;
 }
 
-void cCamera::MoveRight(float deltaTime)
+void cCameraManager::MoveRight(float deltaTime)
 {
 	position += glm::normalize(glm::cross(front, up)) * (cameraSpeed * deltaTime);
 }
 
-void cCamera::MoveLeft(float deltaTime)
+void cCameraManager::MoveLeft(float deltaTime)
 {
 	position -= glm::normalize(glm::cross(front, up)) * (cameraSpeed * deltaTime);
 }
 
-void cCamera::MoveUp(float deltaTime)
+void cCameraManager::MoveUp(float deltaTime)
 {
 	position += (cameraSpeed * deltaTime) * up;
 }
 
-void cCamera::MoveDown(float deltaTime)
+void cCameraManager::MoveDown(float deltaTime)
 {
 	position -= (cameraSpeed * deltaTime) * up;
 }
 
-void cCamera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
+void cCameraManager::ProcessMouseMovement(float xoffset, float yoffset, bool constrainPitch)
 {
 	xoffset *= mouseSensitivity;
 	yoffset *= mouseSensitivity;
@@ -87,7 +89,7 @@ void cCamera::ProcessMouseMovement(float xoffset, float yoffset, bool constrainP
 	UpdateCameraVectors();
 }
 
-glm::mat4 cCamera::GetViewMatrix()
+glm::mat4 cCameraManager::GetViewMatrix()
 {
 	if (usePlayerCamera)
 	{
@@ -110,7 +112,7 @@ glm::mat4 cCamera::GetViewMatrix()
 	}
 }
 
-glm::mat4 cCamera::GetProjectionMatrix()
+glm::mat4 cCameraManager::GetProjectionMatrix()
 {
 	return glm::perspective(glm::radians(FOV), (float)SCR_WIDTH / (float)SCR_HEIGHT, nearPlane, farPlane);
 }

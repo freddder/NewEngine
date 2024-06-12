@@ -1,29 +1,8 @@
 #pragma once
 #include <glm/glm.hpp>
 
-class cCamera
+class cCameraManager
 {
-	static cCamera* sgtn;
-	cCamera();
-	cCamera(const cCamera& obj) = delete;
-public:
-	static cCamera* GetInstance()
-	{
-		if (sgtn == NULL)
-		{
-			sgtn = new cCamera();
-		}
-
-		return sgtn;
-	}
-	static void DestroyInstance()
-	{
-		if (sgtn != NULL)
-		{
-			delete sgtn;
-			sgtn = NULL;
-		}
-	}
 
 private:
 	float cameraSpeed;

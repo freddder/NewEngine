@@ -6,15 +6,15 @@
 #include <rapidjson/filereadstream.h>
 #include <rapidjson/document.h>
 
-#include "cRenderManager.h"
-#include "cAnimationManager.h"
 #include "cAnimatedModel.h"
-#include "cSceneManager.h"
 
 #include "Player.h"
 #include "cPlayerEntity.h"
 
-cMapManager* cMapManager::sgtn = NULL;
+#include "Engine.h"
+#include "cRenderManager.h"
+#include "cAnimationManager.h"
+#include "cSceneManager.h"
 
 sTile* sQuadrant::GetRandomSpawnTile(glm::vec3& globalPos)
 {
@@ -86,11 +86,11 @@ cMapManager::cMapManager()
 cMapManager::~cMapManager()
 {	
 	//delete mapModel;
-	cRenderManager::GetInstance()->RemoveModel(mapModel);
+	Manager::render.RemoveModel(mapModel);
 
 	for (std::map<int, sInstancedTile>::iterator it = instancedTiles.begin(); it != instancedTiles.end(); it++)
 	{
-		cRenderManager::GetInstance()->RemoveModel(it->second.instancedModel);
+		Manager::render.RemoveModel(it->second.instancedModel);
 	}
 }
 
@@ -132,12 +132,12 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	
 	// Load new map
 	std::string mapModelName = d["mapModelFileName"].GetString();
-	cRenderManager::GetInstance()->LoadModel(mapModelName, "scene");
+	Manager::render.LoadModel(mapModelName, "scene");
 
 	// Create map model
 	if (!mapModel)
 	{
-		mapModel = cRenderManager::CreateRenderModel();
+		mapModel = Manager::render.CreateRenderModel();
 		mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 	}
 
@@ -203,7 +203,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		meshPosOffset.z = currInstancedTile["meshOffset"]["z"].GetFloat();
 
 		int animationType = currInstancedTile["animationType"].GetInt();
-		instancedTiles[tileId].instancedModel = cRenderManager::CreateAnimatedModel(static_cast<eAnimatedModel>(animationType));
+		instancedTiles[tileId].instancedModel = Manager::render.CreateAnimatedModel(static_cast<eAnimatedModel>(animationType));
 		instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		instancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
 		instancedTiles[tileId].modelOffset = meshPosOffset;
@@ -351,10 +351,10 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	{
 		if (it->second.instanceOffsets.size() != 0)
 		{
-			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, cRenderManager::GetInstance()->GetCurrentShaderId());
+			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, Manager::render.GetCurrentShaderId());
 
 			if (it->second.instancedModel->animation)
-				cAnimationManager::AddAnimation(it->second.instancedModel->animation);
+				Manager::animation.AddAnimation(it->second.instancedModel->animation);
 
 			it->second.instanceOffsets.clear();
 		}

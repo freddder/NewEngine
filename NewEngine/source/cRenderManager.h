@@ -47,6 +47,7 @@ struct sTexture
 
 struct sSpriteSheet : sTexture
 {
+public:
     unsigned int numCols;
     unsigned int numRows;
     bool isSymmetrical;
@@ -68,28 +69,31 @@ struct sFontData
 
 class cRenderManager
 {
-    static cRenderManager* sgtn;
+public:
+    //static cRenderManager* sgtn;
     cRenderManager();
     ~cRenderManager();
     cRenderManager(const cRenderManager& obj) = delete;
-public:
-    static cRenderManager* GetInstance()
-    {
-        if (sgtn == NULL)
-        {
-            sgtn = new cRenderManager();
-        }
-
-        return sgtn;
-    }
-    static void DestroyInstance()
-    {
-        if (sgtn != NULL)
-        {
-            delete sgtn;
-            sgtn = NULL;
-        }
-    }
+//public:
+//    static cRenderManager* GetInstance()
+//    {
+//        if (sgtn == NULL)
+//        {
+//            sgtn = new cRenderManager();
+//        }
+//
+//        return sgtn;
+//    }
+//    static void DestroyInstance()
+//    {
+//        if (sgtn != NULL)
+//        {
+//            delete sgtn;
+//            sgtn = NULL;
+//        }
+//    }
+    void Startup();
+    void Shutdown();
 
     // Shaders
 private:
@@ -141,10 +145,10 @@ public:
 private:
     std::vector< std::shared_ptr<cRenderModel> > models;
 public:
-    static std::shared_ptr<cRenderModel> CreateRenderModel();
-    static std::shared_ptr<class cSpriteModel> CreateSpriteModel();
-    static std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
-    static void RemoveModel(std::shared_ptr<cRenderModel> model);
+    std::shared_ptr<cRenderModel> CreateRenderModel();
+    std::shared_ptr<class cSpriteModel> CreateSpriteModel();
+    std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
+    void RemoveModel(std::shared_ptr<cRenderModel> model);
 
     // Textures
 private:

@@ -1,6 +1,5 @@
 #pragma once
 
-// purpose: load necessary textures and 3d models and deal with rendering
 #include <string>
 #include "cParticleSpawner.h"
 #include "PokemonData.h"
@@ -36,29 +35,9 @@ const static char* Weather_Strings[] =
 
 class cSceneManager
 {
-	// Singleton
-	static cSceneManager* sgtn;
-	cSceneManager();
-	~cSceneManager();
-	cSceneManager(const cSceneManager& obj) = delete;
 public:
-	static cSceneManager* GetInstance()
-	{
-		if (sgtn == NULL)
-		{
-			sgtn = new cSceneManager();
-		}
-
-		return sgtn;
-	}
-	static void DestroyInstance()
-	{
-		if (sgtn != NULL)
-		{
-			delete sgtn;
-			sgtn = NULL;
-		}
-	}
+	void Startup();
+	void Shutdown();
 
 	// Envoirnment weather
 private:

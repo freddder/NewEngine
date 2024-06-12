@@ -1,5 +1,6 @@
 #include "cAnimatedModel.h"
 
+#include "Engine.h"
 #include "cRenderManager.h"
 #include "cSceneManager.h"
 
@@ -27,7 +28,7 @@ cFoamModel::~cFoamModel()
 
 void cFoamModel::SetUpUniforms()
 {
-	cRenderManager::GetInstance()->setVec2("UVoffset", textureOffset);
+	Manager::render.setVec2("UVoffset", textureOffset);
 }
 
 cOceanModel::cOceanModel()
@@ -50,12 +51,12 @@ cOceanModel::~cOceanModel()
 
 void cOceanModel::SetUpUniforms()
 {
+	// TODO: use deltaTime for the love of god (and in other animated models)
 	timer += 0.0043f;
 
-	cRenderManager* renderManager = cRenderManager::GetInstance();
-	renderManager->setVec2("globalUVRatios", globalUVRatios);
-	renderManager->setVec2("UVoffset", textureOffset);
-	renderManager->setFloat("timer", timer);
+	Manager::render.setVec2("globalUVRatios", globalUVRatios);
+	Manager::render.setVec2("UVoffset", textureOffset);
+	Manager::render.setFloat("timer", timer);
 }
 
 cWaveModel::cWaveModel()
@@ -77,9 +78,8 @@ void cWaveModel::SetUpUniforms()
 {
 	timer += 0.0043f;
 
-	cRenderManager* renderManager = cRenderManager::GetInstance();
-	renderManager->setVec2("UVoffset", textureOffset);
-	renderManager->setFloat("timer", timer);
+	Manager::render.setVec2("UVoffset", textureOffset);
+	Manager::render.setFloat("timer", timer);
 }
 
 cTreeModel::cTreeModel()
@@ -96,8 +96,6 @@ void cTreeModel::SetUpUniforms()
 {
 	timer += 0.0043f;
 
-	cRenderManager* renderManager = cRenderManager::GetInstance();
-	cSceneManager* sceneManager = cSceneManager::GetInstance();
-	renderManager->setFloat("timer", timer);
-	renderManager->setFloat("windSpeed", sceneManager->windSpeed);
+	Manager::render.setFloat("timer", timer);
+	Manager::render.setFloat("windSpeed", Manager::scene.windSpeed);
 }

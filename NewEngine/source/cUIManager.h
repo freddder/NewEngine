@@ -21,28 +21,9 @@ public:
 
 class cUIManager
 {
-    static cUIManager* sgtn;
-    cUIManager();
-    ~cUIManager();
-    cUIManager(const cUIManager& obj) = delete;
 public:
-    static cUIManager* GetInstance()
-    {
-        if (sgtn == NULL)
-        {
-            sgtn = new cUIManager();
-        }
-
-        return sgtn;
-    }
-    static void DestroyInstance()
-    {
-        if (sgtn != NULL)
-        {
-            delete sgtn;
-            sgtn = NULL;
-        }
-    }
+    void Startup();
+    void Shutdown();
 
 private:
     std::stack<cUICanvas*> canvases;

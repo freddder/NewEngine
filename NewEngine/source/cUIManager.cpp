@@ -1,13 +1,14 @@
 #include "cUIManager.h"
 
-cUIManager* cUIManager::sgtn = NULL;
-
 cUIManager::cUIManager()
 {
-
 }
 
 cUIManager::~cUIManager()
+{
+}
+
+void cUIManager::Shutdown()
 {
 	while (!canvases.empty())
 	{

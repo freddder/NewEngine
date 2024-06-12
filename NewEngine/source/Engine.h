@@ -1,8 +1,26 @@
 #pragma once
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
+struct GLFWwindow;
 class cUIStaticImage;
+
+class cCameraManager;
+class cLightManager;
+class cAnimationManager;
+class cRenderManager;
+class cMapManager;
+class cSceneManager;
+class cUIManager;
+
+namespace Manager
+{
+	extern cCameraManager camera;
+	extern cLightManager light;
+	extern cAnimationManager animation;
+	extern cRenderManager render;
+	extern cMapManager map;
+	extern cSceneManager scene;
+	extern cUIManager ui;
+}
 
 namespace Engine
 {

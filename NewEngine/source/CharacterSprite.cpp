@@ -1,12 +1,13 @@
 #include "CharacterSprite.h"
 
+#include "Engine.h"
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cMapManager.h"
 
 cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 {
-	model = cRenderManager::CreateSpriteModel();
+	model = Manager::render.CreateSpriteModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = pos;
 	model->textureName = textureName;
@@ -14,16 +15,16 @@ cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 	spriteAnimation = std::make_shared<cSpriteAnimation>(model->currSpriteId, model->scale);
 	modelAnimation = std::make_shared<cModelAnimation>(model->position, model->orientation, model->scale);
 
-	cAnimationManager::AddAnimation(spriteAnimation);
-	cAnimationManager::AddAnimation(modelAnimation);
+	Manager::animation.AddAnimation(spriteAnimation);
+	Manager::animation.AddAnimation(modelAnimation);
 }
 
 cCharacterSprite::~cCharacterSprite()
 {
-	cRenderManager::RemoveModel(model);
+	Manager::render.RemoveModel(model);
 
-	cAnimationManager::RemoveAnimation(spriteAnimation);
-	cAnimationManager::RemoveAnimation(modelAnimation);
+	Manager::animation.AddAnimation(spriteAnimation);
+	Manager::animation.AddAnimation(modelAnimation);
 }
 
 glm::vec3 cCharacterSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveResult moveResult)
@@ -57,7 +58,7 @@ cOverworldPokemonSprite::cOverworldPokemonSprite(std::string textureName, glm::v
 	spriteAnimation->isRepeat = true;
 
 	std::vector<sKeyFrameSprite> keyframes;
-	cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(OW_POKEMON, "WALK_DOWN", keyframes);
+	Manager::animation.GetSpriteAnimationKeyframes(OW_POKEMON, "WALK_DOWN", keyframes);
 	spriteAnimation->AddKeyFrames(keyframes);
 }
 
@@ -79,7 +80,7 @@ glm::vec3 cOverworldPokemonSprite::AnimateMovement(eDirection dir, bool run, eEn
 		else if (dir == RIGHT) animationName = "WALK_RIGHT";
 
 		std::vector<sKeyFrameSprite> keyframes;
-		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(OW_POKEMON, animationName, keyframes);
+		Manager::animation.GetSpriteAnimationKeyframes(OW_POKEMON, animationName, keyframes);
 		spriteAnimation->AddKeyFrames(keyframes);
 	}
 
@@ -124,7 +125,7 @@ glm::vec3 cNPCSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveResul
 	}
 
 	std::vector<sKeyFrameSprite> keyframes;
-	cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(NPC, animationName, keyframes);
+	Manager::animation.GetSpriteAnimationKeyframes(NPC, animationName, keyframes);
 	spriteAnimation->AddKeyFrames(keyframes);
 	switchLeg = !switchLeg;
 
@@ -173,7 +174,7 @@ void cPlayerSprite::SetupSpriteWalk(eDirection dir)
 	}
 
 	std::vector<sKeyFrameSprite> keyframes;
-	cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
+	Manager::animation.GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
 	spriteAnimation->AddKeyFrames(keyframes);
 	switchLeg = !switchLeg;
 }
@@ -191,7 +192,7 @@ void cPlayerSprite::SetupSpriteRun(eDirection dir)
 		else if (dir == RIGHT) animationName = "RUN_RIGHT";
 
 		std::vector<sKeyFrameSprite> keyframes;
-		cAnimationManager::GetInstance()->GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
+		Manager::animation.GetSpriteAnimationKeyframes(PLAYER, animationName, keyframes);
 		spriteAnimation->AddKeyFrames(keyframes);
 	}
 }

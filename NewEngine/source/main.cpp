@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Engine.h"
 #include "cSceneManager.h"
 #include "cRenderManager.h"
 #include "cMapManager.h"
@@ -7,12 +8,11 @@
 #include "cLightManager.h"
 #include "cUIManager.h"
 
-#include "cCamera.h"
+#include "cCameraManager.h"
 #include "cWildRoamingPokemon.h"
 #include "cTamedRoamingPokemon.h"
 #include "cPlayerEntity.h"
 
-#include "Engine.h"
 #include "Player.h"
 
 int main()
@@ -21,25 +21,18 @@ int main()
 
     Engine::StartUpManagers();
 
-    cCamera* camera = cCamera::GetInstance();
-    cLightManager* lightManager = cLightManager::GetInstance();
-    cAnimationManager* animationManager = cAnimationManager::GetInstance();
-    cRenderManager* renderManager = cRenderManager::GetInstance();
-    cMapManager* mapManager = cMapManager::GetInstance();
-    cSceneManager* sceneManager = cSceneManager::GetInstance();
-
     // Setup shader programs
-    renderManager->CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
-    renderManager->CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
-    renderManager->CreateShadderProgram("sprite", "SpriteVertShader.glsl", "FragShader1.glsl");
-    renderManager->CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
-    renderManager->CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
-    renderManager->CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
-    renderManager->CreateShadderProgram("tree", "TreeVertShader.glsl", "FragShader1.glsl");
-    renderManager->CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
-    renderManager->CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
-    renderManager->CreateShadderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
-    renderManager->CreateShadderProgram("text", "TextVertShader.glsl", "TextFragShader.glsl");
+    Manager::render.CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
+    Manager::render.CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
+    Manager::render.CreateShadderProgram("sprite", "SpriteVertShader.glsl", "FragShader1.glsl");
+    Manager::render.CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
+    Manager::render.CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
+    Manager::render.CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
+    Manager::render.CreateShadderProgram("tree", "TreeVertShader.glsl", "FragShader1.glsl");
+    Manager::render.CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
+    Manager::render.CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
+    Manager::render.CreateShadderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
+    Manager::render.CreateShadderProgram("text", "TextVertShader.glsl", "TextFragShader.glsl");
 
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
@@ -50,58 +43,58 @@ int main()
 
     //********************** Prepare Light **************************************
 
-    lightManager->lights[0].extraParam.x = 2.f; // directional light
-    lightManager->lights[0].position = glm::vec4(-10.f, 10.f, 17.f, 1.f);
-    lightManager->lights[0].direction = -(lightManager->lights[0].position);
-    lightManager->lights[0].diffuse = glm::vec4(1.f, 0.717f, 0.43f, 1.f);
-    lightManager->lights[0].extraParam.w = 1.f; // turn on
+    Manager::light.lights[0].extraParam.x = 2.f; // directional light
+    Manager::light.lights[0].position = glm::vec4(-10.f, 10.f, 17.f, 1.f);
+    Manager::light.lights[0].direction = -(Manager::light.lights[0].position);
+    Manager::light.lights[0].diffuse = glm::vec4(1.f, 0.717f, 0.43f, 1.f);
+    Manager::light.lights[0].extraParam.w = 1.f; // turn on
 
     // Position
-    std::shared_ptr<cFloatAnimation> lightPosAnim = std::make_shared<cFloatAnimation>(lightManager->lights[0].position.z);
+    std::shared_ptr<cFloatAnimation> lightPosAnim = std::make_shared<cFloatAnimation>(Manager::light.lights[0].position.z);
     lightPosAnim->AddKeyFrame(sKeyFrameFloat(60.f, -17.f));
     lightPosAnim->speed = 5.f;
     lightPosAnim->isRepeat = true;
-    //cAnimationManager::GetInstance()->AddAnimation(lightPosAnim);
+    //Manager::animation.AddAnimation(lightPosAnim);
 
     // Color
-    std::shared_ptr<cVec4Animation> lightColorAnim = std::make_shared<cVec4Animation>(lightManager->lights[0].diffuse);
+    std::shared_ptr<cVec4Animation> lightColorAnim = std::make_shared<cVec4Animation>(Manager::light.lights[0].diffuse);
     lightColorAnim->AddKeyFrame(sKeyFrameVec4(30.f, glm::vec4(1.f, 1.f, 1.f, 1.f)));
     lightColorAnim->AddKeyFrame(sKeyFrameVec4(60.f, glm::vec4(0.12f, 0.22f, 0.5f, 1.f)));
     lightColorAnim->speed = 5.f;
     lightColorAnim->isRepeat = true;
-    //cAnimationManager::GetInstance()->AddAnimation(lightColorAnim);
+    //Manager::animation.AddAnimation(lightColorAnim);
 
     //********************** Load models, textures and fonts ***************************
 
-    renderManager->LoadModel("SpriteHolder.obj", "sprite");
-    renderManager->LoadModel("SpriteHolder.obj", "snow");
-    renderManager->LoadModel("Water_c2.obj", "wave");
-    renderManager->LoadModel("Water_b2.obj", "wave");
-    renderManager->LoadModel("Water_bl2.obj", "wave");
-    renderManager->LoadModel("sea_water2.obj", "ocean");
-    renderManager->LoadModel("Foam_b2.obj", "foam");
-    renderManager->LoadModel("Foam_bl2.obj", "foam");
-    renderManager->LoadModel("Foam_c2.obj", "foam");
-    renderManager->LoadModel("Foam_c2.obj", "foam");
-    renderManager->LoadModel("r0_treePine.obj", "tree");
+    Manager::render.LoadModel("SpriteHolder.obj", "sprite");
+    Manager::render.LoadModel("SpriteHolder.obj", "snow");
+    Manager::render.LoadModel("Water_c2.obj", "wave");
+    Manager::render.LoadModel("Water_b2.obj", "wave");
+    Manager::render.LoadModel("Water_bl2.obj", "wave");
+    Manager::render.LoadModel("sea_water2.obj", "ocean");
+    Manager::render.LoadModel("Foam_b2.obj", "foam");
+    Manager::render.LoadModel("Foam_bl2.obj", "foam");
+    Manager::render.LoadModel("Foam_c2.obj", "foam");
+    Manager::render.LoadModel("Foam_c2.obj", "foam");
+    Manager::render.LoadModel("r0_treePine.obj", "tree");
 
-    renderManager->LoadSpriteSheet("Nate.png", 3, 8, false);
-    renderManager->LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
-    renderManager->LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-    renderManager->LoadSpriteSheet("722.png", 4, 4, false);
+    Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
+    Manager::render.LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
+    Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+    Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
-    renderManager->LoadSceneTexture("SnowFlake1.png");
-    renderManager->LoadSceneTexture("SnowFlake2.png");
-    renderManager->LoadSceneTexture("SnowFlake3.png");
+    Manager::render.LoadSceneTexture("SnowFlake1.png");
+    Manager::render.LoadSceneTexture("SnowFlake2.png");
+    Manager::render.LoadSceneTexture("SnowFlake3.png");
 
-    renderManager->LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
-    renderManager->LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
+    Manager::render.LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
+    Manager::render.LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
     
-    renderManager->LoadFont("Truth And Ideals-Normal.ttf", 24);
+    Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
 
     //***************************************************************************
 
-    animationManager->InitializeAnimationsPresets();
+    Manager::animation.InitializeAnimationsPresets();
 
     {
         cUICanvas* canvas = new cUICanvas();
@@ -124,50 +117,49 @@ int main()
         textWidget->color = glm::vec3(1.f);
         textWidget->heightPercent = 0.3f;
         Engine::button->AddChild(textWidget);
-        renderManager->CreateTextDataBuffer(textWidget); // make sure to call this after setting parent
+        Manager::render.CreateTextDataBuffer(textWidget); // make sure to call this after setting parent
 
         canvas->AddWidget(Engine::button);
-        cUIManager::GetInstance()->AddCanvas(canvas);
+        Manager::ui.AddCanvas(canvas);
     }
 
-    //mapManager->LoadMap("WinterTestDesc.json");
-    //mapManager->LoadMap("WaterTest3Desc.json");
-    //mapManager->LoadMap("SlopeTestDesc.json");
-    //mapManager->LoadMap("MultiTestDesc.json");
-    mapManager->LoadMap("GrassRouteDemoDesc.json");
-    //mapManager->LoadMap("CostalWinterDesc.json");
+    //Manager::map.LoadMap("WinterTestDesc.json");
+    //Manager::map.LoadMap("WaterTest3Desc.json");
+    //Manager::map.LoadMap("SlopeTestDesc.json");
+    //Manager::map.LoadMap("MultiTestDesc.json");
+    Manager::map.LoadMap("GrassRouteDemoDesc.json");
+    //Manager::map.LoadMap("CostalWinterDesc.json");
 
-    sceneManager->LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
-    sceneManager->LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
+    Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
+    Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
 
     {
         Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
-        camera->targetPosRef = Player::GetPlayerPositionRef();
+        Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
 
         Pokemon::sSpeciesData followerSpecieData;
         Pokemon::LoadSpecieData(445, followerSpecieData);
-        renderManager->LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
+        Manager::render.LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
         Player::partyMember1.nationalDexNumber = 445;
         Player::partyMember1.gender = Pokemon::MALE;
         Player::partyMember1.isShiny = true;
-        std::shared_ptr<cTamedRoamingPokemon> follower = sceneManager->SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
+        std::shared_ptr<cTamedRoamingPokemon> follower = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
 
         // TODO: find a good place to seed the rand
         srand((int)time(0));
-        sceneManager->SpawnRandomWildPokemon();
-        sceneManager->SpawnRandomWildPokemon();
-        sceneManager->SpawnRandomWildPokemon();
-        sceneManager->SpawnRandomWildPokemon();
-        sceneManager->SpawnRandomWildPokemon();
+        Manager::scene.SpawnRandomWildPokemon();
+        Manager::scene.SpawnRandomWildPokemon();
+        Manager::scene.SpawnRandomWildPokemon();
+        Manager::scene.SpawnRandomWildPokemon();
+        Manager::scene.SpawnRandomWildPokemon();
     }
 
-    //sceneManager->SetWeather(SNOW);
+    // Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
 
     delete Player::playerChar;
-    //delete renderManager->testWidget;
 
     Engine::ShutdownManagers();
 
