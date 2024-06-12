@@ -7,8 +7,8 @@
 #include "cAnimationManager.h"
 #include "cLightManager.h"
 #include "cUIManager.h"
-
 #include "cCameraManager.h"
+
 #include "cWildRoamingPokemon.h"
 #include "cTamedRoamingPokemon.h"
 #include "cPlayerEntity.h"
@@ -87,8 +87,8 @@ int main()
     Manager::render.LoadSceneTexture("SnowFlake2.png");
     Manager::render.LoadSceneTexture("SnowFlake3.png");
 
-    Manager::render.LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
-    Manager::render.LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
+    Manager::render.LoadSceneTexture("PartyMemberButtonBackground.png", "ui/");
+    Manager::render.LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
     
     Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
 

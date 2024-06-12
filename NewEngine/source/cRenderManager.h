@@ -70,28 +70,9 @@ struct sFontData
 class cRenderManager
 {
 public:
-    //static cRenderManager* sgtn;
     cRenderManager();
     ~cRenderManager();
-    cRenderManager(const cRenderManager& obj) = delete;
-//public:
-//    static cRenderManager* GetInstance()
-//    {
-//        if (sgtn == NULL)
-//        {
-//            sgtn = new cRenderManager();
-//        }
-//
-//        return sgtn;
-//    }
-//    static void DestroyInstance()
-//    {
-//        if (sgtn != NULL)
-//        {
-//            delete sgtn;
-//            sgtn = NULL;
-//        }
-//    }
+
     void Startup();
     void Shutdown();
 
