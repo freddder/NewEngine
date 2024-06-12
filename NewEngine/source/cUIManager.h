@@ -22,6 +22,9 @@ public:
 class cUIManager
 {
 public:
+    cUIManager();
+    ~cUIManager();
+
     void Startup();
     void Shutdown();
 

@@ -26,6 +26,9 @@ struct sLight
 class cLightManager
 {
 public:
+	cLightManager();
+	~cLightManager();
+
 	void Startup();
 	void Shutdown();
 

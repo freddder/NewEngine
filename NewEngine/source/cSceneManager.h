@@ -36,6 +36,9 @@ const static char* Weather_Strings[] =
 class cSceneManager
 {
 public:
+	cSceneManager();
+	~cSceneManager();
+
 	void Startup();
 	void Shutdown();
 

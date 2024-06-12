@@ -13,6 +13,9 @@ struct sEntitySpriteAnimationPreset
 
 class cAnimationManager
 {
+public:
+	cAnimationManager();
+	~cAnimationManager();
 
 private:
 	std::vector<std::shared_ptr<cAnimation>> animations;

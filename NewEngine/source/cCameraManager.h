@@ -3,6 +3,9 @@
 
 class cCameraManager
 {
+public:
+	cCameraManager();
+	~cCameraManager();
 
 private:
 	float cameraSpeed;

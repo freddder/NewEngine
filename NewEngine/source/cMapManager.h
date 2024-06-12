@@ -65,6 +65,9 @@ enum eEntityMoveResult
 
 class cMapManager
 {
+public:
+	cMapManager();
+	~cMapManager();
 
 private:
 	std::vector<sQuadrant> quads;
