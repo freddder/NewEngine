@@ -21,10 +21,10 @@ cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 
 cCharacterSprite::~cCharacterSprite()
 {
-	Manager::render.RemoveModel(model);
+	Manager::render.RemoveMapModel(model);
 
-	Manager::animation.AddAnimation(spriteAnimation);
-	Manager::animation.AddAnimation(modelAnimation);
+	Manager::animation.RemoveAnimation(spriteAnimation);
+	Manager::animation.RemoveAnimation(modelAnimation);
 }
 
 glm::vec3 cCharacterSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveResult moveResult)

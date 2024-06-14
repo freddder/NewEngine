@@ -42,7 +42,6 @@ enum eAnimatedModel
 struct sTexture
 {
     unsigned int textureId;
-    bool isPermanent = false; // if false, deleted when scene changes 
 };
 
 struct sSpriteSheet : sTexture
@@ -65,6 +64,13 @@ struct sFontData
     unsigned int textureAtlusId;
     unsigned int glyphSize;
     std::map<char, sFontCharData> characters;
+};
+
+enum eRenderMode
+{
+    MAP,
+    BATTLE,
+    MENU
 };
 
 class cRenderManager
@@ -118,32 +124,33 @@ private:
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;
+    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 public:
     bool LoadModel(std::string fileName, std::string programName);
-    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 
-    // Scene models
+    // Render models
 private:
-    std::vector< std::shared_ptr<cRenderModel> > models;
+    std::vector< std::shared_ptr<cRenderModel> > mapModels;
+    std::vector< std::shared_ptr<cRenderModel> > battleModels;
 public:
-    std::shared_ptr<cRenderModel> CreateRenderModel();
+    std::shared_ptr<cRenderModel> CreateMapRenderModel();
     std::shared_ptr<class cSpriteModel> CreateSpriteModel();
-    std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
-    void RemoveModel(std::shared_ptr<cRenderModel> model);
+    std::shared_ptr<class cAnimatedModel> CreateMapAnimatedModel(eAnimatedModel modelType);
+    void RemoveMapModel(std::shared_ptr<cRenderModel> model);
 
     // Textures
 private:
-    std::map<std::string, sTexture> sceneTextures;
+    std::map<std::string, sTexture> mapTextures;
     unsigned int CreateTexture(const std::string fullPath, int& width, int& height);
 public:
-    void LoadSceneTexture(const std::string fileName, const std::string subdirectory = "", bool isPermanent = false);
-    unsigned int CreateCubemap(const std::vector<std::string> faces);
+    void LoadMapTexture(const std::string fileName, const std::string subdirectory = "");
+    unsigned int CreateCubemap(const std::vector<std::string> faces); // TEMP
 
 private:
     std::map<std::string, sSpriteSheet> sceneSpriteSheets;
     void LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag = "");
 public:
-    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "", bool isPermanent = false);
+    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
     void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
@@ -159,6 +166,7 @@ public:
 
     // Drawing
 private:
+    eRenderMode renderMode = MAP;
     void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawParticles(class cParticleSpawner* spawner);
     void DrawWidget(class cUIWidget* widget);

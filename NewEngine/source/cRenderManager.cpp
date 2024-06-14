@@ -411,7 +411,7 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             newMeshInfo.textureName = path.C_Str();
 
             // maybe try to load texture right here
-            LoadSceneTexture(newMeshInfo.textureName);
+            LoadMapTexture(newMeshInfo.textureName);
         }
 
 #pragma region VAO_Creation
@@ -613,10 +613,10 @@ void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
     glUniform4fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
 }
 
-std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
+std::shared_ptr<cRenderModel> cRenderManager::CreateMapRenderModel()
 {
     std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
-    models.push_back(newModel);
+    mapModels.push_back(newModel);
 
     return newModel;
 }
@@ -624,12 +624,12 @@ std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
 std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
 {
     std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
-    models.push_back(newModel);
+    mapModels.push_back(newModel);
 
     return newModel;
 }
 
-std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModel modelType)
+std::shared_ptr<cAnimatedModel> cRenderManager::CreateMapAnimatedModel(eAnimatedModel modelType)
 {
     std::shared_ptr<cAnimatedModel> newModel;
 
@@ -648,17 +648,17 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedMod
         newModel = std::make_shared<cTreeModel>();
         break;
     }
-    models.push_back(newModel);
+    mapModels.push_back(newModel);
 
     return newModel;
 }
 
-void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
+void cRenderManager::RemoveMapModel(std::shared_ptr<cRenderModel> model)
 {
-    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(models.begin(), models.end(), model);
+    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(mapModels.begin(), mapModels.end(), model);
     
-    if(it != models.end())
-        models.erase(it);
+    if(it != mapModels.end())
+        mapModels.erase(it);
 }
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)
@@ -695,25 +695,19 @@ unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& widt
     return textureId;
 }
 
-void cRenderManager::LoadSceneTexture(const std::string fileName, const std::string subdirectory, bool isPermanent)
+void cRenderManager::LoadMapTexture(const std::string fileName, const std::string subdirectory)
 {
     if (fileName == "") return;
 
-    if (sceneTextures.count(fileName)) // texture already created
-    {
-        if (isPermanent) sceneTextures[fileName].isPermanent = true;
-
-        return;
-    }
+    if (mapTextures.count(fileName)) return;// texture already created
 
     std::string fullPath = TEXTURE_PATH + subdirectory + fileName;
     int width, height;
     sTexture newTexture;
     newTexture.textureId = CreateTexture(fullPath, width, height);
-    newTexture.isPermanent = isPermanent;
 
     if (newTexture.textureId != 0)
-        sceneTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
+        mapTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
 }
 
 unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
@@ -772,7 +766,6 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     newSheet.numCols = 4;
     newSheet.numRows = 4;
     newSheet.isSymmetrical = false;
-    newSheet.isPermanent = false;
 
     std::string fullPath = texturePath + textureName;
     int width, height;
@@ -789,7 +782,6 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     newShinySheet.numCols = 4;
     newShinySheet.numRows = 4;
     newShinySheet.isSymmetrical = false;
-    newShinySheet.isPermanent = false;
 
     std::string shinyFullPath = texturePath + shinyTextureName;
     newShinySheet.textureId = CreateTexture(shinyFullPath, width, height);
@@ -798,7 +790,7 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
         sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
 }
 
-void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory, bool isPermanent)
+void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory)
 {
     if (sceneSpriteSheets.count(spriteSheetName)) return; // texture already created
 
@@ -806,7 +798,6 @@ void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned
     newSheet.numCols = cols;
     newSheet.numRows = rows;
     newSheet.isSymmetrical = sym;
-    newSheet.isPermanent = isPermanent;
 
     std::string fullPath = TEXTURE_PATH + subdirectory + spriteSheetName;
     int width, height;
@@ -858,9 +849,9 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
 
 void cRenderManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
 {
-    if (sceneTextures.find(textureToSetup) == sceneTextures.end()) return; // texture doesn't exists
+    if (mapTextures.find(textureToSetup) == mapTextures.end()) return; // texture doesn't exists
 
-    unsigned int textureId = sceneTextures[textureToSetup].textureId;
+    unsigned int textureId = mapTextures[textureToSetup].textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
@@ -1243,9 +1234,9 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     //Draw scene
-    for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
+    for (int i = 0; i < mapModels.size(); i++)
     {
-        DrawObject(*it);
+        DrawObject(mapModels[i]);
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1278,9 +1269,9 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
-    for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
+    for (int i = 0; i < mapModels.size(); i++)
     {
-        DrawObject(*it);
+        DrawObject(mapModels[i]);
     }
 
     // Draw particles

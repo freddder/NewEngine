@@ -86,11 +86,11 @@ cMapManager::cMapManager()
 cMapManager::~cMapManager()
 {	
 	//delete mapModel;
-	Manager::render.RemoveModel(mapModel);
+	Manager::render.RemoveMapModel(mapModel);
 
 	for (std::map<int, sInstancedTile>::iterator it = instancedTiles.begin(); it != instancedTiles.end(); it++)
 	{
-		Manager::render.RemoveModel(it->second.instancedModel);
+		Manager::render.RemoveMapModel(it->second.instancedModel);
 	}
 }
 
@@ -137,7 +137,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	// Create map model
 	if (!mapModel)
 	{
-		mapModel = Manager::render.CreateRenderModel();
+		mapModel = Manager::render.CreateMapRenderModel();
 		mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 	}
 
@@ -203,7 +203,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		meshPosOffset.z = currInstancedTile["meshOffset"]["z"].GetFloat();
 
 		int animationType = currInstancedTile["animationType"].GetInt();
-		instancedTiles[tileId].instancedModel = Manager::render.CreateAnimatedModel(static_cast<eAnimatedModel>(animationType));
+		instancedTiles[tileId].instancedModel = Manager::render.CreateMapAnimatedModel(static_cast<eAnimatedModel>(animationType));
 		instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
 		instancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
 		instancedTiles[tileId].modelOffset = meshPosOffset;

@@ -83,12 +83,12 @@ int main()
     Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
     Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
-    Manager::render.LoadSceneTexture("SnowFlake1.png");
-    Manager::render.LoadSceneTexture("SnowFlake2.png");
-    Manager::render.LoadSceneTexture("SnowFlake3.png");
+    Manager::render.LoadMapTexture("SnowFlake1.png");
+    Manager::render.LoadMapTexture("SnowFlake2.png");
+    Manager::render.LoadMapTexture("SnowFlake3.png");
 
-    Manager::render.LoadSceneTexture("PartyMemberButtonBackground.png", "ui/");
-    Manager::render.LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
+    Manager::render.LoadMapTexture("PartyMemberButtonBackground.png", "ui/");
+    Manager::render.LoadMapTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
     
     Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
 
