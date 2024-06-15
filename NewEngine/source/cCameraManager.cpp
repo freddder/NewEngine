@@ -1,6 +1,9 @@
 #include "cCameraManager.h"
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Engine.h"
+#include "cRenderManager.h"
+
 cCameraManager::cCameraManager()
 {
 	FOV = 30.f;//45.f;
@@ -93,16 +96,25 @@ glm::mat4 cCameraManager::GetViewMatrix()
 {
 	if (usePlayerCamera)
 	{
-		glm::vec3 newPosition;
-		newPosition.x = targetPosRef->x - (glm::cos(glm::radians(targetAngle)) * targetDistance);
-		newPosition.y = targetPosRef->y + (glm::sin(glm::radians(targetAngle)) * targetDistance);
-		newPosition.z = targetPosRef->z;
+		if (Manager::render.renderMode == MAP)
+		{
+			glm::vec3 newPosition;
+			newPosition.x = targetPosRef->x - (glm::cos(glm::radians(targetAngle)) * targetDistance);
+			newPosition.y = targetPosRef->y + (glm::sin(glm::radians(targetAngle)) * targetDistance);
+			newPosition.z = targetPosRef->z;
 
-		position = newPosition;
+			position = newPosition;
 
-		return glm::lookAt(newPosition,
-			*targetPosRef,
-			up);
+			return glm::lookAt(newPosition,
+				*targetPosRef,
+				up);
+		}
+		else
+		{
+			return glm::lookAt(glm::vec3(-10.f, 10.f, 0.f),
+				glm::vec3(0.f),
+				up);
+		}
 	}
 	else
 	{

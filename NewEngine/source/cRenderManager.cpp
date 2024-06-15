@@ -621,7 +621,7 @@ std::shared_ptr<cRenderModel> cRenderManager::CreateMapRenderModel()
     return newModel;
 }
 
-std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
+std::shared_ptr<cSpriteModel> cRenderManager::CreateMapSpriteModel()
 {
     std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
     mapModels.push_back(newModel);
@@ -659,6 +659,30 @@ void cRenderManager::RemoveMapModel(std::shared_ptr<cRenderModel> model)
     
     if(it != mapModels.end())
         mapModels.erase(it);
+}
+
+std::shared_ptr<class cRenderModel> cRenderManager::CreateBattleRenderModel()
+{
+    std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
+    battleModels.push_back(newModel);
+
+    return newModel;
+}
+
+std::shared_ptr<class cSpriteModel> cRenderManager::CreateBattleSpriteModel()
+{
+    std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
+    battleModels.push_back(newModel);
+
+    return newModel;
+}
+
+void cRenderManager::RemoveBattleModel(std::shared_ptr<cRenderModel> model)
+{
+    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(battleModels.begin(), battleModels.end(), model);
+
+    if (it != battleModels.end())
+        battleModels.erase(it);
 }
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)
@@ -1206,42 +1230,66 @@ void cRenderManager::DrawWidget(cUIWidget* widget)
     glBindVertexArray(0);
 }
 
-void cRenderManager::DrawFrame()
+void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
 {
-    //********************** Shadow pass ********************************
-
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
-    
+
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(Manager::light.lights[0].position) + Player::GetPlayerPosition();
-    glm::vec3 lightAt = Player::GetPlayerPosition();
+    glm::vec3 lightPos, lightAt;
+    if (renderMode == MAP)
+    {
+        lightPos = glm::vec3(Manager::light.lights[0].position) + Player::GetPlayerPosition();
+        lightAt = Player::GetPlayerPosition();
+    }
+    else if (renderMode == BATTLE)
+    {
+        lightPos = glm::vec3(10.f, 20.f, 10.f); // eyeball it
+        lightAt = glm::vec3(0.f); // look at world origin
+    }
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
-    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+    outLightSpaceMatrix = lightProjection * lightView;
 
     int bruh = 1; // B R U H
-
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(lightProjection));
     glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightView));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightSpaceMatrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(outLightSpaceMatrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     //Draw scene
-    for (int i = 0; i < mapModels.size(); i++)
+    if (renderMode == MAP)
     {
-        DrawObject(mapModels[i]);
+        for (int i = 0; i < mapModels.size(); i++)
+        {
+            DrawObject(mapModels[i]);
+        }
+    }
+    else if (renderMode == BATTLE)
+    {
+        for (int i = 0; i < battleModels.size(); i++)
+        {
+            DrawObject(battleModels[i]);
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
-    //*********************** Regular pass ******************************
+void cRenderManager::DrawFrame()
+{
+    //Shadow pass
+    glm::mat4 lightSpaceMatrix;
+    DrawShadowPass(lightSpaceMatrix);
+
+    // Regular pass
+    
     // Reset viewport
     glViewport(0, 0, Manager::camera.SCR_WIDTH, Manager::camera.SCR_HEIGHT);
     glClearColor(0.89f, 0.89f, 0.89f, 1.0f);
@@ -1253,7 +1301,7 @@ void cRenderManager::DrawFrame()
     glm::mat4 projection = Manager::camera.GetProjectionMatrix();
     glm::mat4 view = Manager::camera.GetViewMatrix();
 
-    bruh = 0;
+    int bruh = 0;
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
@@ -1269,9 +1317,19 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
-    for (int i = 0; i < mapModels.size(); i++)
+    if (renderMode == MAP)
     {
-        DrawObject(mapModels[i]);
+        for (int i = 0; i < mapModels.size(); i++)
+        {
+            DrawObject(mapModels[i]);
+        }
+    }
+    else if (renderMode == BATTLE)
+    {
+        for (int i = 0; i < battleModels.size(); i++)
+        {
+            DrawObject(battleModels[i]);
+        }
     }
 
     // Draw particles
@@ -1311,4 +1369,9 @@ void cRenderManager::DrawFrame()
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default      
+}
+
+void cRenderManager::ChangeRenderMode(eRenderMode newMode)
+{
+    renderMode = newMode;
 }

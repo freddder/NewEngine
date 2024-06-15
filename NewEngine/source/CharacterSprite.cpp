@@ -7,7 +7,7 @@
 
 cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 {
-	model = Manager::render.CreateSpriteModel();
+	model = Manager::render.CreateMapSpriteModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = pos;
 	model->textureName = textureName;
@@ -217,4 +217,23 @@ void cPlayerSprite::StopMovement()
 	else if (lastDesiredDirection == DOWN) model->currSpriteId = 3;
 	else if (lastDesiredDirection == LEFT) model->currSpriteId = 6;
 	else if (lastDesiredDirection == RIGHT) model->currSpriteId = 9;
+}
+
+cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos)
+{
+	model = Manager::render.CreateBattleSpriteModel();
+	model->meshName = "SpriteHolder.obj";
+	model->position = pos;
+	model->textureName = textureName;
+
+	spriteAnimation = std::make_shared<cSpriteAnimation>(model->currSpriteId, model->scale);
+
+	Manager::animation.AddAnimation(spriteAnimation);
+}
+
+cBattleSprite::~cBattleSprite()
+{
+	Manager::render.RemoveBattleModel(model);
+
+	Manager::animation.RemoveAnimation(spriteAnimation);
 }

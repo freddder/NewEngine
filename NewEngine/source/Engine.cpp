@@ -203,11 +203,26 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Enviornment"))
     {
-        //cSceneManager* sceneManager = cSceneManager::GetInstance();
+        //if (ImGui::Button("Change Scene"))
+        //{
+        //    Manager::scene.ChangeScene();
+        //}
 
-        if (ImGui::Button("Change Scene"))
+        if (ImGui::BeginCombo("Render Mode", RenderMode_Strings[Manager::render.renderMode]))
         {
-            Manager::scene.ChangeScene();
+            for (int n = 0; n < eRenderMode::RENDERMODE_ENUM_COUNT; n++)
+            {
+                const bool is_selected = (Manager::render.renderMode == n);
+                if (ImGui::Selectable(RenderMode_Strings[n], is_selected))
+                {
+                    Manager::render.ChangeRenderMode(static_cast<eRenderMode>(n));
+                }
+
+                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
         }
 
         if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
@@ -234,9 +249,6 @@ void RenderImgui()
         {
             if (ImGui::BeginTabItem("Light"))
             {
-                //cLightManager* lightManager = cLightManager::GetInstance();
-                //cRenderManager* renderManager = cRenderManager::GetInstance();
-
                 float* position[3];
                 position[0] = &Manager::light.lights[0].position.x;
                 position[1] = &Manager::light.lights[0].position.y;
@@ -252,9 +264,6 @@ void RenderImgui()
                 ImGui::ColorEdit3("Color", *colors);
                 ImGui::DragFloat3("Position", *position);
                 ImGui::DragInt("Smoothing", shadowSmooth);
-                //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
-                //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
-                //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
                 ImGui::Image((void*)(intptr_t)Manager::render.GetDepthMapId(), ImVec2(200, 200));
 
                 ImGui::EndTabItem();

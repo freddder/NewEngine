@@ -61,3 +61,14 @@ public:
 	virtual glm::vec3 AnimateMovement(eDirection dir, bool run, eEntityMoveResult moveResult);
 	void StopMovement();
 };
+
+class cBattleSprite
+{
+public:
+	cBattleSprite(std::string textureName, glm::vec3 pos);
+	~cBattleSprite();
+
+protected:
+	std::shared_ptr<cSpriteAnimation> spriteAnimation;
+	std::shared_ptr<cSpriteModel> model;
+};

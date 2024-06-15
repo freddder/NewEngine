@@ -70,7 +70,15 @@ enum eRenderMode
 {
     MAP,
     BATTLE,
-    MENU
+    MENU,
+    RENDERMODE_ENUM_COUNT
+};
+
+const static char* RenderMode_Strings[] =
+{
+    "Map",
+    "Battle",
+    "Menu"
 };
 
 class cRenderManager
@@ -134,9 +142,13 @@ private:
     std::vector< std::shared_ptr<cRenderModel> > battleModels;
 public:
     std::shared_ptr<cRenderModel> CreateMapRenderModel();
-    std::shared_ptr<class cSpriteModel> CreateSpriteModel();
+    std::shared_ptr<class cSpriteModel> CreateMapSpriteModel();
     std::shared_ptr<class cAnimatedModel> CreateMapAnimatedModel(eAnimatedModel modelType);
     void RemoveMapModel(std::shared_ptr<cRenderModel> model);
+
+    std::shared_ptr<cRenderModel> CreateBattleRenderModel();
+    std::shared_ptr<class cSpriteModel> CreateBattleSpriteModel();
+    void RemoveBattleModel(std::shared_ptr<cRenderModel> model);
 
     // Textures
 private:
@@ -166,11 +178,13 @@ public:
 
     // Drawing
 private:
-    eRenderMode renderMode = MAP;
     void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawParticles(class cParticleSpawner* spawner);
     void DrawWidget(class cUIWidget* widget);
     void DrawText(cUIText* textWidget);
+    void DrawShadowPass(glm::mat4& outLightSpaceMatrix);
 public:
+    eRenderMode renderMode = MAP; // TEMP public
+    void ChangeRenderMode(eRenderMode newMode);
     void DrawFrame();
 };
