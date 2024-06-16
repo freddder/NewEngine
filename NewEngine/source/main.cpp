@@ -155,13 +155,13 @@ int main()
         Manager::scene.SpawnRandomWildPokemon();
     }
 
-    cBattleSprite* battleSprite = new cBattleSprite("Nate.png", glm::vec3(0.f));
+    //cBattleSprite* battleSprite = new cBattleSprite("406_bf.png", glm::vec3(0.f));
 
     // Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
 
-    delete battleSprite;
+    //delete battleSprite;
     delete Player::playerChar;
 
     Engine::ShutdownManagers();

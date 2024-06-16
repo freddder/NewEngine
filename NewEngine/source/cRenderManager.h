@@ -93,7 +93,7 @@ public:
     // Shaders
 private:
     std::string currShader;
-    std::map<std::string, sShaderProgram> programMap;
+    std::map<std::string, sShaderProgram> programs;
     void checkCompileErrors(unsigned int shader, std::string type);
 public:
     void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
@@ -125,9 +125,9 @@ private:
 
     // UI quad
 private:
-    unsigned int UIQuadVAO;
-    unsigned int UIQuadVBO;
-    unsigned int UIQuadEBO;
+    unsigned int uiQuadVAO;
+    unsigned int uiQuadVBO;
+    unsigned int uiQuadEBO;
 
     // Models loading
 private:
@@ -139,7 +139,7 @@ public:
     // Render models
 private:
     std::vector< std::shared_ptr<cRenderModel> > mapModels;
-    std::vector< std::shared_ptr<cRenderModel> > battleModels;
+    std::vector< std::shared_ptr<cRenderModel> > battleModels; // prob not the best idea
 public:
     std::shared_ptr<cRenderModel> CreateMapRenderModel();
     std::shared_ptr<class cSpriteModel> CreateMapSpriteModel();

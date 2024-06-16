@@ -175,16 +175,16 @@ void cRenderManager::Startup()
         1, 2, 3    // second triangle
     };
 
-    glGenVertexArrays(1, &UIQuadVAO);
-    glGenBuffers(1, &UIQuadVBO);
-    glGenBuffers(1, &UIQuadEBO);
+    glGenVertexArrays(1, &uiQuadVAO);
+    glGenBuffers(1, &uiQuadVBO);
+    glGenBuffers(1, &uiQuadEBO);
 
-    glBindVertexArray(UIQuadVAO);
+    glBindVertexArray(uiQuadVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, UIQuadVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, uiQuadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, UIQuadEBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uiQuadEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndicies), quadIndicies, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -215,7 +215,7 @@ void cRenderManager::Shutdown()
 
 void cRenderManager::CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
 {
-    if (programMap.count(programName) != 0) // it exists
+    if (programs.count(programName) != 0) // it exists
     {
         std::cout << "This shadder program already exists" << std::endl;
         return;
@@ -284,7 +284,7 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
     sShaderProgram newShader;
     newShader.ID = ID;
 
-    programMap.insert(std::pair<std::string, sShaderProgram>(programName, newShader));
+    programs.insert(std::pair<std::string, sShaderProgram>(programName, newShader));
 
     // add Matrices block to matrices
     unsigned int ubMatricesIndex = glGetUniformBlockIndex(newShader.ID, "Matrices");
@@ -300,7 +300,7 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
 
 unsigned int cRenderManager::GetCurrentShaderId()
 {
-    return programMap[currShader].ID;
+    return programs[currShader].ID;
 }
 
 unsigned int cRenderManager::GetDepthMapId()
@@ -310,11 +310,11 @@ unsigned int cRenderManager::GetDepthMapId()
 
 bool cRenderManager::LoadModel(std::string fileName, std::string programName)
 {
-    std::map<std::string, sShaderProgram>::iterator itPrograms = programMap.find(programName);
-    if (itPrograms == programMap.end()) return false;
+    std::map<std::string, sShaderProgram>::iterator itPrograms = programs.find(programName);
+    if (itPrograms == programs.end()) return false;
 
-    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programMap[programName].modelsLoaded.find(fileName);
-    if (itDrawInfo != programMap[programName].modelsLoaded.end()) return true; // already loaded
+    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programs[programName].modelsLoaded.find(fileName);
+    if (itDrawInfo != programs[programName].modelsLoaded.end()) return true; // already loaded
 
     Assimp::Importer importer;
 
@@ -485,20 +485,20 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
         newModel.allMeshesData.push_back(newMeshInfo);
     } // end of per mesh
 
-    programMap[programName].modelsLoaded.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
+    programs[programName].modelsLoaded.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
 
     return true;
 }
 
 bool cRenderManager::FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo)
 {
-    std::map<std::string, sShaderProgram>::iterator itProgram = programMap.find(programName);
+    std::map<std::string, sShaderProgram>::iterator itProgram = programs.find(programName);
 
-    if (itProgram == programMap.end()) return false; // Didn't find it
+    if (itProgram == programs.end()) return false; // Didn't find it
 
-    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programMap[programName].modelsLoaded.find(fileName);
+    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programs[programName].modelsLoaded.find(fileName);
 
-    if (itDrawInfo == programMap[programName].modelsLoaded.end()) return false; // Didn't find it
+    if (itDrawInfo == programs[programName].modelsLoaded.end()) return false; // Didn't find it
 
     modelInfo = itDrawInfo->second;
     return true;
@@ -530,87 +530,87 @@ void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)
 
 void cRenderManager::use(std::string programName)
 {
-    if (programMap.count(programName) == 0) return; // Doesn't exists
+    if (programs.count(programName) == 0) return; // Doesn't exists
 
     currShader = programName;
-    glUseProgram(programMap[currShader].ID);
+    glUseProgram(programs[currShader].ID);
 }
 
 void cRenderManager::setBool(const std::string& name, bool value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform1i(programMap[currShader].uniformLocations[name], (int)value);
+    glUniform1i(programs[currShader].uniformLocations[name], (int)value);
 }
 
 void cRenderManager::setInt(const std::string& name, int value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform1i(programMap[currShader].uniformLocations[name], value);
+    glUniform1i(programs[currShader].uniformLocations[name], value);
 }
 
 void cRenderManager::setFloat(const std::string& name, float value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform1f(programMap[currShader].uniformLocations[name], value);
+    glUniform1f(programs[currShader].uniformLocations[name], value);
 }
 
 void cRenderManager::setMat4(const std::string& name, const glm::mat4& mat)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniformMatrix4fv(programMap[currShader].uniformLocations[name], 1, GL_FALSE, &mat[0][0]);
+    glUniformMatrix4fv(programs[currShader].uniformLocations[name], 1, GL_FALSE, &mat[0][0]);
 }
 
 void cRenderManager::setVec2(const std::string& name, const glm::vec2& value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform2fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+    glUniform2fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
 void cRenderManager::setVec3(const std::string& name, const glm::vec3& value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform3fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+    glUniform3fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
 void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform4fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+    glUniform4fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
 std::shared_ptr<cRenderModel> cRenderManager::CreateMapRenderModel()
@@ -991,7 +991,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
             glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
 
             // OPTMIZATION: maybe figure out a way to not have to setup all these data every frame
-            GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+            GLint offset_location = glGetAttribLocation(programs[currShader].ID, "oOffset");
             glEnableVertexAttribArray(offset_location);
             glVertexAttribPointer(offset_location, 4,
                 GL_FLOAT, GL_FALSE,
@@ -1009,7 +1009,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
         {
             glBindBuffer(GL_ARRAY_BUFFER, notInstancedOffsetBufferId);
 
-            GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+            GLint offset_location = glGetAttribLocation(programs[currShader].ID, "oOffset");
             glEnableVertexAttribArray(offset_location);
             glVertexAttribPointer(offset_location, 4,
                 GL_FLOAT, GL_FALSE,
@@ -1142,7 +1142,7 @@ void cRenderManager::DrawText(cUIText* textWidget)
     setInt("screenWidth", scrWidth);
     setInt("screenHeight", scrHeight);
 
-    glBindVertexArray(UIQuadVAO);
+    glBindVertexArray(uiQuadVAO);
 
     // Setup buffer data as vertex atribute
     // (ideally I would want this to be set on VAO creation, but I guess the data needs to be setup before hand... so here it goes)
@@ -1225,7 +1225,7 @@ void cRenderManager::DrawWidget(cUIWidget* widget)
     setFloat("widthTranslate", widthTranslate);
     setFloat("heightTranslate", heightTranslate);
 
-    glBindVertexArray(UIQuadVAO);
+    glBindVertexArray(uiQuadVAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

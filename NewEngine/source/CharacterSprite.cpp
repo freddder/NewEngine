@@ -226,7 +226,8 @@ cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos)
 	model->position = pos;
 	model->textureName = textureName;
 
-	spriteAnimation = std::make_shared<cSpriteAnimation>(model->currSpriteId, model->scale);
+	spriteAnimation = std::make_shared<cPeriodicSpriteAnimation>(model->currSpriteId, 82);
+	spriteAnimation->isRepeat = true;
 
 	Manager::animation.AddAnimation(spriteAnimation);
 }

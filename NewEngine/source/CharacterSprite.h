@@ -69,6 +69,6 @@ public:
 	~cBattleSprite();
 
 protected:
-	std::shared_ptr<cSpriteAnimation> spriteAnimation;
+	std::shared_ptr<cPeriodicSpriteAnimation> spriteAnimation;
 	std::shared_ptr<cSpriteModel> model;
 };

@@ -493,3 +493,25 @@ void cSpriteAnimation::Process(float deltaTime)
 		}
 	}
 }
+
+cPeriodicSpriteAnimation::cPeriodicSpriteAnimation(int& _spriteIdRef, int _maxId) :
+	spriteIdRef(_spriteIdRef)
+{
+	maxId = _maxId;
+	maxDuration = 0.5f; // hack
+}
+
+void cPeriodicSpriteAnimation::Process(float deltaTime)
+{
+	if (isDone)	return;
+
+	timer += deltaTime * speed;
+
+	if (timer >= interval)
+	{
+		if (spriteIdRef + 1 > maxId) spriteIdRef = 0;
+		else spriteIdRef++;
+
+		timer -= interval;
+	}
+}

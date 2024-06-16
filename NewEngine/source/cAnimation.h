@@ -215,12 +215,24 @@ public:
 
 	std::vector<sKeyFrameSprite> keyframes;
 
-	cSpriteAnimation(int& _spriteRef, glm::vec3& _modelScale);
+	cSpriteAnimation(int& _spriteIdRef, glm::vec3& _modelScale);
 	void AddKeyFrame(sKeyFrameSprite newKeyframe);
 	void AddKeyFrames(std::vector<sKeyFrameSprite>& newKeyframes);
 
 	virtual void Reset();
 	void Reset(int newInitId, glm::vec3 newInitScale);
+
+	virtual void Process(float deltaTime);
+};
+
+class cPeriodicSpriteAnimation : public cAnimation
+{
+public:
+	int& spriteIdRef;
+	float interval = 0.1f;
+	int maxId; // If this number is hit, reset id red to 0
+
+	cPeriodicSpriteAnimation(int& _spriteIdRef, int _maxId);
 
 	virtual void Process(float deltaTime);
 };

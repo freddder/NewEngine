@@ -111,7 +111,7 @@ glm::mat4 cCameraManager::GetViewMatrix()
 		}
 		else
 		{
-			return glm::lookAt(glm::vec3(-10.f, 10.f, 0.f),
+			return glm::lookAt(glm::vec3(-10.f, 1.f, 0.f),
 				glm::vec3(0.f),
 				up);
 		}
