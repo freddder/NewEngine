@@ -10,6 +10,8 @@
 
 namespace Pokemon
 {
+	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber);
+
 	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
 	{
 		// Isn't a valid national dex number
@@ -101,36 +103,12 @@ namespace Pokemon
 	
 	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data)
 	{
-		if (nationalDexNumber == 0 || nationalDexNumber >= 1008)
-		{
-			// Isn't a valid national dex number
-			data.nationalDexNumber = 0;
-			return;
-		}
-	
-		std::string dexNumberString = std::to_string(nationalDexNumber);
-		while (dexNumberString.length() < 4)
-		{
-			dexNumberString = "0" + dexNumberString;
-		}
-	
-		FILE* fp = 0;
-		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "rb"); // non-Windows use "r"
-		if(fp == 0)
-		{
-			// File doesn't exists
-			data.nationalDexNumber = 0;
-			return;
-		}
-	
-		// OPTIMIZATION: best buffer size might be different
-		char readBuffer[4096];
-		rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-	
 		rapidjson::Document d;
-		d.ParseStream(is);
-	
-		fclose(fp);
+		if (!OpenPokemonDataFile(d, nationalDexNumber))
+		{
+			data.nationalDexNumber = 0;
+			return;
+		}
 
 		if (d["data_version"].GetInt() != JSON_DATA_VERSION)
 		{
@@ -183,6 +161,70 @@ namespace Pokemon
 		}
 	}
 
+	sRoamingPokemonData GenerateRoamingPokemonData(const sSpawnData& spawnData)
+	{
+		sRoamingPokemonData newRoamingData;
+
+		newRoamingData.nationalDexNumber = spawnData.nationalDexNumber;
+		newRoamingData.formName = spawnData.formName;
+		newRoamingData.isFormGenderBased = spawnData.isFormGenderBased;
+		newRoamingData.isSpriteGenderBased = spawnData.isSpriteGenderBased;
+
+		// Determine level
+		newRoamingData.level = rand() % (spawnData.maxLevel - spawnData.minLevel + 1) + spawnData.minLevel;
+
+		// Determine gender
+		newRoamingData.gender = Pokemon::NO_GENDER;
+		if (spawnData.genderRatio >= 0) // not genderless
+		{
+			int genderRandom = (rand() % 100); // [0-99]
+
+			if (spawnData.genderRatio < genderRandom) newRoamingData.gender = Pokemon::MALE;
+			else newRoamingData.gender = Pokemon::FEMALE;
+		}
+
+		// Determine shiny
+		int shinyRandom = (rand() % 100); // [0-99]
+		if (shinyRandom < 50) newRoamingData.isShiny = true;
+
+		return newRoamingData;
+	}
+
+	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData)
+	{
+		sBattleData newData; 
+		newData.nationalDexNumber = roamingData.nationalDexNumber;
+		newData.formName = roamingData.formName;
+		newData.level = roamingData.level;
+		newData.isShiny = roamingData.isShiny;
+		newData.isFormGenderBased = roamingData.isFormGenderBased;
+		newData.isSpriteGenderBased = roamingData.isSpriteGenderBased;
+
+		rapidjson::Document d;
+		OpenPokemonDataFile(d, roamingData.nationalDexNumber);
+
+		if (newData.isFormGenderBased && newData.gender == FEMALE)
+		{
+
+		}
+		else if (newData.formName != "")
+		{
+
+		}
+		else
+		{
+
+		}
+
+		newData.maxHealth = 100;
+		newData.currHealth = 100;
+
+		newData.expToNextLevel = 2000;
+		newData.currExp = 0;
+
+		return newData;
+	}
+
 	const std::string sRoamingPokemonData::MakeRoamingTextureName()
 	{
 		std::string textureName = std::to_string(nationalDexNumber);
@@ -220,5 +262,29 @@ namespace Pokemon
 		textureName = textureName + ".png";
 
 		return textureName;
+	}
+
+	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber)
+	{
+		if (nationalDexNumber == 0 || nationalDexNumber >= 1008) return false;
+
+		std::string dexNumberString = std::to_string(nationalDexNumber);
+		while (dexNumberString.length() < 4)
+		{
+			dexNumberString = "0" + dexNumberString;
+		}
+
+		FILE* fp = 0;
+		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "rb"); // non-Windows use "r"
+		if (fp == 0) return false; // File doesn't exists
+
+		// OPTIMIZATION: best buffer size might be different
+		char readBuffer[4096];
+		rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
+		doc.ParseStream(is);
+
+		fclose(fp);
+		return false;
 	}
 }

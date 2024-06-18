@@ -124,11 +124,14 @@ namespace Pokemon
 		// Ability ability2
 		// Ability hiddenAbility
 
-		eType type1;
+		eType type1 = NORMAL;
 		eType type2 = NO_TYPE;
 
 		float height = 0.f; // in meters
 		float weight = 0.f; // in kilograms
+
+		float battleSpriteHeightSize = 1.f;
+		int battleSpriteFrameCount = 1;
 
 		// Learnset as a pair of int (level) and int (move id)
 	};
@@ -195,6 +198,7 @@ namespace Pokemon
 
 		const std::string MakeRoamingTextureName();
 	};
+	sRoamingPokemonData GenerateRoamingPokemonData(const sSpawnData& spawnData);
 
 	struct sPokemonData : public sRoamingPokemonData // Individual data (outside of battle)
 	{
@@ -205,6 +209,9 @@ namespace Pokemon
 
 		int expToNextLevel;
 		int currExp;
+
+		eType type1;
+		eType type2;
 
 		// Ability ability;
 		// Natire nature;
@@ -226,4 +233,5 @@ namespace Pokemon
 	{
 		sStats statChanges;
 	};
+	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData);
 }

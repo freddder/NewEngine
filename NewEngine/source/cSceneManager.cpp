@@ -174,35 +174,13 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	return spawnedWildPokemon;
 }
 
-// TODO: move generation of individual data to PokemonData.cpp
-std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
 {
 	if (!spawnTile) return nullptr;
 
-	Pokemon::sRoamingPokemonData individualData;
-	individualData.nationalDexNumber = spawnData.nationalDexNumber;
-	individualData.formName = spawnData.formName;
-	individualData.isFormGenderBased = spawnData.isFormGenderBased;
-	individualData.isSpriteGenderBased = spawnData.isSpriteGenderBased;
+	Pokemon::sRoamingPokemonData roamingData = Pokemon::GenerateRoamingPokemonData(spawnData);
 
-	// Determine level
-	individualData.level = rand() % (spawnData.maxLevel - spawnData.minLevel + 1) + spawnData.minLevel;
-
-	// Determine gender
-	individualData.gender = Pokemon::NO_GENDER;
-	if (spawnData.genderRatio >= 0) // not genderless
-	{		
-		int genderRandom = (rand() % 100); // [0-99]
-
-		if (spawnData.genderRatio < genderRandom) individualData.gender = Pokemon::MALE;
-		else individualData.gender = Pokemon::FEMALE;
-	}
-	
-	// Determine shiny
-	int shinyRandom = (rand() % 100); // [0-99]
-	if (shinyRandom < 50) individualData.isShiny = true;
-	
-	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(individualData, tileLocation);
+	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(roamingData, tileLocation);
 	roamingWildPokemon.push_back(newWildPokemon);
 
 	spawnTile->entity = newWildPokemon.get();
@@ -243,6 +221,8 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	// - Generate battle pokemon data
 	// - Load batle sprite texture
 	// - Create battle sprite
+
+	Pokemon::sPokemonData newData = Pokemon::GeneratePokemonIndividualData(roamingPokemonData);
 
 	//cBattleSprite* battleSprite = new cBattleSprite("406_bf.png", glm::vec3(0.f)); not sure
 
