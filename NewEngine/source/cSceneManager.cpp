@@ -1,13 +1,13 @@
 #include "cSceneManager.h"
 #include "cWildRoamingPokemon.h"
 #include "cTamedRoamingPokemon.h"
-#include "cMapManager.h"
-#include "cRenderManager.h"
 #include "Player.h"
 
 #include <time.h>
 
 #include "Engine.h"
+#include "cMapManager.h"
+#include "cRenderManager.h"
 
 cSceneManager::cSceneManager()
 {
@@ -157,7 +157,7 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	if (loadedSpawnData.size() == 0) return nullptr;
 
 	// Pick a random spawn data
-	int randIndex = (rand() % loadedSpawnData.size());
+	int randIndex = rand() % loadedSpawnData.size();
 	Pokemon::sSpawnData spawnData = loadedSpawnData[randIndex];
 	std::shared_ptr<cWildRoamingPokemon> spawnedWildPokemon = nullptr;
 
@@ -174,6 +174,7 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	return spawnedWildPokemon;
 }
 
+// TODO: move generation of individual data to PokemonData.cpp
 std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
 {
 	if (!spawnTile) return nullptr;
@@ -181,6 +182,11 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sS
 	Pokemon::sRoamingPokemonData individualData;
 	individualData.nationalDexNumber = spawnData.nationalDexNumber;
 	individualData.formName = spawnData.formName;
+	individualData.isFormGenderBased = spawnData.isFormGenderBased;
+	individualData.isSpriteGenderBased = spawnData.isSpriteGenderBased;
+
+	// Determine level
+	individualData.level = rand() % (spawnData.maxLevel - spawnData.minLevel + 1) + spawnData.minLevel;
 
 	// Determine gender
 	individualData.gender = Pokemon::NO_GENDER;
@@ -195,10 +201,8 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sS
 	// Determine shiny
 	int shinyRandom = (rand() % 100); // [0-99]
 	if (shinyRandom < 50) individualData.isShiny = true;
-
-	std::string textureName = individualData.MakeTextureName(spawnData.isFormGenderBased, spawnData.isSpriteGenderBased);
 	
-	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(individualData, tileLocation, textureName);
+	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(individualData, tileLocation);
 	roamingWildPokemon.push_back(newWildPokemon);
 
 	spawnTile->entity = newWildPokemon.get();
@@ -211,9 +215,7 @@ std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::
 	sTile* spawnTile = Manager::map.GetTile(tileLocation);
 	if (!spawnTile || spawnTile->entity != nullptr) return nullptr;
 
-	std::string textureName = pokemonData.MakeTextureName(false, true);
-
-	std::shared_ptr<cTamedRoamingPokemon> newTamedPokemon = std::make_shared<cTamedRoamingPokemon>(pokemonData, tileLocation, textureName);
+	std::shared_ptr<cTamedRoamingPokemon> newTamedPokemon = std::make_shared<cTamedRoamingPokemon>(pokemonData, tileLocation);
 	roamingTamedPokemon.push_back(newTamedPokemon);
 
 	spawnTile->entity = newTamedPokemon.get();
@@ -231,6 +233,20 @@ void cSceneManager::ChangeScene()
 	// - unload despawn data
 	// - move player and follower to appropriate place
 	// - remove render objects from vector
+}
+
+void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData)
+{
+	Manager::render.ChangeRenderMode(BATTLE);
+
+	// TODO: this whole thing next
+	// - Generate battle pokemon data
+	// - Load batle sprite texture
+	// - Create battle sprite
+
+	//cBattleSprite* battleSprite = new cBattleSprite("406_bf.png", glm::vec3(0.f)); not sure
+
+	//Manager::render.LoadPokemonBattleSpriteSheet();
 }
 
 void cSceneManager::Process(float deltaTime)

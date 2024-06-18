@@ -10,7 +10,7 @@
 const static std::string SHADER_PATH = "assets/shaders/";
 const static std::string MODEL_PATH = "assets/models/";
 const static std::string TEXTURE_PATH = "assets/textures/";
-const static std::string PKM_SPRITES_PATH = "assets/pokemon/";
+const static std::string PKM_DATA_PATH = "assets/pokemon/";
 const static std::string FONTS_PATH = "assets/fonts/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
@@ -22,6 +22,7 @@ class cUIText;
 namespace Pokemon
 {
     struct sSpeciesData;
+    struct sPokemonData;
 }
 
 struct sShaderProgram
@@ -141,21 +142,19 @@ private:
     std::vector< std::shared_ptr<cRenderModel> > mapModels;
     std::vector< std::shared_ptr<cRenderModel> > battleModels; // prob not the best idea
 public:
-    std::shared_ptr<cRenderModel> CreateMapRenderModel();
-    std::shared_ptr<class cSpriteModel> CreateMapSpriteModel();
-    std::shared_ptr<class cAnimatedModel> CreateMapAnimatedModel(eAnimatedModel modelType);
-    void RemoveMapModel(std::shared_ptr<cRenderModel> model);
-
-    std::shared_ptr<cRenderModel> CreateBattleRenderModel();
-    std::shared_ptr<class cSpriteModel> CreateBattleSpriteModel();
-    void RemoveBattleModel(std::shared_ptr<cRenderModel> model);
+    std::shared_ptr<cRenderModel> CreateRenderModel(bool isBattleModel = false);
+    std::shared_ptr<class cSpriteModel> CreateSpriteModel(bool isBattleModel = false);
+    std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType, bool isBattleModel = false);
+    void RemoveModel(std::shared_ptr<cRenderModel> model);
 
     // Textures
 private:
     std::map<std::string, sTexture> mapTextures;
+    std::map<std::string, sTexture> battleTextures;
     unsigned int CreateTexture(const std::string fullPath, int& width, int& height);
 public:
-    void LoadMapTexture(const std::string fileName, const std::string subdirectory = "");
+    void LoadTexture(const std::string fileName, const std::string subdirectory = "", bool isBattleTexture = false);
+    void UnloadTextures(bool unloadBattleTexture = false);
     unsigned int CreateCubemap(const std::vector<std::string> faces); // TEMP
 
 private:
@@ -164,6 +163,7 @@ private:
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
     void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);
+    void LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data); // kinda wanted to make this const but whatever
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);

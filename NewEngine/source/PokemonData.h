@@ -186,17 +186,19 @@ namespace Pokemon
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
+		int level;
 		eGender gender = Pokemon::NO_GENDER;
 		bool isShiny = false;
 
-		const std::string MakeTextureName(bool isFormGenderBased, bool isSpriteGenderBased);
+		bool isFormGenderBased;
+		bool isSpriteGenderBased;
+
+		const std::string MakeRoamingTextureName();
 	};
 
 	struct sPokemonData : public sRoamingPokemonData // Individual data (outside of battle)
 	{
 		std::string customName = "";
-
-		int level;
 
 		int maxHealth;
 		int currHealth;
@@ -216,6 +218,8 @@ namespace Pokemon
 		// Move move2;
 		// Move move3;
 		// Move move4;
+
+		const std::string MakeBattleTextureName(bool makeBackInstead = false);
 	};
 
 	struct sBattleData : public sPokemonData // Individual data (in battle)

@@ -410,8 +410,8 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
             newMeshInfo.textureName = path.C_Str();
 
-            // maybe try to load texture right here
-            LoadMapTexture(newMeshInfo.textureName);
+            // Load texture
+            LoadTexture(newMeshInfo.textureName);
         }
 
 #pragma region VAO_Creation
@@ -492,9 +492,7 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
 
 bool cRenderManager::FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo)
 {
-    std::map<std::string, sShaderProgram>::iterator itProgram = programs.find(programName);
-
-    if (itProgram == programs.end()) return false; // Didn't find it
+    if (programs.find(programName) == programs.end()) return false; // Didn't find it
 
     std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programs[programName].modelsLoaded.find(fileName);
 
@@ -613,23 +611,31 @@ void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
     glUniform4fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
-std::shared_ptr<cRenderModel> cRenderManager::CreateMapRenderModel()
+std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel(bool isBattleModel)
 {
     std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
-    mapModels.push_back(newModel);
+
+    if (isBattleModel) 
+        battleModels.push_back(newModel);
+    else 
+        mapModels.push_back(newModel);
 
     return newModel;
 }
 
-std::shared_ptr<cSpriteModel> cRenderManager::CreateMapSpriteModel()
+std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel(bool isBattleModel)
 {
     std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
-    mapModels.push_back(newModel);
+
+    if (isBattleModel) 
+        battleModels.push_back(newModel);
+    else 
+        mapModels.push_back(newModel);
 
     return newModel;
 }
 
-std::shared_ptr<cAnimatedModel> cRenderManager::CreateMapAnimatedModel(eAnimatedModel modelType)
+std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModel modelType, bool isBattleModel)
 {
     std::shared_ptr<cAnimatedModel> newModel;
 
@@ -648,41 +654,31 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateMapAnimatedModel(eAnimated
         newModel = std::make_shared<cTreeModel>();
         break;
     }
-    mapModels.push_back(newModel);
+
+    if (isBattleModel)
+        battleModels.push_back(newModel);
+    else
+        mapModels.push_back(newModel);
 
     return newModel;
 }
 
-void cRenderManager::RemoveMapModel(std::shared_ptr<cRenderModel> model)
+void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
 {
-    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(mapModels.begin(), mapModels.end(), model);
-    
-    if(it != mapModels.end())
-        mapModels.erase(it);
-}
+    if (renderMode == MAP)
+    {
+        std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(mapModels.begin(), mapModels.end(), model);
 
-std::shared_ptr<class cRenderModel> cRenderManager::CreateBattleRenderModel()
-{
-    std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
-    battleModels.push_back(newModel);
+        if (it != mapModels.end())
+            mapModels.erase(it);
+    }
+    else
+    {
+        std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(battleModels.begin(), battleModels.end(), model);
 
-    return newModel;
-}
-
-std::shared_ptr<class cSpriteModel> cRenderManager::CreateBattleSpriteModel()
-{
-    std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
-    battleModels.push_back(newModel);
-
-    return newModel;
-}
-
-void cRenderManager::RemoveBattleModel(std::shared_ptr<cRenderModel> model)
-{
-    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(battleModels.begin(), battleModels.end(), model);
-
-    if (it != battleModels.end())
-        battleModels.erase(it);
+        if (it != battleModels.end())
+            battleModels.erase(it);
+    }
 }
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)
@@ -719,7 +715,7 @@ unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& widt
     return textureId;
 }
 
-void cRenderManager::LoadMapTexture(const std::string fileName, const std::string subdirectory)
+void cRenderManager::LoadTexture(const std::string fileName, const std::string subdirectory, bool isBattleTexture)
 {
     if (fileName == "") return;
 
@@ -731,7 +727,34 @@ void cRenderManager::LoadMapTexture(const std::string fileName, const std::strin
     newTexture.textureId = CreateTexture(fullPath, width, height);
 
     if (newTexture.textureId != 0)
-        mapTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
+    {
+        if (isBattleTexture)
+            battleTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
+        else
+            mapTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
+    }
+}
+
+void cRenderManager::UnloadTextures(bool unloadBattleTexture)
+{
+    if (unloadBattleTexture)
+    {
+        for (std::map<std::string, sTexture>::iterator it = battleTextures.begin(); it != battleTextures.end(); it++)
+        {
+            glDeleteBuffers(1, &it->second.textureId);
+        }
+
+        battleTextures.clear();
+    }
+    else
+    {
+        for (std::map<std::string, sTexture>::iterator it = mapTextures.begin(); it != mapTextures.end(); it++)
+        {
+            glDeleteBuffers(1, &it->second.textureId);
+        }
+
+        mapTextures.clear();
+    }
 }
 
 unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
@@ -783,7 +806,7 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     {
         dexIdString = "0" + dexIdString;
     }
-    std::string texturePath = PKM_SPRITES_PATH + dexIdString + "/";
+    std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
 
     // Create sprite sheet
     sSpriteSheet newSheet;
@@ -851,6 +874,27 @@ void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpecie
     }
 }
 
+void cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data)
+{
+    std::string textureName = data.MakeBattleTextureName();
+
+    if (battleTextures.find(textureName) == battleTextures.end()) return; // already loaded
+
+    std::string dexIdString = std::to_string(data.nationalDexNumber);
+    while (dexIdString.length() < 4)
+    {
+        dexIdString = "0" + dexIdString;
+    }
+    std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
+
+    std::string fullPath = texturePath + textureName;
+    sTexture newTexture;
+    int width, height;
+    newTexture.textureId = CreateTexture(fullPath, width, height);
+
+    battleTextures.insert(std::pair<std::string, sTexture>(textureName, newTexture));
+}
+
 void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit)
 {
     if (sceneSpriteSheets.find(sheetName) == sceneSpriteSheets.end()) return; // texture doesn't exists
@@ -873,9 +917,20 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
 
 void cRenderManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
 {
-    if (mapTextures.find(textureToSetup) == mapTextures.end()) return; // texture doesn't exists
+    unsigned int textureId;
 
-    unsigned int textureId = mapTextures[textureToSetup].textureId;
+    if (renderMode == MAP)
+    {
+        if (mapTextures.find(textureToSetup) == mapTextures.end()) return; // texture doesn't exists
+
+        textureId = mapTextures[textureToSetup].textureId;
+    }
+    else
+    {
+        if (battleTextures.find(textureToSetup) == battleTextures.end()) return; // texture doesn't exists
+
+        textureId = battleTextures[textureToSetup].textureId;
+    }
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984

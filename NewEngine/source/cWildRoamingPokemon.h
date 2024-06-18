@@ -7,6 +7,8 @@ class cWildRoamingPokemon : public cCharacterEntity
 {
 	Pokemon::sRoamingPokemonData data;
 public:
-	cWildRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos, std::string textureName);
+	cWildRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos);
 	~cWildRoamingPokemon();
+
+	virtual void WalkInteract();
 };

@@ -83,12 +83,12 @@ int main()
     Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
     Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
-    Manager::render.LoadMapTexture("SnowFlake1.png");
-    Manager::render.LoadMapTexture("SnowFlake2.png");
-    Manager::render.LoadMapTexture("SnowFlake3.png");
+    Manager::render.LoadTexture("SnowFlake1.png");
+    Manager::render.LoadTexture("SnowFlake2.png");
+    Manager::render.LoadTexture("SnowFlake3.png");
 
-    Manager::render.LoadMapTexture("PartyMemberButtonBackground.png", "ui/");
-    Manager::render.LoadMapTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
+    Manager::render.LoadTexture("PartyMemberButtonBackground.png", "ui/");
+    Manager::render.LoadTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
     
     Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
 
@@ -155,13 +155,10 @@ int main()
         Manager::scene.SpawnRandomWildPokemon();
     }
 
-    //cBattleSprite* battleSprite = new cBattleSprite("406_bf.png", glm::vec3(0.f));
-
     // Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
 
-    //delete battleSprite;
     delete Player::playerChar;
 
     Engine::ShutdownManagers();

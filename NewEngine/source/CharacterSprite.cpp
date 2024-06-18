@@ -7,7 +7,7 @@
 
 cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 {
-	model = Manager::render.CreateMapSpriteModel();
+	model = Manager::render.CreateSpriteModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = pos;
 	model->textureName = textureName;
@@ -21,7 +21,7 @@ cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 
 cCharacterSprite::~cCharacterSprite()
 {
-	Manager::render.RemoveMapModel(model);
+	Manager::render.RemoveModel(model);
 
 	Manager::animation.RemoveAnimation(spriteAnimation);
 	Manager::animation.RemoveAnimation(modelAnimation);
@@ -219,11 +219,13 @@ void cPlayerSprite::StopMovement()
 	else if (lastDesiredDirection == RIGHT) model->currSpriteId = 9;
 }
 
-cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos)
+cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos, float spriteHeightSize, float spriteAspectRatio, int spritesNum)
 {
-	model = Manager::render.CreateBattleSpriteModel();
+	model = Manager::render.CreateSpriteModel();
 	model->meshName = "SpriteHolder.obj";
 	model->position = pos;
+	model->scale.x = spriteHeightSize * spriteAspectRatio;
+	model->scale.y = spriteHeightSize;
 	model->textureName = textureName;
 
 	spriteAnimation = std::make_shared<cPeriodicSpriteAnimation>(model->currSpriteId, 82);
@@ -234,7 +236,7 @@ cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos)
 
 cBattleSprite::~cBattleSprite()
 {
-	Manager::render.RemoveBattleModel(model);
+	Manager::render.RemoveModel(model);
 
 	Manager::animation.RemoveAnimation(spriteAnimation);
 }

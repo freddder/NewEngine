@@ -65,7 +65,7 @@ public:
 class cBattleSprite
 {
 public:
-	cBattleSprite(std::string textureName, glm::vec3 pos);
+	cBattleSprite(std::string textureName, glm::vec3 pos, float spriteHeightSize, float spriteAspectRatio, int spritesNum);
 	~cBattleSprite();
 
 protected:

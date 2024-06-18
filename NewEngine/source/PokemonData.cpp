@@ -183,22 +183,39 @@ namespace Pokemon
 		}
 	}
 
-	const std::string sRoamingPokemonData::MakeTextureName(const bool isFormGenderBased, const bool isSpriteGenderBased)
+	const std::string sRoamingPokemonData::MakeRoamingTextureName()
 	{
 		std::string textureName = std::to_string(nationalDexNumber);
+
 		if (gender == FEMALE && (isSpriteGenderBased || isFormGenderBased))
-		{
 			textureName = textureName + "_f";
-		}
 		else if (formName != "") // There is no case where both will be true
-		{
 			textureName = textureName + "_" + formName;
-		}
 
 		if (isShiny)
-		{
 			textureName = textureName + "_s";
-		}
+
+		textureName = textureName + ".png";
+
+		return textureName;
+	}
+
+	const std::string sPokemonData::MakeBattleTextureName(bool makeBackInstead)
+	{
+		std::string textureName = std::to_string(nationalDexNumber);
+
+		if (gender == FEMALE && (isSpriteGenderBased || isFormGenderBased))
+			textureName = textureName + "_f";
+		else if (formName != "") // There is no case where both will be true
+			textureName = textureName + "_" + formName;
+
+		if (makeBackInstead)
+			textureName = textureName + "_bb";
+		else
+			textureName = textureName + "_bf";
+
+		if (isShiny)
+			textureName = textureName + "_s";
 
 		textureName = textureName + ".png";
 
