@@ -158,12 +158,13 @@ public:
     unsigned int CreateCubemap(const std::vector<std::string> faces); // TEMP
 
 private:
-    std::map<std::string, sSpriteSheet> sceneSpriteSheets;
+    std::map<std::string, sSpriteSheet> mapSpriteSheets;
+    std::map<std::string, sSpriteSheet> battleSpriteSheets;
     void LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag = "");
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
     void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);
-    void LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data); // kinda wanted to make this const but whatever
+    float LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data); // kinda wanted to make this const but whatever
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);

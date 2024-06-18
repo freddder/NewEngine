@@ -743,8 +743,13 @@ void cRenderManager::UnloadTextures(bool unloadBattleTexture)
         {
             glDeleteBuffers(1, &it->second.textureId);
         }
-
         battleTextures.clear();
+
+        for (std::map<std::string, sSpriteSheet>::iterator it = battleSpriteSheets.begin(); it != battleSpriteSheets.end(); it++)
+        {
+            glDeleteBuffers(1, &it->second.textureId);
+        }
+        battleSpriteSheets.clear();
     }
     else
     {
@@ -752,7 +757,6 @@ void cRenderManager::UnloadTextures(bool unloadBattleTexture)
         {
             glDeleteBuffers(1, &it->second.textureId);
         }
-
         mapTextures.clear();
     }
 }
@@ -799,7 +803,7 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     textureName = textureName + ".png";
 
     // Check if not already loaded
-    if (sceneSpriteSheets.find(textureName) != sceneSpriteSheets.end()) return;
+    if (mapSpriteSheets.find(textureName) != mapSpriteSheets.end()) return;
 
     std::string dexIdString = std::to_string(nationalDexId);
     while (dexIdString.length() < 4)
@@ -819,10 +823,10 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     newSheet.textureId = CreateTexture(fullPath, width, height);
 
     if (newSheet.textureId != 0)
-        sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSheet));
+        mapSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSheet));
 
     // Check if shiny not already loaded
-    if (sceneSpriteSheets.find(shinyTextureName) != sceneSpriteSheets.end()) return;
+    if (mapSpriteSheets.find(shinyTextureName) != mapSpriteSheets.end()) return;
 
     // Create shiny sprite sheet
     sSpriteSheet newShinySheet;
@@ -834,12 +838,12 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     newShinySheet.textureId = CreateTexture(shinyFullPath, width, height);
 
     if (newShinySheet.textureId != 0)
-        sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
+        mapSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
 }
 
 void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory)
 {
-    if (sceneSpriteSheets.count(spriteSheetName)) return; // texture already created
+    if (mapSpriteSheets.count(spriteSheetName)) return; // texture already created
 
     sSpriteSheet newSheet;
     newSheet.numCols = cols;
@@ -851,7 +855,7 @@ void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned
     newSheet.textureId = CreateTexture(fullPath, width, height);
 
     if (newSheet.textureId != 0)
-        sceneSpriteSheets[spriteSheetName] = newSheet;
+        mapSpriteSheets[spriteSheetName] = newSheet;
 }
 
 void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData)
@@ -874,11 +878,11 @@ void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpecie
     }
 }
 
-void cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data)
+float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data)
 {
     std::string textureName = data.MakeBattleTextureName();
 
-    if (battleTextures.find(textureName) == battleTextures.end()) return; // already loaded
+    if (battleTextures.find(textureName) != battleTextures.end()) return 1.f; // already loaded
 
     std::string dexIdString = std::to_string(data.nationalDexNumber);
     while (dexIdString.length() < 4)
@@ -888,24 +892,39 @@ void cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data)
     std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
 
     std::string fullPath = texturePath + textureName;
-    sTexture newTexture;
+    sSpriteSheet newSpriteSheet;
+    newSpriteSheet.numRows = 1;
+    newSpriteSheet.numCols = data.form.battleSpriteFrameCount;
     int width, height;
-    newTexture.textureId = CreateTexture(fullPath, width, height);
+    newSpriteSheet.textureId = CreateTexture(fullPath, width, height);
 
-    battleTextures.insert(std::pair<std::string, sTexture>(textureName, newTexture));
+    battleSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSpriteSheet));
+
+    return (float)width / newSpriteSheet.numCols / height;
 }
 
 void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit)
 {
-    if (sceneSpriteSheets.find(sheetName) == sceneSpriteSheets.end()) return; // texture doesn't exists
+    sSpriteSheet sheet;
 
-    sSpriteSheet sheet = sceneSpriteSheets[sheetName];
+    if (renderMode == MAP)
+    {
+        if (mapSpriteSheets.find(sheetName) == mapSpriteSheets.end()) return; // texture doesn't exists
+
+        sheet = mapSpriteSheets[sheetName];
+    }
+    else
+    {
+        if (battleSpriteSheets.find(sheetName) == battleSpriteSheets.end()) return; // texture doesn't exists
+
+        sheet = battleSpriteSheets[sheetName];
+    }
 
     setInt("spriteId", spriteId);
     setInt("numCols", sheet.numCols);
     setInt("numRows", sheet.numRows);
 
-    unsigned int textureId = sceneSpriteSheets[sheetName].textureId;
+    unsigned int textureId = sheet.textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984

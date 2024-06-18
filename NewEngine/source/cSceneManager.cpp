@@ -215,18 +215,18 @@ void cSceneManager::ChangeScene()
 
 void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData)
 {
-	Manager::render.ChangeRenderMode(BATTLE);
-
 	// TODO: this whole thing next
 	// - Generate battle pokemon data
 	// - Load batle sprite texture
 	// - Create battle sprite
 
-	Pokemon::sPokemonData newData = Pokemon::GeneratePokemonIndividualData(roamingPokemonData);
+	Pokemon::sBattleData battleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
+	std::string texName = battleData.MakeBattleTextureName();
 
-	//cBattleSprite* battleSprite = new cBattleSprite("406_bf.png", glm::vec3(0.f)); not sure
+	Manager::render.ChangeRenderMode(BATTLE);
+	float spriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(battleData);
 
-	//Manager::render.LoadPokemonBattleSpriteSheet();
+	cBattleSprite* battleSprite = new cBattleSprite(texName, glm::vec3(0.f), battleData.form.battleSpriteHeightSize, spriteAspectRatio, battleData.form.battleSpriteFrameCount);
 }
 
 void cSceneManager::Process(float deltaTime)

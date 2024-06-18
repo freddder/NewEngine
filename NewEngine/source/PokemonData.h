@@ -210,8 +210,7 @@ namespace Pokemon
 		int expToNextLevel;
 		int currExp;
 
-		eType type1;
-		eType type2;
+		sForm form;
 
 		// Ability ability;
 		// Natire nature;

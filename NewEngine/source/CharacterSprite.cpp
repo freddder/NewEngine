@@ -221,14 +221,14 @@ void cPlayerSprite::StopMovement()
 
 cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos, float spriteHeightSize, float spriteAspectRatio, int spritesNum)
 {
-	model = Manager::render.CreateSpriteModel();
+	model = Manager::render.CreateSpriteModel(true);
 	model->meshName = "SpriteHolder.obj";
 	model->position = pos;
-	model->scale.x = spriteHeightSize * spriteAspectRatio;
+	model->scale.z = spriteHeightSize * spriteAspectRatio;
 	model->scale.y = spriteHeightSize;
 	model->textureName = textureName;
 
-	spriteAnimation = std::make_shared<cPeriodicSpriteAnimation>(model->currSpriteId, 82);
+	spriteAnimation = std::make_shared<cPeriodicSpriteAnimation>(model->currSpriteId, spritesNum);
 	spriteAnimation->isRepeat = true;
 
 	Manager::animation.AddAnimation(spriteAnimation);

@@ -11,6 +11,7 @@
 namespace Pokemon
 {
 	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber);
+	void LoadFormData(rapidjson::Value& formObject, sForm& form);
 
 	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
 	{
@@ -125,38 +126,17 @@ namespace Pokemon
 		data.isFormGenderBased = d["isStatsGenderBased"].GetBool();
 		data.isSpriteGenderBased = d["isSpriteGenderBased"].GetBool();
 
-		data.defaultForm.type1 = static_cast<eType>(d["defaultForm"]["type1"].GetInt());
-		data.defaultForm.type2 = static_cast<eType>(d["defaultForm"]["type2"].GetInt());
-
-		data.defaultForm.baseStats.hp = d["defaultForm"]["baseHp"].GetInt();
-		data.defaultForm.baseStats.atk = d["defaultForm"]["baseAtk"].GetInt();
-		data.defaultForm.baseStats.spAtk = d["defaultForm"]["baseSpAtk"].GetInt();
-		data.defaultForm.baseStats.def = d["defaultForm"]["baseDef"].GetInt();
-		data.defaultForm.baseStats.spDef = d["defaultForm"]["baseSpDef"].GetInt();
-		data.defaultForm.baseStats.spd = d["defaultForm"]["baseSpd"].GetInt();
-
-		data.defaultForm.height = d["defaultForm"]["height"].GetFloat();
-		data.defaultForm.weight = d["defaultForm"]["weight"].GetFloat();
+		rapidjson::Value& defaultFormObject = d["defaultForm"];
+		LoadFormData(defaultFormObject, data.defaultForm);
 
 		rapidjson::Value& alternateForms = d["alternateForms"];
 		for (unsigned int i = 0; i < alternateForms.Size(); i++)
 		{
-			std::string formName = alternateForms[i]["name"].GetString();
+			rapidjson::Value& newFormObject = alternateForms[i];
 			sForm newForm;
+			LoadFormData(newFormObject, newForm);
 
-			newForm.type1 = static_cast<eType>(alternateForms[i]["type1"].GetInt());
-			newForm.type2 = static_cast<eType>(alternateForms[i]["type2"].GetInt());
-
-			newForm.baseStats.hp = alternateForms[i]["baseHp"].GetInt();
-			newForm.baseStats.atk = alternateForms[i]["baseAtk"].GetInt();
-			newForm.baseStats.spAtk = alternateForms[i]["baseSpAtk"].GetInt();
-			newForm.baseStats.def = alternateForms[i]["baseDef"].GetInt();
-			newForm.baseStats.spDef = alternateForms[i]["baseSpDef"].GetInt();
-			newForm.baseStats.spd = alternateForms[i]["baseSpd"].GetInt();
-
-			newForm.height = alternateForms[i]["height"].GetFloat();
-			newForm.weight = alternateForms[i]["weight"].GetFloat();
-
+			std::string formName = newFormObject["name"].GetString();
 			data.alternateForms.insert(std::pair<std::string, sForm>(formName, newForm));
 		}
 	}
@@ -203,17 +183,34 @@ namespace Pokemon
 		rapidjson::Document d;
 		OpenPokemonDataFile(d, roamingData.nationalDexNumber);
 
-		if (newData.isFormGenderBased && newData.gender == FEMALE)
+		if (newData.isFormGenderBased && newData.gender == FEMALE) // load "female" form
 		{
-
+			rapidjson::Value& alternateForms = d["alternateForms"];
+			for (unsigned int i = 0; i < alternateForms.Size(); i++)
+			{
+				if (alternateForms[i]["name"].GetString() == "female")
+				{
+					LoadFormData(alternateForms[i], newData.form);
+					break;
+				}
+			}
 		}
-		else if (newData.formName != "")
+		else if (newData.formName != "") // load custom form
 		{
-
+			rapidjson::Value& alternateForms = d["alternateForms"];
+			for (unsigned int i = 0; i < alternateForms.Size(); i++)
+			{
+				if (alternateForms[i]["name"].GetString() == newData.formName)
+				{
+					LoadFormData(alternateForms[i], newData.form);
+					break;
+				}
+			}
 		}
-		else
+		else // load default form
 		{
-
+			rapidjson::Value& defaultFormObject = d["defaultForm"];
+			LoadFormData(defaultFormObject, newData.form);
 		}
 
 		newData.maxHealth = 100;
@@ -285,6 +282,25 @@ namespace Pokemon
 		doc.ParseStream(is);
 
 		fclose(fp);
-		return false;
+		return true;
+	}
+
+	void LoadFormData(rapidjson::Value& formObject, sForm& form)
+	{
+		form.type1 = static_cast<eType>(formObject["type1"].GetInt());
+		form.type2 = static_cast<eType>(formObject["type2"].GetInt());
+
+		form.baseStats.hp = formObject["baseHp"].GetInt();
+		form.baseStats.atk = formObject["baseAtk"].GetInt();
+		form.baseStats.spAtk = formObject["baseSpAtk"].GetInt();
+		form.baseStats.def = formObject["baseDef"].GetInt();
+		form.baseStats.spDef = formObject["baseSpDef"].GetInt();
+		form.baseStats.spd = formObject["baseSpd"].GetInt();
+
+		form.height = formObject["height"].GetFloat();
+		form.weight = formObject["weight"].GetFloat();
+
+		form.battleSpriteHeightSize = formObject["battleSpriteHeightSize"].GetFloat();
+		form.battleSpriteFrameCount = formObject["battleSpriteFrameCount"].GetInt();
 	}
 }
