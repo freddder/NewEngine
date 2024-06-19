@@ -29,6 +29,16 @@
 
 #include "Player.h"
 
+const std::string SHADER_PATH = "assets/shaders/";
+const std::string MODEL_PATH = "assets/models/";
+const std::string TEXTURE_PATH = "assets/textures/";
+const std::string PKM_DATA_PATH = "assets/pokemon/";
+const std::string FONTS_PATH = "assets/fonts/";
+
+const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
+const int FONT_ATLAS_COLS = 10;
+const int FONT_ATLAS_ROWS = 9;
+
 cRenderManager::cRenderManager()
 {
 }

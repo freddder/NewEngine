@@ -16,6 +16,9 @@
 #include "cAnimationManager.h"
 #include "cSceneManager.h"
 
+const std::string MAPS_PATH = "assets/scenes/maps/";
+const std::string ARENAS_PATH = "assets/scenes/arenas/";
+
 sTile* sQuadrant::GetRandomSpawnTile(glm::vec3& globalPos)
 {
 	if (wildPokemonCount >= 5) return nullptr;
@@ -116,7 +119,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 {
 	// Load json info file with rapidjson
 	FILE* fp = 0;
-	fopen_s(&fp, ("assets/maps/" + mapDescriptionFile).c_str(), "rb"); // non-Windows use "r"
+	fopen_s(&fp, (MAPS_PATH + mapDescriptionFile).c_str(), "rb"); // non-Windows use "r"
 
 	// OPTIMIZATION: best buffer size might be different
 	char readBuffer[4096];
@@ -230,7 +233,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 	// Load collision map
 	std::string collisionMapFileName = d["mapCollisionFileName"].GetString();
-	std::ifstream pdsmap("assets/maps/" + collisionMapFileName);
+	std::ifstream pdsmap(MAPS_PATH + collisionMapFileName);
 
 	if (!pdsmap.is_open()) return;
 

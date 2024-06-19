@@ -7,16 +7,6 @@
 #include "DrawInfo.h"
 #include "cRenderModel.h"
 
-const static std::string SHADER_PATH = "assets/shaders/";
-const static std::string MODEL_PATH = "assets/models/";
-const static std::string TEXTURE_PATH = "assets/textures/";
-const static std::string PKM_DATA_PATH = "assets/pokemon/";
-const static std::string FONTS_PATH = "assets/fonts/";
-
-const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
-const int FONT_ATLAS_COLS = 10;
-const int FONT_ATLAS_ROWS = 9;
-
 class cUIText;
 
 namespace Pokemon
