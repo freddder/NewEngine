@@ -149,17 +149,15 @@ public:
 
     // Textures
 private:
-    std::map<std::string, sTexture> mapTextures;
-    std::map<std::string, sTexture> battleTextures;
+    std::map<std::string, sTexture> textures;
     unsigned int CreateTexture(const std::string fullPath, int& width, int& height);
 public:
-    void LoadTexture(const std::string fileName, const std::string subdirectory = "", bool isBattleTexture = false);
-    void UnloadTextures(bool unloadBattleTexture = false);
+    void LoadTexture(const std::string fileName, const std::string subdirectory = "");
+    void UnloadTextures();
     unsigned int CreateCubemap(const std::vector<std::string> faces); // TEMP
 
 private:
-    std::map<std::string, sSpriteSheet> mapSpriteSheets;
-    std::map<std::string, sSpriteSheet> battleSpriteSheets;
+    std::map<std::string, sSpriteSheet> spriteSheets;
     void LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag = "");
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
