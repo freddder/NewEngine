@@ -226,6 +226,7 @@ cBattleSprite::cBattleSprite(std::string textureName, glm::vec3 pos, float sprit
 	model->position = pos;
 	model->scale.z = spriteHeightSize * spriteAspectRatio;
 	model->scale.y = spriteHeightSize;
+	model->orientation.y = glm::radians(15.f);
 	model->textureName = textureName;
 
 	spriteAnimation = std::make_shared<cPeriodicSpriteAnimation>(model->currSpriteId, spritesNum);

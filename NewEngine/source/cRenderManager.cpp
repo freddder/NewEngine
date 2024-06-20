@@ -1293,7 +1293,7 @@ void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
     }
     else if (renderMode == BATTLE)
     {
-        lightPos = glm::vec3(10.f, 20.f, 10.f); // eyeball it
+        lightPos = glm::vec3(-20.f, 12.f, -10.f);
         lightAt = glm::vec3(0.f); // look at world origin
     }
 
