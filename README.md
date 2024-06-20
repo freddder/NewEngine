@@ -6,6 +6,7 @@ Current technologies:
 - OpenGL + glad for rendering
 - Assimp for model loading
 - Rapidjson for level loading
+- Freetype for font loading
 
 # Prerequisites
 - C++ Redistributables
