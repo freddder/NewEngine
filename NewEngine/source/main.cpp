@@ -127,7 +127,7 @@ int main()
     //Manager::map.LoadMap("WaterTest3Desc.json");
     //Manager::map.LoadMap("SlopeTestDesc.json");
     //Manager::map.LoadMap("MultiTestDesc.json");
-    Manager::map.LoadMap("GrassRouteDemoDesc.json");
+    Manager::map.LoadScene("GrassRouteDemoDesc.json");
     //Manager::map.LoadMap("CostalWinterDesc.json");
 
     Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");

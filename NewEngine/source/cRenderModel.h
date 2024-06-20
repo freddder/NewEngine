@@ -29,8 +29,7 @@ public:
 
 	std::string shaderName;
 
-	void InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program);
+	void InstanceObject(std::vector<glm::vec4>& offsets);
 
 	virtual void SetUpUniforms();
-
 };

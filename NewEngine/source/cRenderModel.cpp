@@ -26,7 +26,7 @@ cRenderModel::~cRenderModel()
 {
 }
 
-void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets, unsigned int program)
+void cRenderModel::InstanceObject(std::vector<glm::vec4>& offsets)
 {
 	isInstanced = true;
 	instancedNum = offsets.size();
