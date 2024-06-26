@@ -18,6 +18,9 @@ namespace Player
 {
 	extern cPlayerEntity* playerChar;
 
+	glm::vec3 GetPlayerPosition();
+	glm::vec3* GetPlayerPositionRef();
+
 	extern Pokemon::sPokemonData partyMember1;
 	extern Pokemon::sPokemonData partyMember2;
 	extern Pokemon::sPokemonData partyMember3;
@@ -25,6 +28,5 @@ namespace Player
 	extern Pokemon::sPokemonData partyMember5;
 	extern Pokemon::sPokemonData partyMember6;
 
-	glm::vec3 GetPlayerPosition();
-	glm::vec3* GetPlayerPositionRef();
+	void AddPartyMember(const Pokemon::sPokemonData& newPartyMember);
 }

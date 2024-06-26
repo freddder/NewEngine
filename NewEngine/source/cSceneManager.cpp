@@ -188,7 +188,7 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokem
 	return newWildPokemon;
 }
 
-std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 tileLocation)
+std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 tileLocation)
 {
 	sTile* spawnTile = Manager::map.GetTile(tileLocation);
 	if (!spawnTile || spawnTile->entity != nullptr) return nullptr;

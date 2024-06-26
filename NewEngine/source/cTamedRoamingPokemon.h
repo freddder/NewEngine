@@ -5,8 +5,8 @@
 
 class cTamedRoamingPokemon : public cCharacterEntity
 {
-	Pokemon::sPokemonData data;
+	Pokemon::sRoamingPokemonData data;
 public:
-	cTamedRoamingPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 pos);
+	cTamedRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos);
 	~cTamedRoamingPokemon();
 };
