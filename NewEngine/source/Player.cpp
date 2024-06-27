@@ -16,14 +16,14 @@ namespace Player
         return &playerChar->GetModelPositionRef();
     }
 
-    Pokemon::sPokemonData partyMember1;
-    Pokemon::sPokemonData partyMember2;
-    Pokemon::sPokemonData partyMember3;
-    Pokemon::sPokemonData partyMember4;
-    Pokemon::sPokemonData partyMember5;
-    Pokemon::sPokemonData partyMember6;
+    Pokemon::sIndividualData partyMember1;
+    Pokemon::sIndividualData partyMember2;
+    Pokemon::sIndividualData partyMember3;
+    Pokemon::sIndividualData partyMember4;
+    Pokemon::sIndividualData partyMember5;
+    Pokemon::sIndividualData partyMember6;
 
-    void AddPartyMember(const Pokemon::sPokemonData& newPartyMember)
+    void AddPartyMember(const Pokemon::sIndividualData& newPartyMember)
     {
         if (partyMember1.nationalDexNumber == 0) partyMember1 = newPartyMember;
         else if (partyMember2.nationalDexNumber == 0) partyMember2 = newPartyMember;

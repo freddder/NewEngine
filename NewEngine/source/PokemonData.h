@@ -116,6 +116,11 @@ namespace Pokemon
 		}
 	};
 
+	static bool IsNationalDexNumberValid(int nationalDexNumber)
+	{
+		return nationalDexNumber > 0 && nationalDexNumber <= 1008;
+	}
+
 	struct sForm
 	{
 		sStats baseStats;
@@ -200,7 +205,7 @@ namespace Pokemon
 	};
 	sRoamingPokemonData GenerateRoamingPokemonData(const sSpawnData& spawnData);
 
-	struct sPokemonData : public sRoamingPokemonData // Individual data (outside of battle)
+	struct sIndividualData : public sRoamingPokemonData // Individual data (outside of battle)
 	{
 		std::string customName = "";
 
@@ -227,10 +232,11 @@ namespace Pokemon
 
 		const std::string MakeBattleTextureName(bool makeBackInstead = false);
 	};
+	sIndividualData GenerateIndividualPokemonData(int nationalDexId);
 
-	struct sBattleData : public sPokemonData // Individual data (in battle)
+	struct sBattleData : public sIndividualData // Individual data (in battle)
 	{
 		sStats statChanges;
 	};
-	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData);
+	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData); // For wild encounters
 }

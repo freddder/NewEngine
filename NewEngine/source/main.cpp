@@ -137,12 +137,16 @@ int main()
         Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
         Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
 
+        Pokemon::sIndividualData partner;
+        partner.nationalDexNumber = 445;
+        partner.gender = Pokemon::MALE;
+        partner.isShiny = true;
+        Player::AddPartyMember(partner);
+
         Pokemon::sSpeciesData followerSpecieData;
-        Pokemon::LoadSpecieData(445, followerSpecieData);
+        Pokemon::LoadSpecieData(Player::partyMember1.nationalDexNumber, followerSpecieData);
         Manager::render.LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
-        Player::partyMember1.nationalDexNumber = 445;
-        Player::partyMember1.gender = Pokemon::MALE;
-        Player::partyMember1.isShiny = true;
+
         std::shared_ptr<cTamedRoamingPokemon> follower = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(follower.get());
 

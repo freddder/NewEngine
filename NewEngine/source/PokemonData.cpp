@@ -15,8 +15,7 @@ namespace Pokemon
 
 	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
 	{
-		// Isn't a valid national dex number
-		if (nationalDexNumber <= 0 || nationalDexNumber >= 1008) return;
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return;
 	
 		std::string dexNumberString = std::to_string(nationalDexNumber);
 		while (dexNumberString.length() < 4)
@@ -170,6 +169,14 @@ namespace Pokemon
 		return newRoamingData;
 	}
 
+	// TODO: have a more versitile way to create battle ready pokemon & incorporate into entering wild encounters and spawn data
+	sIndividualData GenerateIndividualPokemonData(int nationalDexId)
+	{
+		//if (!IsNationalDexNumberValid(nationalDexId)) return;
+
+		return sIndividualData();
+	}
+
 	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData)
 	{
 		sBattleData newData; 
@@ -239,7 +246,7 @@ namespace Pokemon
 		return textureName;
 	}
 
-	const std::string sPokemonData::MakeBattleTextureName(bool makeBackInstead)
+	const std::string sIndividualData::MakeBattleTextureName(bool makeBackInstead)
 	{
 		std::string textureName = std::to_string(nationalDexNumber);
 
@@ -263,7 +270,7 @@ namespace Pokemon
 
 	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber)
 	{
-		if (nationalDexNumber == 0 || nationalDexNumber >= 1008) return false;
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return false;
 
 		std::string dexNumberString = std::to_string(nationalDexNumber);
 		while (dexNumberString.length() < 4)

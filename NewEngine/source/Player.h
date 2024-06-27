@@ -11,7 +11,7 @@ class cPlayerEntity;
 
 namespace Pokemon
 {
-	struct sPokemonData;
+	struct sIndividualData;
 }
 
 namespace Player
@@ -21,12 +21,12 @@ namespace Player
 	glm::vec3 GetPlayerPosition();
 	glm::vec3* GetPlayerPositionRef();
 
-	extern Pokemon::sPokemonData partyMember1;
-	extern Pokemon::sPokemonData partyMember2;
-	extern Pokemon::sPokemonData partyMember3;
-	extern Pokemon::sPokemonData partyMember4;
-	extern Pokemon::sPokemonData partyMember5;
-	extern Pokemon::sPokemonData partyMember6;
+	extern Pokemon::sIndividualData partyMember1;
+	extern Pokemon::sIndividualData partyMember2;
+	extern Pokemon::sIndividualData partyMember3;
+	extern Pokemon::sIndividualData partyMember4;
+	extern Pokemon::sIndividualData partyMember5;
+	extern Pokemon::sIndividualData partyMember6;
 
-	void AddPartyMember(const Pokemon::sPokemonData& newPartyMember);
+	void AddPartyMember(const Pokemon::sIndividualData& newPartyMember);
 }

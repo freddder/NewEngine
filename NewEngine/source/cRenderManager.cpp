@@ -874,7 +874,7 @@ void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpecie
     }
 }
 
-float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sPokemonData& data)
+float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& data)
 {
     std::string textureName = data.MakeBattleTextureName();
 
