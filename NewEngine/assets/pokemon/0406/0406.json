@@ -20,7 +20,7 @@
         "baseSpd": 55,
         "height": 0.20000000298023224,
         "weight": 1.2000000476837158,
-        "battleSpriteHeightSize": 1.0,
+        "battleSpriteHeightSize": 0.7,
         "battleSpriteFrameCount": 82
     },
     "alternateForms": []
