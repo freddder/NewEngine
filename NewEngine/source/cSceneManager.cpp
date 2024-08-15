@@ -136,7 +136,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	Pokemon::LoadSpecieData(nationalDexId, specieData);
 
 	// Load overworld sprite texture
-	Manager::render.LoadRoamingPokemonSpecieSpriteSheets(specieData);
+	Manager::render.LoadRoamingPokemonSpecieTextures(specieData);
 
 	Pokemon::sSpawnData spawnData;
 	spawnData.nationalDexNumber = nationalDexId;

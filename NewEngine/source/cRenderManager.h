@@ -152,7 +152,7 @@ private:
     void LoadPokemonIconTexture(const int nationalDexId, const std::string formTag = "");
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
-    void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);
+    void LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesData& specieData);
     float LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& data); // kinda wanted to make this const but whatever
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);

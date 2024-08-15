@@ -88,7 +88,6 @@ int main()
     Manager::render.LoadTexture("SnowFlake3.png");
 
     Manager::render.LoadTexture("PartyMemberButtonBackground.png", "ui/");
-    Manager::render.LoadTexture("ico_3ds_722.png", "ui/PokemonPartySprites/");
     
     Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
 
@@ -124,7 +123,7 @@ int main()
         Engine::sprite->anchor = MIDDLE_LEFT;
         Engine::sprite->aspectRatio = 3.f / 4.f;
         Engine::sprite->heightPercent = 3.f / 4.f;
-        Engine::sprite->textureName = "ico_3ds_722.png";
+        Engine::sprite->textureName = "445_ico_s.png";
         Engine::button->AddChild(Engine::sprite);
 
         cUIText* textWidget = new cUIText();
@@ -145,7 +144,7 @@ int main()
 
         Pokemon::sSpeciesData followerSpecieData;
         Pokemon::LoadSpecieData(Player::partyMember1.nationalDexNumber, followerSpecieData);
-        Manager::render.LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
+        Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
 
         Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(Player::playerPartner.get());
