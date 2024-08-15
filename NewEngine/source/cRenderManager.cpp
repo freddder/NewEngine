@@ -209,7 +209,7 @@ void cRenderManager::Startup()
 
 void cRenderManager::Shutdown()
 {
-    // TODO: unload loaded models from shaders
+    // TODO: unload loaded models from shaders and textures
 
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVBO);
@@ -221,6 +221,9 @@ void cRenderManager::Shutdown()
     {
         glDeleteBuffers(1, &it->second.textureAtlusId);
     }
+
+    mapModels.clear();
+    battleModels.clear();
 }
 
 void cRenderManager::CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
@@ -693,6 +696,15 @@ void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)
 {
+    // load and generate the texture
+    int nrChannels;
+    unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
+    if (!data)
+    {
+        std::cout << "Failed to load texture " << fullPath << std::endl;
+        return 0;
+    }
+
     unsigned int textureId;
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -704,22 +716,8 @@ unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& widt
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // load and generate the texture
-    int nrChannels;
-    unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        //std::cout << "Created texture " << fileName << std::endl;
-    }
-    else
-    {
-        glDeleteTextures(1, &textureId);
-        std::cout << "Failed to load texture " << fullPath << std::endl;
-        return 0;
-    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
     return textureId;

@@ -149,6 +149,7 @@ public:
 private:
     std::map<std::string, sSpriteSheet> spriteSheets;
     void LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag = "");
+    void LoadPokemonIconTexture(const int nationalDexId, const std::string formTag = "");
 public:
     void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
     void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);

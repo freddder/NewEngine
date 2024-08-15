@@ -96,6 +96,22 @@ int main()
 
     Manager::animation.InitializeAnimationsPresets();
 
+    //Manager::map.LoadMap("WinterTestDesc.json");
+    //Manager::map.LoadMap("WaterTest3Desc.json");
+    //Manager::map.LoadMap("SlopeTestDesc.json");
+    //Manager::map.LoadMap("MultiTestDesc.json");
+    Manager::map.LoadScene("GrassRouteDemoDesc.json");
+    //Manager::map.LoadMap("CostalWinterDesc.json");
+
+    Pokemon::sIndividualData partner;
+    partner.nationalDexNumber = 445;
+    partner.gender = Pokemon::MALE;
+    partner.isShiny = true;
+    Player::AddPartyMember(partner);
+
+    Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
+    Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
+
     {
         cUICanvas* canvas = new cUICanvas();
         Engine::button = new cUIStaticImage();
@@ -123,32 +139,16 @@ int main()
         Manager::ui.AddCanvas(canvas);
     }
 
-    //Manager::map.LoadMap("WinterTestDesc.json");
-    //Manager::map.LoadMap("WaterTest3Desc.json");
-    //Manager::map.LoadMap("SlopeTestDesc.json");
-    //Manager::map.LoadMap("MultiTestDesc.json");
-    Manager::map.LoadScene("GrassRouteDemoDesc.json");
-    //Manager::map.LoadMap("CostalWinterDesc.json");
-
-    Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
-    Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
-
     {
         Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
         Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
-
-        Pokemon::sIndividualData partner;
-        partner.nationalDexNumber = 445;
-        partner.gender = Pokemon::MALE;
-        partner.isShiny = true;
-        Player::AddPartyMember(partner);
 
         Pokemon::sSpeciesData followerSpecieData;
         Pokemon::LoadSpecieData(Player::partyMember1.nationalDexNumber, followerSpecieData);
         Manager::render.LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
 
-        std::shared_ptr<cTamedRoamingPokemon> follower = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
-        Player::playerChar->SetFollower(follower.get());
+        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
+        Player::playerChar->SetFollower(Player::playerPartner.get());
 
         // TODO: find a good place to seed the rand
         srand((int)time(0));
@@ -159,7 +159,7 @@ int main()
         Manager::scene.SpawnRandomWildPokemon();
     }
 
-    // Manager::scene.SetWeather(SNOW);
+    //Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
 

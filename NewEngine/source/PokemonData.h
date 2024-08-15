@@ -230,6 +230,7 @@ namespace Pokemon
 		// Move move3;
 		// Move move4;
 
+		const std::string MakeIconTextureName();
 		const std::string MakeBattleTextureName(bool makeBackInstead = false);
 	};
 	sIndividualData GenerateIndividualPokemonData(int nationalDexId);

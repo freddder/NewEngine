@@ -15,7 +15,6 @@ private:
 public:
     void AddWidget(cUIWidget* newWidget);
 
-    //friend class cUIManager;
     friend class cRenderManager;
 };
 

@@ -182,6 +182,7 @@ namespace Pokemon
 		sBattleData newData; 
 		newData.nationalDexNumber = roamingData.nationalDexNumber;
 		newData.formName = roamingData.formName;
+		newData.gender = roamingData.gender;
 		newData.level = roamingData.level;
 		newData.isShiny = roamingData.isShiny;
 		newData.isFormGenderBased = roamingData.isFormGenderBased;
@@ -244,6 +245,12 @@ namespace Pokemon
 		textureName = textureName + ".png";
 
 		return textureName;
+	}
+
+	const std::string sIndividualData::MakeIconTextureName()
+	{
+
+		return std::string();
 	}
 
 	const std::string sIndividualData::MakeBattleTextureName(bool makeBackInstead)

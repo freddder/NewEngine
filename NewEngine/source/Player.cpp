@@ -1,10 +1,12 @@
 #include "Player.h"
 #include "cPlayerEntity.h"
+#include "cTamedRoamingPokemon.h"
 #include "PokemonData.h"
 
 namespace Player 
 {
     cPlayerEntity* playerChar;
+    std::shared_ptr<cTamedRoamingPokemon> playerPartner;
 
     glm::vec3 GetPlayerPosition()
     {
