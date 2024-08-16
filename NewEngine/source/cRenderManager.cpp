@@ -907,7 +907,7 @@ void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesDat
         LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, "f");
 
         if (specieData.isFormGenderBased)
-            LoadPokemonIconTexture(specieData.nationalDexNumber);
+            LoadPokemonIconTexture(specieData.nationalDexNumber, "f");
     }
     else
     {
