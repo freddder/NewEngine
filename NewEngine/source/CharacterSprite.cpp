@@ -4,6 +4,7 @@
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cMapManager.h"
+#include "cInputManager.h"
 
 cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 {
@@ -181,7 +182,7 @@ void cPlayerSprite::SetupSpriteWalk(eDirection dir)
 
 void cPlayerSprite::SetupSpriteRun(eDirection dir)
 {
-	if (lastDesiredDirection != dir || spriteAnimation->keyframes.size() != 5) // <-- very hacky
+	if (lastDesiredDirection != dir || spriteAnimation->keyframes.size() != 5) // <-- very hacky way to find if player was running
 	{
 		spriteAnimation->Reset(model->currSpriteId, model->scale);
 
@@ -203,7 +204,17 @@ glm::vec3 cPlayerSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveRe
 
 	lastDesiredDirection = dir;
 
-	return cCharacterSprite::AnimateMovement(dir, run, moveResult);
+	glm::vec3 ugh =  cCharacterSprite::AnimateMovement(dir, run, moveResult);
+	modelAnimation->callback = [this]() 
+	{
+		if (spriteAnimation->keyframes.size() != 5 || // not running
+			!(Manager::input.IsInputDown(IT_UP) || Manager::input.IsInputDown(IT_DOWN) || Manager::input.IsInputDown(IT_LEFT) || Manager::input.IsInputDown(IT_RIGHT)))
+		{
+			StopMovement();
+		}
+	};
+
+	return ugh;
 }
 
 void cPlayerSprite::StopMovement()

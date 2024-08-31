@@ -2,7 +2,7 @@
 #include <map>
 #include <functional>
 
-const float KEY_HELD_THRESHOLD = 0.3F;
+const float KEY_HELD_THRESHOLD = 0.3f;
 
 enum eInputState
 {
@@ -28,7 +28,10 @@ struct sInputAction
 {
 	bool isDown, wasDown; // Per frame basis
 
-	std::function<void()> PressedAction;
+	bool ignoreHoldThreshold = false;
+	float heldTimer = 0.f;
+
+	std::function<void()> PressedAction; // learning lambdas are fun
 	std::function<void()> HeldAction;
 };
 
@@ -46,6 +49,7 @@ private:
 	std::map<eInputType, sInputAction> inputActions;
 public:
 	void ChangeInputState(eInputState newInputState);
+	bool IsInputDown(eInputType type);
 
 private:
 	std::map<int, eInputType> boundInputs;

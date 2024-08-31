@@ -10,6 +10,4 @@ public:
 
 	glm::vec3 GetModelPosition();
 	glm::vec3& GetModelPositionRef();
-
-	void StopMovement();
 };

@@ -139,9 +139,6 @@ int main()
     }
 
     {
-        Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
-        Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
-
         Pokemon::sSpeciesData followerSpecieData;
         Pokemon::LoadSpecieData(Player::partyMember1.nationalDexNumber, followerSpecieData);
         Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);

@@ -3,6 +3,9 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include "Player.h"
+#include "cPlayerEntity.h"
+
 cInputManager::cInputManager()
 {
 	currInputState = OVERWORLD_MOVEMENT;
@@ -23,13 +26,27 @@ void cInputManager::Startup()
 	BindInput(GLFW_KEY_X, IT_CANCEL);
 	BindInput(GLFW_KEY_C, IT_MENU);
 
+	cPlayerEntity* player = Player::playerChar;
+
 	sInputAction& upAction = inputActions[IT_UP];
-	upAction.PressedAction = []() { std::cout << "Pressed up" << std::endl; };
-	upAction.HeldAction = []() { std::cout << "Holding up" << std::endl; };
+	upAction.ignoreHoldThreshold = true;
+	//upAction.PressedAction = []() { std::cout << "Pressed up" << std::endl; };
+	upAction.HeldAction = [this, player]() { player->AttemptMovement(UP, inputActions[IT_CANCEL].isDown); };
 
 	sInputAction& downAction = inputActions[IT_DOWN];
-	downAction.PressedAction = []() { std::cout << "Pressed down" << std::endl; };
-	downAction.HeldAction = []() { std::cout << "Holding down" << std::endl; };
+	downAction.ignoreHoldThreshold = true;
+	//downAction.PressedAction = []() { std::cout << "Pressed down" << std::endl; };
+	downAction.HeldAction = [this, player]() { player->AttemptMovement(DOWN, inputActions[IT_CANCEL].isDown); };
+
+	sInputAction& leftAction = inputActions[IT_LEFT];
+	leftAction.ignoreHoldThreshold = true;
+	//leftAction.PressedAction = []() { std::cout << "Pressed left" << std::endl; };
+	leftAction.HeldAction = [this, player]() { player->AttemptMovement(LEFT, inputActions[IT_CANCEL].isDown); };
+
+	sInputAction& rightAction = inputActions[IT_RIGHT];
+	rightAction.ignoreHoldThreshold = true;
+	//rightAction.PressedAction = []() { std::cout << "Pressed right" << std::endl; };
+	rightAction.HeldAction = [this, player]() { player->AttemptMovement(RIGHT, inputActions[IT_CANCEL].isDown); };
 }
 
 void cInputManager::Shutdown()
@@ -41,6 +58,13 @@ void cInputManager::ChangeInputState(eInputState newInputState)
 	if (newInputState == currInputState) return;
 
 	currInputState = newInputState;
+}
+
+bool cInputManager::IsInputDown(eInputType type)
+{
+	if (type == IT_INVALID) return false;
+
+	return inputActions[type].isDown;
 }
 
 void cInputManager::BindInput(int key, eInputType type)
@@ -66,10 +90,18 @@ void cInputManager::ProcessInputs(float deltaTime)
 	for (std::map<eInputType, sInputAction>::iterator it = inputActions.begin(); it != inputActions.end(); it++)
 	{
 		if (it->second.isDown && !it->second.wasDown && it->second.PressedAction)
+		{
+			it->second.heldTimer = 0.f;
 			it->second.PressedAction();
+		}
 
-		if (it->second.isDown && it->second.wasDown && it->second.HeldAction)
-			it->second.HeldAction();
+		if (it->second.isDown && it->second.wasDown)
+		{
+			it->second.heldTimer += deltaTime;
+
+			if ((it->second.ignoreHoldThreshold || it->second.heldTimer >= KEY_HELD_THRESHOLD) && it->second.HeldAction)
+				it->second.HeldAction();
+		}
 
 		it->second.wasDown = it->second.isDown;
 	}

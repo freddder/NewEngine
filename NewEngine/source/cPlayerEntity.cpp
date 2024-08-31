@@ -19,8 +19,3 @@ glm::vec3& cPlayerEntity::GetModelPositionRef()
 {
 	return spriteModel->model->position;
 }
-
-void cPlayerEntity::StopMovement()
-{
-	dynamic_cast<cPlayerSprite*>(spriteModel)->StopMovement();
-}

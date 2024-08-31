@@ -485,6 +485,9 @@ namespace Engine
 
         Manager::render.Startup();
 
+        Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
+        Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
+
         Manager::input.Startup();
     }
 
@@ -519,7 +522,6 @@ namespace Engine
             lastFrame = currentFrame;
 
             // input
-            processInput(window);
             Manager::input.ProcessInputs(deltaTime);
 
             Manager::animation.Process(deltaTime);
@@ -544,66 +546,10 @@ namespace Engine
         glfwTerminate();
     }
 
-    // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-    void processInput(GLFWwindow* window)
-    {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, true);
-
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            Manager::camera.MoveForward(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            Manager::camera.MoveBackward(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            Manager::camera.MoveLeft(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            Manager::camera.MoveRight(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-            Manager::camera.MoveUp(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-            Manager::camera.MoveDown(deltaTime);
-
-        bool playerDesiresMovement = false;
-        eDirection playerDesiredDirection = eDirection::UP;
-
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::UP;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::DOWN;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::LEFT;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::RIGHT;
-        }
-
-        if (playerDesiresMovement)
-        {
-            if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-                Player::playerChar->AttemptMovement(playerDesiredDirection, true);
-            else
-                Player::playerChar->AttemptMovement(playerDesiredDirection, false);
-        }
-        else
-        {
-            Player::playerChar->StopMovement();
-        }
-    }
-
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        // menuing and give/take movement control
-        //std::cout << key << ": " << action << std::endl;
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
 
         Manager::input.UpdateInput(key, action);
     }
