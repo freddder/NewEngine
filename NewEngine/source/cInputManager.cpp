@@ -85,7 +85,7 @@ void cInputManager::UpdateInput(int key, int action)
 		inputActions[type].isDown = false;
 }
 
-void cInputManager::ProcessInputs(float deltaTime)
+void cInputManager::Process(float deltaTime)
 {
 	for (std::map<eInputType, sInputAction>::iterator it = inputActions.begin(); it != inputActions.end(); it++)
 	{

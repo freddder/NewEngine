@@ -57,5 +57,5 @@ public:
 	void BindInput(int key, eInputType type);
 
 	void UpdateInput(int key, int action);
-	void ProcessInputs(float deltaTime);
+	void Process(float deltaTime);
 };

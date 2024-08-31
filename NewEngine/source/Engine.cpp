@@ -522,7 +522,7 @@ namespace Engine
             lastFrame = currentFrame;
 
             // input
-            Manager::input.ProcessInputs(deltaTime);
+            Manager::input.Process(deltaTime);
 
             Manager::animation.Process(deltaTime);
 

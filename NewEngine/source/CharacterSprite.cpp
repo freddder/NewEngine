@@ -204,7 +204,7 @@ glm::vec3 cPlayerSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveRe
 
 	lastDesiredDirection = dir;
 
-	glm::vec3 ugh =  cCharacterSprite::AnimateMovement(dir, run, moveResult);
+	glm::vec3 newPosition = cCharacterSprite::AnimateMovement(dir, run, moveResult);
 	modelAnimation->callback = [this]() 
 	{
 		if (spriteAnimation->keyframes.size() != 5 || // not running
@@ -214,7 +214,7 @@ glm::vec3 cPlayerSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveRe
 		}
 	};
 
-	return ugh;
+	return newPosition;
 }
 
 void cPlayerSprite::StopMovement()
