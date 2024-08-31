@@ -26,27 +26,25 @@ void cInputManager::Startup()
 	BindInput(GLFW_KEY_X, IT_CANCEL);
 	BindInput(GLFW_KEY_C, IT_MENU);
 
-	cPlayerEntity* player = Player::playerChar;
-
 	sInputAction& upAction = inputActions[IT_UP];
 	upAction.ignoreHoldThreshold = true;
 	//upAction.PressedAction = []() { std::cout << "Pressed up" << std::endl; };
-	upAction.HeldAction = [this, player]() { player->AttemptMovement(UP, inputActions[IT_CANCEL].isDown); };
+	upAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(UP, inputActions[IT_CANCEL].isDown); };
 
 	sInputAction& downAction = inputActions[IT_DOWN];
 	downAction.ignoreHoldThreshold = true;
 	//downAction.PressedAction = []() { std::cout << "Pressed down" << std::endl; };
-	downAction.HeldAction = [this, player]() { player->AttemptMovement(DOWN, inputActions[IT_CANCEL].isDown); };
+	downAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(DOWN, inputActions[IT_CANCEL].isDown); };
 
 	sInputAction& leftAction = inputActions[IT_LEFT];
 	leftAction.ignoreHoldThreshold = true;
 	//leftAction.PressedAction = []() { std::cout << "Pressed left" << std::endl; };
-	leftAction.HeldAction = [this, player]() { player->AttemptMovement(LEFT, inputActions[IT_CANCEL].isDown); };
+	leftAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(LEFT, inputActions[IT_CANCEL].isDown); };
 
 	sInputAction& rightAction = inputActions[IT_RIGHT];
 	rightAction.ignoreHoldThreshold = true;
 	//rightAction.PressedAction = []() { std::cout << "Pressed right" << std::endl; };
-	rightAction.HeldAction = [this, player]() { player->AttemptMovement(RIGHT, inputActions[IT_CANCEL].isDown); };
+	rightAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(RIGHT, inputActions[IT_CANCEL].isDown); };
 }
 
 void cInputManager::Shutdown()
