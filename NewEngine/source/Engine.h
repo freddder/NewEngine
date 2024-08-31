@@ -10,6 +10,7 @@ class cRenderManager;
 class cMapManager;
 class cSceneManager;
 class cUIManager;
+class cInputManager;
 
 namespace Manager
 {
@@ -20,6 +21,7 @@ namespace Manager
 	extern cMapManager map;
 	extern cSceneManager scene;
 	extern cUIManager ui;
+	extern cInputManager input;
 }
 
 namespace Engine

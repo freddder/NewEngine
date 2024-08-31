@@ -54,6 +54,9 @@
     <Filter Include="Globals">
       <UniqueIdentifier>{bc6c6b07-fea1-48f3-847f-6ac28a200d0c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{4a2235ad-122c-4759-95c6-23ac8d771e56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="source\Engine.cpp">
       <Filter>Globals</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cInputManager.cpp">
+      <Filter>Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -255,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="source\Engine.h">
       <Filter>Globals</Filter>
+    </ClInclude>
+    <ClInclude Include="source\cInputManager.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

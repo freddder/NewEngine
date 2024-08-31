@@ -158,6 +158,7 @@
     <ClCompile Include="source\CharacterSprite.cpp" />
     <ClCompile Include="source\cCharacterEntity.cpp" />
     <ClCompile Include="source\cEntity.cpp" />
+    <ClCompile Include="source\cInputManager.cpp" />
     <ClCompile Include="source\cPlayerEntity.cpp" />
     <ClCompile Include="source\cSceneManager.cpp" />
     <ClCompile Include="source\cAnimatedModel.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="source\UIWidgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\cInputManager.h" />
     <ClInclude Include="source\cPlayerEntity.h" />
     <ClInclude Include="source\cTamedRoamingPokemon.h" />
     <ClInclude Include="source\cWildRoamingPokemon.h" />

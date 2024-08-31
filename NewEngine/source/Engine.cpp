@@ -21,6 +21,8 @@
 #include "cMapManager.h"
 #include "cSceneManager.h"
 #include "cUIManager.h"
+#include "cInputManager.h"
+
 #include "PokemonData.h"
 
 #include "Player.h"
@@ -420,6 +422,7 @@ namespace Manager
     cMapManager map;
     cSceneManager scene;
     cUIManager ui;
+    cInputManager input;
 }
 
 namespace Engine
@@ -481,6 +484,8 @@ namespace Engine
         Manager::light.Startup();
 
         Manager::render.Startup();
+
+        Manager::input.Startup();
     }
 
     void ShutdownManagers()
@@ -515,6 +520,7 @@ namespace Engine
 
             // input
             processInput(window);
+            Manager::input.ProcessInputs(deltaTime);
 
             Manager::animation.Process(deltaTime);
 
@@ -597,6 +603,9 @@ namespace Engine
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         // menuing and give/take movement control
+        //std::cout << key << ": " << action << std::endl;
+
+        Manager::input.UpdateInput(key, action);
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes
