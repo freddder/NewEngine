@@ -8,6 +8,7 @@
 #include "Engine.h"
 #include "cMapManager.h"
 #include "cRenderManager.h"
+#include "cInputManager.h"
 
 cSceneManager::cSceneManager()
 {
@@ -224,8 +225,9 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	std::string texName = battleData.MakeBattleTextureName();
 
 	Manager::render.ChangeRenderMode(BATTLE);
-	float spriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(battleData);
+	Manager::input.ChangeInputState(MENU_NAVEGATION);
 
+	float spriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(battleData);
 	cBattleSprite* battleSprite = new cBattleSprite(texName, glm::vec3(3.f, 0.f, 1.f), battleData.form.battleSpriteHeightSize, spriteAspectRatio, battleData.form.battleSpriteFrameCount);
 }
 

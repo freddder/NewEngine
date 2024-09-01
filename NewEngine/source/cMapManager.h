@@ -74,6 +74,7 @@ private:
 	std::map<int, sCorrectionTiles> walkableTiles;
 	std::shared_ptr<cRenderModel> mapModel;
 	std::shared_ptr<cRenderModel> arenaModel;
+	cBattleSprite opponentSpriteModel;
 	std::map<int, sInstancedTile> mapInstancedTiles;
 	std::map<int, sInstancedTile> arenaInstancedTiles;
 	sQuadrant* GetQuad(int worldX, int worldZ);

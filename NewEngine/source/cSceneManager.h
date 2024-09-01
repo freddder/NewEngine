@@ -68,6 +68,7 @@ public:
 public:
 	void ChangeScene();
 	void EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData);
+	void RunEncounter();
 
 	void Process(float deltaTime);
 };

@@ -46,7 +46,7 @@ public:
 
 private:
 	eInputState currInputState;
-	std::map<eInputType, sInputAction> inputActions;
+	std::map<eInputState, std::map<eInputType, sInputAction>> inputActions;
 public:
 	void ChangeInputState(eInputState newInputState);
 	bool IsInputDown(eInputType type);

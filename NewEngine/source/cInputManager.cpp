@@ -26,25 +26,40 @@ void cInputManager::Startup()
 	BindInput(GLFW_KEY_X, IT_CANCEL);
 	BindInput(GLFW_KEY_C, IT_MENU);
 
-	sInputAction& upAction = inputActions[IT_UP];
-	upAction.ignoreHoldThreshold = true;
-	//upAction.PressedAction = []() { std::cout << "Pressed up" << std::endl; };
-	upAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(UP, inputActions[IT_CANCEL].isDown); };
+	// Setup input actions
+	sInputAction& moveUpAction = inputActions[OVERWORLD_MOVEMENT][IT_UP];
+	moveUpAction.ignoreHoldThreshold = true;
+	moveUpAction.HeldAction = [this]() { 
+		Player::playerChar->AttemptMovement(UP, inputActions[currInputState][IT_CANCEL].isDown); 
+	};
 
-	sInputAction& downAction = inputActions[IT_DOWN];
-	downAction.ignoreHoldThreshold = true;
-	//downAction.PressedAction = []() { std::cout << "Pressed down" << std::endl; };
-	downAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(DOWN, inputActions[IT_CANCEL].isDown); };
+	sInputAction& moveDownAction = inputActions[OVERWORLD_MOVEMENT][IT_DOWN];
+	moveDownAction.ignoreHoldThreshold = true;
+	moveDownAction.HeldAction = [this]() { 
+		Player::playerChar->AttemptMovement(DOWN, inputActions[currInputState][IT_CANCEL].isDown); 
+	};
 
-	sInputAction& leftAction = inputActions[IT_LEFT];
-	leftAction.ignoreHoldThreshold = true;
-	//leftAction.PressedAction = []() { std::cout << "Pressed left" << std::endl; };
-	leftAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(LEFT, inputActions[IT_CANCEL].isDown); };
+	sInputAction& moveLeftAction = inputActions[OVERWORLD_MOVEMENT][IT_LEFT];
+	moveLeftAction.ignoreHoldThreshold = true;
+	moveLeftAction.HeldAction = [this]() { 
+		Player::playerChar->AttemptMovement(LEFT, inputActions[currInputState][IT_CANCEL].isDown); 
+	};
 
-	sInputAction& rightAction = inputActions[IT_RIGHT];
-	rightAction.ignoreHoldThreshold = true;
-	//rightAction.PressedAction = []() { std::cout << "Pressed right" << std::endl; };
-	rightAction.HeldAction = [this]() { Player::playerChar->AttemptMovement(RIGHT, inputActions[IT_CANCEL].isDown); };
+	sInputAction& moveRightAction = inputActions[OVERWORLD_MOVEMENT][IT_RIGHT];
+	moveRightAction.ignoreHoldThreshold = true;
+	moveRightAction.HeldAction = [this]() { 
+		Player::playerChar->AttemptMovement(RIGHT, inputActions[currInputState][IT_CANCEL].isDown); 
+	};
+
+	sInputAction& menuConfirm = inputActions[MENU_NAVEGATION][IT_CONFIRM];
+	menuConfirm.PressedAction = []() {
+		std::cout << "confirm" << std::endl;
+	};
+
+	sInputAction& menuUp = inputActions[MENU_NAVEGATION][IT_UP];
+	sInputAction& menuDown = inputActions[MENU_NAVEGATION][IT_DOWN];
+	sInputAction& menuLeft = inputActions[MENU_NAVEGATION][IT_LEFT];
+	sInputAction& menuRight = inputActions[MENU_NAVEGATION][IT_RIGHT];
 }
 
 void cInputManager::Shutdown()
@@ -55,6 +70,14 @@ void cInputManager::ChangeInputState(eInputState newInputState)
 {
 	if (newInputState == currInputState) return;
 
+	// Reset variables
+	for (std::map<eInputType, sInputAction>::iterator it = inputActions[currInputState].begin(); it != inputActions[currInputState].end(); it++)
+	{
+		it->second.isDown = false;
+		it->second.wasDown = false;
+		it->second.heldTimer = 0.f;
+	}
+
 	currInputState = newInputState;
 }
 
@@ -62,7 +85,7 @@ bool cInputManager::IsInputDown(eInputType type)
 {
 	if (type == IT_INVALID) return false;
 
-	return inputActions[type].isDown;
+	return inputActions[currInputState][type].isDown;
 }
 
 void cInputManager::BindInput(int key, eInputType type)
@@ -78,14 +101,15 @@ void cInputManager::UpdateInput(int key, int action)
 	if (type == IT_INVALID) return;
 
 	if (action == GLFW_PRESS)
-		inputActions[type].isDown = true;
+		inputActions[currInputState][type].isDown = true;
 	else if (action == GLFW_RELEASE)
-		inputActions[type].isDown = false;
+		inputActions[currInputState][type].isDown = false;
 }
 
 void cInputManager::Process(float deltaTime)
 {
-	for (std::map<eInputType, sInputAction>::iterator it = inputActions.begin(); it != inputActions.end(); it++)
+	eInputState state = currInputState;
+	for (std::map<eInputType, sInputAction>::iterator it = inputActions[state].begin(); it != inputActions[state].end(); it++)
 	{
 		if (it->second.isDown && !it->second.wasDown && it->second.PressedAction)
 		{
