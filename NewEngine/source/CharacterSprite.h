@@ -65,8 +65,11 @@ public:
 class cBattleSprite
 {
 public:
-	cBattleSprite(std::string textureName, glm::vec3 pos, float spriteHeightSize, float spriteAspectRatio, int spritesNum);
+	cBattleSprite(glm::vec3 pos);
 	~cBattleSprite();
+
+	void SetSpriteData(std::string textureName, float spriteHeightSize, float spriteAspectRatio, int spritesNum);
+	void ClearSpriteData();
 
 protected:
 	std::shared_ptr<cPeriodicSpriteAnimation> spriteAnimation;

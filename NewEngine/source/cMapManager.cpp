@@ -258,6 +258,8 @@ void cMapManager::LoadArena(std::string arenaDescriptionFile)
 			it->second.instanceOffsets.clear();
 		}
 	}
+
+	opponentSpriteModel = new cBattleSprite(glm::vec3(3.f, 0.f, 1.f));
 }
 
 void cMapManager::LoadScene(const std::string mapDescriptionFile)

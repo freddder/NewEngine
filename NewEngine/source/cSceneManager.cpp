@@ -228,7 +228,15 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	Manager::input.ChangeInputState(MENU_NAVEGATION);
 
 	float spriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(battleData);
-	cBattleSprite* battleSprite = new cBattleSprite(texName, glm::vec3(3.f, 0.f, 1.f), battleData.form.battleSpriteHeightSize, spriteAspectRatio, battleData.form.battleSpriteFrameCount);
+	Manager::map.opponentSpriteModel->SetSpriteData(texName, battleData.form.battleSpriteHeightSize, spriteAspectRatio, battleData.form.battleSpriteFrameCount);
+}
+
+void cSceneManager::RunEncounter()
+{
+	Manager::render.ChangeRenderMode(MAP);
+	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
+
+	Manager::map.opponentSpriteModel->ClearSpriteData();
 }
 
 void cSceneManager::Process(float deltaTime)

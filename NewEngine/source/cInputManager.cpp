@@ -6,6 +6,9 @@
 #include "Player.h"
 #include "cPlayerEntity.h"
 
+#include "Engine.h"
+#include "cSceneManager.h"
+
 cInputManager::cInputManager()
 {
 	currInputState = OVERWORLD_MOVEMENT;
@@ -52,8 +55,8 @@ void cInputManager::Startup()
 	};
 
 	sInputAction& menuConfirm = inputActions[MENU_NAVEGATION][IT_CONFIRM];
-	menuConfirm.PressedAction = []() {
-		std::cout << "confirm" << std::endl;
+	menuConfirm.PressedAction = [this]() {
+		Manager::scene.RunEncounter();
 	};
 
 	sInputAction& menuUp = inputActions[MENU_NAVEGATION][IT_UP];
