@@ -2,6 +2,7 @@
 #include "UIWidgets.h"
 
 #include <stack>
+#include <map>
 
 class cUICanvas
 {
@@ -15,7 +16,21 @@ private:
 public:
     void AddWidget(cUIWidget* newWidget);
 
-    friend class cRenderManager;
+    friend class cUIManager;
+};
+
+struct sFontCharData
+{
+    glm::ivec2   size;       // Size of glyph
+    glm::ivec2   bearing;    // Offset from baseline to left/top of glyph
+    unsigned int advance;    // Offset to advance to next glyph
+};
+
+struct sFontData
+{
+    unsigned int textureAtlusId;
+    unsigned int glyphSize;
+    std::map<char, sFontCharData> characters;
 };
 
 class cUIManager
@@ -32,5 +47,23 @@ private:
 public:
     void AddCanvas(cUICanvas* newCanvas);
 
-    friend class cRenderManager;
+    // UI quad
+private:
+    unsigned int uiQuadVAO;
+    unsigned int uiQuadVBO;
+    unsigned int uiQuadEBO;
+public:
+    unsigned int GetUIQuadVAO();
+
+    // Fonts
+private:
+    std::map<std::string, sFontData> fonts;
+public:
+    void LoadFont(const std::string fontName, const unsigned int glyphSize);
+    void CreateTextDataBuffer(cUIText* text);
+    unsigned int GetFontGlyphSize(std::string fontName);
+    void SetupFont(const std::string fontName);
+
+public:
+    void DrawUI();
 };

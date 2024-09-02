@@ -1,9 +1,10 @@
 #include "UIWidgets.h"
 
-#include "Engine.h"
-#include "cCameraManager.h"
+#include <glad/glad.h>
 
-// Should be removed (maybe?)
+#include "Engine.h"
+#include "cUIManager.h"
+#include "cCameraManager.h"
 #include "cRenderManager.h"
 
 cUIWidget::~cUIWidget()
@@ -14,9 +15,12 @@ cUIWidget::~cUIWidget()
 	}
 }
 
-void cUIWidget::SetupWidget()
+void cUIWidget::Draw()
 {
-	
+	for (int i = 0; i < children.size(); i++)
+	{
+		children[i]->Draw();
+	}
 }
 
 void cUIWidget::AddChild(cUIWidget* newChild)
@@ -90,10 +94,27 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	return parentHorizontalTranslation + widgetPercentTranslate;
 }
 
-void cUIStaticImage::SetupWidget()
+void cUIStaticImage::Draw()
 {
+	cUIWidget::Draw();
+
 	Manager::render.use("ui");
 	Manager::render.SetupTexture(textureName);
+
+	// OPTMIZATION: calculate these values once and store them and/or make them into a matrix
+	float widthPercent = CalculateWidthScreenPercent();
+	float heightPercent = CalculateHeightScreenPercent();
+	Manager::render.setFloat("widthPercent", widthPercent);
+	Manager::render.setFloat("heightPercent", heightPercent);
+
+	float widthTranslate = CalculateHorizontalTranslate();
+	float heightTranslate = CalculateVerticalTranslate();
+	Manager::render.setFloat("widthTranslate", widthTranslate);
+	Manager::render.setFloat("heightTranslate", heightTranslate);
+
+	glBindVertexArray(Manager::ui.GetUIQuadVAO());
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 cUIText::cUIText()
@@ -106,4 +127,47 @@ cUIText::~cUIText()
 	{
 		glDeleteBuffers(1, &dataBufferId);
 	}
+}
+
+void cUIText::Draw()
+{
+	unsigned int scrWidth = Manager::camera.SCR_WIDTH;
+	unsigned int scrHeight = Manager::camera.SCR_HEIGHT;
+	float horizontalTranslation = CalculateHorizontalTranslate();
+	float verticalTranslation = CalculateVerticalTranslate();
+	float widthPercent = CalculateWidthScreenPercent();
+	float heightPercent = CalculateHeightScreenPercent();
+
+	float pixelGlyphRatio = heightPercent * scrHeight * textSizePercent / (float)Manager::ui.GetFontGlyphSize(fontName);
+
+	float finalHorizontalTranslation = horizontalTranslation - widthPercent;
+	float finalVerticalTranslation = verticalTranslation + heightPercent;
+	glm::vec2 origin = glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
+
+	Manager::render.use("text");
+	Manager::ui.SetupFont(fontName);
+	Manager::render.setVec3("color", color);
+
+	Manager::render.setVec2("originOffset", origin);
+	Manager::render.setFloat("glyphPixelRatio", pixelGlyphRatio);
+	Manager::render.setInt("screenWidth", scrWidth);
+	Manager::render.setInt("screenHeight", scrHeight);
+
+	glBindVertexArray(Manager::ui.GetUIQuadVAO());
+
+	// Setup buffer data as vertex atribute
+	// (ideally I would want this to be set on VAO creation, but I guess the data needs to be setup before hand... so here it goes)
+	glBindBuffer(GL_ARRAY_BUFFER, dataBufferId);
+
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribDivisor(2, 1);
+
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(4 * sizeof(float)));
+	glVertexAttribDivisor(3, 1);
+
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, drawCharCount);
+
+	glBindVertexArray(0);
 }

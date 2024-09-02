@@ -1,11 +1,12 @@
 #include "cRenderManager.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <glm/glm.hpp>
+
+#include <glad/glad.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -13,9 +14,6 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
-
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
 #include "Engine.h"
 #include "cSceneManager.h"
@@ -33,11 +31,8 @@ const std::string SHADER_PATH = "assets/shaders/";
 const std::string MODEL_PATH = "assets/models/";
 const std::string TEXTURE_PATH = "assets/textures/";
 const std::string PKM_DATA_PATH = "assets/pokemon/";
-const std::string FONTS_PATH = "assets/fonts/";
 
 const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
-const int FONT_ATLAS_COLS = 10;
-const int FONT_ATLAS_ROWS = 9;
 
 cRenderManager::cRenderManager()
 {
@@ -170,41 +165,6 @@ void cRenderManager::Startup()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
-
-    //********************** Setup on UI quad ****************************
-    float quadVertices[] = {
-        //  x,     y,    z, u(x), v(y)
-         1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
-         1.0f, -1.0f, 0.0f, 1.0f, 1.0f, // bottom right
-        -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
-        -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, // top left
-    };
-
-    unsigned int quadIndicies[] = {
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };
-
-    glGenVertexArrays(1, &uiQuadVAO);
-    glGenBuffers(1, &uiQuadVBO);
-    glGenBuffers(1, &uiQuadEBO);
-
-    glBindVertexArray(uiQuadVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, uiQuadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, uiQuadEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndicies), quadIndicies, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-    //***************************************************************************
 }
 
 void cRenderManager::Shutdown()
@@ -216,11 +176,6 @@ void cRenderManager::Shutdown()
     glDeleteBuffers(1, &uboMatricesID);
     glDeleteBuffers(1, &uboFogID);
     glDeleteBuffers(1, &notInstancedOffsetBufferId);
-
-    for (std::map<std::string, sFontData>::iterator it = fonts.begin(); it != fonts.end(); it++)
-    {
-        glDeleteBuffers(1, &it->second.textureAtlusId);
-    }
 
     mapModels.clear();
     battleModels.clear();
@@ -977,77 +932,6 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
     setInt(shaderVariable, shaderTextureUnit);
 }
 
-void cRenderManager::LoadFont(const std::string fontName, const unsigned int glyphSize)
-{
-    FT_Library ft;
-    // All functions return a value different than 0 whenever an error occurred
-    if (FT_Init_FreeType(&ft)) {
-        std::cout << "ERROR: Could not init FreeType Library" << std::endl;
-        return;
-    }
-
-    std::string fontPath = FONTS_PATH + fontName;
-    FT_Face face;
-    if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-        std::cout << "ERROR: Failed to load font" << std::endl;
-        return;
-    }
-
-    // Leave width as 0 to be calculated with height
-    FT_Set_Pixel_Sizes(face, 0, glyphSize);
-
-    sFontData newFont;
-    newFont.glyphSize = glyphSize;
-    // Create empty black texture
-    glGenTextures(1, &newFont.textureAtlusId);
-    glBindTexture(GL_TEXTURE_2D, newFont.textureAtlusId);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_COLS * glyphSize, FONT_ATLAS_ROWS * glyphSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    // Fill slots of atlus with individual characters
-    int i = 0;
-    for (unsigned char c = 32; c < 126; c++)
-    {
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cout << "ERROR: Failed to load Glyph " << c << std::endl;
-            continue;
-        }
-
-        sFontCharData newChar;
-        newChar.size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
-        newChar.bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
-        newChar.advance = face->glyph->advance.x;
-
-        // No need to add space to texture
-        if (c != ' ')
-        {
-            glTexSubImage2D(GL_TEXTURE_2D, 0,
-                glyphSize * (i % FONT_ATLAS_COLS),
-                glyphSize * (i / FONT_ATLAS_COLS),
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                GL_RED, GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
-
-            i++;
-        }
-
-        newFont.characters.insert(std::pair<char, sFontCharData>(c, newChar));
-    }
-
-    fonts.insert(std::pair<std::string, sFontData>(fontName, newFont));
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
-}
-
 void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 {
     sModelDrawInfo drawInfo;
@@ -1119,140 +1003,6 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
     }    
 }
 
-void cRenderManager::SetupFont(const std::string fontName)
-{
-    if (fonts.find(fontName) == fonts.end()) return; // font doesn't exists
-
-    unsigned int textureId = fonts[fontName].textureAtlusId;
-
-    glActiveTexture(GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    std::string shaderVariable = "texture_0";
-    setInt(shaderVariable, 0);
-
-    setInt("atlasRowsNum", FONT_ATLAS_ROWS);
-    setInt("atlasColsNum", FONT_ATLAS_COLS);
-}
-
-void cRenderManager::CreateTextDataBuffer(cUIText* text)
-{
-    if (fonts.find(text->fontName) == fonts.end()) return; // font doesn't exists
-    sFontData& font = fonts[text->fontName];
-
-    std::stringstream ss(text->text);
-    std::vector<std::string> words;
-    std::string s;
-    while (std::getline(ss, s, ' '))
-    {
-        words.push_back(s); // no spaces
-    }
-
-    float glyphPixelRatio = text->CalculateHeightPixels() * text->textSizePercent / (float)font.glyphSize;
-    float pixelCutoff = text->CalculateWidthPixels();
-
-    std::vector<sCharBufferData> data;
-    int advanceX = 0;
-    int advanceY = 0;
-    for (unsigned int i = 0; i < words.size(); i++)
-    {
-        // Check if this word is too big for this line
-        int wordAdvance = 0;
-        for (unsigned int j = 0; j < words[i].length(); j++)
-        {
-            sFontCharData& ch = font.characters[words[i][j]];
-            wordAdvance += ch.advance >> 6;
-        }
-
-        // Jump to next line
-        if ((advanceX + wordAdvance) * glyphPixelRatio > pixelCutoff)
-        {
-            advanceX = 0;
-            advanceY += font.glyphSize * 1.1f;
-        }
-        
-        for (unsigned int j = 0; j < words[i].length(); j++)
-        {
-            char c = words[i][j];
-            sFontCharData& ch = font.characters[c];
-
-            int posX = advanceX + ch.bearing.x;
-            int posY = ch.size.y - ch.bearing.y + advanceY;
-
-            int sizeX = ch.size.x;
-            int sizeY = ch.size.y;
-
-            sCharBufferData newData;
-            newData.posX = (float)posX;
-            newData.posY = (float)posY;
-            newData.sizeX = (float)sizeX;
-            newData.sizeY = (float)sizeY;
-            newData.charId = (float)c;
-            data.push_back(newData);
-
-            advanceX += ch.advance >> 6;
-        }
-        advanceX += font.characters[' '].advance >> 6;
-    }
-
-    text->drawCharCount = data.size();
-
-    glGenBuffers(1, &text->dataBufferId);
-    glBindBuffer(GL_ARRAY_BUFFER, text->dataBufferId);
-
-    glBufferData(GL_ARRAY_BUFFER,
-        sizeof(sCharBufferData) * data.size(),
-        (GLvoid*)&data[0],
-        GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void cRenderManager::DrawText(cUIText* textWidget)
-{
-    sFontData& font = fonts[textWidget->fontName];
-    unsigned int scrWidth = Manager::camera.SCR_WIDTH;
-    unsigned int scrHeight = Manager::camera.SCR_HEIGHT;
-    float horizontalTranslation = textWidget->CalculateHorizontalTranslate();
-    float verticalTranslation = textWidget->CalculateVerticalTranslate();
-    float widthPercent = textWidget->CalculateWidthScreenPercent();
-    float heightPercent = textWidget->CalculateHeightScreenPercent();
-
-    float pixelGlyphRatio = heightPercent * scrHeight * textWidget->textSizePercent / (float)font.glyphSize;
-
-    float finalHorizontalTranslation = horizontalTranslation - widthPercent;
-    float finalVerticalTranslation = verticalTranslation + heightPercent;
-    glm::vec2 origin = glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
-
-    use("text");
-    SetupFont(textWidget->fontName);
-    setVec3("color", textWidget->color);
-
-    setVec2("originOffset", origin);
-    setFloat("glyphPixelRatio", pixelGlyphRatio);
-    setInt("glyphSize", font.glyphSize);
-    setInt("screenWidth", scrWidth);
-    setInt("screenHeight", scrHeight);
-
-    glBindVertexArray(uiQuadVAO);
-
-    // Setup buffer data as vertex atribute
-    // (ideally I would want this to be set on VAO creation, but I guess the data needs to be setup before hand... so here it goes)
-    glBindBuffer(GL_ARRAY_BUFFER, textWidget->dataBufferId);
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glVertexAttribDivisor(2, 1);
-
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(4 * sizeof(float)));
-    glVertexAttribDivisor(3, 1);
-
-    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, textWidget->drawCharCount);
-
-    glBindVertexArray(0);
-}
-
 void cRenderManager::DrawParticles(cParticleSpawner* spawner)
 {
     sModelDrawInfo drawInfo;
@@ -1293,33 +1043,6 @@ void cRenderManager::DrawParticles(cParticleSpawner* spawner)
     
         glBindVertexArray(0);
     }
-}
-
-void cRenderManager::DrawWidget(cUIWidget* widget)
-{
-    for (int i = 0; i < widget->children.size(); i++)
-    {
-        cUIWidget* child = widget->children[i];
-
-        if (child->ShouldUseTextRenderer()) DrawText(dynamic_cast<cUIText*>(child));
-        else DrawWidget(child);
-    }
-    
-    widget->SetupWidget();
-
-    float widthPercent = widget->CalculateWidthScreenPercent();
-    float heightPercent = widget->CalculateHeightScreenPercent();
-    setFloat("widthPercent", widthPercent);
-    setFloat("heightPercent", heightPercent);
-
-    float widthTranslate = widget->CalculateHorizontalTranslate();
-    float heightTranslate = widget->CalculateVerticalTranslate(); 
-    setFloat("widthTranslate", widthTranslate);
-    setFloat("heightTranslate", heightTranslate);
-
-    glBindVertexArray(uiQuadVAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
 }
 
 void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
@@ -1435,16 +1158,7 @@ void cRenderManager::DrawFrame()
     }
 
     // Draw UI
-    if (!Manager::ui.canvases.empty())
-    {
-        const cUICanvas* canvasToDraw = Manager::ui.canvases.top();
-
-        for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
-        {
-            if (canvasToDraw->anchoredWidgets[i]->ShouldUseTextRenderer()) DrawText(dynamic_cast<cUIText*>(canvasToDraw->anchoredWidgets[i]));
-            else DrawWidget(canvasToDraw->anchoredWidgets[i]);
-        }
-    }
+    Manager::ui.DrawUI();
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

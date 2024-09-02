@@ -1,13 +1,10 @@
 #pragma once
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <set>
 #include <map>
 #include <memory>
 #include "DrawInfo.h"
 #include "cRenderModel.h"
-
-class cUIText;
 
 namespace Pokemon
 {
@@ -41,20 +38,6 @@ public:
     unsigned int numCols;
     unsigned int numRows;
     bool isSymmetrical;
-};
-
-struct sFontCharData
-{
-    glm::ivec2   size;       // Size of glyph
-    glm::ivec2   bearing;    // Offset from baseline to left/top of glyph
-    unsigned int advance;    // Offset to advance to next glyph
-};
-
-struct sFontData
-{
-    unsigned int textureAtlusId;
-    unsigned int glyphSize;
-    std::map<char, sFontCharData> characters;
 };
 
 enum eRenderMode
@@ -114,12 +97,6 @@ private:
     unsigned int uboMatricesID;
     unsigned int uboFogID;
 
-    // UI quad
-private:
-    unsigned int uiQuadVAO;
-    unsigned int uiQuadVBO;
-    unsigned int uiQuadEBO;
-
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;
@@ -158,20 +135,10 @@ public:
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);
 
-    // Fonts
-private:
-    std::map<std::string, sFontData> fonts;
-    void SetupFont(const std::string fontName);
-public:
-    void LoadFont(const std::string fontName, const unsigned int glyphSize);
-    void CreateTextDataBuffer(cUIText* text);
-
     // Drawing
 private:
     void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawParticles(class cParticleSpawner* spawner);
-    void DrawWidget(class cUIWidget* widget);
-    void DrawText(cUIText* textWidget);
     void DrawShadowPass(glm::mat4& outLightSpaceMatrix);
 public:
     eRenderMode renderMode = MAP; // TEMP public

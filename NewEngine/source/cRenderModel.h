@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <glm/glm.hpp>
+#include <string>
 #include <vector>
 
 class cRenderModel

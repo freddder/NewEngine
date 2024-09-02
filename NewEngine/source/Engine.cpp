@@ -486,6 +486,8 @@ namespace Engine
         Manager::render.Startup();
 
         Manager::input.Startup();
+
+        Manager::ui.Startup();
     }
 
     void ShutdownManagers()

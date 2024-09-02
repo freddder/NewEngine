@@ -44,8 +44,7 @@ public:
 	float aspectRatio = 1.f;
 	eAnchor anchor = MIDDLE_MIDDLE;
 
-	virtual void SetupWidget();
-	virtual bool ShouldUseTextRenderer() { return false; }
+	virtual void Draw();
 
 private:
 	std::vector<cUIWidget*> children;
@@ -62,8 +61,7 @@ protected:
 	const float CalculateVerticalTranslate();
 	const float CalculateHorizontalTranslate();
 
-	friend class cRenderManager;
-	friend class cUIText;
+	friend class cUIManager;
 };
 
 class cUIStaticImage : public cUIWidget
@@ -71,14 +69,13 @@ class cUIStaticImage : public cUIWidget
 	~cUIStaticImage() {}
 public:
 	std::string textureName;
-	virtual void SetupWidget();
+	virtual void Draw();
 };
 
 class cUIAnimatedSprite : public cUIWidget
 {
 public:
 	std::string spriteTextureName;
-	virtual void SetupWidget();
 };
 
 struct sCharBufferData
@@ -100,5 +97,5 @@ public:
 	glm::vec3 color;
 	float textSizePercent = 1.f; // Of this widget
 
-	virtual bool ShouldUseTextRenderer() { return true; }
+	virtual void Draw();
 };

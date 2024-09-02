@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <iostream>
 
 #include "Engine.h"
@@ -89,7 +90,7 @@ int main()
 
     Manager::render.LoadTexture("PartyMemberButtonBackground.png", "ui/");
     
-    Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
+    Manager::ui.LoadFont("Truth And Ideals-Normal.ttf", 24);
 
     //***************************************************************************
 
@@ -132,7 +133,7 @@ int main()
         textWidget->color = glm::vec3(1.f);
         textWidget->heightPercent = 0.3f;
         Engine::button->AddChild(textWidget);
-        Manager::render.CreateTextDataBuffer(textWidget); // make sure to call this after setting parent
+        Manager::ui.CreateTextDataBuffer(textWidget);
 
         canvas->AddWidget(Engine::button);
         Manager::ui.AddCanvas(canvas);
