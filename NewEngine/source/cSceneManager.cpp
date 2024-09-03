@@ -216,16 +216,15 @@ void cSceneManager::ChangeScene()
 
 void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData)
 {
-	// TODO: this whole thing next
-	// - Generate battle pokemon data
-	// - Load batle sprite texture
-	// - Create battle sprite
-
 	Pokemon::sBattleData battleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
 	std::string texName = battleData.MakeBattleTextureName();
 
+	// TODO: create new canvas for the battle
+	// Canvas should probably have a confirm and cancel function that changes what it does
+	// depending of situations
+
 	Manager::render.ChangeRenderMode(BATTLE);
-	Manager::input.ChangeInputState(MENU_NAVEGATION);
+	Manager::input.ChangeInputState(MENU_NAVIGATION);
 
 	float spriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(battleData);
 	Manager::map.opponentSpriteModel->SetSpriteData(texName, battleData.form.battleSpriteHeightSize, spriteAspectRatio, battleData.form.battleSpriteFrameCount);

@@ -20,6 +20,7 @@
 #include "cLightManager.h"
 #include "cCameraManager.h"
 #include "cUIManager.h"
+#include "cInputManager.h"
 
 #include "cSpriteModel.h"
 #include "cAnimatedModel.h"
@@ -1158,7 +1159,8 @@ void cRenderManager::DrawFrame()
     }
 
     // Draw UI
-    Manager::ui.DrawUI();
+    if (Manager::input.GetCurrentInputState() == MENU_NAVIGATION)
+        Manager::ui.DrawUI();
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

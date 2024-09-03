@@ -507,6 +507,8 @@ namespace Engine
         Manager::scene.Shutdown();
 
         Manager::ui.Shutdown();
+
+        // TODO: I think there is one sprite model not properly deleting. Investigate later
     }
 
     void GameLoop(bool renderDebugInfo)

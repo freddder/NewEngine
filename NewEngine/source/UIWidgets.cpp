@@ -7,6 +7,8 @@
 #include "cCameraManager.h"
 #include "cRenderManager.h"
 
+#include "cAnimation.h"
+
 cUIWidget::~cUIWidget()
 {
 	for (int i = 0; i < children.size(); i++)
@@ -17,6 +19,8 @@ cUIWidget::~cUIWidget()
 
 void cUIWidget::Draw()
 {
+	if (isHidden) return;
+
 	for (int i = 0; i < children.size(); i++)
 	{
 		children[i]->Draw();
@@ -92,6 +96,64 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) widgetPercentTranslate *= -1.f;
 
 	return parentHorizontalTranslation + widgetPercentTranslate;
+}
+
+void cUIWidget::SetMoveFocus(cUIWidget* from, cUIWidget* to, eDirection dir, bool isViceVersa)
+{
+	switch (dir)
+	{
+	case UP:
+		from->focusUp = to;
+		break;
+	case DOWN:
+		from->focusDown = to;
+		break;
+	case LEFT:
+		from->focusLeft = to;
+		break;
+	case RIGHT:
+		from->focusRight = to;
+		break;
+	default:
+		break;
+	}
+
+	if (isViceVersa)
+	{
+		switch (dir)
+		{
+		case UP:
+			to->focusDown = from;
+			break;
+		case DOWN:
+			to->focusUp = from;
+			break;
+		case LEFT:
+			to->focusRight = from;
+			break;
+		case RIGHT:
+			to->focusLeft = from;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void cUIWidget::EnterFocus()
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		children[i]->EnterFocus();
+	}
+}
+
+void cUIWidget::LeaveFocus()
+{
+	for (int i = 0; i < children.size(); i++)
+	{
+		children[i]->LeaveFocus();
+	}
 }
 
 void cUIStaticImage::Draw()

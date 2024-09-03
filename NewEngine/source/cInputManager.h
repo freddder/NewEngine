@@ -7,7 +7,7 @@ const float KEY_HELD_THRESHOLD = 0.3f;
 enum eInputState
 {
 	IS_NONE,
-	MENU_NAVEGATION,
+	MENU_NAVIGATION,
 	OVERWORLD_MOVEMENT,
 	// maybe add one for dialog?
 };
@@ -48,6 +48,7 @@ private:
 	eInputState currInputState;
 	std::map<eInputState, std::map<eInputType, sInputAction>> inputActions;
 public:
+	eInputState GetCurrentInputState();
 	void ChangeInputState(eInputState newInputState);
 	bool IsInputDown(eInputType type);
 

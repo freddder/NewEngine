@@ -11,10 +11,14 @@ public:
 
 private:
     std::vector<cUIWidget*> anchoredWidgets;
-    cUIWidget* currentFocus;
-
 public:
     void AddWidget(cUIWidget* newWidget);
+
+private:
+    cUIWidget* defaultFocus;
+    cUIWidget* currFocus;
+public:
+    void MoveFocus(eDirection dir);
 
     friend class cUIManager;
 };
@@ -31,6 +35,12 @@ struct sFontData
     unsigned int textureAtlusId;
     unsigned int glyphSize;
     std::map<char, sFontCharData> characters;
+};
+
+struct sCharBufferData
+{
+    float posX, posY, sizeX, sizeY;	// position from origin and screen percent size
+    float charId;/*colorR, colorG, colorB,*/  // maybe I will add character highlight color
 };
 
 class cUIManager

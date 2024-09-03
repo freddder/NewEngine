@@ -10,6 +10,8 @@
 #include "Engine.h"
 #include "cRenderManager.h"
 
+#include "cAnimation.h"
+
 const std::string FONTS_PATH = "assets/fonts/";
 const int FONT_ATLAS_COLS = 10;
 const int FONT_ATLAS_ROWS = 9;
@@ -85,6 +87,34 @@ cUICanvas::~cUICanvas()
 void cUICanvas::AddWidget(cUIWidget* newWidget)
 {
 	anchoredWidgets.push_back(newWidget);
+}
+
+void cUICanvas::MoveFocus(eDirection dir)
+{
+    cUIWidget* newFocus = nullptr;
+
+    switch (dir)
+    {
+    case UP:
+        if (currFocus->focusUp) newFocus = currFocus->focusUp;
+        break;
+    case DOWN:
+        if (currFocus->focusDown) newFocus = currFocus->focusDown;
+        break;
+    case LEFT:
+        if (currFocus->focusLeft) newFocus = currFocus->focusLeft;
+        break;
+    case RIGHT:
+        if (currFocus->focusRight) newFocus = currFocus->focusRight;
+        break;
+    default:
+        break;
+    }
+
+    if (!newFocus)
+        return;
+
+    currFocus = newFocus;
 }
 
 void cUIManager::AddCanvas(cUICanvas* newCanvas)

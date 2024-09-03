@@ -54,19 +54,34 @@ void cInputManager::Startup()
 		Player::playerChar->AttemptMovement(RIGHT, inputActions[currInputState][IT_CANCEL].isDown); 
 	};
 
-	sInputAction& menuConfirm = inputActions[MENU_NAVEGATION][IT_CONFIRM];
-	menuConfirm.PressedAction = [this]() {
-		Manager::scene.RunEncounter();
+	sInputAction& openMenu = inputActions[OVERWORLD_MOVEMENT][IT_MENU];
+	openMenu.PressedAction = [this]() {
+		ChangeInputState(MENU_NAVIGATION);
 	};
 
-	sInputAction& menuUp = inputActions[MENU_NAVEGATION][IT_UP];
-	sInputAction& menuDown = inputActions[MENU_NAVEGATION][IT_DOWN];
-	sInputAction& menuLeft = inputActions[MENU_NAVEGATION][IT_LEFT];
-	sInputAction& menuRight = inputActions[MENU_NAVEGATION][IT_RIGHT];
+	sInputAction& menuConfirm = inputActions[MENU_NAVIGATION][IT_CONFIRM];
+	menuConfirm.PressedAction = [this]() {
+		//Manager::scene.RunEncounter();
+	};
+
+	sInputAction& menuCancel = inputActions[MENU_NAVIGATION][IT_CANCEL];
+	menuCancel.PressedAction = [this]() {
+		ChangeInputState(OVERWORLD_MOVEMENT);
+	};
+
+	sInputAction& menuUp = inputActions[MENU_NAVIGATION][IT_UP];
+	sInputAction& menuDown = inputActions[MENU_NAVIGATION][IT_DOWN];
+	sInputAction& menuLeft = inputActions[MENU_NAVIGATION][IT_LEFT];
+	sInputAction& menuRight = inputActions[MENU_NAVIGATION][IT_RIGHT];
 }
 
 void cInputManager::Shutdown()
 {
+}
+
+eInputState cInputManager::GetCurrentInputState()
+{
+	return currInputState;
 }
 
 void cInputManager::ChangeInputState(eInputState newInputState)
