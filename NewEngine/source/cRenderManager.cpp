@@ -178,6 +178,7 @@ void cRenderManager::Shutdown()
     glDeleteBuffers(1, &uboFogID);
     glDeleteBuffers(1, &notInstancedOffsetBufferId);
 
+    UnloadTextures();
     mapModels.clear();
     battleModels.clear();
 }
@@ -683,7 +684,7 @@ void cRenderManager::LoadTexture(const std::string fileName, const std::string s
 {
     if (fileName == "") return;
 
-    if (textures.count(fileName)) return;// texture already created
+    if (textures.find(fileName) != textures.end()) return; // texture already created
 
     std::string fullPath = TEXTURE_PATH + subdirectory + fileName;
     int width, height;

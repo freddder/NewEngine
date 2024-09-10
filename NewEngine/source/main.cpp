@@ -88,10 +88,6 @@ int main()
     Manager::render.LoadTexture("SnowFlake2.png");
     Manager::render.LoadTexture("SnowFlake3.png");
 
-    Manager::render.LoadTexture("PartyMemberButtonBackground.png", "ui/");
-    
-    Manager::ui.LoadFont("Truth And Ideals-Normal.ttf", 24);
-
     //***************************************************************************
 
     Manager::animation.InitializeAnimationsPresets();
@@ -111,33 +107,6 @@ int main()
 
     Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
     Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
-
-    {
-        cUICanvas* canvas = new cUICanvas();
-        Engine::button = new cUIStaticImage();
-        Engine::button->anchor = MIDDLE_LEFT;
-        Engine::button->textureName = "PartyMemberButtonBackground.png";
-        Engine::button->aspectRatio = 0.365f;
-        Engine::button->heightPercent = 1.f / 9.f;
-
-        Engine::sprite = new cUIStaticImage();
-        Engine::sprite->anchor = MIDDLE_LEFT;
-        Engine::sprite->aspectRatio = 3.f / 4.f;
-        Engine::sprite->heightPercent = 3.f / 4.f;
-        Engine::sprite->textureName = "445_ico_s.png";
-        Engine::button->AddChild(Engine::sprite);
-
-        cUIText* textWidget = new cUIText();
-        textWidget->fontName = "Truth And Ideals-Normal.ttf";
-        textWidget->text = "Thatguy";
-        textWidget->color = glm::vec3(1.f);
-        textWidget->heightPercent = 0.3f;
-        Engine::button->AddChild(textWidget);
-        Manager::ui.CreateTextDataBuffer(textWidget);
-
-        canvas->AddWidget(Engine::button);
-        Manager::ui.AddCanvas(canvas);
-    }
 
     {
         Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));

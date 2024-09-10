@@ -382,22 +382,7 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("UI"))
     {
-        if (ImGui::BeginCombo("Button UI Anchor", Anchors_Strings[Engine::button->anchor]))
-        {
-            for (int n = 0; n < eAnchor::ANCHOR_ENUM_COUNT; n++)
-            {
-                const bool is_selected = (Engine::button->anchor == n);
-                if (ImGui::Selectable(Anchors_Strings[n], is_selected))
-                {
-                    Engine::button->anchor = static_cast<eAnchor>(n);
-                }
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+        
     }
 
     ImGui::End();
@@ -427,8 +412,8 @@ namespace Manager
 
 namespace Engine
 {
-    cUIStaticImage* button;
-    cUIStaticImage* sprite;
+    //cUIStaticImage* button;
+    //cUIStaticImage* sprite;
 
     // camera
     float lastX = 1200 / 2.0f;

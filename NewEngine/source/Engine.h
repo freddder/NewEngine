@@ -1,7 +1,6 @@
 #pragma once
 
 struct GLFWwindow;
-class cUIStaticImage;
 
 class cCameraManager;
 class cLightManager;
@@ -26,10 +25,6 @@ namespace Manager
 
 namespace Engine
 {
-	// TEMPORARY
-	extern cUIStaticImage* button;
-	extern cUIStaticImage* sprite;
-
 	bool InitializeGLFW();
 
 	void StartUpManagers();

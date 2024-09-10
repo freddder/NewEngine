@@ -8,6 +8,7 @@
 
 #include "Engine.h"
 #include "cSceneManager.h"
+#include "cUIManager.h"
 
 cInputManager::cInputManager()
 {
@@ -61,12 +62,13 @@ void cInputManager::Startup()
 
 	sInputAction& menuConfirm = inputActions[MENU_NAVIGATION][IT_CONFIRM];
 	menuConfirm.PressedAction = [this]() {
-		//Manager::scene.RunEncounter();
+		Manager::ui.ExecuteInputAction(IT_CONFIRM);
 	};
 
 	sInputAction& menuCancel = inputActions[MENU_NAVIGATION][IT_CANCEL];
 	menuCancel.PressedAction = [this]() {
-		ChangeInputState(OVERWORLD_MOVEMENT);
+		//ChangeInputState(OVERWORLD_MOVEMENT);
+		Manager::ui.ExecuteInputAction(IT_CANCEL);
 	};
 
 	sInputAction& menuUp = inputActions[MENU_NAVIGATION][IT_UP];

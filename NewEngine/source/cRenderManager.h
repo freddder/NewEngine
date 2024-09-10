@@ -144,4 +144,6 @@ public:
     eRenderMode renderMode = MAP; // TEMP public
     void ChangeRenderMode(eRenderMode newMode);
     void DrawFrame();
+
+    friend class cUICanvas;
 };

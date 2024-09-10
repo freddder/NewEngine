@@ -63,15 +63,15 @@ protected:
 	const float CalculateHorizontalTranslate();
 
 private:
-	//bool focusable = false;
 	cUIWidget* focusUp;
 	cUIWidget* focusDown;
 	cUIWidget* focusLeft;
 	cUIWidget* focusRight;
-public:
-	void SetMoveFocus(cUIWidget* from, cUIWidget* to, eDirection dir, bool isViceVersa);
 	virtual void EnterFocus();
 	virtual void LeaveFocus();
+	virtual void ConfirmAction();
+public:
+	void SetMoveFocus(cUIWidget* to, eDirection dir, bool isViceVersa);
 
 	friend class cUIManager;
 	friend class cUICanvas;
@@ -81,7 +81,7 @@ class cUIStaticImage : public cUIWidget
 {
 	~cUIStaticImage() {}
 public:
-	std::string textureName;
+	unsigned int textureId;
 	virtual void Draw();
 };
 

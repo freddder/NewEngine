@@ -98,21 +98,23 @@ const float cUIWidget::CalculateHorizontalTranslate()
 	return parentHorizontalTranslation + widgetPercentTranslate;
 }
 
-void cUIWidget::SetMoveFocus(cUIWidget* from, cUIWidget* to, eDirection dir, bool isViceVersa)
+void cUIWidget::SetMoveFocus(cUIWidget* to, eDirection dir, bool isViceVersa)
 {
+	if (!to) return;
+
 	switch (dir)
 	{
 	case UP:
-		from->focusUp = to;
+		focusUp = to;
 		break;
 	case DOWN:
-		from->focusDown = to;
+		focusDown = to;
 		break;
 	case LEFT:
-		from->focusLeft = to;
+		focusLeft = to;
 		break;
 	case RIGHT:
-		from->focusRight = to;
+		focusRight = to;
 		break;
 	default:
 		break;
@@ -123,16 +125,16 @@ void cUIWidget::SetMoveFocus(cUIWidget* from, cUIWidget* to, eDirection dir, boo
 		switch (dir)
 		{
 		case UP:
-			to->focusDown = from;
+			to->focusDown = this;
 			break;
 		case DOWN:
-			to->focusUp = from;
+			to->focusUp = this;
 			break;
 		case LEFT:
-			to->focusRight = from;
+			to->focusRight = this;
 			break;
 		case RIGHT:
-			to->focusLeft = from;
+			to->focusLeft = this;
 			break;
 		default:
 			break;
@@ -156,12 +158,23 @@ void cUIWidget::LeaveFocus()
 	}
 }
 
+void cUIWidget::ConfirmAction()
+{
+}
+
 void cUIStaticImage::Draw()
 {
 	cUIWidget::Draw();
 
+	if (textureId == 0) return;
+
 	Manager::render.use("ui");
-	Manager::render.SetupTexture(textureName);
+	
+	unsigned int shaderTextureUnit = 0;
+	glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
+	glBindTexture(GL_TEXTURE_2D, textureId);
+	std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
+	Manager::render.setInt(shaderVariable, shaderTextureUnit);
 
 	// OPTMIZATION: calculate these values once and store them and/or make them into a matrix
 	float widthPercent = CalculateWidthScreenPercent();

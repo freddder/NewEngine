@@ -9,9 +9,11 @@
 
 #include "Engine.h"
 #include "cRenderManager.h"
+#include "cInputManager.h"
 
-#include "cAnimation.h"
+#include "CanvasFactory.h"
 
+const std::string UI_TEXTURE_PATH = "assets/textures/ui/";
 const std::string FONTS_PATH = "assets/fonts/";
 const int FONT_ATLAS_COLS = 10;
 const int FONT_ATLAS_ROWS = 9;
@@ -58,6 +60,11 @@ void cUIManager::Startup()
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    LoadFont("Truth And Ideals-Normal.ttf", 24);
+
+    cOverworldCanvas* oc = new cOverworldCanvas();
+    canvases.push(oc);
 }
 
 void cUIManager::Shutdown()
@@ -82,45 +89,56 @@ cUICanvas::~cUICanvas()
 	{
 		delete anchoredWidgets[i];
 	}
-}
 
-void cUICanvas::AddWidget(cUIWidget* newWidget)
-{
-	anchoredWidgets.push_back(newWidget);
-}
-
-void cUICanvas::MoveFocus(eDirection dir)
-{
-    cUIWidget* newFocus = nullptr;
-
-    switch (dir)
+    for (std::map<std::string, unsigned int>::iterator it = textures.begin(); it != textures.end(); it++)
     {
-    case UP:
-        if (currFocus->focusUp) newFocus = currFocus->focusUp;
-        break;
-    case DOWN:
-        if (currFocus->focusDown) newFocus = currFocus->focusDown;
-        break;
-    case LEFT:
-        if (currFocus->focusLeft) newFocus = currFocus->focusLeft;
-        break;
-    case RIGHT:
-        if (currFocus->focusRight) newFocus = currFocus->focusRight;
-        break;
-    default:
-        break;
+        glDeleteBuffers(1, &it->second);
+    }
+}
+
+unsigned int cUICanvas::LoadUITexture(const std::string fileName, const std::string subdirectory)
+{
+    if (fileName == "") return 0;
+
+    if (textures.find(fileName) != textures.end()) return textures[fileName]; // texture already loaded
+
+    std::string fullPath = "";
+    if (subdirectory == "") fullPath += UI_TEXTURE_PATH + fileName;
+    else fullPath += subdirectory + fileName;
+
+    int width, height;
+    unsigned int textureId = Manager::render.CreateTexture(fullPath, width, height);
+
+    if (textureId != 0)
+    {
+        textures.insert(std::pair<std::string, unsigned int>(fileName, textureId));
     }
 
-    if (!newFocus)
-        return;
-
-    currFocus = newFocus;
+    return textureId;
 }
 
-void cUIManager::AddCanvas(cUICanvas* newCanvas)
+void cUICanvas::ConfirmAction()
 {
-	canvases.push(newCanvas);
+    currFocus->ConfirmAction();
 }
+
+void cUICanvas::CancelAction()
+{
+}
+
+void cUICanvas::MoveFocus(cUIWidget* newFocus)
+{
+    if (!newFocus) return;
+
+    currFocus->LeaveFocus();
+    currFocus = currFocus->focusUp;
+    currFocus->EnterFocus();
+}
+
+//void cUIManager::AddCanvas(cUICanvas* newCanvas)
+//{
+//	canvases.push(newCanvas);
+//}
 
 unsigned int cUIManager::GetUIQuadVAO()
 {
@@ -294,6 +312,32 @@ void cUIManager::SetupFont(const std::string fontName)
     Manager::render.setInt("glyphSize", fonts[fontName].glyphSize);
 }
 
+void cUIManager::ExecuteInputAction(eInputType inputType)
+{
+    cUICanvas* currCanvas = canvases.top();
+
+    switch (inputType)
+    {
+    case IT_CONFIRM:
+        currCanvas->ConfirmAction();
+        break;
+    case IT_CANCEL:
+        currCanvas->CancelAction();
+        break;
+    case IT_UP:
+        currCanvas->MoveFocus(currCanvas->currFocus->focusUp);
+        break;
+    case IT_DOWN:
+        currCanvas->MoveFocus(currCanvas->currFocus->focusDown);
+        break;
+    case IT_LEFT:
+        currCanvas->MoveFocus(currCanvas->currFocus->focusLeft);
+        break;
+    case IT_RIGHT:
+        currCanvas->MoveFocus(currCanvas->currFocus->focusRight);
+        break;
+    }
+}
 void cUIManager::DrawUI()
 {
 	const cUICanvas* canvasToDraw = canvases.top();

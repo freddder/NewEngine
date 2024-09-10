@@ -4,21 +4,29 @@
 #include <stack>
 #include <map>
 
+enum eInputType;
+
 class cUICanvas
 {
 public:
-    ~cUICanvas();
+    virtual ~cUICanvas();
 
-private:
+protected:
     std::vector<cUIWidget*> anchoredWidgets;
-public:
-    void AddWidget(cUIWidget* newWidget);
 
-private:
+    // Textures
+protected:
+    std::map<std::string, unsigned int> textures;
+public:
+    // Load a texture to be used on this canvas and return its id. If no subdirectory specified will look in ui folder
+    unsigned int LoadUITexture(const std::string fileName, const std::string subdirectory = "");
+
+protected:
     cUIWidget* defaultFocus;
     cUIWidget* currFocus;
-public:
-    void MoveFocus(eDirection dir);
+    void ConfirmAction();
+    virtual void CancelAction();
+    void MoveFocus(cUIWidget* newFocus);
 
     friend class cUIManager;
 };
@@ -55,7 +63,7 @@ public:
 private:
     std::stack<cUICanvas*> canvases;
 public:
-    void AddCanvas(cUICanvas* newCanvas);
+    //void AddCanvas(cUICanvas* newCanvas);
 
     // UI quad
 private:
@@ -73,6 +81,10 @@ public:
     void CreateTextDataBuffer(cUIText* text);
     unsigned int GetFontGlyphSize(std::string fontName);
     void SetupFont(const std::string fontName);
+
+    // Functionality
+public:
+    void ExecuteInputAction(eInputType inputType); // For navigation and functionality
 
 public:
     void DrawUI();
