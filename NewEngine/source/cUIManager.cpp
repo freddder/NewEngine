@@ -63,6 +63,7 @@ void cUIManager::Startup()
 
     LoadFont("Truth And Ideals-Normal.ttf", 24);
 
+    // Will probably move this to a better place
     cOverworldCanvas* oc = new cOverworldCanvas();
     canvases.push(oc);
 }
@@ -131,14 +132,15 @@ void cUICanvas::MoveFocus(cUIWidget* newFocus)
     if (!newFocus) return;
 
     currFocus->LeaveFocus();
-    currFocus = currFocus->focusUp;
+    currFocus = newFocus;
     currFocus->EnterFocus();
 }
 
-//void cUIManager::AddCanvas(cUICanvas* newCanvas)
-//{
-//	canvases.push(newCanvas);
-//}
+void cUICanvas::ResetFocus()
+{
+    currFocus->LeaveFocus();
+    currFocus = nullptr;
+}
 
 unsigned int cUIManager::GetUIQuadVAO()
 {
@@ -315,6 +317,13 @@ void cUIManager::SetupFont(const std::string fontName)
 void cUIManager::ExecuteInputAction(eInputType inputType)
 {
     cUICanvas* currCanvas = canvases.top();
+
+    if (!currCanvas->currFocus)
+    {
+        currCanvas->currFocus = currCanvas->defaultFocus;
+        currCanvas->currFocus->EnterFocus();
+        return;
+    }
 
     switch (inputType)
     {

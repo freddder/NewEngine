@@ -2,12 +2,14 @@
 
 #include "Engine.h"
 #include "cInputManager.h"
+#include "cAnimation.h"
 
 cOverworldCanvas::cOverworldCanvas()
 {
     cUIStaticImage* button = new cUIStaticImage();
     button->anchor = MIDDLE_LEFT;
     button->textureId = LoadUITexture("PartyMemberButtonBackground.png");
+    button->hoveredTextureId = LoadUITexture("PartyMemberButtonBackground-Hovered.png");
     button->aspectRatio = 0.365f;
     button->heightPercent = 1.f / 9.f;
 
@@ -29,6 +31,7 @@ cOverworldCanvas::cOverworldCanvas()
     cUIStaticImage* button2 = new cUIStaticImage();
     button2->anchor = TOP_LEFT;
     button2->textureId = LoadUITexture("PartyMemberButtonBackground.png");
+    button2->hoveredTextureId = LoadUITexture("PartyMemberButtonBackground-Hovered.png");
     button2->aspectRatio = 0.365f;
     button2->heightPercent = 1.f / 9.f;
 
@@ -47,8 +50,11 @@ cOverworldCanvas::cOverworldCanvas()
     button2->AddChild(textWidget2);
     Manager::ui.CreateTextDataBuffer(textWidget2);
 
+    button2->SetMoveFocus(button, DOWN, true);
+
     anchoredWidgets.push_back(button);
     anchoredWidgets.push_back(button2);
+    defaultFocus = button;
 }
 
 cOverworldCanvas::~cOverworldCanvas()
@@ -57,6 +63,7 @@ cOverworldCanvas::~cOverworldCanvas()
 
 void cOverworldCanvas::CancelAction()
 {
-	MoveFocus(defaultFocus);
+	//MoveFocus(defaultFocus);
+    ResetFocus();
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
 }

@@ -62,7 +62,8 @@ protected:
 	const float CalculateVerticalTranslate();
 	const float CalculateHorizontalTranslate();
 
-private:
+protected:
+	bool isFocused = false;
 	cUIWidget* focusUp;
 	cUIWidget* focusDown;
 	cUIWidget* focusLeft;
@@ -82,6 +83,7 @@ class cUIStaticImage : public cUIWidget
 	~cUIStaticImage() {}
 public:
 	unsigned int textureId;
+	unsigned int hoveredTextureId;
 	virtual void Draw();
 };
 

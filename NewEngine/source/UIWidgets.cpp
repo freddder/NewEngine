@@ -144,6 +144,7 @@ void cUIWidget::SetMoveFocus(cUIWidget* to, eDirection dir, bool isViceVersa)
 
 void cUIWidget::EnterFocus()
 {
+	isFocused = true;
 	for (int i = 0; i < children.size(); i++)
 	{
 		children[i]->EnterFocus();
@@ -152,6 +153,7 @@ void cUIWidget::EnterFocus()
 
 void cUIWidget::LeaveFocus()
 {
+	isFocused = false;
 	for (int i = 0; i < children.size(); i++)
 	{
 		children[i]->LeaveFocus();
@@ -168,11 +170,17 @@ void cUIStaticImage::Draw()
 
 	if (textureId == 0) return;
 
+	unsigned int textureIdToUse;
+	if (!isFocused || hoveredTextureId == 0)
+		textureIdToUse = textureId;
+	else
+		textureIdToUse = hoveredTextureId;
+
 	Manager::render.use("ui");
 	
 	unsigned int shaderTextureUnit = 0;
-	glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	glActiveTexture(shaderTextureUnit + GL_TEXTURE0); // GL_TEXTURE0 = 33984
+	glBindTexture(GL_TEXTURE_2D, textureIdToUse);
 	std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
 	Manager::render.setInt(shaderVariable, shaderTextureUnit);
 

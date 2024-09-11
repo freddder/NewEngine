@@ -72,9 +72,24 @@ void cInputManager::Startup()
 	};
 
 	sInputAction& menuUp = inputActions[MENU_NAVIGATION][IT_UP];
+	menuUp.PressedAction = [this]() {
+		Manager::ui.ExecuteInputAction(IT_UP);
+	};
+
 	sInputAction& menuDown = inputActions[MENU_NAVIGATION][IT_DOWN];
+	menuDown.PressedAction = [this]() {
+		Manager::ui.ExecuteInputAction(IT_DOWN);
+	};
+
 	sInputAction& menuLeft = inputActions[MENU_NAVIGATION][IT_LEFT];
+	menuLeft.PressedAction = [this]() {
+		Manager::ui.ExecuteInputAction(IT_LEFT);
+	};
+
 	sInputAction& menuRight = inputActions[MENU_NAVIGATION][IT_RIGHT];
+	menuRight.PressedAction = [this]() {
+		Manager::ui.ExecuteInputAction(IT_RIGHT);
+	};
 }
 
 void cInputManager::Shutdown()

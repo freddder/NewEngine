@@ -27,6 +27,7 @@ protected:
     void ConfirmAction();
     virtual void CancelAction();
     void MoveFocus(cUIWidget* newFocus);
+    void ResetFocus();
 
     friend class cUIManager;
 };
@@ -62,8 +63,6 @@ public:
 
 private:
     std::stack<cUICanvas*> canvases;
-public:
-    //void AddCanvas(cUICanvas* newCanvas);
 
     // UI quad
 private:
