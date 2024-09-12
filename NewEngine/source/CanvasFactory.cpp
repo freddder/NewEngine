@@ -6,27 +6,30 @@
 
 cOverworldCanvas::cOverworldCanvas()
 {
-    cUIWidget* menuBtnContainer = new cUIWidget();
+    int imageWidth = 250;
+    int imageHeight = 82;
+
+    cUIWidget* menuBtnContainer = new cUIWidget();    
     menuBtnContainer->anchor = MIDDLE_RIGHT;
-    menuBtnContainer->aspectRatio = 230.f / 126.f;
+    menuBtnContainer->aspectRatio = (float)imageHeight * 5 / (float)imageWidth;
     menuBtnContainer->heightPercent = 3.f / 4.f; // change this for size
 
     cUIWidget* topBtnContainer = new cUIWidget();
     topBtnContainer->anchor = TOP_MIDDLE;
-    topBtnContainer->aspectRatio = 92.f / 126.f;
+    topBtnContainer->aspectRatio = (float)imageHeight * 2 / (float)imageWidth;
     topBtnContainer->heightPercent = 2.f / 5.f;
 
-    cMenuButtonWidget* menuBtn1 = new cMenuButtonWidget(this, "Pokedex", "");
+    cMenuButtonWidget* menuBtn1 = new cMenuButtonWidget(this, "Pokedex", "pokedex.png");
     menuBtn1->anchor = TOP_MIDDLE;
     menuBtn1->heightPercent = 0.5f;
     topBtnContainer->AddChild(menuBtn1);
 
-    cMenuButtonWidget* menuBtn2 = new cMenuButtonWidget(this, "Pokemon", "");
+    cMenuButtonWidget* menuBtn2 = new cMenuButtonWidget(this, "Pokemon", "party.png");
     menuBtn2->anchor = BOTTOM_MIDDLE;
     menuBtn2->heightPercent = 0.5f;
     topBtnContainer->AddChild(menuBtn2);
 
-    cMenuButtonWidget* menuBtn3 = new cMenuButtonWidget(this, "Bag", "");
+    cMenuButtonWidget* menuBtn3 = new cMenuButtonWidget(this, "Bag", "bag.png");
     menuBtn3->anchor = MIDDLE_MIDDLE;
     menuBtn3->heightPercent = 1.f / 5.f;
     menuBtnContainer->AddChild(menuBtn3);
@@ -36,12 +39,12 @@ cOverworldCanvas::cOverworldCanvas()
     botBtnContainer->aspectRatio = 92.f / 126.f;
     botBtnContainer->heightPercent = 2.f / 5.f;
 
-    cMenuButtonWidget* menuBtn4 = new cMenuButtonWidget(this, "Options", "");
+    cMenuButtonWidget* menuBtn4 = new cMenuButtonWidget(this, "Options", "options.png");
     menuBtn4->anchor = TOP_MIDDLE;
     menuBtn4->heightPercent = 0.5f;
     botBtnContainer->AddChild(menuBtn4);
 
-    cMenuButtonWidget* menuBtn5 = new cMenuButtonWidget(this, "Save", "");
+    cMenuButtonWidget* menuBtn5 = new cMenuButtonWidget(this, "Save", "save.png");
     menuBtn5->anchor = BOTTOM_MIDDLE;
     menuBtn5->heightPercent = 0.5f;
     botBtnContainer->AddChild(menuBtn5);
@@ -70,15 +73,15 @@ void cOverworldCanvas::CancelAction()
 
 cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName)
 {
-    textureId = canvas->LoadUITexture("PartyMemberButtonBackground.png");
-    hoveredTextureId = canvas->LoadUITexture("PartyMemberButtonBackground-Hovered.png");
-    aspectRatio = 0.365f;
+    textureId = canvas->LoadUITexture("panel.png");
+    hoveredTextureId = canvas->LoadUITexture("panel2.png");
+    aspectRatio = 82.f / 250.f;
 
     cUIStaticImage* icon = new cUIStaticImage();
     icon->anchor = MIDDLE_LEFT;
-    icon->aspectRatio = 3.f / 4.f;
+    icon->aspectRatio = 1.f;;
     icon->heightPercent = 3.f / 4.f;
-    icon->textureId = canvas->LoadUITexture("445_ico_s.png", "assets/pokemon/0445/");
+    icon->textureId = canvas->LoadUITexture(iconFileName);
     AddChild(icon);
 
     cUIText* textWidget = new cUIText();
