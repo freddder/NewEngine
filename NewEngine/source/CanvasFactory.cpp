@@ -95,3 +95,11 @@ cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::s
 cMenuButtonWidget::~cMenuButtonWidget()
 {
 }
+
+cBattleCanvas::cBattleCanvas()
+{
+}
+
+cBattleCanvas::~cBattleCanvas()
+{
+}

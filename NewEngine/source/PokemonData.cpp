@@ -253,7 +253,7 @@ namespace Pokemon
 		return std::string();
 	}
 
-	const std::string sIndividualData::MakeBattleTextureName(bool makeBackInstead)
+	const std::string sIndividualData::MakeBattleTextureName(bool isFront)
 	{
 		std::string textureName = std::to_string(nationalDexNumber);
 
@@ -262,10 +262,10 @@ namespace Pokemon
 		else if (formName != "") // There is no case where both will be true
 			textureName = textureName + "_" + formName;
 
-		if (makeBackInstead)
-			textureName = textureName + "_bb";
-		else
+		if (isFront)
 			textureName = textureName + "_bf";
+		else
+			textureName = textureName + "_bb";
 
 		if (isShiny)
 			textureName = textureName + "_s";

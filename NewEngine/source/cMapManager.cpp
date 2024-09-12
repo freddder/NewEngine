@@ -97,6 +97,16 @@ cMapManager::~cMapManager()
 	}
 }
 
+void cMapManager::Startup()
+{
+}
+
+void cMapManager::Shutdown()
+{
+	delete opponentSpriteModel;
+	delete playerSpriteModel;
+}
+
 sQuadrant* cMapManager::GetQuad(int worldX, int worldZ)
 {
 	if (worldX + 15 < 0 || worldZ + 15 < 0) return nullptr;
@@ -259,7 +269,11 @@ void cMapManager::LoadArena(std::string arenaDescriptionFile)
 		}
 	}
 
-	opponentSpriteModel = new cBattleSprite(glm::vec3(3.f, 0.f, 1.f));
+	if (!opponentSpriteModel)
+		opponentSpriteModel = new cBattleSprite(glm::vec3(3.f, 0.f, 1.f));
+
+	if (!playerSpriteModel)
+		playerSpriteModel = new cBattleSprite(glm::vec3(-4.f, 0.f, 1.f));
 }
 
 void cMapManager::LoadScene(const std::string mapDescriptionFile)

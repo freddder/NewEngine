@@ -487,6 +487,8 @@ namespace Engine
 
         Manager::light.Shutdown();
 
+        Manager::map.Shutdown();
+
         Manager::render.Shutdown();
 
         Manager::scene.Shutdown();

@@ -216,18 +216,19 @@ void cSceneManager::ChangeScene()
 
 void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData)
 {
-	Pokemon::sBattleData battleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
-	std::string texName = battleData.MakeBattleTextureName();
+	Pokemon::sBattleData enemyBattleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
+	std::string enemyTextureName = enemyBattleData.MakeBattleTextureName();
+	float enemySpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(enemyBattleData);
 
-	// TODO: create new canvas for the battle
-	// Canvas should probably have a confirm and cancel function that changes what it does
-	// depending of situations
+	Pokemon::sBattleData playerBattleData = (Pokemon::sBattleData&)Player::partyMember1;
+	std::string playerTextureName = playerBattleData.MakeBattleTextureName(false);
+	float playerSpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(playerBattleData, false);
+
+	Manager::map.opponentSpriteModel->SetSpriteData(enemyTextureName, enemyBattleData.form.battleSpriteHeightSize, enemySpriteAspectRatio, enemyBattleData.form.battleSpriteFrameCount);
+	Manager::map.playerSpriteModel->SetSpriteData(playerTextureName, playerBattleData.form.battleSpriteHeightSize, playerSpriteAspectRatio, playerBattleData.form.battleSpriteFrameCount);
 
 	Manager::render.ChangeRenderMode(BATTLE);
 	Manager::input.ChangeInputState(MENU_NAVIGATION);
-
-	float spriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(battleData);
-	Manager::map.opponentSpriteModel->SetSpriteData(texName, battleData.form.battleSpriteHeightSize, spriteAspectRatio, battleData.form.battleSpriteFrameCount);
 }
 
 void cSceneManager::RunEncounter()
@@ -236,6 +237,7 @@ void cSceneManager::RunEncounter()
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
 
 	Manager::map.opponentSpriteModel->ClearSpriteData();
+	Manager::map.playerSpriteModel->ClearSpriteData();
 }
 
 void cSceneManager::Process(float deltaTime)

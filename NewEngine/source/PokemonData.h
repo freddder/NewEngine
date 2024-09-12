@@ -194,12 +194,12 @@ namespace Pokemon
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
-		int level;
+		int level = 0;
 		eGender gender = Pokemon::NO_GENDER;
 		bool isShiny = false;
 
-		bool isFormGenderBased;
-		bool isSpriteGenderBased;
+		bool isFormGenderBased = false;
+		bool isSpriteGenderBased = false;
 
 		const std::string MakeRoamingTextureName();
 	};
@@ -231,7 +231,7 @@ namespace Pokemon
 		// Move move4;
 
 		const std::string MakeIconTextureName();
-		const std::string MakeBattleTextureName(bool makeBackInstead = false);
+		const std::string MakeBattleTextureName(bool isFront = true);
 	};
 	sIndividualData GenerateIndividualPokemonData(int nationalDexId);
 

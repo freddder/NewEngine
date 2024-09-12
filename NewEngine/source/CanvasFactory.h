@@ -17,3 +17,10 @@ public:
 
 	virtual void CancelAction();
 };
+
+class cBattleCanvas : public cUICanvas
+{
+public:
+	cBattleCanvas();
+	virtual ~cBattleCanvas();
+};

@@ -877,9 +877,9 @@ void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesDat
     }
 }
 
-float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& data)
+float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& data, bool isFront)
 {
-    std::string textureName = data.MakeBattleTextureName();
+    std::string textureName = data.MakeBattleTextureName(isFront);
 
     if (textures.find(textureName) != textures.end()) return 1.f; // already loaded
 

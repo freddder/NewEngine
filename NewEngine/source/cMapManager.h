@@ -70,6 +70,9 @@ public:
 	cMapManager();
 	~cMapManager();
 
+	void Startup();
+	void Shutdown();
+
 private:
 	std::vector<sQuadrant> quads;
 	std::map<int, sCorrectionTiles> walkableTiles;
@@ -89,4 +92,5 @@ public:
 	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
 	
 	cBattleSprite* opponentSpriteModel;
+	cBattleSprite* playerSpriteModel;
 };

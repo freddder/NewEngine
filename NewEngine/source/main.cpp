@@ -103,6 +103,7 @@ int main()
     partner.nationalDexNumber = 445;
     partner.gender = Pokemon::MALE;
     partner.isShiny = true;
+    partner.form.battleSpriteFrameCount = 48; // hard coded for now
     Player::AddPartyMember(partner);
 
     Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
