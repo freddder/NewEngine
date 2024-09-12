@@ -164,6 +164,10 @@ void cUIWidget::ConfirmAction()
 {
 }
 
+cUIStaticImage::~cUIStaticImage()
+{
+}
+
 void cUIStaticImage::Draw()
 {
 	cUIWidget::Draw();

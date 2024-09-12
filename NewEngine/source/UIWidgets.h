@@ -80,8 +80,9 @@ public:
 
 class cUIStaticImage : public cUIWidget
 {
-	~cUIStaticImage() {}
 public:
+	virtual ~cUIStaticImage();
+
 	unsigned int textureId;
 	unsigned int hoveredTextureId;
 	virtual void Draw();
@@ -97,13 +98,13 @@ class cUIText : public cUIWidget
 {
 public:
 	cUIText();
-	~cUIText();
+	virtual ~cUIText();
 
 	unsigned int dataBufferId = 0;
 	size_t drawCharCount = 0;
 	std::string fontName;
 	std::string text;
-	glm::vec3 color;
+	glm::vec3 color = glm::vec3(1.f);
 	float textSizePercent = 1.f; // Of this widget
 
 	virtual void Draw();
