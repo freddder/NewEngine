@@ -88,6 +88,7 @@ public:
 public:
 	sTile* GetTile(glm::vec3 worldPosition);
 	sTile* GetRandomSpawnTile(glm::vec3& globalPositionOut);
+	void RemoveEntityFromTile(glm::vec3 worldPosition);
 
 	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
 	

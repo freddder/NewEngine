@@ -26,7 +26,7 @@ class cOverworldPokemonSprite : public cCharacterSprite
 {
 public:
 	cOverworldPokemonSprite(std::string textureName, glm::vec3 pos);
-	~cOverworldPokemonSprite();
+	virtual ~cOverworldPokemonSprite();
 
 private:
 	eDirection lastDesiredDirection;
@@ -38,7 +38,7 @@ class cNPCSprite : public cCharacterSprite
 {
 public:
 	cNPCSprite(std::string textureName, glm::vec3 pos);
-	~cNPCSprite();
+	virtual ~cNPCSprite();
 
 private:
 	bool switchLeg;
@@ -50,7 +50,7 @@ class cPlayerSprite : public cCharacterSprite
 {
 public:
 	cPlayerSprite(std::string textureName, glm::vec3 pos);
-	~cPlayerSprite();
+	virtual ~cPlayerSprite();
 
 private:
 	eDirection lastDesiredDirection;

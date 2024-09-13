@@ -574,6 +574,15 @@ sTile* cMapManager::GetRandomSpawnTile(glm::vec3& globalPositionOut)
 	return spawnTile;
 }
 
+void cMapManager::RemoveEntityFromTile(glm::vec3 worldPosition)
+{
+	sTile* tile = GetTile(worldPosition);
+
+	if (!tile) return;
+
+	tile->entity = nullptr;
+}
+
 eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection direction)
 {
 	int desiredPosX = (int)entityToMove->position.x;
@@ -613,7 +622,6 @@ eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection d
 
 	if (moveResult != eEntityMoveResult::FAILURE)
 	{
-
 		// OPTIMIZATION: it might be better to have a check on position x and z and direction to easily check
 		// if entity will be changing quad and not have to search for quads twice with a single function call
 		if (sQuadrant* currQuad = GetQuad((int)entityToMove->position.x, (int)entityToMove->position.z))

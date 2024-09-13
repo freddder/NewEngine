@@ -190,6 +190,18 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokem
 	return newWildPokemon;
 }
 
+void cSceneManager::DespawnWildPokemon(cWildRoamingPokemon* pokemonToDespawn)
+{
+	for (int i = 0; roamingWildPokemon.size(); i++)
+	{
+		if (roamingWildPokemon[i].get() == pokemonToDespawn)
+		{
+			roamingWildPokemon.erase(roamingWildPokemon.begin() + i);
+			return;
+		}
+	}
+}
+
 std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 tileLocation)
 {
 	sTile* spawnTile = Manager::map.GetTile(tileLocation);
@@ -215,9 +227,9 @@ void cSceneManager::ChangeScene()
 	// - remove render objects from vector
 }
 
-void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData)
+void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData, cWildRoamingPokemon* roamingEntity)
 {
-	Pokemon::sBattleData enemyBattleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
+	enemyBattleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
 	std::string enemyTextureName = enemyBattleData.MakeBattleTextureName();
 	float enemySpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(enemyBattleData);
 
@@ -229,12 +241,21 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	Manager::map.playerSpriteModel->SetSpriteData(playerTextureName, playerBattleData.form.battleSpriteHeightSize, playerSpriteAspectRatio, playerBattleData.form.battleSpriteFrameCount);
 
 	Manager::ui.AddCanvas(new cBattleCanvas());
+	DespawnWildPokemon(roamingEntity);
 
 	Manager::render.ChangeRenderMode(BATTLE);
 	Manager::input.ChangeInputState(MENU_NAVIGATION);
 }
 
-void cSceneManager::RunEncounter()
+void cSceneManager::CatchWildPokemon()
+{
+	if (enemyBattleData.nationalDexNumber == 0) return;
+
+	Player::AddPartyMember(enemyBattleData);
+	ExitEncounter();
+}
+
+void cSceneManager::ExitEncounter()
 {
 	Manager::render.ChangeRenderMode(MAP);
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
@@ -243,6 +264,8 @@ void cSceneManager::RunEncounter()
 
 	Manager::map.opponentSpriteModel->ClearSpriteData();
 	Manager::map.playerSpriteModel->ClearSpriteData();
+
+	enemyBattleData = Pokemon::sBattleData();
 }
 
 void cSceneManager::Process(float deltaTime)

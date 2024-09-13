@@ -21,6 +21,8 @@ public:
 class cBattleCanvas : public cUICanvas
 {
 	cUIStaticImage* fightButton;
+	cUIStaticImage* pokemonButton;
+	cUIStaticImage* bagButton;
 	cUIStaticImage* runButton;
 
 public:

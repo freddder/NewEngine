@@ -132,7 +132,8 @@ unsigned int cUICanvas::LoadUITexture(const std::string fileName, const std::str
 
 void cUICanvas::ConfirmAction()
 {
-    currFocus->ConfirmAction();
+    if (currFocus)
+        currFocus->ConfirmAction();
 }
 
 void cUICanvas::CancelAction()
@@ -150,8 +151,11 @@ void cUICanvas::MoveFocus(cUIWidget* newFocus)
 
 void cUICanvas::ResetFocus()
 {
-    currFocus->LeaveFocus();
-    currFocus = nullptr;
+    if (currFocus)
+    {
+        currFocus->LeaveFocus();
+        currFocus = nullptr;
+    }
 }
 
 unsigned int cUIManager::GetUIQuadVAO()
@@ -330,6 +334,17 @@ void cUIManager::ExecuteInputAction(eInputType inputType)
 {
     cUICanvas* currCanvas = canvases.top();
 
+    if (inputType == IT_CONFIRM)
+    {
+        currCanvas->ConfirmAction();
+        return;
+    }
+    else if (inputType == IT_CANCEL)
+    {
+        currCanvas->CancelAction();
+        return;
+    }
+
     if (!currCanvas->currFocus)
     {
         currCanvas->currFocus = currCanvas->defaultFocus;
@@ -339,12 +354,6 @@ void cUIManager::ExecuteInputAction(eInputType inputType)
 
     switch (inputType)
     {
-    case IT_CONFIRM:
-        currCanvas->ConfirmAction();
-        break;
-    case IT_CANCEL:
-        currCanvas->CancelAction();
-        break;
     case IT_UP:
         currCanvas->MoveFocus(currCanvas->currFocus->focusUp);
         break;

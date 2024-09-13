@@ -63,12 +63,16 @@ public:
 	void LoadSpawnData(const int nationalDexId, const int minLevel, const int maxLevel, const Pokemon::eSpawnType spawnType,  const int spawnChance, const std::string formName = "");
 	std::shared_ptr<cWildRoamingPokemon> SpawnRandomWildPokemon();
 	std::shared_ptr<cWildRoamingPokemon> SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile);
+	void DespawnWildPokemon(cWildRoamingPokemon* pokemonToDespawn);
 	std::shared_ptr<cTamedRoamingPokemon> SpawnTamedPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 tileLocation);
 
+private:
+	Pokemon::sBattleData enemyBattleData;
 public:
 	void ChangeScene();
-	void EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData);
-	void RunEncounter();
+	void EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData, cWildRoamingPokemon* roamingEntity);
+	void CatchWildPokemon();
+	void ExitEncounter();
 
 	void Process(float deltaTime);
 };

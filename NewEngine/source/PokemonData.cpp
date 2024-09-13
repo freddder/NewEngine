@@ -179,7 +179,7 @@ namespace Pokemon
 
 	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData)
 	{
-		sBattleData newData; 
+		sBattleData newData;
 		newData.nationalDexNumber = roamingData.nationalDexNumber;
 		newData.formName = roamingData.formName;
 		newData.gender = roamingData.gender;

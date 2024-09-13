@@ -108,49 +108,49 @@ cBattleCanvas::cBattleCanvas()
     menuBtnContainer->aspectRatio = (float)imageHeight / (float)imageWidth;
     menuBtnContainer->heightPercent = 1.f / 4.f; // change this for size
 
-    cUIStaticImage* fightBtn = new cUIStaticImage();
-    fightBtn->anchor = TOP_LEFT;
-    fightBtn->heightPercent = 0.5f;
-    fightBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
-    fightBtn->textureId = LoadUITexture("button.png");
-    fightBtn->hoveredTextureId = LoadUITexture("button2.png");
-    menuBtnContainer->AddChild(fightBtn);
+    fightButton = new cUIStaticImage();
+    fightButton->anchor = TOP_LEFT;
+    fightButton->heightPercent = 0.5f;
+    fightButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    fightButton->textureId = LoadUITexture("button.png");
+    fightButton->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(fightButton);
 
     cUIText* fightText = new cUIText();
     fightText->fontName = "Truth And Ideals-Normal.ttf";
     fightText->text = "Fight";
     fightText->heightPercent = 0.3f;
-    fightBtn->AddChild(fightText);
+    fightButton->AddChild(fightText);
     Manager::ui.CreateTextDataBuffer(fightText);
 
-    cUIStaticImage* pkmBtn = new cUIStaticImage();
-    pkmBtn->anchor = TOP_RIGHT;
-    pkmBtn->heightPercent = 0.5f;
-    pkmBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
-    pkmBtn->textureId = LoadUITexture("button.png");
-    pkmBtn->hoveredTextureId = LoadUITexture("button2.png");
-    menuBtnContainer->AddChild(pkmBtn);
+    pokemonButton = new cUIStaticImage();
+    pokemonButton->anchor = TOP_RIGHT;
+    pokemonButton->heightPercent = 0.5f;
+    pokemonButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    pokemonButton->textureId = LoadUITexture("button.png");
+    pokemonButton->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(pokemonButton);
 
     cUIText* pkmText = new cUIText();
     pkmText->fontName = "Truth And Ideals-Normal.ttf";
     pkmText->text = "Pokemon";
     pkmText->heightPercent = 0.3f;
-    pkmBtn->AddChild(pkmText);
+    pokemonButton->AddChild(pkmText);
     Manager::ui.CreateTextDataBuffer(pkmText);
 
-    cUIStaticImage* bagBtn = new cUIStaticImage();
-    bagBtn->anchor = BOTTOM_LEFT;
-    bagBtn->heightPercent = 0.5f;
-    bagBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
-    bagBtn->textureId = LoadUITexture("button.png");
-    bagBtn->hoveredTextureId = LoadUITexture("button2.png");
-    menuBtnContainer->AddChild(bagBtn);
+    bagButton = new cUIStaticImage();
+    bagButton->anchor = BOTTOM_LEFT;
+    bagButton->heightPercent = 0.5f;
+    bagButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    bagButton->textureId = LoadUITexture("button.png");
+    bagButton->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(bagButton);
 
     cUIText* bagText = new cUIText();
     bagText->fontName = "Truth And Ideals-Normal.ttf";
     bagText->text = "Bag";
     bagText->heightPercent = 0.3f;
-    bagBtn->AddChild(bagText);
+    bagButton->AddChild(bagText);
     Manager::ui.CreateTextDataBuffer(bagText);
 
     runButton = new cUIStaticImage();
@@ -168,12 +168,12 @@ cBattleCanvas::cBattleCanvas()
     runButton->AddChild(runText);
     Manager::ui.CreateTextDataBuffer(runText);
 
-    defaultFocus = fightBtn;
+    defaultFocus = fightButton;
 
-    fightBtn->SetMoveFocus(pkmBtn, RIGHT, true);
-    fightBtn->SetMoveFocus(bagBtn, DOWN, true);
-    pkmBtn->SetMoveFocus(runButton, DOWN, true);
-    bagBtn->SetMoveFocus(runButton, RIGHT, true);
+    fightButton->SetMoveFocus(pokemonButton, RIGHT, true);
+    fightButton->SetMoveFocus(bagButton, DOWN, true);
+    pokemonButton->SetMoveFocus(runButton, DOWN, true);
+    bagButton->SetMoveFocus(runButton, RIGHT, true);
 
     anchoredWidgets.push_back(menuBtnContainer);
 }
@@ -184,9 +184,21 @@ cBattleCanvas::~cBattleCanvas()
 
 void cBattleCanvas::ConfirmAction()
 {
-    if (currFocus == runButton)
+    if (currFocus == fightButton)
     {
-        Manager::scene.RunEncounter();
+        Manager::scene.ExitEncounter();
+    }
+    else if (currFocus == pokemonButton)
+    {
+
+    }
+    else if (currFocus == bagButton)
+    {
+        Manager::scene.CatchWildPokemon();
+    }
+    else if (currFocus == runButton)
+    {
+        Manager::scene.ExitEncounter();
     }
 }
 
