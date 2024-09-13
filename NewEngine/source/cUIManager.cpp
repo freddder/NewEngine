@@ -84,6 +84,18 @@ void cUIManager::Shutdown()
     glDeleteVertexArrays(1, &uiQuadVAO);
 }
 
+void cUIManager::AddCanvas(cUICanvas* newCanvas)
+{
+    canvases.push(newCanvas);
+}
+
+void cUIManager::RemoveCanvas()
+{
+    cUICanvas* canvasToRemove = canvases.top();
+    canvases.pop();
+    delete canvasToRemove;
+}
+
 cUICanvas::~cUICanvas()
 {
 	for (int i = 0; i < anchoredWidgets.size(); i++)

@@ -9,6 +9,7 @@
 #include "cMapManager.h"
 #include "cRenderManager.h"
 #include "cInputManager.h"
+#include "CanvasFactory.h"
 
 cSceneManager::cSceneManager()
 {
@@ -227,6 +228,8 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	Manager::map.opponentSpriteModel->SetSpriteData(enemyTextureName, enemyBattleData.form.battleSpriteHeightSize, enemySpriteAspectRatio, enemyBattleData.form.battleSpriteFrameCount);
 	Manager::map.playerSpriteModel->SetSpriteData(playerTextureName, playerBattleData.form.battleSpriteHeightSize, playerSpriteAspectRatio, playerBattleData.form.battleSpriteFrameCount);
 
+	Manager::ui.AddCanvas(new cBattleCanvas());
+
 	Manager::render.ChangeRenderMode(BATTLE);
 	Manager::input.ChangeInputState(MENU_NAVIGATION);
 }
@@ -235,6 +238,8 @@ void cSceneManager::RunEncounter()
 {
 	Manager::render.ChangeRenderMode(MAP);
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
+
+	Manager::ui.RemoveCanvas();
 
 	Manager::map.opponentSpriteModel->ClearSpriteData();
 	Manager::map.playerSpriteModel->ClearSpriteData();

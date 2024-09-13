@@ -4,6 +4,31 @@
 #include "cInputManager.h"
 #include "cAnimation.h"
 
+cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName)
+{
+    textureId = canvas->LoadUITexture("panel.png");
+    hoveredTextureId = canvas->LoadUITexture("panel2.png");
+    aspectRatio = 82.f / 250.f;
+
+    cUIStaticImage* icon = new cUIStaticImage();
+    icon->anchor = MIDDLE_LEFT;
+    icon->aspectRatio = 1.f;;
+    icon->heightPercent = 3.f / 4.f;
+    icon->textureId = canvas->LoadUITexture(iconFileName);
+    AddChild(icon);
+
+    cUIText* textWidget = new cUIText();
+    textWidget->fontName = "Truth And Ideals-Normal.ttf";
+    textWidget->text = text;
+    textWidget->heightPercent = 0.3f;
+    AddChild(textWidget);
+    Manager::ui.CreateTextDataBuffer(textWidget);
+}
+
+cMenuButtonWidget::~cMenuButtonWidget()
+{
+}
+
 cOverworldCanvas::cOverworldCanvas()
 {
     int imageWidth = 250;
@@ -71,33 +96,84 @@ void cOverworldCanvas::CancelAction()
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
 }
 
-cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName)
-{
-    textureId = canvas->LoadUITexture("panel.png");
-    hoveredTextureId = canvas->LoadUITexture("panel2.png");
-    aspectRatio = 82.f / 250.f;
-
-    cUIStaticImage* icon = new cUIStaticImage();
-    icon->anchor = MIDDLE_LEFT;
-    icon->aspectRatio = 1.f;;
-    icon->heightPercent = 3.f / 4.f;
-    icon->textureId = canvas->LoadUITexture(iconFileName);
-    AddChild(icon);
-
-    cUIText* textWidget = new cUIText();
-    textWidget->fontName = "Truth And Ideals-Normal.ttf";
-    textWidget->text = text;
-    textWidget->heightPercent = 0.3f;
-    AddChild(textWidget);
-    Manager::ui.CreateTextDataBuffer(textWidget);
-}
-
-cMenuButtonWidget::~cMenuButtonWidget()
-{
-}
-
 cBattleCanvas::cBattleCanvas()
 {
+    int imageHeight = 46;
+    int imageWidth = 126;
+
+    cUIWidget* menuBtnContainer = new cUIWidget();
+    menuBtnContainer->anchor = BOTTOM_RIGHT;
+    menuBtnContainer->aspectRatio = (float)imageHeight / (float)imageWidth;
+    menuBtnContainer->heightPercent = 1.f / 4.f; // change this for size
+
+    cUIStaticImage* fightBtn = new cUIStaticImage();
+    fightBtn->anchor = TOP_LEFT;
+    fightBtn->heightPercent = 0.5f;
+    fightBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
+    fightBtn->textureId = LoadUITexture("button.png");
+    fightBtn->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(fightBtn);
+
+    cUIText* fightText = new cUIText();
+    fightText->fontName = "Truth And Ideals-Normal.ttf";
+    fightText->text = "Fight";
+    fightText->heightPercent = 0.3f;
+    fightBtn->AddChild(fightText);
+    Manager::ui.CreateTextDataBuffer(fightText);
+
+    cUIStaticImage* pkmBtn = new cUIStaticImage();
+    pkmBtn->anchor = TOP_RIGHT;
+    pkmBtn->heightPercent = 0.5f;
+    pkmBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
+    pkmBtn->textureId = LoadUITexture("button.png");
+    pkmBtn->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(pkmBtn);
+
+    cUIText* pkmText = new cUIText();
+    pkmText->fontName = "Truth And Ideals-Normal.ttf";
+    pkmText->text = "Pokemon";
+    pkmText->heightPercent = 0.3f;
+    pkmBtn->AddChild(pkmText);
+    Manager::ui.CreateTextDataBuffer(pkmText);
+
+    cUIStaticImage* bagBtn = new cUIStaticImage();
+    bagBtn->anchor = BOTTOM_LEFT;
+    bagBtn->heightPercent = 0.5f;
+    bagBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
+    bagBtn->textureId = LoadUITexture("button.png");
+    bagBtn->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(bagBtn);
+
+    cUIText* bagText = new cUIText();
+    bagText->fontName = "Truth And Ideals-Normal.ttf";
+    bagText->text = "Bag";
+    bagText->heightPercent = 0.3f;
+    bagBtn->AddChild(bagText);
+    Manager::ui.CreateTextDataBuffer(bagText);
+
+    cUIStaticImage* runBtn = new cUIStaticImage();
+    runBtn->anchor = BOTTOM_RIGHT;
+    runBtn->heightPercent = 0.5f;
+    runBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
+    runBtn->textureId = LoadUITexture("button.png");
+    runBtn->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(runBtn);
+
+    cUIText* runText = new cUIText();
+    runText->fontName = "Truth And Ideals-Normal.ttf";
+    runText->text = "Run";
+    runText->heightPercent = 0.3f;
+    runBtn->AddChild(runText);
+    Manager::ui.CreateTextDataBuffer(runText);
+
+    defaultFocus = fightBtn;
+
+    fightBtn->SetMoveFocus(pkmBtn, RIGHT, true);
+    fightBtn->SetMoveFocus(bagBtn, DOWN, true);
+    pkmBtn->SetMoveFocus(runBtn, DOWN, true);
+    bagBtn->SetMoveFocus(runBtn, RIGHT, true);
+
+    anchoredWidgets.push_back(menuBtnContainer);
 }
 
 cBattleCanvas::~cBattleCanvas()

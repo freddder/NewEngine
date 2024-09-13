@@ -24,7 +24,7 @@ public:
 protected:
     cUIWidget* defaultFocus;
     cUIWidget* currFocus;
-    void ConfirmAction();
+    virtual void ConfirmAction();
     virtual void CancelAction();
     void MoveFocus(cUIWidget* newFocus);
     void ResetFocus();
@@ -63,6 +63,9 @@ public:
 
 private:
     std::stack<cUICanvas*> canvases;
+public:
+    void AddCanvas(cUICanvas* newCanvas);
+    void RemoveCanvas();
 
     // UI quad
 private:
