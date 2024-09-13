@@ -20,7 +20,13 @@ public:
 
 class cBattleCanvas : public cUICanvas
 {
+	cUIStaticImage* fightButton;
+	cUIStaticImage* runButton;
+
 public:
 	cBattleCanvas();
 	virtual ~cBattleCanvas();
+
+	virtual void ConfirmAction();
+	virtual void CancelAction();
 };

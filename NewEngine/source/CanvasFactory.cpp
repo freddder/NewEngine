@@ -2,6 +2,8 @@
 
 #include "Engine.h"
 #include "cInputManager.h"
+#include "cSceneManager.h"
+
 #include "cAnimation.h"
 
 cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName)
@@ -151,31 +153,43 @@ cBattleCanvas::cBattleCanvas()
     bagBtn->AddChild(bagText);
     Manager::ui.CreateTextDataBuffer(bagText);
 
-    cUIStaticImage* runBtn = new cUIStaticImage();
-    runBtn->anchor = BOTTOM_RIGHT;
-    runBtn->heightPercent = 0.5f;
-    runBtn->aspectRatio = (float)imageHeight / (float)imageWidth;
-    runBtn->textureId = LoadUITexture("button.png");
-    runBtn->hoveredTextureId = LoadUITexture("button2.png");
-    menuBtnContainer->AddChild(runBtn);
+    runButton = new cUIStaticImage();
+    runButton->anchor = BOTTOM_RIGHT;
+    runButton->heightPercent = 0.5f;
+    runButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    runButton->textureId = LoadUITexture("button.png");
+    runButton->hoveredTextureId = LoadUITexture("button2.png");
+    menuBtnContainer->AddChild(runButton);
 
     cUIText* runText = new cUIText();
     runText->fontName = "Truth And Ideals-Normal.ttf";
     runText->text = "Run";
     runText->heightPercent = 0.3f;
-    runBtn->AddChild(runText);
+    runButton->AddChild(runText);
     Manager::ui.CreateTextDataBuffer(runText);
 
     defaultFocus = fightBtn;
 
     fightBtn->SetMoveFocus(pkmBtn, RIGHT, true);
     fightBtn->SetMoveFocus(bagBtn, DOWN, true);
-    pkmBtn->SetMoveFocus(runBtn, DOWN, true);
-    bagBtn->SetMoveFocus(runBtn, RIGHT, true);
+    pkmBtn->SetMoveFocus(runButton, DOWN, true);
+    bagBtn->SetMoveFocus(runButton, RIGHT, true);
 
     anchoredWidgets.push_back(menuBtnContainer);
 }
 
 cBattleCanvas::~cBattleCanvas()
+{
+}
+
+void cBattleCanvas::ConfirmAction()
+{
+    if (currFocus == runButton)
+    {
+        Manager::scene.RunEncounter();
+    }
+}
+
+void cBattleCanvas::CancelAction()
 {
 }
