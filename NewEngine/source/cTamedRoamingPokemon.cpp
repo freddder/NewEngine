@@ -10,3 +10,9 @@ cTamedRoamingPokemon::~cTamedRoamingPokemon()
 {
 
 }
+
+void cTamedRoamingPokemon::UpdateRoamingData(Pokemon::sRoamingPokemonData& newData)
+{
+	data = newData;
+	spriteModel->model.get()->textureName = newData.MakeRoamingTextureName();
+}

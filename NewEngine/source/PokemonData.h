@@ -136,7 +136,8 @@ namespace Pokemon
 		float weight = 0.f; // in kilograms
 
 		float battleSpriteHeightSize = 1.f;
-		int battleSpriteFrameCount = 1;
+		int battleFrontSpriteFrameCount = 1;
+		int battleBackSpriteFrameCount = 1;
 
 		// Learnset as a pair of int (level) and int (move id)
 	};

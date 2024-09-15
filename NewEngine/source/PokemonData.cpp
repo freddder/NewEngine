@@ -315,6 +315,7 @@ namespace Pokemon
 		form.weight = formObject["weight"].GetFloat();
 
 		form.battleSpriteHeightSize = formObject["battleSpriteHeightSize"].GetFloat();
-		form.battleSpriteFrameCount = formObject["battleSpriteFrameCount"].GetInt();
+		form.battleFrontSpriteFrameCount = formObject["battleFrontSpriteFrameCount"].GetInt();
+		form.battleBackSpriteFrameCount = formObject["battleBackSpriteFrameCount"].GetInt();
 	}
 }

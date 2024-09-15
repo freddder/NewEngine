@@ -18,22 +18,20 @@ namespace Player
         return &playerChar->GetModelPositionRef();
     }
 
-    Pokemon::sIndividualData partyMember1;
-    Pokemon::sIndividualData partyMember2;
-    Pokemon::sIndividualData partyMember3;
-    Pokemon::sIndividualData partyMember4;
-    Pokemon::sIndividualData partyMember5;
-    Pokemon::sIndividualData partyMember6;
+    Pokemon::sIndividualData party[6];
 
     void AddPartyMember(const Pokemon::sIndividualData& newPartyMember)
     {
-        if (partyMember1.nationalDexNumber == 0) partyMember1 = newPartyMember;
-        else if (partyMember2.nationalDexNumber == 0) partyMember2 = newPartyMember;
-        else if (partyMember3.nationalDexNumber == 0) partyMember3 = newPartyMember;
-        else if (partyMember4.nationalDexNumber == 0) partyMember4 = newPartyMember;
-        else if (partyMember5.nationalDexNumber == 0) partyMember5 = newPartyMember;
-        else if (partyMember6.nationalDexNumber == 0) partyMember6 = newPartyMember;
+        for (int i = 0; i < 6; i++)
+        {
+            if (party[i].nationalDexNumber == 0)
+            {
+                party[i] = newPartyMember;
+                break;
+            }
+        }
     }
+
     void SwitchPartyMembers(const int member1, const int member2)
     {
         if (member1 < 1 || member1 > 6 ||
@@ -41,8 +39,19 @@ namespace Player
             member1 == member2)
             return;
 
-        Pokemon::sIndividualData* switchMember1, switchMember2;
+        if (party[member1 - 1].nationalDexNumber == 0 || party[member2 - 1].nationalDexNumber == 0)
+            return;
 
-        //if (member1 == 1) switchMember1 = partyMember1
+        Pokemon::sIndividualData& switchMember1 = party[member1 - 1];
+        Pokemon::sIndividualData& switchMember2 = party[member2 - 1];
+
+        Pokemon::sIndividualData temp = switchMember1;
+        switchMember1 = switchMember2;
+        switchMember2 = temp;
+
+        if (member1 == 1 || member2 == 2) // change the following tamed pokemon sprite
+        {
+            playerPartner.get()->UpdateRoamingData(party[0]);
+        }
     }
 }

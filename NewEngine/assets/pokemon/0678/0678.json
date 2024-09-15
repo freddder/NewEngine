@@ -21,7 +21,8 @@
         "height": 0.6000000238418579,
         "weight": 8.5,
         "battleSpriteHeightSize": 0.7,
-        "battleSpriteFrameCount": 1
+        "battleFrontSpriteFrameCount": 1,
+        "battleBackSpriteFrameCount": 1
     },
     "alternateForms": [
         {
@@ -37,7 +38,8 @@
             "height": 0.6000000238418579,
             "weight": 8.5,
             "battleSpriteHeightSize": 0.7,
-            "battleSpriteFrameCount": 1
+            "battleFrontSpriteFrameCount": 1,
+            "battleBackSpriteFrameCount": 1
         }
     ]
 }

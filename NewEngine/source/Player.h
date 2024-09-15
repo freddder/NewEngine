@@ -24,12 +24,7 @@ namespace Player
 	glm::vec3 GetPlayerPosition();
 	glm::vec3* GetPlayerPositionRef();
 
-	extern Pokemon::sIndividualData partyMember1;
-	extern Pokemon::sIndividualData partyMember2;
-	extern Pokemon::sIndividualData partyMember3;
-	extern Pokemon::sIndividualData partyMember4;
-	extern Pokemon::sIndividualData partyMember5;
-	extern Pokemon::sIndividualData partyMember6;
+	extern Pokemon::sIndividualData party[];
 
 	void AddPartyMember(const Pokemon::sIndividualData& newPartyMember);
 	void SwitchPartyMembers(const int member1, const int member2);

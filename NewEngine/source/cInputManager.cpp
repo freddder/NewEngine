@@ -132,6 +132,9 @@ void cInputManager::BindInput(int key, eInputType type)
 
 void cInputManager::UpdateInput(int key, int action)
 {
+	if (key == GLFW_KEY_S && action == GLFW_PRESS)
+		Player::SwitchPartyMembers(1, 2);
+
 	eInputType type = boundInputs[key];
 	if (type == IT_INVALID) return;
 

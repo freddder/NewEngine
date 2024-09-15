@@ -233,12 +233,12 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	std::string enemyTextureName = enemyBattleData.MakeBattleTextureName();
 	float enemySpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(enemyBattleData);
 
-	Pokemon::sBattleData playerBattleData = (Pokemon::sBattleData&)Player::partyMember1;
+	Pokemon::sBattleData playerBattleData = (Pokemon::sBattleData&)Player::party[0];
 	std::string playerTextureName = playerBattleData.MakeBattleTextureName(false);
 	float playerSpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(playerBattleData, false);
 
-	Manager::map.opponentSpriteModel->SetSpriteData(enemyTextureName, enemyBattleData.form.battleSpriteHeightSize, enemySpriteAspectRatio, enemyBattleData.form.battleSpriteFrameCount);
-	Manager::map.playerSpriteModel->SetSpriteData(playerTextureName, playerBattleData.form.battleSpriteHeightSize, playerSpriteAspectRatio, playerBattleData.form.battleSpriteFrameCount);
+	Manager::map.opponentSpriteModel->SetSpriteData(enemyTextureName, enemyBattleData.form.battleSpriteHeightSize, enemySpriteAspectRatio, enemyBattleData.form.battleFrontSpriteFrameCount);
+	Manager::map.playerSpriteModel->SetSpriteData(playerTextureName, playerBattleData.form.battleSpriteHeightSize, playerSpriteAspectRatio, playerBattleData.form.battleBackSpriteFrameCount);
 
 	Manager::ui.AddCanvas(new cBattleCanvas());
 	DespawnWildPokemon(roamingEntity);

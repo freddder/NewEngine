@@ -9,4 +9,6 @@ class cTamedRoamingPokemon : public cCharacterEntity
 public:
 	cTamedRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos);
 	~cTamedRoamingPokemon();
+
+	void UpdateRoamingData(Pokemon::sRoamingPokemonData& newData);
 };

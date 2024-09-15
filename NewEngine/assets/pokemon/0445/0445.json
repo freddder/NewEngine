@@ -21,7 +21,8 @@
         "height": 1.899999976158142,
         "weight": 95.0,
         "battleSpriteHeightSize": 1.0,
-        "battleSpriteFrameCount": 90
+        "battleFrontSpriteFrameCount": 90,
+        "battleBackSpriteFrameCount": 48
     },
     "alternateForms": []
 }

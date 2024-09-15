@@ -103,7 +103,7 @@ int main()
     partner.nationalDexNumber = 445;
     partner.gender = Pokemon::MALE;
     partner.isShiny = true;
-    partner.form.battleSpriteFrameCount = 48; // hard coded for now
+    partner.form.battleBackSpriteFrameCount = 48; // hard coded for now
     Player::AddPartyMember(partner);
 
     Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
@@ -114,10 +114,10 @@ int main()
         Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
 
         Pokemon::sSpeciesData followerSpecieData;
-        Pokemon::LoadSpecieData(Player::partyMember1.nationalDexNumber, followerSpecieData);
+        Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
         Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
 
-        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
+        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::party[0], glm::vec3(22.f, 1.f, 25.f));
         Player::playerChar->SetFollower(Player::playerPartner.get());
 
         // TODO: find a good place to seed the rand

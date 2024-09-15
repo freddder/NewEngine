@@ -893,7 +893,8 @@ float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& dat
     std::string fullPath = texturePath + textureName;
     sSpriteSheet newSpriteSheet;
     newSpriteSheet.numRows = 1;
-    newSpriteSheet.numCols = data.form.battleSpriteFrameCount;
+    newSpriteSheet.numCols = isFront ? data.form.battleFrontSpriteFrameCount : data.form.battleBackSpriteFrameCount;
+
     int width, height;
     newSpriteSheet.textureId = CreateTexture(fullPath, width, height);
 
