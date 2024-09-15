@@ -34,4 +34,15 @@ namespace Player
         else if (partyMember5.nationalDexNumber == 0) partyMember5 = newPartyMember;
         else if (partyMember6.nationalDexNumber == 0) partyMember6 = newPartyMember;
     }
+    void SwitchPartyMembers(const int member1, const int member2)
+    {
+        if (member1 < 1 || member1 > 6 ||
+            member2 < 1 || member2 > 6 ||
+            member1 == member2)
+            return;
+
+        Pokemon::sIndividualData* switchMember1, switchMember2;
+
+        //if (member1 == 1) switchMember1 = partyMember1
+    }
 }

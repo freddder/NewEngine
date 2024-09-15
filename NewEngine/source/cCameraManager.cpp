@@ -96,7 +96,7 @@ glm::mat4 cCameraManager::GetViewMatrix()
 {
 	if (usePlayerCamera)
 	{
-		if (Manager::render.renderMode == MAP)
+		if (Engine::currGameMode == eGameMode::MAP)
 		{
 			glm::vec3 newPosition;
 			newPosition.x = targetPosRef->x - (glm::cos(glm::radians(targetAngle)) * targetDistance);

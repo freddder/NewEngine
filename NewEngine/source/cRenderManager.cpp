@@ -635,7 +635,7 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedMod
 
 void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
 {
-    if (renderMode == MAP)
+    if (Engine::currGameMode == eGameMode::MAP) // TEMP
     {
         std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(mapModels.begin(), mapModels.end(), model);
 
@@ -1057,12 +1057,12 @@ void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
     float near_plane = 1.f, far_plane = 100.f;
 
     glm::vec3 lightPos, lightAt;
-    if (renderMode == MAP)
+    if (Engine::currGameMode == eGameMode::MAP)
     {
         lightPos = glm::vec3(Manager::light.lights[0].position) + Player::GetPlayerPosition();
         lightAt = Player::GetPlayerPosition();
     }
-    else if (renderMode == BATTLE)
+    else if (Engine::currGameMode == eGameMode::BATTLE)
     {
         lightPos = glm::vec3(-20.f, 12.f, -10.f);
         lightAt = glm::vec3(0.f); // look at world origin
@@ -1081,14 +1081,14 @@ void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     //Draw scene
-    if (renderMode == MAP)
+    if (Engine::currGameMode == eGameMode::MAP)
     {
         for (int i = 0; i < mapModels.size(); i++)
         {
             DrawObject(mapModels[i]);
         }
     }
-    else if (renderMode == BATTLE)
+    else if (Engine::currGameMode == eGameMode::BATTLE)
     {
         for (int i = 0; i < battleModels.size(); i++)
         {
@@ -1134,14 +1134,14 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
-    if (renderMode == MAP)
+    if (Engine::currGameMode == eGameMode::MAP)
     {
         for (int i = 0; i < mapModels.size(); i++)
         {
             DrawObject(mapModels[i]);
         }
     }
-    else if (renderMode == BATTLE)
+    else if (Engine::currGameMode == eGameMode::BATTLE)
     {
         for (int i = 0; i < battleModels.size(); i++)
         {
@@ -1180,7 +1180,7 @@ void cRenderManager::DrawFrame()
     glDepthFunc(GL_LESS); // set depth function back to default      
 }
 
-void cRenderManager::ChangeRenderMode(eRenderMode newMode)
-{
-    renderMode = newMode;
-}
+//void cRenderManager::ChangeRenderMode(eRenderMode newMode)
+//{
+//    renderMode = newMode;
+//}

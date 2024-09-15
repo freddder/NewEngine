@@ -32,4 +32,5 @@ namespace Player
 	extern Pokemon::sIndividualData partyMember6;
 
 	void AddPartyMember(const Pokemon::sIndividualData& newPartyMember);
+	void SwitchPartyMembers(const int member1, const int member2);
 }

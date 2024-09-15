@@ -189,8 +189,6 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Camera"))
     {
-        //cCamera* camera = cCamera::GetInstance();
-
         float* cameraPosition[3];
         cameraPosition[0] = &Manager::camera.position.x;
         cameraPosition[1] = &Manager::camera.position.y;
@@ -205,28 +203,6 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Enviornment"))
     {
-        //if (ImGui::Button("Change Scene"))
-        //{
-        //    Manager::scene.ChangeScene();
-        //}
-
-        if (ImGui::BeginCombo("Render Mode", RenderMode_Strings[Manager::render.renderMode]))
-        {
-            for (int n = 0; n < eRenderMode::RENDERMODE_ENUM_COUNT; n++)
-            {
-                const bool is_selected = (Manager::render.renderMode == n);
-                if (ImGui::Selectable(RenderMode_Strings[n], is_selected))
-                {
-                    Manager::render.ChangeRenderMode(static_cast<eRenderMode>(n));
-                }
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
-
         if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
         {
             for (int n = 0; n < eEnvironmentWeather::ENUM_COUNT; n++)
@@ -311,7 +287,7 @@ void RenderImgui()
             {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
-                //cRenderManager* renderManager = cRenderManager::GetInstance();
+                
                 ImGui::Image((void*)(intptr_t)Manager::render.GetDepthMapId(), ImVec2(120, 90));
 
                 ImGui::TableNextColumn();
@@ -412,8 +388,7 @@ namespace Manager
 
 namespace Engine
 {
-    //cUIStaticImage* button;
-    //cUIStaticImage* sprite;
+    eGameMode currGameMode = eGameMode::MAP;
 
     // camera
     float lastX = 1200 / 2.0f;

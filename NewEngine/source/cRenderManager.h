@@ -40,21 +40,6 @@ public:
     bool isSymmetrical;
 };
 
-enum eRenderMode
-{
-    MAP,
-    BATTLE,
-    MENU,
-    RENDERMODE_ENUM_COUNT
-};
-
-const static char* RenderMode_Strings[] =
-{
-    "Map",
-    "Battle",
-    "Menu"
-};
-
 class cRenderManager
 {
 public:
@@ -141,8 +126,6 @@ private:
     void DrawParticles(class cParticleSpawner* spawner);
     void DrawShadowPass(glm::mat4& outLightSpaceMatrix);
 public:
-    eRenderMode renderMode = MAP; // TEMP public
-    void ChangeRenderMode(eRenderMode newMode);
     void DrawFrame();
 
     friend class cUICanvas;

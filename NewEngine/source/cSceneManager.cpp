@@ -243,12 +243,14 @@ void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roami
 	Manager::ui.AddCanvas(new cBattleCanvas());
 	DespawnWildPokemon(roamingEntity);
 
-	Manager::render.ChangeRenderMode(BATTLE);
+	Engine::currGameMode = eGameMode::BATTLE;
 	Manager::input.ChangeInputState(MENU_NAVIGATION);
 }
 
 void cSceneManager::CatchWildPokemon()
 {
+	if (Engine::currGameMode != eGameMode::BATTLE) return;
+
 	if (enemyBattleData.nationalDexNumber == 0) return;
 
 	Player::AddPartyMember(enemyBattleData);
@@ -257,7 +259,9 @@ void cSceneManager::CatchWildPokemon()
 
 void cSceneManager::ExitEncounter()
 {
-	Manager::render.ChangeRenderMode(MAP);
+	if (Engine::currGameMode != eGameMode::BATTLE) return;
+
+	Engine::currGameMode = eGameMode::MAP;
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
 
 	Manager::ui.RemoveCanvas();

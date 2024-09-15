@@ -23,8 +23,17 @@ namespace Manager
 	extern cInputManager input;
 }
 
+enum eGameMode
+{
+	MAP,
+	BATTLE,
+	MENU
+};
+
 namespace Engine
 {
+	extern eGameMode currGameMode;
+
 	bool InitializeGLFW();
 
 	void StartUpManagers();
