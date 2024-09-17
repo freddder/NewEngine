@@ -701,13 +701,13 @@ void cRenderManager::UnloadTextures()
 {
     for (std::map<std::string, sTexture>::iterator it = textures.begin(); it != textures.end(); it++)
     {
-        glDeleteBuffers(1, &it->second.textureId);
+        glDeleteTextures(1, &it->second.textureId);
     }
     textures.clear();
 
     for (std::map<std::string, sSpriteSheet>::iterator it = spriteSheets.begin(); it != spriteSheets.end(); it++)
     {
-        glDeleteBuffers(1, &it->second.textureId);
+        glDeleteTextures(1, &it->second.textureId);
     }
     spriteSheets.clear();
 }
@@ -923,7 +923,11 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
 
 void cRenderManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
 {
-    if (textures.find(textureToSetup) == textures.end()) return; // texture doesn't exists
+    if (textures.find(textureToSetup) == textures.end())
+    {
+        std::cout << "Failed to setup texture: " << textureToSetup << std::endl;
+        return; // texture doesn't exists
+    }
 
     unsigned int textureId = textures[textureToSetup].textureId;
 
@@ -1151,13 +1155,16 @@ void cRenderManager::DrawFrame()
     }
 
     // Draw particles
-    if (Manager::scene.weatherParticleSpawner)
+    if (Engine::currGameMode != eGameMode::MENU)
     {
-        DrawParticles(Manager::scene.weatherParticleSpawner);
-    }
-    for (int i = 0; i < Manager::scene.particleSpawners.size(); i++)
-    {
-        DrawParticles(Manager::scene.particleSpawners[i]);
+        if (Manager::scene.weatherParticleSpawner)
+        {
+            DrawParticles(Manager::scene.weatherParticleSpawner);
+        }
+        for (int i = 0; i < Manager::scene.particleSpawners.size(); i++)
+        {
+            DrawParticles(Manager::scene.particleSpawners[i]);
+        }
     }
 
     // Draw UI
@@ -1180,8 +1187,3 @@ void cRenderManager::DrawFrame()
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default      
 }
-
-//void cRenderManager::ChangeRenderMode(eRenderMode newMode)
-//{
-//    renderMode = newMode;
-//}

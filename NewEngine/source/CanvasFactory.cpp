@@ -6,6 +6,8 @@
 
 #include "cAnimation.h"
 
+#include "Player.h"
+
 cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName)
 {
     textureId = canvas->LoadUITexture("panel.png");
@@ -90,6 +92,12 @@ cOverworldCanvas::cOverworldCanvas()
 
 cOverworldCanvas::~cOverworldCanvas()
 {
+}
+
+void cOverworldCanvas::ConfirmAction()
+{
+    Engine::currGameMode = eGameMode::MENU;
+    Manager::ui.AddCanvas(new cPartyCanvas());
 }
 
 void cOverworldCanvas::CancelAction()
@@ -190,7 +198,7 @@ void cBattleCanvas::ConfirmAction()
     }
     else if (currFocus == pokemonButton)
     {
-
+        
     }
     else if (currFocus == bagButton)
     {
@@ -204,4 +212,126 @@ void cBattleCanvas::ConfirmAction()
 
 void cBattleCanvas::CancelAction()
 {
+}
+
+cPartyMemberButton::cPartyMemberButton(cUICanvas* canvas, int memberNum)
+{
+    Pokemon::sIndividualData& member = Player::party[memberNum];
+
+    textureId = canvas->LoadUITexture("button.png");
+    hoveredTextureId = canvas->LoadUITexture("button2.png");
+    aspectRatio = 46.f / 126.f;
+    heightPercent = 1.f / 3.f;
+
+    cUIText* memberText = new cUIText();
+    memberText->fontName = "Truth And Ideals-Normal.ttf";
+    memberText->text = member.name;
+    memberText->heightPercent = 0.3f;
+    AddChild(memberText);
+    Manager::ui.CreateTextDataBuffer(memberText);
+
+    cUIStaticImage* icon = new cUIStaticImage();
+    icon->anchor = MIDDLE_LEFT;
+    icon->aspectRatio = 3.f / 4.f;
+    icon->heightPercent = 3.f / 4.f;
+    icon->textureId = canvas->LoadUITexture(member.MakeIconTextureName(), "assets/pokemon/" + Pokemon::MakeDexNumberFolderName(member.nationalDexNumber) + "/");
+    AddChild(icon);
+}
+
+cPartyMemberButton::~cPartyMemberButton()
+{
+}
+
+cPartyCanvas::cPartyCanvas()
+{
+    cUIWidget* membersContainer = new cUIWidget();
+    membersContainer->aspectRatio = (46.f * 3.f) / (126.f * 2.f);
+    membersContainer->heightPercent = 0.9f;
+
+    member1 = new cPartyMemberButton(this, 0);
+    member1->anchor = TOP_LEFT;
+    membersContainer->AddChild(member1);
+
+    if (Player::party[1].nationalDexNumber != 0)
+    {
+        member2 = new cPartyMemberButton(this, 1);
+        member2->anchor = TOP_RIGHT;
+        member2->SetMoveFocus(member1, LEFT, true);
+        membersContainer->AddChild(member2);
+    }
+
+    if (Player::party[2].nationalDexNumber != 0)
+    {
+        member3 = new cPartyMemberButton(this, 2);
+        member3->anchor = MIDDLE_LEFT;
+        member3->SetMoveFocus(member1, UP, true);
+        membersContainer->AddChild(member3);
+    }
+
+    if (Player::party[3].nationalDexNumber != 0)
+    {
+        member4 = new cPartyMemberButton(this, 3);
+        member4->anchor = MIDDLE_RIGHT;
+        member4->SetMoveFocus(member3, LEFT, true);
+        member4->SetMoveFocus(member2, UP, true);
+        membersContainer->AddChild(member4);
+    }
+
+    if (Player::party[4].nationalDexNumber != 0)
+    {
+        member5 = new cPartyMemberButton(this, 4);
+        member5->anchor = BOTTOM_LEFT;
+        member5->SetMoveFocus(member3, UP, true);
+        membersContainer->AddChild(member5);
+    }
+
+    if (Player::party[5].nationalDexNumber != 0)
+    {
+        member6 = new cPartyMemberButton(this, 5);
+        member6->anchor = BOTTOM_RIGHT;
+        member6->SetMoveFocus(member5, LEFT, true);
+        member6->SetMoveFocus(member4, UP, true);
+        membersContainer->AddChild(member6);
+    }
+
+    defaultFocus = member1;
+
+    anchoredWidgets.push_back(membersContainer);
+}
+
+cPartyCanvas::~cPartyCanvas()
+{
+}
+
+void cPartyCanvas::ConfirmAction()
+{
+    if (memberSelected != 0)
+    {
+        int otherMember = 0;
+
+        if (currFocus == member1) otherMember = 1;
+        else if (currFocus == member2) otherMember = 2;
+        else if (currFocus == member3) otherMember = 3;
+        else if (currFocus == member4) otherMember = 4;
+        else if (currFocus == member5) otherMember = 5;
+        else if (currFocus == member6) otherMember = 6;
+
+        Player::SwitchPartyMembers(memberSelected, otherMember);
+        memberSelected = 0;
+    }
+    else
+    {
+        if (currFocus == member1) memberSelected = 1;
+        else if (currFocus == member2) memberSelected = 2;
+        else if (currFocus == member3) memberSelected = 3;
+        else if (currFocus == member4) memberSelected = 4;
+        else if (currFocus == member5) memberSelected = 5;
+        else if (currFocus == member6) memberSelected = 6;
+    }
+}
+
+void cPartyCanvas::CancelAction()
+{
+    Engine::currGameMode = eGameMode::MAP;
+    Manager::ui.RemoveCanvas();
 }

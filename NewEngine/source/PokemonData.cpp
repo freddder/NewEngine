@@ -13,15 +13,22 @@ namespace Pokemon
 	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber);
 	void LoadFormData(rapidjson::Value& formObject, sForm& form);
 
-	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
+	std::string MakeDexNumberFolderName(const int nationalDexNumber)
 	{
-		if (!IsNationalDexNumberValid(nationalDexNumber)) return;
-	
 		std::string dexNumberString = std::to_string(nationalDexNumber);
 		while (dexNumberString.length() < 4)
 		{
 			dexNumberString = "0" + dexNumberString;
 		}
+
+		return dexNumberString;
+	}
+
+	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
+	{
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return;
+	
+		std::string dexNumberString = MakeDexNumberFolderName(nationalDexNumber);
 	
 		FILE* fp = 0;
 		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "wb");
@@ -221,6 +228,8 @@ namespace Pokemon
 			LoadFormData(defaultFormObject, newData.form);
 		}
 
+		newData.name = d["name"].GetString();
+
 		newData.maxHealth = 100;
 		newData.currHealth = 100;
 
@@ -249,8 +258,21 @@ namespace Pokemon
 
 	const std::string sIndividualData::MakeIconTextureName()
 	{
+		std::string textureName = std::to_string(nationalDexNumber);
 
-		return std::string();
+		if (gender == FEMALE && isFormGenderBased)
+			textureName = textureName + "_f";
+		else if (formName != "") // There is no case where both will be true
+			textureName = textureName + "_" + formName;
+
+		textureName += "_ico";
+
+		if (isShiny)
+			textureName = textureName + "_s";
+
+		textureName = textureName + ".png";
+
+		return textureName;
 	}
 
 	const std::string sIndividualData::MakeBattleTextureName(bool isFront)
@@ -275,15 +297,29 @@ namespace Pokemon
 		return textureName;
 	}
 
+	void sIndividualData::LoadFormFromSpeciesData()
+	{
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return;
+
+		sSpeciesData speciesData;
+		LoadSpecieData(nationalDexNumber, speciesData);
+
+		if (speciesData.isFormGenderBased && gender == FEMALE)
+			form = speciesData.alternateForms["female"];
+		else if (formName != "")
+			form = speciesData.alternateForms[formName];
+		else
+			form = speciesData.defaultForm;
+
+		if (name == "")
+			name = speciesData.name;
+	}
+
 	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber)
 	{
 		if (!IsNationalDexNumberValid(nationalDexNumber)) return false;
 
-		std::string dexNumberString = std::to_string(nationalDexNumber);
-		while (dexNumberString.length() < 4)
-		{
-			dexNumberString = "0" + dexNumberString;
-		}
+		std::string dexNumberString = MakeDexNumberFolderName(nationalDexNumber);
 
 		FILE* fp = 0;
 		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "rb"); // non-Windows use "r"

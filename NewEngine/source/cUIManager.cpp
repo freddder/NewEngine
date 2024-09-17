@@ -105,7 +105,7 @@ cUICanvas::~cUICanvas()
 
     for (std::map<std::string, unsigned int>::iterator it = textures.begin(); it != textures.end(); it++)
     {
-        glDeleteBuffers(1, &it->second);
+        glDeleteTextures(1, &it->second);
     }
 }
 
@@ -116,8 +116,8 @@ unsigned int cUICanvas::LoadUITexture(const std::string fileName, const std::str
     if (textures.find(fileName) != textures.end()) return textures[fileName]; // texture already loaded
 
     std::string fullPath = "";
-    if (subdirectory == "") fullPath += UI_TEXTURE_PATH + fileName;
-    else fullPath += subdirectory + fileName;
+    fullPath += subdirectory == "" ? UI_TEXTURE_PATH : subdirectory;
+    fullPath += fileName;
 
     int width, height;
     unsigned int textureId = Manager::render.CreateTexture(fullPath, width, height);

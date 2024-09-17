@@ -49,7 +49,7 @@ namespace Player
         switchMember1 = switchMember2;
         switchMember2 = temp;
 
-        if (member1 == 1 || member2 == 2) // change the following tamed pokemon sprite
+        if (member1 == 1 || member2 == 1) // change the following tamed pokemon sprite
         {
             playerPartner.get()->UpdateRoamingData(party[0]);
         }

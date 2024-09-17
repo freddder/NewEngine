@@ -162,6 +162,7 @@ namespace Pokemon
 	};
 
 	const static unsigned int JSON_DATA_VERSION = 1;
+	std::string MakeDexNumberFolderName(const int nationalDexNumber);
 	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data);
 	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data);
 
@@ -208,7 +209,7 @@ namespace Pokemon
 
 	struct sIndividualData : public sRoamingPokemonData // Individual data (outside of battle)
 	{
-		std::string customName = "";
+		std::string name = "";
 
 		int maxHealth;
 		int currHealth;
@@ -233,6 +234,7 @@ namespace Pokemon
 
 		const std::string MakeIconTextureName();
 		const std::string MakeBattleTextureName(bool isFront = true);
+		void LoadFormFromSpeciesData();
 	};
 	sIndividualData GenerateIndividualPokemonData(int nationalDexId);
 

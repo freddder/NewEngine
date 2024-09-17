@@ -15,6 +15,7 @@ public:
 	cOverworldCanvas();
 	virtual ~cOverworldCanvas();
 
+	virtual void ConfirmAction();
 	virtual void CancelAction();
 };
 
@@ -28,6 +29,32 @@ class cBattleCanvas : public cUICanvas
 public:
 	cBattleCanvas();
 	virtual ~cBattleCanvas();
+
+	virtual void ConfirmAction();
+	virtual void CancelAction();
+};
+
+class cPartyMemberButton : public cUIStaticImage
+{
+public:
+	cPartyMemberButton(cUICanvas* canvas, int memberNum);
+	virtual ~cPartyMemberButton();
+};
+
+class cPartyCanvas : public cUICanvas
+{
+	cPartyMemberButton* member1;
+	cPartyMemberButton* member2;
+	cPartyMemberButton* member3;
+	cPartyMemberButton* member4;
+	cPartyMemberButton* member5;
+	cPartyMemberButton* member6;
+
+	int memberSelected = 0;
+
+public:
+	cPartyCanvas();
+	virtual ~cPartyCanvas();
 
 	virtual void ConfirmAction();
 	virtual void CancelAction();
