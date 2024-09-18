@@ -18,9 +18,7 @@ uniform mat4 modelOrientationX;
 uniform mat4 modelOrientationY;
 uniform mat4 modelOrientationZ;
 uniform mat4 modelScale;
-//uniform mat4 lightSpaceMatrix;
 
-//uniform bool isShadowPass;
 
 uniform vec2 globalUVRatios;
 //uniform vec2 UVoffset;

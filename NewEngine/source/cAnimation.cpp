@@ -77,6 +77,61 @@ void cFloatAnimation::Process(float deltaTime)
 	}
 }
 
+cVec2Animation::cVec2Animation(glm::vec2& _valueRef) :
+	valueRef(_valueRef)
+{
+	initValue = _valueRef;
+}
+
+void cVec2Animation::AddKeyFrame(sKeyFrameVec2 newKeyframe)
+{
+	if (newKeyframe.time > maxDuration)
+		maxDuration = newKeyframe.time;
+
+	keyframes.push_back(newKeyframe);
+}
+
+void cVec2Animation::Process(float deltaTime)
+{
+	if (isDone) return;
+
+	timer += deltaTime * speed;
+
+	sKeyFrameVec2 currKeyframe;
+	sKeyFrameVec2 nextKeyframe;
+	float fraction = 1;
+	for (unsigned int keyFrameIndex = 0; keyFrameIndex < keyframes.size(); keyFrameIndex++)
+	{
+		if (keyframes[keyFrameIndex].time >= timer)
+		{
+			nextKeyframe = keyframes[keyFrameIndex];
+
+			if (keyFrameIndex != 0)
+			{
+				currKeyframe = keyframes[keyFrameIndex - 1];
+			}
+			else
+			{
+				currKeyframe.time = 0.f;
+				currKeyframe.value = initValue;
+			}
+
+			fraction = (timer - currKeyframe.time) / (nextKeyframe.time - currKeyframe.time);
+
+			glm::vec2 newValue = currKeyframe.value + (nextKeyframe.value - currKeyframe.value) * fraction;
+			valueRef = newValue;
+
+			break;
+		}
+	}
+
+	if (keyframes.size() != 0 && timer >= maxDuration)
+	{
+		glm::vec2 finalValue = keyframes[keyframes.size() - 1].value;
+		valueRef = finalValue;
+	}
+}
+
 cVec3Animation::cVec3Animation(glm::vec3& _valueRef) :
 	valueRef(_valueRef)
 {

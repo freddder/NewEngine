@@ -174,11 +174,7 @@ void cUIStaticImage::Draw()
 
 	if (textureId == 0) return;
 
-	unsigned int textureIdToUse;
-	if (!isFocused || hoveredTextureId == 0)
-		textureIdToUse = textureId;
-	else
-		textureIdToUse = hoveredTextureId;
+	unsigned int textureIdToUse = !isFocused || hoveredTextureId == 0 ? textureId : hoveredTextureId;
 
 	Manager::render.use("ui");
 	
@@ -198,6 +194,19 @@ void cUIStaticImage::Draw()
 	float heightTranslate = CalculateVerticalTranslate();
 	Manager::render.setFloat("widthTranslate", widthTranslate);
 	Manager::render.setFloat("heightTranslate", heightTranslate);
+
+	if (useScreenSpace)
+	{
+		float screenAspectRatio = (float)Manager::camera.SCR_HEIGHT / (float)Manager::camera.SCR_WIDTH;
+		glm::vec2 rate = glm::vec2(screenSpaceRatio.x / screenAspectRatio, screenSpaceRatio.y);
+		Manager::render.setVec2("screenSpaceRatio", rate);
+		Manager::render.setVec2("textureTranslate", translate);
+	}
+	else
+	{
+		Manager::render.setVec2("screenSpaceRatio", glm::vec2(1.f));
+		Manager::render.setVec2("textureTranslate", glm::vec2(0.f));
+	}
 
 	glBindVertexArray(Manager::ui.GetUIQuadVAO());
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

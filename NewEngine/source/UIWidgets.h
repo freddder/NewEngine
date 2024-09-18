@@ -85,6 +85,9 @@ public:
 
 	unsigned int textureId;
 	unsigned int hoveredTextureId;
+	bool useScreenSpace = false;
+	glm::vec2 screenSpaceRatio = glm::vec2(1.f);
+	glm::vec2 translate = glm::vec2(0.f);
 	virtual void Draw();
 };
 

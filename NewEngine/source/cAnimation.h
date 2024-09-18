@@ -20,6 +20,19 @@ enum eDirection
 	RIGHT
 };
 
+struct sKeyFrameVec2
+{
+	sKeyFrameVec2() :
+		time(0.f),
+		value(glm::vec2(0)) {}
+	sKeyFrameVec2(float _time, glm::vec2 _value) :
+		time(_time),
+		value(_value) {}
+
+	glm::vec2 value;
+	float time;
+};
+
 struct sKeyFrameVec3 // rgb
 {
 	sKeyFrameVec3(): 
@@ -126,6 +139,20 @@ public:
 
 	cFloatAnimation(float& _valueRef);
 	void AddKeyFrame(sKeyFrameFloat newKeyframe);
+
+	virtual void Process(float deltaTime);
+};
+
+class cVec2Animation : public cAnimation
+{
+public:
+	glm::vec2& valueRef;
+	glm::vec2 initValue;
+
+	std::vector<sKeyFrameVec2> keyframes;
+
+	cVec2Animation(glm::vec2& _valueRef);
+	void AddKeyFrame(sKeyFrameVec2 newKeyframe);
 
 	virtual void Process(float deltaTime);
 };

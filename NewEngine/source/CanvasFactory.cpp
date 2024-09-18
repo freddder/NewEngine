@@ -3,6 +3,8 @@
 #include "Engine.h"
 #include "cInputManager.h"
 #include "cSceneManager.h"
+#include "cCameraManager.h"
+#include "cAnimationManager.h"
 
 #include "cAnimation.h"
 
@@ -242,8 +244,27 @@ cPartyMemberButton::~cPartyMemberButton()
 {
 }
 
+cPartyBackground::cPartyBackground(cUICanvas* canvas)
+{
+    scroll = std::make_shared<cVec2Animation>(translate);
+    scroll->AddKeyFrame(sKeyFrameVec2(5.f, glm::vec2(5.f)));
+    scroll->isRepeat = true;
+    Manager::animation.AddAnimation(scroll);
+}
+
+cPartyBackground::~cPartyBackground()
+{
+    Manager::animation.RemoveAnimation(scroll);
+}
+
 cPartyCanvas::cPartyCanvas()
 {
+    cPartyBackground* background = new cPartyBackground(this);
+    background->textureId = LoadUITexture("background.png");
+    background->aspectRatio = (float)Manager::camera.SCR_HEIGHT / (float)Manager::camera.SCR_WIDTH;
+    background->useScreenSpace = true;
+    background->screenSpaceRatio = glm::vec2(30.f);
+
     cUIWidget* membersContainer = new cUIWidget();
     membersContainer->aspectRatio = (46.f * 3.f) / (126.f * 2.f);
     membersContainer->heightPercent = 0.9f;
@@ -297,6 +318,7 @@ cPartyCanvas::cPartyCanvas()
     defaultFocus = member1;
 
     anchoredWidgets.push_back(membersContainer);
+    anchoredWidgets.push_back(background);
 }
 
 cPartyCanvas::~cPartyCanvas()

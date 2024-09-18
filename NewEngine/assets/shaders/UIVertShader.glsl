@@ -10,6 +10,9 @@ uniform float heightPercent;
 uniform float widthTranslate;
 uniform float heightTranslate;
 
+uniform vec2 screenSpaceRatio;
+uniform vec2 textureTranslate;
+
 void main()
 {    
     vec3 newPos;
@@ -19,6 +22,7 @@ void main()
     newPos.x += widthTranslate;
     newPos.y += heightTranslate;
 
-    textureCoords = aTextureCoords;
+    textureCoords = aTextureCoords * screenSpaceRatio + textureTranslate;
+
     gl_Position = vec4(newPos, 1.0);
 }
