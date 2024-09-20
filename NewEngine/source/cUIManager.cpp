@@ -62,6 +62,7 @@ void cUIManager::Startup()
     glBindVertexArray(0);
 
     LoadFont("Truth And Ideals-Normal.ttf", 24);
+    LoadFont("Truth And Ideals - Fighting Ideals-Normal.ttf", 32);
 
     // Will probably move this to a better place
     cOverworldCanvas* oc = new cOverworldCanvas();

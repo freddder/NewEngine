@@ -31,17 +31,13 @@ cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::s
     Manager::ui.CreateTextDataBuffer(textWidget);
 }
 
-cMenuButtonWidget::~cMenuButtonWidget()
-{
-}
-
 cOverworldCanvas::cOverworldCanvas()
 {
     int imageWidth = 250;
     int imageHeight = 82;
 
     cUIWidget* menuBtnContainer = new cUIWidget();    
-    menuBtnContainer->anchor = MIDDLE_RIGHT;
+    menuBtnContainer->anchor = BOTTOM_RIGHT;
     menuBtnContainer->aspectRatio = (float)imageHeight * 5 / (float)imageWidth;
     menuBtnContainer->heightPercent = 3.f / 4.f; // change this for size
 
@@ -92,10 +88,6 @@ cOverworldCanvas::cOverworldCanvas()
     defaultFocus = menuBtn1;
 }
 
-cOverworldCanvas::~cOverworldCanvas()
-{
-}
-
 void cOverworldCanvas::ConfirmAction()
 {
     Engine::currGameMode = eGameMode::MENU;
@@ -108,20 +100,77 @@ void cOverworldCanvas::CancelAction()
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
 }
 
+cHealthBar::cHealthBar(cUICanvas* canvas)
+{
+    aspectRatio = 0.1f;
+    textureId = canvas->LoadUITexture("HealthBarBackground.png");
+
+    cUIWidget* fillable = new cUIWidget();
+    fillable->aspectRatio = 0.0625f;
+    fillable->heightPercent = 3.f / 5.f;
+    fillable->anchor = MIDDLE_MIDDLE;
+
+    cUIStaticImage* healthBarContent = new cUIStaticImage();
+    healthBarContent->aspectRatio = 0.0625f; //* 2.f; // this being half (just inverse the health percentage lol)
+    healthBarContent->anchor = MIDDLE_LEFT;
+    healthBarContent->textureId = canvas->LoadUITexture("HealthBar.png");
+    fillable->AddChild(healthBarContent);
+
+    // all I have to do is change the aspect ratio (idk the numbers tho)
+    AddChild(fillable);
+}
+
+cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
+{
+    aspectRatio = 28.f / 113.f;
+
+    cUIStaticImage* bg = new cUIStaticImage();
+    bg->aspectRatio = 13.f / 113.f;
+    bg->heightPercent = 13.f / 28.f;
+    bg->verticalTranslate = 4.f / 28.f;
+    bg->anchor = BOTTOM_MIDDLE;
+    bg->textureId = canvas->LoadUITexture("BattlePlayerBackground.png");
+
+    cHealthBar* hb = new cHealthBar(canvas);
+    hb->heightPercent = 5.f / 28.f;
+    hb->anchor = TOP_RIGHT;
+    hb->verticalTranslate = -11.f / 28.f;
+    hb->horizontalTranslate = -14.f / 113.f;
+
+    cUIStaticImage* hpIcon = new cUIStaticImage();
+    hpIcon->aspectRatio = 7.f / 16.f;
+    hpIcon->heightPercent = 7.f / 28.f;
+    hpIcon->anchor = TOP_LEFT;
+    hpIcon->verticalTranslate = -10.f / 28.f;
+    hpIcon->horizontalTranslate = 33.f / 113.f;
+    hpIcon->textureId = canvas->LoadUITexture("HP.png");
+
+    cUIText* name = new cUIText();
+    name->fontName = "Truth And Ideals - Fighting Ideals-Normal.ttf";
+    name->text = Player::party[0].name;
+    name->heightPercent = 9.f / 28.f;
+    name->anchor = TOP_LEFT;
+    AddChild(name);
+    Manager::ui.CreateTextDataBuffer(name);
+
+    AddChild(hpIcon);
+    AddChild(hb);
+    AddChild(bg);
+}
+
+const float MENU_BUTTON_RATIO = 46.f / 126.f;
+
 cBattleCanvas::cBattleCanvas()
 {
-    int imageHeight = 46;
-    int imageWidth = 126;
-
     cUIWidget* menuBtnContainer = new cUIWidget();
     menuBtnContainer->anchor = BOTTOM_RIGHT;
-    menuBtnContainer->aspectRatio = (float)imageHeight / (float)imageWidth;
+    menuBtnContainer->aspectRatio = MENU_BUTTON_RATIO;
     menuBtnContainer->heightPercent = 1.f / 4.f; // change this for size
 
     fightButton = new cUIStaticImage();
     fightButton->anchor = TOP_LEFT;
     fightButton->heightPercent = 0.5f;
-    fightButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    fightButton->aspectRatio = MENU_BUTTON_RATIO;
     fightButton->textureId = LoadUITexture("button.png");
     fightButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(fightButton);
@@ -136,7 +185,7 @@ cBattleCanvas::cBattleCanvas()
     pokemonButton = new cUIStaticImage();
     pokemonButton->anchor = TOP_RIGHT;
     pokemonButton->heightPercent = 0.5f;
-    pokemonButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    pokemonButton->aspectRatio = MENU_BUTTON_RATIO;
     pokemonButton->textureId = LoadUITexture("button.png");
     pokemonButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(pokemonButton);
@@ -151,7 +200,7 @@ cBattleCanvas::cBattleCanvas()
     bagButton = new cUIStaticImage();
     bagButton->anchor = BOTTOM_LEFT;
     bagButton->heightPercent = 0.5f;
-    bagButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    bagButton->aspectRatio = MENU_BUTTON_RATIO;
     bagButton->textureId = LoadUITexture("button.png");
     bagButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(bagButton);
@@ -166,7 +215,7 @@ cBattleCanvas::cBattleCanvas()
     runButton = new cUIStaticImage();
     runButton->anchor = BOTTOM_RIGHT;
     runButton->heightPercent = 0.5f;
-    runButton->aspectRatio = (float)imageHeight / (float)imageWidth;
+    runButton->aspectRatio = MENU_BUTTON_RATIO;
     runButton->textureId = LoadUITexture("button.png");
     runButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(runButton);
@@ -186,10 +235,18 @@ cBattleCanvas::cBattleCanvas()
     bagButton->SetMoveFocus(runButton, RIGHT, true);
 
     anchoredWidgets.push_back(menuBtnContainer);
-}
 
-cBattleCanvas::~cBattleCanvas()
-{
+    //cUIWidget* battleHudContainer = new cUIWidget();
+    //battleHudContainer->aspectRatio = (float)Manager::camera.SCR_HEIGHT / (float)Manager::camera.SCR_WIDTH;
+    //battleHudContainer->heightPercent = 0.8f;
+
+    cPlayerBattleInfo* pbi = new cPlayerBattleInfo(this);
+    pbi->heightPercent = 0.2f;
+    pbi->anchor = BOTTOM_LEFT;
+    //battleHudContainer->AddChild(pbi);
+
+    anchoredWidgets.push_back(pbi);
+    //anchoredWidgets.push_back(battleHudContainer);
 }
 
 void cBattleCanvas::ConfirmAction()
@@ -222,7 +279,7 @@ cPartyMemberButton::cPartyMemberButton(cUICanvas* canvas, int memberNum)
 
     textureId = canvas->LoadUITexture("button.png");
     hoveredTextureId = canvas->LoadUITexture("button2.png");
-    aspectRatio = 46.f / 126.f;
+    aspectRatio = MENU_BUTTON_RATIO;
     heightPercent = 1.f / 3.f;
 
     cUIText* memberText = new cUIText();
@@ -238,10 +295,6 @@ cPartyMemberButton::cPartyMemberButton(cUICanvas* canvas, int memberNum)
     icon->heightPercent = 3.f / 4.f;
     icon->textureId = canvas->LoadUITexture(member.MakeIconTextureName(), "assets/pokemon/" + Pokemon::MakeDexNumberFolderName(member.nationalDexNumber) + "/");
     AddChild(icon);
-}
-
-cPartyMemberButton::~cPartyMemberButton()
-{
 }
 
 cPartyBackground::cPartyBackground(cUICanvas* canvas)
@@ -319,10 +372,6 @@ cPartyCanvas::cPartyCanvas()
 
     anchoredWidgets.push_back(membersContainer);
     anchoredWidgets.push_back(background);
-}
-
-cPartyCanvas::~cPartyCanvas()
-{
 }
 
 void cPartyCanvas::ConfirmAction()

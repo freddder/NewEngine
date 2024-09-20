@@ -68,14 +68,20 @@ const float cUIWidget::CalculateVerticalTranslate()
 		parentHeightPixels = parent->CalculateHeightPixels();
 	}
 
-	if (anchor == MIDDLE_LEFT || anchor == MIDDLE_MIDDLE || anchor == MIDDLE_RIGHT)	return parentVerticalTranslation;
+	float thisPercentTranslate = verticalTranslate * parentHeightPixels / (float)Manager::camera.SCR_HEIGHT * 2.f; // pixels to translate this 
 
-	float widgetPixelTranslate = parentHeightPixels - CalculateHeightPixels();
-	float widgetPercentTranslate = widgetPixelTranslate / (float)Manager::camera.SCR_HEIGHT;
+	// No vertical translating compared to parent
+	if (anchor == MIDDLE_LEFT || anchor == MIDDLE_MIDDLE || anchor == MIDDLE_RIGHT)
+	{
+		return parentVerticalTranslation + thisPercentTranslate;
+	}
 
-	if (anchor == BOTTOM_LEFT || anchor == BOTTOM_MIDDLE || anchor == BOTTOM_RIGHT) widgetPercentTranslate *= -1.f;
+	float anchorPixelTranslate = parentHeightPixels - CalculateHeightPixels(); // assuming top
+	float anchorPercentTranslate = anchorPixelTranslate / (float)Manager::camera.SCR_HEIGHT;
 
-	return parentVerticalTranslation + widgetPercentTranslate;
+	if (anchor == BOTTOM_LEFT || anchor == BOTTOM_MIDDLE || anchor == BOTTOM_RIGHT) anchorPercentTranslate *= -1.f;
+
+	return parentVerticalTranslation + anchorPercentTranslate + thisPercentTranslate;
 }
 
 const float cUIWidget::CalculateHorizontalTranslate()
@@ -88,14 +94,19 @@ const float cUIWidget::CalculateHorizontalTranslate()
 		parentWidthPixels = parent->CalculateWidthPixels();
 	}
 
-	if (anchor == TOP_MIDDLE || anchor == MIDDLE_MIDDLE || anchor == BOTTOM_MIDDLE)	return parentHorizontalTranslation;
+	float thisPercentTranslate = horizontalTranslate * parentWidthPixels / (float)Manager::camera.SCR_WIDTH * 2.f; // pixels to translate this 
 
-	float widgetPixelTranslate = parentWidthPixels - CalculateWidthPixels();
-	float widgetPercentTranslate = widgetPixelTranslate / (float)Manager::camera.SCR_WIDTH;
+	if (anchor == TOP_MIDDLE || anchor == MIDDLE_MIDDLE || anchor == BOTTOM_MIDDLE)
+	{
+		return parentHorizontalTranslation + thisPercentTranslate;
+	}
 
-	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) widgetPercentTranslate *= -1.f;
+	float anchorPixelTranslate = parentWidthPixels - CalculateWidthPixels();
+	float anchorPercentTranslate = anchorPixelTranslate / (float)Manager::camera.SCR_WIDTH;
 
-	return parentHorizontalTranslation + widgetPercentTranslate;
+	if (anchor == TOP_LEFT || anchor == MIDDLE_LEFT || anchor == BOTTOM_LEFT) anchorPercentTranslate *= -1.f;
+
+	return parentHorizontalTranslation + anchorPercentTranslate + thisPercentTranslate;
 }
 
 void cUIWidget::SetMoveFocus(cUIWidget* to, eDirection dir, bool isViceVersa)

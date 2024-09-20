@@ -42,6 +42,10 @@ public:
 	float heightPercent = 1.f;
 	// Ratio between widget height and width (height / width)
 	float aspectRatio = 1.f;
+	// Percent of parent to translate verticaly (positive up and negative down)
+	float verticalTranslate = 0.f;
+	// Percent of parent to translate herizontaly (positive right and negative left)
+	float horizontalTranslate = 0.f;
 	eAnchor anchor = MIDDLE_MIDDLE;
 
 	bool isHidden = false;

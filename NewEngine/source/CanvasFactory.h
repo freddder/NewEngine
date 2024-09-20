@@ -9,17 +9,31 @@ class cMenuButtonWidget : public cUIStaticImage
 {
 public:
 	cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName);
-	virtual ~cMenuButtonWidget();
+	virtual ~cMenuButtonWidget() {};
 };
 
 class cOverworldCanvas : public cUICanvas
 {
 public:
 	cOverworldCanvas();
-	virtual ~cOverworldCanvas();
+	virtual ~cOverworldCanvas() {};
 
 	virtual void ConfirmAction();
 	virtual void CancelAction();
+};
+
+class cHealthBar : public cUIStaticImage
+{
+public:
+	cHealthBar(cUICanvas* canvas);
+	virtual ~cHealthBar() {};
+};
+
+class cPlayerBattleInfo : public cUIWidget
+{
+public:
+	cPlayerBattleInfo(cUICanvas* canvas);
+	virtual ~cPlayerBattleInfo() {};
 };
 
 class cBattleCanvas : public cUICanvas
@@ -31,7 +45,7 @@ class cBattleCanvas : public cUICanvas
 
 public:
 	cBattleCanvas();
-	virtual ~cBattleCanvas();
+	virtual ~cBattleCanvas() {};
 
 	virtual void ConfirmAction();
 	virtual void CancelAction();
@@ -41,7 +55,7 @@ class cPartyMemberButton : public cUIStaticImage
 {
 public:
 	cPartyMemberButton(cUICanvas* canvas, int memberNum);
-	virtual ~cPartyMemberButton();
+	virtual ~cPartyMemberButton() {};
 };
 
 class cPartyBackground : public cUIStaticImage
@@ -65,7 +79,7 @@ class cPartyCanvas : public cUICanvas
 
 public:
 	cPartyCanvas();
-	virtual ~cPartyCanvas();
+	virtual ~cPartyCanvas() {};
 
 	virtual void ConfirmAction();
 	virtual void CancelAction();
