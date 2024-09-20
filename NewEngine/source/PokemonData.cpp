@@ -236,6 +236,8 @@ namespace Pokemon
 		newData.expToNextLevel = 2000;
 		newData.currExp = 0;
 
+		newData.level = 29;
+
 		return newData;
 	}
 

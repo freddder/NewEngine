@@ -146,11 +146,11 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
     bg->anchor = BOTTOM_MIDDLE;
     bg->textureId = canvas->LoadUITexture("BattlePlayerBackground.png");
 
-    playeHb = new cHealthBar(canvas);
-    playeHb->heightPercent = 5.f / 28.f;
-    playeHb->anchor = TOP_RIGHT;
-    playeHb->verticalTranslate = -11.f / 28.f;
-    playeHb->horizontalTranslate = -14.f / 113.f;
+    playerHb = new cHealthBar(canvas);
+    playerHb->heightPercent = 5.f / 28.f;
+    playerHb->anchor = TOP_RIGHT;
+    playerHb->verticalTranslate = -11.f / 28.f;
+    playerHb->horizontalTranslate = -14.f / 113.f;
 
     cUIImage* hpIcon = new cUIImage();
     hpIcon->aspectRatio = 7.f / 16.f;
@@ -211,7 +211,7 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
     AddChild(lvIcon);
     AddChild(expIcon);
     AddChild(hpIcon);
-    AddChild(playeHb);
+    AddChild(playerHb);
     AddChild(bg);
 }
 
@@ -219,7 +219,81 @@ void cPlayerBattleInfo::UpdatePlayerInfo()
 {
     Player::party[0].currHealth /= 2.f;
     float healthPercent = (float)Player::party[0].currHealth / (float)Player::party[0].maxHealth;
-    playeHb->UpdateHealthBar(healthPercent);
+    playerHb->UpdateHealthBar(healthPercent);
+}
+
+cEnemyBattleInfo::cEnemyBattleInfo(cUICanvas* canvas)
+{
+    aspectRatio = 20.f / 103.f;
+
+    cUIImage* bg = new cUIImage();
+    bg->aspectRatio = 9.f / 103.f;
+    bg->heightPercent = 9.f / 20.f;
+    bg->anchor = BOTTOM_MIDDLE;
+    bg->textureId = canvas->LoadUITexture("BattlePlayerBackground.png");
+
+    enemyHb = new cHealthBar(canvas);
+    enemyHb->heightPercent = 5.f / 20.f;
+    enemyHb->anchor = TOP_RIGHT;
+    enemyHb->verticalTranslate = -11.f / 20.f;
+    enemyHb->horizontalTranslate = -16.f / 103.f;
+
+    cUIImage* hpIcon = new cUIImage();
+    hpIcon->aspectRatio = 7.f / 16.f;
+    hpIcon->heightPercent = 7.f / 20.f;
+    hpIcon->anchor = TOP_LEFT;
+    hpIcon->verticalTranslate = -10.f / 20.f;
+    hpIcon->horizontalTranslate = 21.f / 103.f;
+    hpIcon->textureId = canvas->LoadUITexture("HP.png");
+
+    if (Manager::scene.enemyBattleData.gender != Pokemon::NO_GENDER)
+    {
+        cUIImage* genderIcon = new cUIImage();
+        genderIcon->aspectRatio = 10.f / 7.f;
+        genderIcon->heightPercent = 10.f / 20.f;
+        genderIcon->anchor = TOP_RIGHT;
+        genderIcon->horizontalTranslate = -26.f / 103.f;
+
+        if (Manager::scene.enemyBattleData.gender == Pokemon::FEMALE) genderIcon->textureId = canvas->LoadUITexture("FemaleIcon.png");
+        else genderIcon->textureId = canvas->LoadUITexture("MaleIcon.png");
+        AddChild(genderIcon);
+    }
+
+    cUIImage* lvIcon = new cUIImage();
+    lvIcon->aspectRatio = 7.f / 8.f;
+    lvIcon->heightPercent = 7.f / 20.f;
+    lvIcon->anchor = TOP_RIGHT;
+    lvIcon->horizontalTranslate = -17.f / 103.f;
+    lvIcon->verticalTranslate = -3.f / 20.f;
+    lvIcon->textureId = canvas->LoadUITexture("LV.png");
+
+    cUIText* levelNum = new cUIText();
+    levelNum->fontName = "Truth And Ideals - Fighting Ideals-Normal.ttf";
+    levelNum->text = std::to_string(Manager::scene.enemyBattleData.level);
+    levelNum->heightPercent = 10.f / 20.f;
+    levelNum->aspectRatio = 10.f / 17.f;
+    levelNum->anchor = TOP_RIGHT;
+    levelNum->verticalTranslate = -9.5f / 20.f; // idk why I need this tbh
+    AddChild(levelNum);
+    Manager::ui.CreateTextDataBuffer(levelNum);
+
+    cUIText* name = new cUIText();
+    name->fontName = "Truth And Ideals - Fighting Ideals-Normal.ttf";
+    name->text = Manager::scene.enemyBattleData.name;
+    name->heightPercent = 9.f / 20.f;
+    name->anchor = TOP_LEFT;
+    name->horizontalTranslate = 14.f / 103.f;
+    AddChild(name);
+    Manager::ui.CreateTextDataBuffer(name);
+
+    AddChild(lvIcon);
+    AddChild(hpIcon);
+    AddChild(enemyHb);
+    AddChild(bg);
+}
+
+void cEnemyBattleInfo::UpdateEnemyInfo()
+{
 }
 
 const float MENU_BUTTON_RATIO = 46.f / 126.f;
@@ -300,17 +374,23 @@ cBattleCanvas::cBattleCanvas()
 
     anchoredWidgets.push_back(menuBtnContainer);
 
-    //cUIWidget* battleHudContainer = new cUIWidget();
-    //battleHudContainer->aspectRatio = (float)Manager::camera.SCR_HEIGHT / (float)Manager::camera.SCR_WIDTH;
-    //battleHudContainer->heightPercent = 0.8f;
+    cUIWidget* battleHudContainer = new cUIWidget();
+    battleHudContainer->aspectRatio = (float)Manager::camera.SCR_HEIGHT / (float)Manager::camera.SCR_WIDTH;
+    battleHudContainer->heightPercent = 0.8f;
 
     pbi = new cPlayerBattleInfo(this);
     pbi->heightPercent = 0.2f;
     pbi->anchor = BOTTOM_LEFT;
-    //battleHudContainer->AddChild(pbi);
+    battleHudContainer->AddChild(pbi);
 
-    anchoredWidgets.push_back(pbi);
-    //anchoredWidgets.push_back(battleHudContainer);
+    ebi = new cEnemyBattleInfo(this);
+    ebi->heightPercent = 0.1428f;;
+    ebi->anchor = TOP_RIGHT;
+    battleHudContainer->AddChild(ebi);
+
+    //nchoredWidgets.push_back(pbi);
+    //anchoredWidgets.push_back(ebi);
+    anchoredWidgets.push_back(battleHudContainer);
 }
 
 void cBattleCanvas::ConfirmAction()

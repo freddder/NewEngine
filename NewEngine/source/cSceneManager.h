@@ -75,4 +75,6 @@ public:
 	void ExitEncounter();
 
 	void Process(float deltaTime);
+
+	friend class cEnemyBattleInfo;
 };

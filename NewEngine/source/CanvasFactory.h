@@ -34,12 +34,22 @@ public:
 
 class cPlayerBattleInfo : public cUIWidget
 {
-	cHealthBar* playeHb;
+	cHealthBar* playerHb;
 public:
 	cPlayerBattleInfo(cUICanvas* canvas);
 	virtual ~cPlayerBattleInfo() {};
 
 	void UpdatePlayerInfo();
+};
+
+class cEnemyBattleInfo : public cUIWidget
+{
+	cHealthBar* enemyHb;
+public:
+	cEnemyBattleInfo(cUICanvas* canvas);
+	virtual ~cEnemyBattleInfo() {};
+
+	void UpdateEnemyInfo();
 };
 
 class cBattleCanvas : public cUICanvas
@@ -50,6 +60,7 @@ class cBattleCanvas : public cUICanvas
 	cUIImage* runButton;
 
 	cPlayerBattleInfo* pbi;
+	cEnemyBattleInfo* ebi;
 
 public:
 	cBattleCanvas();
