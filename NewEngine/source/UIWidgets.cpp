@@ -175,11 +175,11 @@ void cUIWidget::ConfirmAction()
 {
 }
 
-cUIStaticImage::~cUIStaticImage()
+cUIImage::~cUIImage()
 {
 }
 
-void cUIStaticImage::Draw()
+void cUIImage::Draw()
 {
 	cUIWidget::Draw();
 
@@ -218,6 +218,8 @@ void cUIStaticImage::Draw()
 		Manager::render.setVec2("screenSpaceRatio", glm::vec2(1.f));
 		Manager::render.setVec2("textureTranslate", glm::vec2(0.f));
 	}
+
+	Manager::render.setVec3("colorFilter", colorFilter);
 
 	glBindVertexArray(Manager::ui.GetUIQuadVAO());
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

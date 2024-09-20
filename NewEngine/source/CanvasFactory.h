@@ -5,7 +5,7 @@
 #include <memory>
 #include "cAnimation.h"
 
-class cMenuButtonWidget : public cUIStaticImage
+class cMenuButtonWidget : public cUIImage
 {
 public:
 	cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName);
@@ -22,26 +22,34 @@ public:
 	virtual void CancelAction();
 };
 
-class cHealthBar : public cUIStaticImage
+class cHealthBar : public cUIImage
 {
+	cUIImage* hbContent;
 public:
 	cHealthBar(cUICanvas* canvas);
 	virtual ~cHealthBar() {};
+
+	void UpdateHealthBar(float healthPercent);
 };
 
 class cPlayerBattleInfo : public cUIWidget
 {
+	cHealthBar* playeHb;
 public:
 	cPlayerBattleInfo(cUICanvas* canvas);
 	virtual ~cPlayerBattleInfo() {};
+
+	void UpdatePlayerInfo();
 };
 
 class cBattleCanvas : public cUICanvas
 {
-	cUIStaticImage* fightButton;
-	cUIStaticImage* pokemonButton;
-	cUIStaticImage* bagButton;
-	cUIStaticImage* runButton;
+	cUIImage* fightButton;
+	cUIImage* pokemonButton;
+	cUIImage* bagButton;
+	cUIImage* runButton;
+
+	cPlayerBattleInfo* pbi;
 
 public:
 	cBattleCanvas();
@@ -51,14 +59,14 @@ public:
 	virtual void CancelAction();
 };
 
-class cPartyMemberButton : public cUIStaticImage
+class cPartyMemberButton : public cUIImage
 {
 public:
 	cPartyMemberButton(cUICanvas* canvas, int memberNum);
 	virtual ~cPartyMemberButton() {};
 };
 
-class cPartyBackground : public cUIStaticImage
+class cPartyBackground : public cUIImage
 {
 	std::shared_ptr<cVec2Animation> scroll;
 public:

@@ -16,7 +16,7 @@ cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::s
     hoveredTextureId = canvas->LoadUITexture("panel2.png");
     aspectRatio = 82.f / 250.f;
 
-    cUIStaticImage* icon = new cUIStaticImage();
+    cUIImage* icon = new cUIImage();
     icon->anchor = MIDDLE_LEFT;
     icon->aspectRatio = 1.f;;
     icon->heightPercent = 3.f / 4.f;
@@ -110,34 +110,49 @@ cHealthBar::cHealthBar(cUICanvas* canvas)
     fillable->heightPercent = 3.f / 5.f;
     fillable->anchor = MIDDLE_MIDDLE;
 
-    cUIStaticImage* healthBarContent = new cUIStaticImage();
-    healthBarContent->aspectRatio = 0.0625f; //* 2.f; // this being half (just inverse the health percentage lol)
-    healthBarContent->anchor = MIDDLE_LEFT;
-    healthBarContent->textureId = canvas->LoadUITexture("HealthBar.png");
-    fillable->AddChild(healthBarContent);
+    hbContent = new cUIImage();
+    hbContent->aspectRatio = 0.0625f; //* 2.f; // this being half (just inverse the health percentage lol)
+    hbContent->anchor = MIDDLE_LEFT;
+    hbContent->textureId = canvas->LoadUITexture("HealthBar.png");
+    hbContent->colorFilter = glm::vec3(0.f, 1.f, 0.f);
+    fillable->AddChild(hbContent);
 
     // all I have to do is change the aspect ratio (idk the numbers tho)
     AddChild(fillable);
+}
+
+void cHealthBar::UpdateHealthBar(float healthPercent)
+{
+    float percentToUse = glm::clamp(healthPercent, 0.f, 1.f);
+    
+    hbContent->aspectRatio = 0.0625f * (1.f / healthPercent);
+
+    if (healthPercent < 0.25f) 
+        hbContent->colorFilter = glm::vec3(1.f, 0.f, 0.f); // red
+    else if (healthPercent < 0.5f)
+        hbContent->colorFilter = glm::vec3(1.f, 1.f, 0.f); // yellow
+    else 
+        hbContent->colorFilter = glm::vec3(0.f, 1.f, 0.f); // green
 }
 
 cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
 {
     aspectRatio = 28.f / 113.f;
 
-    cUIStaticImage* bg = new cUIStaticImage();
+    cUIImage* bg = new cUIImage();
     bg->aspectRatio = 13.f / 113.f;
     bg->heightPercent = 13.f / 28.f;
     bg->verticalTranslate = 4.f / 28.f;
     bg->anchor = BOTTOM_MIDDLE;
     bg->textureId = canvas->LoadUITexture("BattlePlayerBackground.png");
 
-    cHealthBar* hb = new cHealthBar(canvas);
-    hb->heightPercent = 5.f / 28.f;
-    hb->anchor = TOP_RIGHT;
-    hb->verticalTranslate = -11.f / 28.f;
-    hb->horizontalTranslate = -14.f / 113.f;
+    playeHb = new cHealthBar(canvas);
+    playeHb->heightPercent = 5.f / 28.f;
+    playeHb->anchor = TOP_RIGHT;
+    playeHb->verticalTranslate = -11.f / 28.f;
+    playeHb->horizontalTranslate = -14.f / 113.f;
 
-    cUIStaticImage* hpIcon = new cUIStaticImage();
+    cUIImage* hpIcon = new cUIImage();
     hpIcon->aspectRatio = 7.f / 16.f;
     hpIcon->heightPercent = 7.f / 28.f;
     hpIcon->anchor = TOP_LEFT;
@@ -154,8 +169,15 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
     Manager::ui.CreateTextDataBuffer(name);
 
     AddChild(hpIcon);
-    AddChild(hb);
+    AddChild(playeHb);
     AddChild(bg);
+}
+
+void cPlayerBattleInfo::UpdatePlayerInfo()
+{
+    Player::party[0].currHealth /= 2.f;
+    float healthPercent = (float)Player::party[0].currHealth / (float)Player::party[0].maxHealth;
+    playeHb->UpdateHealthBar(healthPercent);
 }
 
 const float MENU_BUTTON_RATIO = 46.f / 126.f;
@@ -167,7 +189,7 @@ cBattleCanvas::cBattleCanvas()
     menuBtnContainer->aspectRatio = MENU_BUTTON_RATIO;
     menuBtnContainer->heightPercent = 1.f / 4.f; // change this for size
 
-    fightButton = new cUIStaticImage();
+    fightButton = new cUIImage();
     fightButton->anchor = TOP_LEFT;
     fightButton->heightPercent = 0.5f;
     fightButton->aspectRatio = MENU_BUTTON_RATIO;
@@ -182,7 +204,7 @@ cBattleCanvas::cBattleCanvas()
     fightButton->AddChild(fightText);
     Manager::ui.CreateTextDataBuffer(fightText);
 
-    pokemonButton = new cUIStaticImage();
+    pokemonButton = new cUIImage();
     pokemonButton->anchor = TOP_RIGHT;
     pokemonButton->heightPercent = 0.5f;
     pokemonButton->aspectRatio = MENU_BUTTON_RATIO;
@@ -197,7 +219,7 @@ cBattleCanvas::cBattleCanvas()
     pokemonButton->AddChild(pkmText);
     Manager::ui.CreateTextDataBuffer(pkmText);
 
-    bagButton = new cUIStaticImage();
+    bagButton = new cUIImage();
     bagButton->anchor = BOTTOM_LEFT;
     bagButton->heightPercent = 0.5f;
     bagButton->aspectRatio = MENU_BUTTON_RATIO;
@@ -212,7 +234,7 @@ cBattleCanvas::cBattleCanvas()
     bagButton->AddChild(bagText);
     Manager::ui.CreateTextDataBuffer(bagText);
 
-    runButton = new cUIStaticImage();
+    runButton = new cUIImage();
     runButton->anchor = BOTTOM_RIGHT;
     runButton->heightPercent = 0.5f;
     runButton->aspectRatio = MENU_BUTTON_RATIO;
@@ -240,7 +262,7 @@ cBattleCanvas::cBattleCanvas()
     //battleHudContainer->aspectRatio = (float)Manager::camera.SCR_HEIGHT / (float)Manager::camera.SCR_WIDTH;
     //battleHudContainer->heightPercent = 0.8f;
 
-    cPlayerBattleInfo* pbi = new cPlayerBattleInfo(this);
+    pbi = new cPlayerBattleInfo(this);
     pbi->heightPercent = 0.2f;
     pbi->anchor = BOTTOM_LEFT;
     //battleHudContainer->AddChild(pbi);
@@ -253,7 +275,7 @@ void cBattleCanvas::ConfirmAction()
 {
     if (currFocus == fightButton)
     {
-        Manager::scene.ExitEncounter();
+        pbi->UpdatePlayerInfo();
     }
     else if (currFocus == pokemonButton)
     {
@@ -289,7 +311,7 @@ cPartyMemberButton::cPartyMemberButton(cUICanvas* canvas, int memberNum)
     AddChild(memberText);
     Manager::ui.CreateTextDataBuffer(memberText);
 
-    cUIStaticImage* icon = new cUIStaticImage();
+    cUIImage* icon = new cUIImage();
     icon->anchor = MIDDLE_LEFT;
     icon->aspectRatio = 3.f / 4.f;
     icon->heightPercent = 3.f / 4.f;

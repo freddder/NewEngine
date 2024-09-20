@@ -82,16 +82,20 @@ public:
 	friend class cUICanvas;
 };
 
-class cUIStaticImage : public cUIWidget
+class cUIImage : public cUIWidget
 {
 public:
-	virtual ~cUIStaticImage();
+	virtual ~cUIImage();
 
 	unsigned int textureId;
 	unsigned int hoveredTextureId;
+
 	bool useScreenSpace = false;
 	glm::vec2 screenSpaceRatio = glm::vec2(1.f);
 	glm::vec2 translate = glm::vec2(0.f);
+
+	glm::vec3 colorFilter = glm::vec3(1.f);
+
 	virtual void Draw();
 };
 
