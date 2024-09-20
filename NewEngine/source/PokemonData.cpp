@@ -313,6 +313,9 @@ namespace Pokemon
 
 		if (name == "")
 			name = speciesData.name;
+
+		isFormGenderBased = speciesData.isFormGenderBased;
+		isSpriteGenderBased = speciesData.isSpriteGenderBased;
 	}
 
 	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber)

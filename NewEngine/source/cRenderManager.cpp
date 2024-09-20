@@ -756,11 +756,7 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     // Check if not already loaded
     if (spriteSheets.find(textureName) != spriteSheets.end()) return;
 
-    std::string dexIdString = std::to_string(nationalDexId);
-    while (dexIdString.length() < 4)
-    {
-        dexIdString = "0" + dexIdString;
-    }
+    std::string dexIdString = Pokemon::MakeDexNumberFolderName(nationalDexId);
     std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
 
     // Create sprite sheet

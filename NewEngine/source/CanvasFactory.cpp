@@ -165,9 +165,32 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
     name->text = Player::party[0].name;
     name->heightPercent = 9.f / 28.f;
     name->anchor = TOP_LEFT;
+    name->horizontalTranslate = 10.f / 113.f;
     AddChild(name);
     Manager::ui.CreateTextDataBuffer(name);
 
+    cUIImage* expIcon = new cUIImage();
+    expIcon->aspectRatio = 7.f / 24.f;
+    expIcon->heightPercent = 7.f / 28.f;
+    expIcon->anchor = BOTTOM_LEFT;
+    expIcon->horizontalTranslate = 11.f / 113.f;
+    expIcon->verticalTranslate = 3.f / 28.f;
+    expIcon->textureId = canvas->LoadUITexture("EXP.png");
+
+    if (Player::party[0].gender != Pokemon::NO_GENDER)
+    {
+        cUIImage* genderIcon = new cUIImage();
+        genderIcon->aspectRatio = 10.f / 7.f;
+        genderIcon->heightPercent = 10.f / 28.f;
+        genderIcon->anchor = TOP_RIGHT;
+        genderIcon->horizontalTranslate = -40.f / 113.f;
+
+        if (Player::party[0].gender == Pokemon::FEMALE) genderIcon->textureId = canvas->LoadUITexture("FemaleIcon.png");
+        else genderIcon->textureId = canvas->LoadUITexture("MaleIcon.png");
+        AddChild(genderIcon);
+    }
+
+    AddChild(expIcon);
     AddChild(hpIcon);
     AddChild(playeHb);
     AddChild(bg);

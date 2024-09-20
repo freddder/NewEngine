@@ -101,7 +101,7 @@ int main()
 
     Pokemon::sIndividualData partner;
     partner.nationalDexNumber = 445;
-    partner.gender = Pokemon::MALE;
+    partner.gender = Pokemon::FEMALE;
     partner.isShiny = true;
     partner.form.battleBackSpriteFrameCount = 48; // hard coded for now
     partner.LoadFormFromSpeciesData();
