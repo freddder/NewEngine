@@ -190,6 +190,25 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
         AddChild(genderIcon);
     }
 
+    cUIImage* lvIcon = new cUIImage();
+    lvIcon->aspectRatio = 7.f / 8.f;
+    lvIcon->heightPercent = 7.f / 28.f;
+    lvIcon->anchor = TOP_RIGHT;
+    lvIcon->horizontalTranslate = -31.f / 113.f;
+    lvIcon->verticalTranslate = -3.f / 28.f;
+    lvIcon->textureId = canvas->LoadUITexture("LV.png");
+
+    cUIText* levelNum = new cUIText();
+    levelNum->fontName = "Truth And Ideals - Fighting Ideals-Normal.ttf";
+    levelNum->text = std::to_string(Player::party[0].level);
+    levelNum->heightPercent = 9.f / 28.f;
+    levelNum->aspectRatio = 10.f / 31.f;
+    levelNum->anchor = TOP_RIGHT;
+    levelNum->verticalTranslate = -9.5f / 28.f; // idk why I need this tbh
+    AddChild(levelNum);
+    Manager::ui.CreateTextDataBuffer(levelNum);
+
+    AddChild(lvIcon);
     AddChild(expIcon);
     AddChild(hpIcon);
     AddChild(playeHb);

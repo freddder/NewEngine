@@ -104,6 +104,7 @@ int main()
     partner.gender = Pokemon::FEMALE;
     partner.isShiny = true;
     partner.form.battleBackSpriteFrameCount = 48; // hard coded for now
+    partner.level = 98;
     partner.LoadFormFromSpeciesData();
     Player::AddPartyMember(partner);
 
