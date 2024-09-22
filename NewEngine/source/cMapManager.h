@@ -6,6 +6,7 @@
 #include <memory>
 #include "cAnimatedModel.h"
 #include "cEntity.h"
+#include "CharacterSprite.h"
 
 struct sInstancedTile
 {
@@ -69,17 +70,28 @@ public:
 	cMapManager();
 	~cMapManager();
 
+	void Startup();
+	void Shutdown();
+
 private:
 	std::vector<sQuadrant> quads;
 	std::map<int, sCorrectionTiles> walkableTiles;
 	std::shared_ptr<cRenderModel> mapModel;
-	std::map<int, sInstancedTile> instancedTiles;
+	std::shared_ptr<cRenderModel> arenaModel;
+	std::map<int, sInstancedTile> mapInstancedTiles;
+	std::map<int, sInstancedTile> arenaInstancedTiles;
 	sQuadrant* GetQuad(int worldX, int worldZ);
+	void LoadArena(const std::string arenaDescriptionFile);
 public:
-	void LoadMap(std::string mapDescriptionFile);
+	void LoadScene(const std::string mapDescriptionFile);
 
+public:
 	sTile* GetTile(glm::vec3 worldPosition);
 	sTile* GetRandomSpawnTile(glm::vec3& globalPositionOut);
+	void RemoveEntityFromTile(glm::vec3 worldPosition);
 
 	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
+	
+	cBattleSprite* opponentSpriteModel;
+	cBattleSprite* playerSpriteModel;
 };

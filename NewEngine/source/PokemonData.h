@@ -116,6 +116,11 @@ namespace Pokemon
 		}
 	};
 
+	static bool IsNationalDexNumberValid(int nationalDexNumber)
+	{
+		return nationalDexNumber > 0 && nationalDexNumber <= 1008;
+	}
+
 	struct sForm
 	{
 		sStats baseStats;
@@ -124,11 +129,15 @@ namespace Pokemon
 		// Ability ability2
 		// Ability hiddenAbility
 
-		eType type1;
+		eType type1 = NORMAL;
 		eType type2 = NO_TYPE;
 
 		float height = 0.f; // in meters
 		float weight = 0.f; // in kilograms
+
+		float battleSpriteHeightSize = 1.f;
+		int battleFrontSpriteFrameCount = 1;
+		int battleBackSpriteFrameCount = 1;
 
 		// Learnset as a pair of int (level) and int (move id)
 	};
@@ -153,6 +162,7 @@ namespace Pokemon
 	};
 
 	const static unsigned int JSON_DATA_VERSION = 1;
+	std::string MakeDexNumberFolderName(const int nationalDexNumber);
 	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data);
 	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data);
 
@@ -186,23 +196,28 @@ namespace Pokemon
 		int nationalDexNumber = 0;
 		std::string formName = "";
 
+		int level = 0;
 		eGender gender = Pokemon::NO_GENDER;
 		bool isShiny = false;
 
-		const std::string MakeTextureName(bool isFormGenderBased, bool isSpriteGenderBased);
+		bool isFormGenderBased = false;
+		bool isSpriteGenderBased = false;
+
+		const std::string MakeRoamingTextureName();
 	};
+	sRoamingPokemonData GenerateRoamingPokemonData(const sSpawnData& spawnData);
 
-	struct sPokemonData : public sRoamingPokemonData // Individual data (outside of battle)
+	struct sIndividualData : public sRoamingPokemonData // Individual data (outside of battle)
 	{
-		std::string customName = "";
-
-		int level;
+		std::string name = "";
 
 		int maxHealth;
 		int currHealth;
 
 		int expToNextLevel;
 		int currExp;
+
+		sForm form;
 
 		// Ability ability;
 		// Natire nature;
@@ -216,10 +231,16 @@ namespace Pokemon
 		// Move move2;
 		// Move move3;
 		// Move move4;
-	};
 
-	struct sBattleData : public sPokemonData // Individual data (in battle)
+		const std::string MakeIconTextureName();
+		const std::string MakeBattleTextureName(bool isFront = true);
+		void LoadFormFromSpeciesData();
+	};
+	sIndividualData GenerateIndividualPokemonData(int nationalDexId);
+
+	struct sBattleData : public sIndividualData // Individual data (in battle)
 	{
 		sStats statChanges;
 	};
+	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData); // For wild encounters
 }

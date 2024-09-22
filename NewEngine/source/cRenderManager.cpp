@@ -1,11 +1,12 @@
 #include "cRenderManager.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <glm/glm.hpp>
+
+#include <glad/glad.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 #include <assimp/Importer.hpp>      // C++ importer interface
 #include <assimp/scene.h>           // Output data structure
@@ -14,20 +15,25 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include "Engine.h"
 #include "cSceneManager.h"
 #include "cLightManager.h"
 #include "cCameraManager.h"
 #include "cUIManager.h"
+#include "cInputManager.h"
 
 #include "cSpriteModel.h"
 #include "cAnimatedModel.h"
 #include "PokemonData.h"
 
 #include "Player.h"
+
+const std::string SHADER_PATH = "assets/shaders/";
+const std::string MODEL_PATH = "assets/models/";
+const std::string TEXTURE_PATH = "assets/textures/";
+const std::string PKM_DATA_PATH = "assets/pokemon/";
+
+const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
 
 cRenderManager::cRenderManager()
 {
@@ -160,46 +166,11 @@ void cRenderManager::Startup()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
-
-    //********************** Setup on UI quad ****************************
-    float quadVertices[] = {
-        //  x,     y,    z, u(x), v(y)
-         1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // top right
-         1.0f, -1.0f, 0.0f, 1.0f, 1.0f, // bottom right
-        -1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // bottom left
-        -1.0f,  1.0f, 0.0f, 0.0f, 0.0f, // top left
-    };
-
-    unsigned int quadIndicies[] = {
-        0, 1, 3,   // first triangle
-        1, 2, 3    // second triangle
-    };
-
-    glGenVertexArrays(1, &UIQuadVAO);
-    glGenBuffers(1, &UIQuadVBO);
-    glGenBuffers(1, &UIQuadEBO);
-
-    glBindVertexArray(UIQuadVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, UIQuadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, UIQuadEBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(quadIndicies), quadIndicies, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-    //***************************************************************************
 }
 
 void cRenderManager::Shutdown()
 {
-    // TODO: unload loaded models from shaders
+    // TODO: unload loaded models from shaders and textures
 
     glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteBuffers(1, &skyboxVBO);
@@ -207,15 +178,14 @@ void cRenderManager::Shutdown()
     glDeleteBuffers(1, &uboFogID);
     glDeleteBuffers(1, &notInstancedOffsetBufferId);
 
-    for (std::map<std::string, sFontData>::iterator it = fonts.begin(); it != fonts.end(); it++)
-    {
-        glDeleteBuffers(1, &it->second.textureAtlusId);
-    }
+    UnloadTextures();
+    mapModels.clear();
+    battleModels.clear();
 }
 
 void cRenderManager::CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
 {
-    if (programMap.count(programName) != 0) // it exists
+    if (programs.count(programName) != 0) // it exists
     {
         std::cout << "This shadder program already exists" << std::endl;
         return;
@@ -284,7 +254,7 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
     sShaderProgram newShader;
     newShader.ID = ID;
 
-    programMap.insert(std::pair<std::string, sShaderProgram>(programName, newShader));
+    programs.insert(std::pair<std::string, sShaderProgram>(programName, newShader));
 
     // add Matrices block to matrices
     unsigned int ubMatricesIndex = glGetUniformBlockIndex(newShader.ID, "Matrices");
@@ -300,7 +270,7 @@ void cRenderManager::CreateShadderProgram(std::string programName, const char* v
 
 unsigned int cRenderManager::GetCurrentShaderId()
 {
-    return programMap[currShader].ID;
+    return programs[currShader].ID;
 }
 
 unsigned int cRenderManager::GetDepthMapId()
@@ -310,11 +280,11 @@ unsigned int cRenderManager::GetDepthMapId()
 
 bool cRenderManager::LoadModel(std::string fileName, std::string programName)
 {
-    std::map<std::string, sShaderProgram>::iterator itPrograms = programMap.find(programName);
-    if (itPrograms == programMap.end()) return false;
+    std::map<std::string, sShaderProgram>::iterator itPrograms = programs.find(programName);
+    if (itPrograms == programs.end()) return false;
 
-    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programMap[programName].modelsLoaded.find(fileName);
-    if (itDrawInfo != programMap[programName].modelsLoaded.end()) return true; // already loaded
+    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programs[programName].modelsLoaded.find(fileName);
+    if (itDrawInfo != programs[programName].modelsLoaded.end()) return true; // already loaded
 
     Assimp::Importer importer;
 
@@ -410,8 +380,8 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
             material->GetTexture(aiTextureType_DIFFUSE, 0, &path);
             newMeshInfo.textureName = path.C_Str();
 
-            // maybe try to load texture right here
-            LoadSceneTexture(newMeshInfo.textureName);
+            // Load texture
+            LoadTexture(newMeshInfo.textureName);
         }
 
 #pragma region VAO_Creation
@@ -485,20 +455,18 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
         newModel.allMeshesData.push_back(newMeshInfo);
     } // end of per mesh
 
-    programMap[programName].modelsLoaded.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
+    programs[programName].modelsLoaded.insert(std::pair<std::string, sModelDrawInfo>(fileName, newModel));
 
     return true;
 }
 
 bool cRenderManager::FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo)
 {
-    std::map<std::string, sShaderProgram>::iterator itProgram = programMap.find(programName);
+    if (programs.find(programName) == programs.end()) return false; // Didn't find it
 
-    if (itProgram == programMap.end()) return false; // Didn't find it
+    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programs[programName].modelsLoaded.find(fileName);
 
-    std::map<std::string, sModelDrawInfo>::iterator itDrawInfo = programMap[programName].modelsLoaded.find(fileName);
-
-    if (itDrawInfo == programMap[programName].modelsLoaded.end()) return false; // Didn't find it
+    if (itDrawInfo == programs[programName].modelsLoaded.end()) return false; // Didn't find it
 
     modelInfo = itDrawInfo->second;
     return true;
@@ -530,106 +498,114 @@ void cRenderManager::checkCompileErrors(unsigned int shader, std::string type)
 
 void cRenderManager::use(std::string programName)
 {
-    if (programMap.count(programName) == 0) return; // Doesn't exists
+    if (programs.count(programName) == 0) return; // Doesn't exists
 
     currShader = programName;
-    glUseProgram(programMap[currShader].ID);
+    glUseProgram(programs[currShader].ID);
 }
 
 void cRenderManager::setBool(const std::string& name, bool value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform1i(programMap[currShader].uniformLocations[name], (int)value);
+    glUniform1i(programs[currShader].uniformLocations[name], (int)value);
 }
 
 void cRenderManager::setInt(const std::string& name, int value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform1i(programMap[currShader].uniformLocations[name], value);
+    glUniform1i(programs[currShader].uniformLocations[name], value);
 }
 
 void cRenderManager::setFloat(const std::string& name, float value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform1f(programMap[currShader].uniformLocations[name], value);
+    glUniform1f(programs[currShader].uniformLocations[name], value);
 }
 
 void cRenderManager::setMat4(const std::string& name, const glm::mat4& mat)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniformMatrix4fv(programMap[currShader].uniformLocations[name], 1, GL_FALSE, &mat[0][0]);
+    glUniformMatrix4fv(programs[currShader].uniformLocations[name], 1, GL_FALSE, &mat[0][0]);
 }
 
 void cRenderManager::setVec2(const std::string& name, const glm::vec2& value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform2fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+    glUniform2fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
 void cRenderManager::setVec3(const std::string& name, const glm::vec3& value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform3fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+    glUniform3fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
 void cRenderManager::setVec4(const std::string& name, const glm::vec4& value)
 {
-    if (programMap[currShader].uniformLocations.count(name) == 0)
+    if (programs[currShader].uniformLocations.count(name) == 0)
     {
-        unsigned int newLocation = glGetUniformLocation(programMap.at(currShader).ID, name.c_str());
-        programMap[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
+        unsigned int newLocation = glGetUniformLocation(programs.at(currShader).ID, name.c_str());
+        programs[currShader].uniformLocations.insert(std::pair<std::string, unsigned int>(name, newLocation));
     }
 
-    glUniform4fv(programMap[currShader].uniformLocations[name], 1, &value[0]);
+    glUniform4fv(programs[currShader].uniformLocations[name], 1, &value[0]);
 }
 
-std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel()
+std::shared_ptr<cRenderModel> cRenderManager::CreateRenderModel(bool isBattleModel)
 {
     std::shared_ptr<cRenderModel> newModel = std::make_shared<cRenderModel>();
-    models.push_back(newModel);
+
+    if (isBattleModel) 
+        battleModels.push_back(newModel);
+    else 
+        mapModels.push_back(newModel);
 
     return newModel;
 }
 
-std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel()
+std::shared_ptr<cSpriteModel> cRenderManager::CreateSpriteModel(bool isBattleModel)
 {
     std::shared_ptr<cSpriteModel> newModel = std::make_shared<cSpriteModel>();
-    models.push_back(newModel);
+
+    if (isBattleModel) 
+        battleModels.push_back(newModel);
+    else 
+        mapModels.push_back(newModel);
 
     return newModel;
 }
 
-std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModel modelType)
+std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedModel modelType, bool isBattleModel)
 {
     std::shared_ptr<cAnimatedModel> newModel;
 
@@ -648,21 +624,44 @@ std::shared_ptr<cAnimatedModel> cRenderManager::CreateAnimatedModel(eAnimatedMod
         newModel = std::make_shared<cTreeModel>();
         break;
     }
-    models.push_back(newModel);
+
+    if (isBattleModel)
+        battleModels.push_back(newModel);
+    else
+        mapModels.push_back(newModel);
 
     return newModel;
 }
 
 void cRenderManager::RemoveModel(std::shared_ptr<cRenderModel> model)
 {
-    std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(models.begin(), models.end(), model);
-    
-    if(it != models.end())
-        models.erase(it);
+    if (Engine::currGameMode == eGameMode::MAP) // TEMP
+    {
+        std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(mapModels.begin(), mapModels.end(), model);
+
+        if (it != mapModels.end())
+            mapModels.erase(it);
+    }
+    else
+    {
+        std::vector< std::shared_ptr<cRenderModel> >::iterator it = std::find(battleModels.begin(), battleModels.end(), model);
+
+        if (it != battleModels.end())
+            battleModels.erase(it);
+    }
 }
 
 unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& width, int& height)
 {
+    // load and generate the texture
+    int nrChannels;
+    unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
+    if (!data)
+    {
+        std::cout << "Failed to load texture " << fullPath << std::endl;
+        return 0;
+    }
+
     unsigned int textureId;
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_2D, textureId);
@@ -674,46 +673,43 @@ unsigned int cRenderManager::CreateTexture(const std::string fullPath, int& widt
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // load and generate the texture
-    int nrChannels;
-    unsigned char* data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        //std::cout << "Created texture " << fileName << std::endl;
-    }
-    else
-    {
-        glDeleteTextures(1, &textureId);
-        std::cout << "Failed to load texture " << fullPath << std::endl;
-        return 0;
-    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
     return textureId;
 }
 
-void cRenderManager::LoadSceneTexture(const std::string fileName, const std::string subdirectory, bool isPermanent)
+void cRenderManager::LoadTexture(const std::string fileName, const std::string subdirectory)
 {
     if (fileName == "") return;
 
-    if (sceneTextures.count(fileName)) // texture already created
-    {
-        if (isPermanent) sceneTextures[fileName].isPermanent = true;
-
-        return;
-    }
+    if (textures.find(fileName) != textures.end()) return; // texture already created
 
     std::string fullPath = TEXTURE_PATH + subdirectory + fileName;
     int width, height;
     sTexture newTexture;
     newTexture.textureId = CreateTexture(fullPath, width, height);
-    newTexture.isPermanent = isPermanent;
 
     if (newTexture.textureId != 0)
-        sceneTextures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
+    {
+        textures.insert(std::pair<std::string, sTexture>(fileName, newTexture));
+    }
+}
+
+void cRenderManager::UnloadTextures()
+{
+    for (std::map<std::string, sTexture>::iterator it = textures.begin(); it != textures.end(); it++)
+    {
+        glDeleteTextures(1, &it->second.textureId);
+    }
+    textures.clear();
+
+    for (std::map<std::string, sSpriteSheet>::iterator it = spriteSheets.begin(); it != spriteSheets.end(); it++)
+    {
+        glDeleteTextures(1, &it->second.textureId);
+    }
+    spriteSheets.clear();
 }
 
 unsigned int cRenderManager::CreateCubemap(const std::vector<std::string> faces)
@@ -758,73 +754,113 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
     textureName = textureName + ".png";
 
     // Check if not already loaded
-    if (sceneSpriteSheets.find(textureName) != sceneSpriteSheets.end()) return;
+    if (spriteSheets.find(textureName) != spriteSheets.end()) return;
 
-    std::string dexIdString = std::to_string(nationalDexId);
-    while (dexIdString.length() < 4)
-    {
-        dexIdString = "0" + dexIdString;
-    }
-    std::string texturePath = PKM_SPRITES_PATH + dexIdString + "/";
+    std::string dexIdString = Pokemon::MakeDexNumberFolderName(nationalDexId);
+    std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
 
     // Create sprite sheet
     sSpriteSheet newSheet;
     newSheet.numCols = 4;
     newSheet.numRows = 4;
     newSheet.isSymmetrical = false;
-    newSheet.isPermanent = false;
 
     std::string fullPath = texturePath + textureName;
     int width, height;
     newSheet.textureId = CreateTexture(fullPath, width, height);
 
     if (newSheet.textureId != 0)
-        sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSheet));
+        spriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSheet));
 
     // Check if shiny not already loaded
-    if (sceneSpriteSheets.find(shinyTextureName) != sceneSpriteSheets.end()) return;
+    if (spriteSheets.find(shinyTextureName) != spriteSheets.end()) return;
 
     // Create shiny sprite sheet
     sSpriteSheet newShinySheet;
     newShinySheet.numCols = 4;
     newShinySheet.numRows = 4;
     newShinySheet.isSymmetrical = false;
-    newShinySheet.isPermanent = false;
 
     std::string shinyFullPath = texturePath + shinyTextureName;
     newShinySheet.textureId = CreateTexture(shinyFullPath, width, height);
 
     if (newShinySheet.textureId != 0)
-        sceneSpriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
+        spriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
 }
 
-void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory, bool isPermanent)
+void cRenderManager::LoadPokemonIconTexture(const int nationalDexId, const std::string formTag)
 {
-    if (sceneSpriteSheets.count(spriteSheetName)) return; // texture already created
+    // OPTIMIZATION: might not need to load both shiny and non shiny version depending on what will be needed
+    std::string textureName = std::to_string(nationalDexId);
+    if (formTag != "")
+    {
+        textureName = textureName + "_" + formTag;
+    }
+    textureName = textureName + "_ico";
+    std::string shinyTextureName = textureName + "_s.png";
+    textureName = textureName + ".png";
+
+    // Check if not already loaded
+    if (textures.find(textureName) != textures.end()) return;
+
+    std::string dexIdString = std::to_string(nationalDexId);
+    while (dexIdString.length() < 4)
+    {
+        dexIdString = "0" + dexIdString;
+    }
+    std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
+
+    // Create icon texture
+    sTexture newIcon;
+    std::string fullPath = texturePath + textureName;
+    int width, height;
+    newIcon.textureId = CreateTexture(fullPath, width, height);
+
+    if (newIcon.textureId != 0)
+        textures.insert(std::pair<std::string, sTexture>(textureName, newIcon));
+
+    // Check if shiny not already loaded
+    if (textures.find(shinyTextureName) != textures.end()) return;
+
+    // Create shiny icon texture
+    sTexture newShinyIcon;
+    std::string shinyFullPath = texturePath + shinyTextureName;
+    newShinyIcon.textureId = CreateTexture(shinyFullPath, width, height);
+
+    if (newShinyIcon.textureId != 0)
+        textures.insert(std::pair<std::string, sTexture>(shinyTextureName, newShinyIcon));
+}
+
+void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory)
+{
+    if (spriteSheets.count(spriteSheetName)) return; // texture already created
 
     sSpriteSheet newSheet;
     newSheet.numCols = cols;
     newSheet.numRows = rows;
     newSheet.isSymmetrical = sym;
-    newSheet.isPermanent = isPermanent;
 
     std::string fullPath = TEXTURE_PATH + subdirectory + spriteSheetName;
     int width, height;
     newSheet.textureId = CreateTexture(fullPath, width, height);
 
     if (newSheet.textureId != 0)
-        sceneSpriteSheets[spriteSheetName] = newSheet;
+        spriteSheets[spriteSheetName] = newSheet;
 }
 
-void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData)
+void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesData& specieData)
 {
     // Load default form
     LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber);
+    LoadPokemonIconTexture(specieData.nationalDexNumber);
 
     // Load female varient if there is one
     if (specieData.isSpriteGenderBased || specieData.isFormGenderBased)
     {
         LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, "f");
+
+        if (specieData.isFormGenderBased)
+            LoadPokemonIconTexture(specieData.nationalDexNumber, "f");
     }
     else
     {
@@ -832,21 +868,46 @@ void cRenderManager::LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpecie
         for (std::map<std::string, Pokemon::sForm>::const_iterator it = specieData.alternateForms.cbegin(); it != specieData.alternateForms.cend(); it++)
         {
             LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, it->first);
+            LoadPokemonIconTexture(specieData.nationalDexNumber, it->first);
         }
     }
 }
 
+float cRenderManager::LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& data, bool isFront)
+{
+    std::string textureName = data.MakeBattleTextureName(isFront);
+
+    if (textures.find(textureName) != textures.end()) return 1.f; // already loaded
+
+    std::string dexIdString = std::to_string(data.nationalDexNumber);
+    while (dexIdString.length() < 4)
+    {
+        dexIdString = "0" + dexIdString;
+    }
+    std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
+
+    std::string fullPath = texturePath + textureName;
+    sSpriteSheet newSpriteSheet;
+    newSpriteSheet.numRows = 1;
+    newSpriteSheet.numCols = isFront ? data.form.battleFrontSpriteFrameCount : data.form.battleBackSpriteFrameCount;
+
+    int width, height;
+    newSpriteSheet.textureId = CreateTexture(fullPath, width, height);
+
+    spriteSheets.insert(std::pair<std::string, sSpriteSheet>(textureName, newSpriteSheet));
+
+    return (float)width / newSpriteSheet.numCols / height;
+}
+
 void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit)
 {
-    if (sceneSpriteSheets.find(sheetName) == sceneSpriteSheets.end()) return; // texture doesn't exists
-
-    sSpriteSheet sheet = sceneSpriteSheets[sheetName];
+    sSpriteSheet sheet = spriteSheets[sheetName];
 
     setInt("spriteId", spriteId);
     setInt("numCols", sheet.numCols);
     setInt("numRows", sheet.numRows);
 
-    unsigned int textureId = sceneSpriteSheets[sheetName].textureId;
+    unsigned int textureId = sheet.textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
@@ -858,9 +919,13 @@ void cRenderManager::SetupSpriteSheet(const std::string sheetName, const int spr
 
 void cRenderManager::SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit)
 {
-    if (sceneTextures.find(textureToSetup) == sceneTextures.end()) return; // texture doesn't exists
+    if (textures.find(textureToSetup) == textures.end())
+    {
+        std::cout << "Failed to setup texture: " << textureToSetup << std::endl;
+        return; // texture doesn't exists
+    }
 
-    unsigned int textureId = sceneTextures[textureToSetup].textureId;
+    unsigned int textureId = textures[textureToSetup].textureId;
 
     //GLuint textureUnit = 0;			// Texture unit go from 0 to 79
     glActiveTexture(shaderTextureUnit + GL_TEXTURE0);	// GL_TEXTURE0 = 33984
@@ -868,77 +933,6 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
 
     std::string shaderVariable = "texture_" + std::to_string(shaderTextureUnit);
     setInt(shaderVariable, shaderTextureUnit);
-}
-
-void cRenderManager::LoadFont(const std::string fontName, const unsigned int glyphSize)
-{
-    FT_Library ft;
-    // All functions return a value different than 0 whenever an error occurred
-    if (FT_Init_FreeType(&ft)) {
-        std::cout << "ERROR: Could not init FreeType Library" << std::endl;
-        return;
-    }
-
-    std::string fontPath = FONTS_PATH + fontName;
-    FT_Face face;
-    if (FT_New_Face(ft, fontPath.c_str(), 0, &face)) {
-        std::cout << "ERROR: Failed to load font" << std::endl;
-        return;
-    }
-
-    // Leave width as 0 to be calculated with height
-    FT_Set_Pixel_Sizes(face, 0, glyphSize);
-
-    sFontData newFont;
-    newFont.glyphSize = glyphSize;
-    // Create empty black texture
-    glGenTextures(1, &newFont.textureAtlusId);
-    glBindTexture(GL_TEXTURE_2D, newFont.textureAtlusId);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, FONT_ATLAS_COLS * glyphSize, FONT_ATLAS_ROWS * glyphSize, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    // Fill slots of atlus with individual characters
-    int i = 0;
-    for (unsigned char c = 32; c < 126; c++)
-    {
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            std::cout << "ERROR: Failed to load Glyph " << c << std::endl;
-            continue;
-        }
-
-        sFontCharData newChar;
-        newChar.size = glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows);
-        newChar.bearing = glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top);
-        newChar.advance = face->glyph->advance.x;
-
-        // No need to add space to texture
-        if (c != ' ')
-        {
-            glTexSubImage2D(GL_TEXTURE_2D, 0,
-                glyphSize * (i % FONT_ATLAS_COLS),
-                glyphSize * (i / FONT_ATLAS_COLS),
-                face->glyph->bitmap.width,
-                face->glyph->bitmap.rows,
-                GL_RED, GL_UNSIGNED_BYTE,
-                face->glyph->bitmap.buffer
-            );
-
-            i++;
-        }
-
-        newFont.characters.insert(std::pair<char, sFontCharData>(c, newChar));
-    }
-
-    fonts.insert(std::pair<std::string, sFontData>(fontName, newFont));
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
 }
 
 void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
@@ -976,7 +970,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
             glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
 
             // OPTMIZATION: maybe figure out a way to not have to setup all these data every frame
-            GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+            GLint offset_location = glGetAttribLocation(programs[currShader].ID, "oOffset");
             glEnableVertexAttribArray(offset_location);
             glVertexAttribPointer(offset_location, 4,
                 GL_FLOAT, GL_FALSE,
@@ -994,7 +988,7 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
         {
             glBindBuffer(GL_ARRAY_BUFFER, notInstancedOffsetBufferId);
 
-            GLint offset_location = glGetAttribLocation(programMap[currShader].ID, "oOffset");
+            GLint offset_location = glGetAttribLocation(programs[currShader].ID, "oOffset");
             glEnableVertexAttribArray(offset_location);
             glVertexAttribPointer(offset_location, 4,
                 GL_FLOAT, GL_FALSE,
@@ -1010,140 +1004,6 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 
         glBindVertexArray(0);
     }    
-}
-
-void cRenderManager::SetupFont(const std::string fontName)
-{
-    if (fonts.find(fontName) == fonts.end()) return; // font doesn't exists
-
-    unsigned int textureId = fonts[fontName].textureAtlusId;
-
-    glActiveTexture(GL_TEXTURE0);	// GL_TEXTURE0 = 33984
-    glBindTexture(GL_TEXTURE_2D, textureId);
-
-    std::string shaderVariable = "texture_0";
-    setInt(shaderVariable, 0);
-
-    setInt("atlasRowsNum", FONT_ATLAS_ROWS);
-    setInt("atlasColsNum", FONT_ATLAS_COLS);
-}
-
-void cRenderManager::CreateTextDataBuffer(cUIText* text)
-{
-    if (fonts.find(text->fontName) == fonts.end()) return; // font doesn't exists
-    sFontData& font = fonts[text->fontName];
-
-    std::stringstream ss(text->text);
-    std::vector<std::string> words;
-    std::string s;
-    while (std::getline(ss, s, ' '))
-    {
-        words.push_back(s); // no spaces
-    }
-
-    float glyphPixelRatio = text->CalculateHeightPixels() * text->textSizePercent / (float)font.glyphSize;
-    float pixelCutoff = text->CalculateWidthPixels();
-
-    std::vector<sCharBufferData> data;
-    int advanceX = 0;
-    int advanceY = 0;
-    for (unsigned int i = 0; i < words.size(); i++)
-    {
-        // Check if this word is too big for this line
-        int wordAdvance = 0;
-        for (unsigned int j = 0; j < words[i].length(); j++)
-        {
-            sFontCharData& ch = font.characters[words[i][j]];
-            wordAdvance += ch.advance >> 6;
-        }
-
-        // Jump to next line
-        if ((advanceX + wordAdvance) * glyphPixelRatio > pixelCutoff)
-        {
-            advanceX = 0;
-            advanceY += font.glyphSize * 1.1f;
-        }
-        
-        for (unsigned int j = 0; j < words[i].length(); j++)
-        {
-            char c = words[i][j];
-            sFontCharData& ch = font.characters[c];
-
-            int posX = advanceX + ch.bearing.x;
-            int posY = ch.size.y - ch.bearing.y + advanceY;
-
-            int sizeX = ch.size.x;
-            int sizeY = ch.size.y;
-
-            sCharBufferData newData;
-            newData.posX = (float)posX;
-            newData.posY = (float)posY;
-            newData.sizeX = (float)sizeX;
-            newData.sizeY = (float)sizeY;
-            newData.charId = (float)c;
-            data.push_back(newData);
-
-            advanceX += ch.advance >> 6;
-        }
-        advanceX += font.characters[' '].advance >> 6;
-    }
-
-    text->drawCharCount = data.size();
-
-    glGenBuffers(1, &text->dataBufferId);
-    glBindBuffer(GL_ARRAY_BUFFER, text->dataBufferId);
-
-    glBufferData(GL_ARRAY_BUFFER,
-        sizeof(sCharBufferData) * data.size(),
-        (GLvoid*)&data[0],
-        GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void cRenderManager::DrawText(cUIText* textWidget)
-{
-    sFontData& font = fonts[textWidget->fontName];
-    unsigned int scrWidth = Manager::camera.SCR_WIDTH;
-    unsigned int scrHeight = Manager::camera.SCR_HEIGHT;
-    float horizontalTranslation = textWidget->CalculateHorizontalTranslate();
-    float verticalTranslation = textWidget->CalculateVerticalTranslate();
-    float widthPercent = textWidget->CalculateWidthScreenPercent();
-    float heightPercent = textWidget->CalculateHeightScreenPercent();
-
-    float pixelGlyphRatio = heightPercent * scrHeight * textWidget->textSizePercent / (float)font.glyphSize;
-
-    float finalHorizontalTranslation = horizontalTranslation - widthPercent;
-    float finalVerticalTranslation = verticalTranslation + heightPercent;
-    glm::vec2 origin = glm::vec2(finalHorizontalTranslation, finalVerticalTranslation);
-
-    use("text");
-    SetupFont(textWidget->fontName);
-    setVec3("color", textWidget->color);
-
-    setVec2("originOffset", origin);
-    setFloat("glyphPixelRatio", pixelGlyphRatio);
-    setInt("glyphSize", font.glyphSize);
-    setInt("screenWidth", scrWidth);
-    setInt("screenHeight", scrHeight);
-
-    glBindVertexArray(UIQuadVAO);
-
-    // Setup buffer data as vertex atribute
-    // (ideally I would want this to be set on VAO creation, but I guess the data needs to be setup before hand... so here it goes)
-    glBindBuffer(GL_ARRAY_BUFFER, textWidget->dataBufferId);
-
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glVertexAttribDivisor(2, 1);
-
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(4 * sizeof(float)));
-    glVertexAttribDivisor(3, 1);
-
-    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)0, textWidget->drawCharCount);
-
-    glBindVertexArray(0);
 }
 
 void cRenderManager::DrawParticles(cParticleSpawner* spawner)
@@ -1188,69 +1048,66 @@ void cRenderManager::DrawParticles(cParticleSpawner* spawner)
     }
 }
 
-void cRenderManager::DrawWidget(cUIWidget* widget)
+void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
 {
-    for (int i = 0; i < widget->children.size(); i++)
-    {
-        cUIWidget* child = widget->children[i];
-
-        if (child->ShouldUseTextRenderer()) DrawText(dynamic_cast<cUIText*>(child));
-        else DrawWidget(child);
-    }
-    
-    widget->SetupWidget();
-
-    float widthPercent = widget->CalculateWidthScreenPercent();
-    float heightPercent = widget->CalculateHeightScreenPercent();
-    setFloat("widthPercent", widthPercent);
-    setFloat("heightPercent", heightPercent);
-
-    float widthTranslate = widget->CalculateHorizontalTranslate();
-    float heightTranslate = widget->CalculateVerticalTranslate(); 
-    setFloat("widthTranslate", widthTranslate);
-    setFloat("heightTranslate", heightTranslate);
-
-    glBindVertexArray(UIQuadVAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
-void cRenderManager::DrawFrame()
-{
-    //********************** Shadow pass ********************************
-
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
-    
+
     glm::mat4 lightProjection, lightView;
     float near_plane = 1.f, far_plane = 100.f;
 
-    glm::vec3 lightPos = glm::vec3(Manager::light.lights[0].position) + Player::GetPlayerPosition();
-    glm::vec3 lightAt = Player::GetPlayerPosition();
+    glm::vec3 lightPos, lightAt;
+    if (Engine::currGameMode == eGameMode::MAP)
+    {
+        lightPos = glm::vec3(Manager::light.lights[0].position) + Player::GetPlayerPosition();
+        lightAt = Player::GetPlayerPosition();
+    }
+    else if (Engine::currGameMode == eGameMode::BATTLE)
+    {
+        lightPos = glm::vec3(-20.f, 12.f, -10.f);
+        lightAt = glm::vec3(0.f); // look at world origin
+    }
 
     lightProjection = glm::ortho(-25.0f, 25.0f, -25.0f, 25.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightAt, glm::vec3(0.0, 1.0, 0.0));
-    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+    outLightSpaceMatrix = lightProjection * lightView;
 
     int bruh = 1; // B R U H
-
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(lightProjection));
     glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightView));
-    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightSpaceMatrix));
+    glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(outLightSpaceMatrix));
     glBufferSubData(GL_UNIFORM_BUFFER, 3 * sizeof(glm::mat4), sizeof(int), &bruh);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     //Draw scene
-    for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
+    if (Engine::currGameMode == eGameMode::MAP)
     {
-        DrawObject(*it);
+        for (int i = 0; i < mapModels.size(); i++)
+        {
+            DrawObject(mapModels[i]);
+        }
+    }
+    else if (Engine::currGameMode == eGameMode::BATTLE)
+    {
+        for (int i = 0; i < battleModels.size(); i++)
+        {
+            DrawObject(battleModels[i]);
+        }
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
 
-    //*********************** Regular pass ******************************
+void cRenderManager::DrawFrame()
+{
+    //Shadow pass
+    glm::mat4 lightSpaceMatrix;
+    DrawShadowPass(lightSpaceMatrix);
+
+    // Regular pass
+    
     // Reset viewport
     glViewport(0, 0, Manager::camera.SCR_WIDTH, Manager::camera.SCR_HEIGHT);
     glClearColor(0.89f, 0.89f, 0.89f, 1.0f);
@@ -1262,7 +1119,7 @@ void cRenderManager::DrawFrame()
     glm::mat4 projection = Manager::camera.GetProjectionMatrix();
     glm::mat4 view = Manager::camera.GetViewMatrix();
 
-    bruh = 0;
+    int bruh = 0;
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatricesID);
     glBufferSubData(GL_UNIFORM_BUFFER, 0 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(projection));
     glBufferSubData(GL_UNIFORM_BUFFER, 1 * sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
@@ -1278,32 +1135,37 @@ void cRenderManager::DrawFrame()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     // Draw scene
-    for (std::vector< std::shared_ptr<cRenderModel> >::iterator it = models.begin(); it != models.end(); it++)
+    if (Engine::currGameMode == eGameMode::MAP)
     {
-        DrawObject(*it);
+        for (int i = 0; i < mapModels.size(); i++)
+        {
+            DrawObject(mapModels[i]);
+        }
+    }
+    else if (Engine::currGameMode == eGameMode::BATTLE)
+    {
+        for (int i = 0; i < battleModels.size(); i++)
+        {
+            DrawObject(battleModels[i]);
+        }
     }
 
     // Draw particles
-    if (Manager::scene.weatherParticleSpawner)
+    if (Engine::currGameMode != eGameMode::MENU)
     {
-        DrawParticles(Manager::scene.weatherParticleSpawner);
-    }
-    for (int i = 0; i < Manager::scene.particleSpawners.size(); i++)
-    {
-        DrawParticles(Manager::scene.particleSpawners[i]);
+        if (Manager::scene.weatherParticleSpawner)
+        {
+            DrawParticles(Manager::scene.weatherParticleSpawner);
+        }
+        for (int i = 0; i < Manager::scene.particleSpawners.size(); i++)
+        {
+            DrawParticles(Manager::scene.particleSpawners[i]);
+        }
     }
 
     // Draw UI
-    if (!Manager::ui.canvases.empty())
-    {
-        const cUICanvas* canvasToDraw = Manager::ui.canvases.top();
-
-        for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
-        {
-            if (canvasToDraw->anchoredWidgets[i]->ShouldUseTextRenderer()) DrawText(dynamic_cast<cUIText*>(canvasToDraw->anchoredWidgets[i]));
-            else DrawWidget(canvasToDraw->anchoredWidgets[i]);
-        }
-    }
+    if (Manager::input.GetCurrentInputState() == MENU_NAVIGATION)
+        Manager::ui.DrawUI();
 
     // Draw skybox
     glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content

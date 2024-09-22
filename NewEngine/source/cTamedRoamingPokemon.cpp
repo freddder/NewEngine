@@ -1,12 +1,18 @@
 #include "cTamedRoamingPokemon.h"
 
-cTamedRoamingPokemon::cTamedRoamingPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 pos, std::string textureName) : cCharacterEntity(pos)
+cTamedRoamingPokemon::cTamedRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos) : cCharacterEntity(pos)
 {
 	data = pokemonData;
-	spriteModel = new cOverworldPokemonSprite(textureName, pos);
+	spriteModel = new cOverworldPokemonSprite(pokemonData.MakeRoamingTextureName(), pos);
 }
 
 cTamedRoamingPokemon::~cTamedRoamingPokemon()
 {
 
+}
+
+void cTamedRoamingPokemon::UpdateRoamingData(Pokemon::sRoamingPokemonData& newData)
+{
+	data = newData;
+	spriteModel->model.get()->textureName = newData.MakeRoamingTextureName();
 }

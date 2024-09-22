@@ -11,6 +11,8 @@ cCharacterEntity::cCharacterEntity(glm::vec3 pos)
 
 cCharacterEntity::~cCharacterEntity()
 {
+	Manager::map.RemoveEntityFromTile(position);
+
 	if (spriteModel)
 		delete spriteModel;
 }

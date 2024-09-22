@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include <iostream>
 
 #include "Engine.h"
@@ -7,8 +8,8 @@
 #include "cAnimationManager.h"
 #include "cLightManager.h"
 #include "cUIManager.h"
-
 #include "cCameraManager.h"
+
 #include "cWildRoamingPokemon.h"
 #include "cTamedRoamingPokemon.h"
 #include "cPlayerEntity.h"
@@ -83,52 +84,29 @@ int main()
     Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
     Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
-    Manager::render.LoadSceneTexture("SnowFlake1.png");
-    Manager::render.LoadSceneTexture("SnowFlake2.png");
-    Manager::render.LoadSceneTexture("SnowFlake3.png");
-
-    Manager::render.LoadSceneTexture("PartyMemberButtonBackground.png", "ui/", false);
-    Manager::render.LoadSceneTexture("ico_3ds_722.png", "ui/PokemonPartySprites/", false);
-    
-    Manager::render.LoadFont("Truth And Ideals-Normal.ttf", 24);
+    Manager::render.LoadTexture("SnowFlake1.png");
+    Manager::render.LoadTexture("SnowFlake2.png");
+    Manager::render.LoadTexture("SnowFlake3.png");
 
     //***************************************************************************
 
     Manager::animation.InitializeAnimationsPresets();
 
-    {
-        cUICanvas* canvas = new cUICanvas();
-        Engine::button = new cUIStaticImage();
-        Engine::button->anchor = MIDDLE_LEFT;
-        Engine::button->textureName = "PartyMemberButtonBackground.png";
-        Engine::button->aspectRatio = 0.365f;
-        Engine::button->heightPercent = 1.f / 9.f;
-
-        Engine::sprite = new cUIStaticImage();
-        Engine::sprite->anchor = MIDDLE_LEFT;
-        Engine::sprite->aspectRatio = 3.f / 4.f;
-        Engine::sprite->heightPercent = 3.f / 4.f;
-        Engine::sprite->textureName = "ico_3ds_722.png";
-        Engine::button->AddChild(Engine::sprite);
-
-        cUIText* textWidget = new cUIText();
-        textWidget->fontName = "Truth And Ideals-Normal.ttf";
-        textWidget->text = "Thatguy";
-        textWidget->color = glm::vec3(1.f);
-        textWidget->heightPercent = 0.3f;
-        Engine::button->AddChild(textWidget);
-        Manager::render.CreateTextDataBuffer(textWidget); // make sure to call this after setting parent
-
-        canvas->AddWidget(Engine::button);
-        Manager::ui.AddCanvas(canvas);
-    }
-
     //Manager::map.LoadMap("WinterTestDesc.json");
     //Manager::map.LoadMap("WaterTest3Desc.json");
     //Manager::map.LoadMap("SlopeTestDesc.json");
     //Manager::map.LoadMap("MultiTestDesc.json");
-    Manager::map.LoadMap("GrassRouteDemoDesc.json");
+    Manager::map.LoadScene("GrassRouteDemoDesc.json");
     //Manager::map.LoadMap("CostalWinterDesc.json");
+
+    Pokemon::sIndividualData partner;
+    partner.nationalDexNumber = 445;
+    partner.gender = Pokemon::FEMALE;
+    partner.isShiny = true;
+    partner.form.battleBackSpriteFrameCount = 48; // hard coded for now
+    partner.level = 98;
+    partner.LoadFormFromSpeciesData();
+    Player::AddPartyMember(partner);
 
     Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
     Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
@@ -138,13 +116,11 @@ int main()
         Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
 
         Pokemon::sSpeciesData followerSpecieData;
-        Pokemon::LoadSpecieData(445, followerSpecieData);
-        Manager::render.LoadRoamingPokemonSpecieSpriteSheets(followerSpecieData);
-        Player::partyMember1.nationalDexNumber = 445;
-        Player::partyMember1.gender = Pokemon::MALE;
-        Player::partyMember1.isShiny = true;
-        std::shared_ptr<cTamedRoamingPokemon> follower = Manager::scene.SpawnTamedPokemon(Player::partyMember1, glm::vec3(22.f, 1.f, 25.f));
-        Player::playerChar->SetFollower(follower.get());
+        Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
+        Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
+
+        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::party[0], glm::vec3(22.f, 1.f, 25.f));
+        Player::playerChar->SetFollower(Player::playerPartner.get());
 
         // TODO: find a good place to seed the rand
         srand((int)time(0));
@@ -155,7 +131,7 @@ int main()
         Manager::scene.SpawnRandomWildPokemon();
     }
 
-    // Manager::scene.SetWeather(SNOW);
+    //Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
 

@@ -21,6 +21,8 @@
 #include "cMapManager.h"
 #include "cSceneManager.h"
 #include "cUIManager.h"
+#include "cInputManager.h"
+
 #include "PokemonData.h"
 
 #include "Player.h"
@@ -187,8 +189,6 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Camera"))
     {
-        //cCamera* camera = cCamera::GetInstance();
-
         float* cameraPosition[3];
         cameraPosition[0] = &Manager::camera.position.x;
         cameraPosition[1] = &Manager::camera.position.y;
@@ -203,13 +203,6 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("Enviornment"))
     {
-        //cSceneManager* sceneManager = cSceneManager::GetInstance();
-
-        if (ImGui::Button("Change Scene"))
-        {
-            Manager::scene.ChangeScene();
-        }
-
         if (ImGui::BeginCombo("Weather", Weather_Strings[selectedWeather]))
         {
             for (int n = 0; n < eEnvironmentWeather::ENUM_COUNT; n++)
@@ -234,9 +227,6 @@ void RenderImgui()
         {
             if (ImGui::BeginTabItem("Light"))
             {
-                //cLightManager* lightManager = cLightManager::GetInstance();
-                //cRenderManager* renderManager = cRenderManager::GetInstance();
-
                 float* position[3];
                 position[0] = &Manager::light.lights[0].position.x;
                 position[1] = &Manager::light.lights[0].position.y;
@@ -252,9 +242,6 @@ void RenderImgui()
                 ImGui::ColorEdit3("Color", *colors);
                 ImGui::DragFloat3("Position", *position);
                 ImGui::DragInt("Smoothing", shadowSmooth);
-                //ImGui::DragFloat("Threshold", &waterThreshold, 0.05f, 0.f, 1.f);
-                //ImGui::Checkbox("Day & Night cycle", &dayNightCycleOn);
-                //ImGui::DragFloat("Cycle speed", &dayNightCycle->speed);
                 ImGui::Image((void*)(intptr_t)Manager::render.GetDepthMapId(), ImVec2(200, 200));
 
                 ImGui::EndTabItem();
@@ -300,7 +287,7 @@ void RenderImgui()
             {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
-                //cRenderManager* renderManager = cRenderManager::GetInstance();
+                
                 ImGui::Image((void*)(intptr_t)Manager::render.GetDepthMapId(), ImVec2(120, 90));
 
                 ImGui::TableNextColumn();
@@ -371,22 +358,7 @@ void RenderImgui()
 
     if (ImGui::CollapsingHeader("UI"))
     {
-        if (ImGui::BeginCombo("Button UI Anchor", Anchors_Strings[Engine::button->anchor]))
-        {
-            for (int n = 0; n < eAnchor::ANCHOR_ENUM_COUNT; n++)
-            {
-                const bool is_selected = (Engine::button->anchor == n);
-                if (ImGui::Selectable(Anchors_Strings[n], is_selected))
-                {
-                    Engine::button->anchor = static_cast<eAnchor>(n);
-                }
-
-                // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-            }
-            ImGui::EndCombo();
-        }
+        
     }
 
     ImGui::End();
@@ -411,12 +383,12 @@ namespace Manager
     cMapManager map;
     cSceneManager scene;
     cUIManager ui;
+    cInputManager input;
 }
 
 namespace Engine
 {
-    cUIStaticImage* button;
-    cUIStaticImage* sprite;
+    eGameMode currGameMode = eGameMode::MAP;
 
     // camera
     float lastX = 1200 / 2.0f;
@@ -472,6 +444,10 @@ namespace Engine
         Manager::light.Startup();
 
         Manager::render.Startup();
+
+        Manager::input.Startup();
+
+        Manager::ui.Startup();
     }
 
     void ShutdownManagers()
@@ -486,11 +462,15 @@ namespace Engine
 
         Manager::light.Shutdown();
 
+        Manager::map.Shutdown();
+
         Manager::render.Shutdown();
 
         Manager::scene.Shutdown();
 
         Manager::ui.Shutdown();
+
+        // TODO: I think there is one sprite model not properly deleting. Investigate later
     }
 
     void GameLoop(bool renderDebugInfo)
@@ -505,7 +485,7 @@ namespace Engine
             lastFrame = currentFrame;
 
             // input
-            processInput(window);
+            Manager::input.Process(deltaTime);
 
             Manager::animation.Process(deltaTime);
 
@@ -529,65 +509,12 @@ namespace Engine
         glfwTerminate();
     }
 
-    // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-    void processInput(GLFWwindow* window)
-    {
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, true);
-
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            Manager::camera.MoveForward(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            Manager::camera.MoveBackward(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            Manager::camera.MoveLeft(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            Manager::camera.MoveRight(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-            Manager::camera.MoveUp(deltaTime);
-        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-            Manager::camera.MoveDown(deltaTime);
-
-        bool playerDesiresMovement = false;
-        eDirection playerDesiredDirection = eDirection::UP;
-
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::UP;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::DOWN;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::LEFT;
-        }
-        else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        {
-            playerDesiresMovement = true;
-            playerDesiredDirection = eDirection::RIGHT;
-        }
-
-        if (playerDesiresMovement)
-        {
-            if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
-                Player::playerChar->AttemptMovement(playerDesiredDirection, true);
-            else
-                Player::playerChar->AttemptMovement(playerDesiredDirection, false);
-        }
-        else
-        {
-            Player::playerChar->StopMovement();
-        }
-    }
-
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
-        // menuing and give/take movement control
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+
+        Manager::input.UpdateInput(key, action);
     }
 
     // glfw: whenever the window size changed (by OS or user resize) this callback function executes

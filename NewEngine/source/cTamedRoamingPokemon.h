@@ -5,8 +5,10 @@
 
 class cTamedRoamingPokemon : public cCharacterEntity
 {
-	Pokemon::sPokemonData data;
+	Pokemon::sRoamingPokemonData data;
 public:
-	cTamedRoamingPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 pos, std::string textureName);
+	cTamedRoamingPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 pos);
 	~cTamedRoamingPokemon();
+
+	void UpdateRoamingData(Pokemon::sRoamingPokemonData& newData);
 };

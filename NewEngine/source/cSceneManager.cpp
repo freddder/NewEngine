@@ -1,13 +1,15 @@
 #include "cSceneManager.h"
 #include "cWildRoamingPokemon.h"
 #include "cTamedRoamingPokemon.h"
-#include "cMapManager.h"
-#include "cRenderManager.h"
 #include "Player.h"
 
 #include <time.h>
 
 #include "Engine.h"
+#include "cMapManager.h"
+#include "cRenderManager.h"
+#include "cInputManager.h"
+#include "CanvasFactory.h"
 
 cSceneManager::cSceneManager()
 {
@@ -136,7 +138,7 @@ void cSceneManager::LoadSpawnData(const int nationalDexId, const int minLevel, c
 	Pokemon::LoadSpecieData(nationalDexId, specieData);
 
 	// Load overworld sprite texture
-	Manager::render.LoadRoamingPokemonSpecieSpriteSheets(specieData);
+	Manager::render.LoadRoamingPokemonSpecieTextures(specieData);
 
 	Pokemon::sSpawnData spawnData;
 	spawnData.nationalDexNumber = nationalDexId;
@@ -157,7 +159,7 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	if (loadedSpawnData.size() == 0) return nullptr;
 
 	// Pick a random spawn data
-	int randIndex = (rand() % loadedSpawnData.size());
+	int randIndex = rand() % loadedSpawnData.size();
 	Pokemon::sSpawnData spawnData = loadedSpawnData[randIndex];
 	std::shared_ptr<cWildRoamingPokemon> spawnedWildPokemon = nullptr;
 
@@ -174,31 +176,13 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnRandomWildPokemon()
 	return spawnedWildPokemon;
 }
 
-std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
+std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(const Pokemon::sSpawnData& spawnData, glm::vec3 tileLocation, sTile* spawnTile)
 {
 	if (!spawnTile) return nullptr;
 
-	Pokemon::sRoamingPokemonData individualData;
-	individualData.nationalDexNumber = spawnData.nationalDexNumber;
-	individualData.formName = spawnData.formName;
+	Pokemon::sRoamingPokemonData roamingData = Pokemon::GenerateRoamingPokemonData(spawnData);
 
-	// Determine gender
-	individualData.gender = Pokemon::NO_GENDER;
-	if (spawnData.genderRatio >= 0) // not genderless
-	{		
-		int genderRandom = (rand() % 100); // [0-99]
-
-		if (spawnData.genderRatio < genderRandom) individualData.gender = Pokemon::MALE;
-		else individualData.gender = Pokemon::FEMALE;
-	}
-	
-	// Determine shiny
-	int shinyRandom = (rand() % 100); // [0-99]
-	if (shinyRandom < 50) individualData.isShiny = true;
-
-	std::string textureName = individualData.MakeTextureName(spawnData.isFormGenderBased, spawnData.isSpriteGenderBased);
-	
-	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(individualData, tileLocation, textureName);
+	std::shared_ptr<cWildRoamingPokemon> newWildPokemon = std::make_shared<cWildRoamingPokemon>(roamingData, tileLocation);
 	roamingWildPokemon.push_back(newWildPokemon);
 
 	spawnTile->entity = newWildPokemon.get();
@@ -206,14 +190,24 @@ std::shared_ptr<cWildRoamingPokemon> cSceneManager::SpawnWildPokemon(Pokemon::sS
 	return newWildPokemon;
 }
 
-std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sPokemonData& pokemonData, glm::vec3 tileLocation)
+void cSceneManager::DespawnWildPokemon(cWildRoamingPokemon* pokemonToDespawn)
+{
+	for (int i = 0; roamingWildPokemon.size(); i++)
+	{
+		if (roamingWildPokemon[i].get() == pokemonToDespawn)
+		{
+			roamingWildPokemon.erase(roamingWildPokemon.begin() + i);
+			return;
+		}
+	}
+}
+
+std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::sRoamingPokemonData& pokemonData, glm::vec3 tileLocation)
 {
 	sTile* spawnTile = Manager::map.GetTile(tileLocation);
 	if (!spawnTile || spawnTile->entity != nullptr) return nullptr;
 
-	std::string textureName = pokemonData.MakeTextureName(false, true);
-
-	std::shared_ptr<cTamedRoamingPokemon> newTamedPokemon = std::make_shared<cTamedRoamingPokemon>(pokemonData, tileLocation, textureName);
+	std::shared_ptr<cTamedRoamingPokemon> newTamedPokemon = std::make_shared<cTamedRoamingPokemon>(pokemonData, tileLocation);
 	roamingTamedPokemon.push_back(newTamedPokemon);
 
 	spawnTile->entity = newTamedPokemon.get();
@@ -231,6 +225,51 @@ void cSceneManager::ChangeScene()
 	// - unload despawn data
 	// - move player and follower to appropriate place
 	// - remove render objects from vector
+}
+
+void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData, cWildRoamingPokemon* roamingEntity)
+{
+	enemyBattleData = Pokemon::GeneratePokemonBattleData(roamingPokemonData);
+	std::string enemyTextureName = enemyBattleData.MakeBattleTextureName();
+	float enemySpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(enemyBattleData);
+
+	Pokemon::sBattleData playerBattleData = (Pokemon::sBattleData&)Player::party[0];
+	std::string playerTextureName = playerBattleData.MakeBattleTextureName(false);
+	float playerSpriteAspectRatio = Manager::render.LoadPokemonBattleSpriteSheet(playerBattleData, false);
+
+	Manager::map.opponentSpriteModel->SetSpriteData(enemyTextureName, enemyBattleData.form.battleSpriteHeightSize, enemySpriteAspectRatio, enemyBattleData.form.battleFrontSpriteFrameCount);
+	Manager::map.playerSpriteModel->SetSpriteData(playerTextureName, playerBattleData.form.battleSpriteHeightSize, playerSpriteAspectRatio, playerBattleData.form.battleBackSpriteFrameCount);
+
+	Manager::ui.AddCanvas(new cBattleCanvas());
+	DespawnWildPokemon(roamingEntity);
+
+	Engine::currGameMode = eGameMode::BATTLE;
+	Manager::input.ChangeInputState(MENU_NAVIGATION);
+}
+
+void cSceneManager::CatchWildPokemon()
+{
+	if (Engine::currGameMode != eGameMode::BATTLE) return;
+
+	if (enemyBattleData.nationalDexNumber == 0) return;
+
+	Player::AddPartyMember(enemyBattleData);
+	ExitEncounter();
+}
+
+void cSceneManager::ExitEncounter()
+{
+	if (Engine::currGameMode != eGameMode::BATTLE) return;
+
+	Engine::currGameMode = eGameMode::MAP;
+	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
+
+	Manager::ui.RemoveCanvas();
+
+	Manager::map.opponentSpriteModel->ClearSpriteData();
+	Manager::map.playerSpriteModel->ClearSpriteData();
+
+	enemyBattleData = Pokemon::sBattleData();
 }
 
 void cSceneManager::Process(float deltaTime)

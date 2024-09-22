@@ -1,7 +1,6 @@
 #pragma once
 
 struct GLFWwindow;
-class cUIStaticImage;
 
 class cCameraManager;
 class cLightManager;
@@ -10,6 +9,7 @@ class cRenderManager;
 class cMapManager;
 class cSceneManager;
 class cUIManager;
+class cInputManager;
 
 namespace Manager
 {
@@ -20,13 +20,19 @@ namespace Manager
 	extern cMapManager map;
 	extern cSceneManager scene;
 	extern cUIManager ui;
+	extern cInputManager input;
 }
+
+enum eGameMode
+{
+	MAP,
+	BATTLE,
+	MENU
+};
 
 namespace Engine
 {
-	// TEMPORARY
-	extern cUIStaticImage* button;
-	extern cUIStaticImage* sprite;
+	extern eGameMode currGameMode;
 
 	bool InitializeGLFW();
 
@@ -40,6 +46,5 @@ namespace Engine
 	void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-	void processInput(GLFWwindow* window);
 	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 }

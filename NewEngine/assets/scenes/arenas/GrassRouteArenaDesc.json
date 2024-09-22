@@ -1,0 +1,13 @@
+{
+    "arenaModelFileName": "GrassRouteArena.obj",
+    "arenaDetailFileName": "GrassRouteArena.pdsmap",
+    "instancedTiles": [
+        {
+            "tileId": 0,
+            "meshName": "r0_treePine.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 3
+        }
+    ]
+}

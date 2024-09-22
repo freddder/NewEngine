@@ -26,7 +26,7 @@ class cOverworldPokemonSprite : public cCharacterSprite
 {
 public:
 	cOverworldPokemonSprite(std::string textureName, glm::vec3 pos);
-	~cOverworldPokemonSprite();
+	virtual ~cOverworldPokemonSprite();
 
 private:
 	eDirection lastDesiredDirection;
@@ -38,7 +38,7 @@ class cNPCSprite : public cCharacterSprite
 {
 public:
 	cNPCSprite(std::string textureName, glm::vec3 pos);
-	~cNPCSprite();
+	virtual ~cNPCSprite();
 
 private:
 	bool switchLeg;
@@ -50,7 +50,7 @@ class cPlayerSprite : public cCharacterSprite
 {
 public:
 	cPlayerSprite(std::string textureName, glm::vec3 pos);
-	~cPlayerSprite();
+	virtual ~cPlayerSprite();
 
 private:
 	eDirection lastDesiredDirection;
@@ -60,4 +60,18 @@ private:
 public:
 	virtual glm::vec3 AnimateMovement(eDirection dir, bool run, eEntityMoveResult moveResult);
 	void StopMovement();
+};
+
+class cBattleSprite
+{
+public:
+	cBattleSprite(glm::vec3 pos);
+	~cBattleSprite();
+
+	void SetSpriteData(std::string textureName, float spriteHeightSize, float spriteAspectRatio, int spritesNum);
+	void ClearSpriteData();
+
+protected:
+	std::shared_ptr<cPeriodicSpriteAnimation> spriteAnimation;
+	std::shared_ptr<cSpriteModel> model;
 };

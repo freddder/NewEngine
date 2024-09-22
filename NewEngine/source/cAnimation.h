@@ -20,6 +20,19 @@ enum eDirection
 	RIGHT
 };
 
+struct sKeyFrameVec2
+{
+	sKeyFrameVec2() :
+		time(0.f),
+		value(glm::vec2(0)) {}
+	sKeyFrameVec2(float _time, glm::vec2 _value) :
+		time(_time),
+		value(_value) {}
+
+	glm::vec2 value;
+	float time;
+};
+
 struct sKeyFrameVec3 // rgb
 {
 	sKeyFrameVec3(): 
@@ -130,6 +143,20 @@ public:
 	virtual void Process(float deltaTime);
 };
 
+class cVec2Animation : public cAnimation
+{
+public:
+	glm::vec2& valueRef;
+	glm::vec2 initValue;
+
+	std::vector<sKeyFrameVec2> keyframes;
+
+	cVec2Animation(glm::vec2& _valueRef);
+	void AddKeyFrame(sKeyFrameVec2 newKeyframe);
+
+	virtual void Process(float deltaTime);
+};
+
 class cVec3Animation : public cAnimation
 {
 public:
@@ -215,12 +242,24 @@ public:
 
 	std::vector<sKeyFrameSprite> keyframes;
 
-	cSpriteAnimation(int& _spriteRef, glm::vec3& _modelScale);
+	cSpriteAnimation(int& _spriteIdRef, glm::vec3& _modelScale);
 	void AddKeyFrame(sKeyFrameSprite newKeyframe);
 	void AddKeyFrames(std::vector<sKeyFrameSprite>& newKeyframes);
 
 	virtual void Reset();
 	void Reset(int newInitId, glm::vec3 newInitScale);
+
+	virtual void Process(float deltaTime);
+};
+
+class cPeriodicSpriteAnimation : public cAnimation
+{
+public:
+	int& spriteIdRef;
+	float interval = 0.1f;
+	int maxId; // If this number is hit, reset id red to 0
+
+	cPeriodicSpriteAnimation(int& _spriteIdRef, int _maxId);
 
 	virtual void Process(float deltaTime);
 };

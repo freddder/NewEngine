@@ -1,5 +1,4 @@
 #pragma once
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <set>
 #include <map>
@@ -7,21 +6,10 @@
 #include "DrawInfo.h"
 #include "cRenderModel.h"
 
-const static std::string SHADER_PATH = "assets/shaders/";
-const static std::string MODEL_PATH = "assets/models/";
-const static std::string TEXTURE_PATH = "assets/textures/";
-const static std::string PKM_SPRITES_PATH = "assets/pokemon/";
-const static std::string FONTS_PATH = "assets/fonts/";
-
-const unsigned int SHADOW_WIDTH = 3048, SHADOW_HEIGHT = 3048;
-const int FONT_ATLAS_COLS = 10;
-const int FONT_ATLAS_ROWS = 9;
-
-class cUIText;
-
 namespace Pokemon
 {
     struct sSpeciesData;
+    struct sIndividualData;
 }
 
 struct sShaderProgram
@@ -42,7 +30,6 @@ enum eAnimatedModel
 struct sTexture
 {
     unsigned int textureId;
-    bool isPermanent = false; // if false, deleted when scene changes 
 };
 
 struct sSpriteSheet : sTexture
@@ -53,52 +40,19 @@ public:
     bool isSymmetrical;
 };
 
-struct sFontCharData
-{
-    glm::ivec2   size;       // Size of glyph
-    glm::ivec2   bearing;    // Offset from baseline to left/top of glyph
-    unsigned int advance;    // Offset to advance to next glyph
-};
-
-struct sFontData
-{
-    unsigned int textureAtlusId;
-    unsigned int glyphSize;
-    std::map<char, sFontCharData> characters;
-};
-
 class cRenderManager
 {
 public:
-    //static cRenderManager* sgtn;
     cRenderManager();
     ~cRenderManager();
-    cRenderManager(const cRenderManager& obj) = delete;
-//public:
-//    static cRenderManager* GetInstance()
-//    {
-//        if (sgtn == NULL)
-//        {
-//            sgtn = new cRenderManager();
-//        }
-//
-//        return sgtn;
-//    }
-//    static void DestroyInstance()
-//    {
-//        if (sgtn != NULL)
-//        {
-//            delete sgtn;
-//            sgtn = NULL;
-//        }
-//    }
+
     void Startup();
     void Shutdown();
 
     // Shaders
 private:
     std::string currShader;
-    std::map<std::string, sShaderProgram> programMap;
+    std::map<std::string, sShaderProgram> programs;
     void checkCompileErrors(unsigned int shader, std::string type);
 public:
     void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
@@ -128,60 +82,51 @@ private:
     unsigned int uboMatricesID;
     unsigned int uboFogID;
 
-    // UI quad
-private:
-    unsigned int UIQuadVAO;
-    unsigned int UIQuadVBO;
-    unsigned int UIQuadEBO;
-
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;
+    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 public:
     bool LoadModel(std::string fileName, std::string programName);
-    bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 
-    // Scene models
+    // Render models
 private:
-    std::vector< std::shared_ptr<cRenderModel> > models;
+    std::vector< std::shared_ptr<cRenderModel> > mapModels;
+    std::vector< std::shared_ptr<cRenderModel> > battleModels; // prob not the best idea
 public:
-    std::shared_ptr<cRenderModel> CreateRenderModel();
-    std::shared_ptr<class cSpriteModel> CreateSpriteModel();
-    std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType);
+    std::shared_ptr<cRenderModel> CreateRenderModel(bool isBattleModel = false);
+    std::shared_ptr<class cSpriteModel> CreateSpriteModel(bool isBattleModel = false);
+    std::shared_ptr<class cAnimatedModel> CreateAnimatedModel(eAnimatedModel modelType, bool isBattleModel = false);
     void RemoveModel(std::shared_ptr<cRenderModel> model);
 
     // Textures
 private:
-    std::map<std::string, sTexture> sceneTextures;
+    std::map<std::string, sTexture> textures;
     unsigned int CreateTexture(const std::string fullPath, int& width, int& height);
 public:
-    void LoadSceneTexture(const std::string fileName, const std::string subdirectory = "", bool isPermanent = false);
-    unsigned int CreateCubemap(const std::vector<std::string> faces);
+    void LoadTexture(const std::string fileName, const std::string subdirectory = "");
+    void UnloadTextures();
+    unsigned int CreateCubemap(const std::vector<std::string> faces); // TEMP
 
 private:
-    std::map<std::string, sSpriteSheet> sceneSpriteSheets;
+    std::map<std::string, sSpriteSheet> spriteSheets;
     void LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, const std::string formTag = "");
+    void LoadPokemonIconTexture(const int nationalDexId, const std::string formTag = "");
 public:
-    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "", bool isPermanent = false);
-    void LoadRoamingPokemonSpecieSpriteSheets(const Pokemon::sSpeciesData& specieData);
+    void LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym = false, const std::string subdirectory = "");
+    void LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesData& specieData);
+    float LoadPokemonBattleSpriteSheet(Pokemon::sIndividualData& data, bool isFront = true); // kinda wanted to make this const but whatever
 
     void SetupSpriteSheet(const std::string sheetName, const int spriteId, const unsigned int shaderTextureUnit = 0);
     void SetupTexture(const std::string textureToSetup, const unsigned int shaderTextureUnit = 0);
-
-    // Fonts
-private:
-    std::map<std::string, sFontData> fonts;
-    void SetupFont(const std::string fontName);
-public:
-    void LoadFont(const std::string fontName, const unsigned int glyphSize);
-    void CreateTextDataBuffer(cUIText* text);
 
     // Drawing
 private:
     void DrawObject(std::shared_ptr<cRenderModel> model);
     void DrawParticles(class cParticleSpawner* spawner);
-    void DrawWidget(class cUIWidget* widget);
-    void DrawText(cUIText* textWidget);
+    void DrawShadowPass(glm::mat4& outLightSpaceMatrix);
 public:
     void DrawFrame();
+
+    friend class cUICanvas;
 };

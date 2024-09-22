@@ -16,6 +16,9 @@
 #include "cAnimationManager.h"
 #include "cSceneManager.h"
 
+const std::string MAPS_PATH = "assets/scenes/maps/";
+const std::string ARENAS_PATH = "assets/scenes/arenas/";
+
 sTile* sQuadrant::GetRandomSpawnTile(glm::vec3& globalPos)
 {
 	if (wildPokemonCount >= 5) return nullptr;
@@ -88,10 +91,20 @@ cMapManager::~cMapManager()
 	//delete mapModel;
 	Manager::render.RemoveModel(mapModel);
 
-	for (std::map<int, sInstancedTile>::iterator it = instancedTiles.begin(); it != instancedTiles.end(); it++)
+	for (std::map<int, sInstancedTile>::iterator it = mapInstancedTiles.begin(); it != mapInstancedTiles.end(); it++)
 	{
 		Manager::render.RemoveModel(it->second.instancedModel);
 	}
+}
+
+void cMapManager::Startup()
+{
+}
+
+void cMapManager::Shutdown()
+{
+	delete opponentSpriteModel;
+	delete playerSpriteModel;
 }
 
 sQuadrant* cMapManager::GetQuad(int worldX, int worldZ)
@@ -112,11 +125,10 @@ sQuadrant* cMapManager::GetQuad(int worldX, int worldZ)
 	return nullptr;
 }
 
-void cMapManager::LoadMap(std::string mapDescriptionFile)
+void cMapManager::LoadArena(std::string arenaDescriptionFile)
 {
-	// Load json info file with rapidjson
 	FILE* fp = 0;
-	fopen_s(&fp, ("assets/maps/" + mapDescriptionFile).c_str(), "rb"); // non-Windows use "r"
+	fopen_s(&fp, (ARENAS_PATH + arenaDescriptionFile).c_str(), "rb"); // non-Windows use "r"
 
 	// OPTIMIZATION: best buffer size might be different
 	char readBuffer[4096];
@@ -128,7 +140,157 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	if (fp == 0) return;
 	fclose(fp);
 
-	// unload old map (how to unload textures?)
+	// Load arena model
+	std::string mapModelName = d["arenaModelFileName"].GetString();
+	Manager::render.LoadModel(mapModelName, "scene");
+
+	// Create map model
+	if (!arenaModel)
+	{
+		arenaModel = Manager::render.CreateRenderModel(true);
+	}
+
+	arenaModel->meshName = mapModelName;
+
+	// Load tile animations
+	rapidjson::Value& instancedTileData = d["instancedTiles"];
+	for (unsigned int i = 0; i < instancedTileData.Size(); i++)
+	{
+		rapidjson::Value& currInstancedTile = d["instancedTiles"][i];
+
+		int tileId = currInstancedTile["tileId"].GetInt();
+
+		float meshOrientationY = currInstancedTile["meshYOrientation"].GetFloat();
+		glm::vec3 meshPosOffset;
+		meshPosOffset.x = currInstancedTile["meshOffset"]["x"].GetFloat();
+		meshPosOffset.y = currInstancedTile["meshOffset"]["y"].GetFloat();
+		meshPosOffset.z = currInstancedTile["meshOffset"]["z"].GetFloat();
+
+		int animationType = currInstancedTile["animationType"].GetInt();
+		arenaInstancedTiles[tileId].instancedModel = Manager::render.CreateAnimatedModel(static_cast<eAnimatedModel>(animationType), true);
+		arenaInstancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
+		arenaInstancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
+		arenaInstancedTiles[tileId].modelOffset = meshPosOffset;
+	}
+
+	// Load detail file
+	std::string arenaDetailFileName = d["arenaDetailFileName"].GetString();
+	std::ifstream pdsmap(ARENAS_PATH + arenaDetailFileName);
+
+	if (!pdsmap.is_open()) return;
+
+	std::string currToken;
+
+	// make sure reader is at first mapstart
+	while (pdsmap >> currToken)
+	{
+		if (currToken == "mapstart") break;
+	}
+
+	// start here
+	while (currToken == "mapstart")
+	{
+		sQuadrant newQuad;
+		int tempLayers[32][32][8];
+
+		// set quadrant coords
+		pdsmap >> newQuad.posX;
+		pdsmap >> newQuad.posZ;
+
+		// skip areaindex
+		pdsmap >> currToken;
+		pdsmap >> currToken;
+
+		for (int layerId = 0; layerId < 8; layerId++)
+		{
+			pdsmap >> currToken;
+
+			if (currToken != "tilegrid") break;
+
+			for (int x = 0; x < 32; x++)
+			{
+				for (int z = 0; z < 32; z++)
+				{
+					pdsmap >> tempLayers[x][z][layerId];
+				}
+			}
+		}
+
+		for (int layerId = 0; layerId < 8; layerId++)
+		{
+			pdsmap >> currToken;
+
+			if (currToken != "heightgrid") break;
+
+			for (int x = 0; x < 32; x++)
+			{
+				for (int z = 0; z < 32; z++)
+				{
+					int currHeight;
+					pdsmap >> currHeight;
+
+					int tileId = tempLayers[x][z][layerId];
+
+					if (tileId == -1) continue;
+
+					sTile* currTile = newQuad.GetTileFromLocalPosition(glm::vec3(x, currHeight, z));
+
+					if (arenaInstancedTiles.find(tileId) != arenaInstancedTiles.end()) // it exists
+					{
+						glm::vec4 newOffset = glm::vec4((newQuad.posX * 32 - 15 + x), currHeight, (newQuad.posZ * 32 - 15 + z), 1.f);
+						newOffset.x += arenaInstancedTiles[tileId].modelOffset.x;
+						newOffset.y += arenaInstancedTiles[tileId].modelOffset.y;
+						newOffset.z += arenaInstancedTiles[tileId].modelOffset.z;
+
+						arenaInstancedTiles[tileId].instanceOffsets.push_back(newOffset);
+					}
+				}
+			}
+		}
+
+		pdsmap >> currToken; // this should be mapend
+		pdsmap >> currToken; // if there is another quad, this will be mapstart
+	}
+	// end here
+
+	pdsmap.close();
+
+	// Load tile specific animations
+	for (std::map<int, sInstancedTile>::iterator it = arenaInstancedTiles.begin(); it != arenaInstancedTiles.end(); it++)
+	{
+		if (it->second.instanceOffsets.size() != 0)
+		{
+			it->second.instancedModel->InstanceObject(it->second.instanceOffsets);
+
+			if (it->second.instancedModel->animation)
+				Manager::animation.AddAnimation(it->second.instancedModel->animation);
+
+			it->second.instanceOffsets.clear();
+		}
+	}
+
+	if (!opponentSpriteModel)
+		opponentSpriteModel = new cBattleSprite(glm::vec3(3.f, 0.f, 1.f));
+
+	if (!playerSpriteModel)
+		playerSpriteModel = new cBattleSprite(glm::vec3(-4.f, 0.f, 1.f));
+}
+
+void cMapManager::LoadScene(const std::string mapDescriptionFile)
+{
+	// Load json info file with rapidjson
+	FILE* fp = 0;
+	fopen_s(&fp, (MAPS_PATH + mapDescriptionFile).c_str(), "rb"); // non-Windows use "r"
+
+	// OPTIMIZATION: best buffer size might be different
+	char readBuffer[4096];
+	rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
+	rapidjson::Document d;
+	d.ParseStream(is);
+
+	if (fp == 0) return;
+	fclose(fp);
 	
 	// Load new map
 	std::string mapModelName = d["mapModelFileName"].GetString();
@@ -154,8 +316,6 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	rapidjson::Value& correctionTileData = d["correctionTiles"];
 	for (unsigned int i = 0; i < correctionTileData.Size(); i++)
 	{
-		//int tileId = correctionTileData[i]["tileId"].GetInt();
-
 		std::vector<glm::vec3> newTileWalkableOffsets;
 		std::vector<glm::vec3> newTileUnwalkableOffsets;
 
@@ -203,10 +363,10 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		meshPosOffset.z = currInstancedTile["meshOffset"]["z"].GetFloat();
 
 		int animationType = currInstancedTile["animationType"].GetInt();
-		instancedTiles[tileId].instancedModel = Manager::render.CreateAnimatedModel(static_cast<eAnimatedModel>(animationType));
-		instancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
-		instancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
-		instancedTiles[tileId].modelOffset = meshPosOffset;
+		mapInstancedTiles[tileId].instancedModel = Manager::render.CreateAnimatedModel(static_cast<eAnimatedModel>(animationType));
+		mapInstancedTiles[tileId].instancedModel->meshName = currInstancedTile["meshName"].GetString();
+		mapInstancedTiles[tileId].instancedModel->orientation.y = glm::radians(meshOrientationY);
+		mapInstancedTiles[tileId].modelOffset = meshPosOffset;
 	}
 
 	// Load spawn data
@@ -230,7 +390,7 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 
 	// Load collision map
 	std::string collisionMapFileName = d["mapCollisionFileName"].GetString();
-	std::ifstream pdsmap("assets/maps/" + collisionMapFileName);
+	std::ifstream pdsmap(MAPS_PATH + collisionMapFileName);
 
 	if (!pdsmap.is_open()) return;
 
@@ -328,14 +488,14 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 						currTile->isUnchangeable = true;
 					}
 
-					if (instancedTiles.find(tileId) != instancedTiles.end()) // it exists
+					if (mapInstancedTiles.find(tileId) != mapInstancedTiles.end()) // it exists
 					{
 						glm::vec4 newOffset = glm::vec4((newQuad.posX * 32 - 15 + x), currHeight, (newQuad.posZ * 32 - 15 + z), 1.f);
-						newOffset.x += instancedTiles[tileId].modelOffset.x;
-						newOffset.y += instancedTiles[tileId].modelOffset.y;
-						newOffset.z += instancedTiles[tileId].modelOffset.z;
+						newOffset.x += mapInstancedTiles[tileId].modelOffset.x;
+						newOffset.y += mapInstancedTiles[tileId].modelOffset.y;
+						newOffset.z += mapInstancedTiles[tileId].modelOffset.z;
 
-						instancedTiles[tileId].instanceOffsets.push_back(newOffset);
+						mapInstancedTiles[tileId].instanceOffsets.push_back(newOffset);
 					}
 				}
 			}
@@ -346,12 +506,14 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 	}
 	// end here
 
+	pdsmap.close();
+
 	// Load tile specific animations
-	for (std::map<int, sInstancedTile>::iterator it = instancedTiles.begin(); it != instancedTiles.end(); it++)
+	for (std::map<int, sInstancedTile>::iterator it = mapInstancedTiles.begin(); it != mapInstancedTiles.end(); it++)
 	{
 		if (it->second.instanceOffsets.size() != 0)
 		{
-			it->second.instancedModel->InstanceObject(it->second.instanceOffsets, Manager::render.GetCurrentShaderId());
+			it->second.instancedModel->InstanceObject(it->second.instanceOffsets);
 
 			if (it->second.instancedModel->animation)
 				Manager::animation.AddAnimation(it->second.instancedModel->animation);
@@ -360,7 +522,8 @@ void cMapManager::LoadMap(std::string mapDescriptionFile)
 		}
 	}
 
-	pdsmap.close();
+	std::string arenaDescFileName = d["arenaDescFileName"].GetString();
+	LoadArena(arenaDescFileName);
 }
 
 sTile* cMapManager::GetTile(glm::vec3 worldPosition)
@@ -411,6 +574,15 @@ sTile* cMapManager::GetRandomSpawnTile(glm::vec3& globalPositionOut)
 	return spawnTile;
 }
 
+void cMapManager::RemoveEntityFromTile(glm::vec3 worldPosition)
+{
+	sTile* tile = GetTile(worldPosition);
+
+	if (!tile) return;
+
+	tile->entity = nullptr;
+}
+
 eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection direction)
 {
 	int desiredPosX = (int)entityToMove->position.x;
@@ -450,7 +622,6 @@ eEntityMoveResult cMapManager::TryMoveEntity(cEntity* entityToMove, eDirection d
 
 	if (moveResult != eEntityMoveResult::FAILURE)
 	{
-
 		// OPTIMIZATION: it might be better to have a check on position x and z and direction to easily check
 		// if entity will be changing quad and not have to search for quads twice with a single function call
 		if (sQuadrant* currQuad = GetQuad((int)entityToMove->position.x, (int)entityToMove->position.z))

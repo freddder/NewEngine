@@ -4,6 +4,7 @@
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cMapManager.h"
+#include "cInputManager.h"
 
 cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 {
@@ -23,8 +24,8 @@ cCharacterSprite::~cCharacterSprite()
 {
 	Manager::render.RemoveModel(model);
 
-	Manager::animation.AddAnimation(spriteAnimation);
-	Manager::animation.AddAnimation(modelAnimation);
+	Manager::animation.RemoveAnimation(spriteAnimation);
+	Manager::animation.RemoveAnimation(modelAnimation);
 }
 
 glm::vec3 cCharacterSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveResult moveResult)
@@ -181,7 +182,7 @@ void cPlayerSprite::SetupSpriteWalk(eDirection dir)
 
 void cPlayerSprite::SetupSpriteRun(eDirection dir)
 {
-	if (lastDesiredDirection != dir || spriteAnimation->keyframes.size() != 5) // <-- very hacky
+	if (lastDesiredDirection != dir || spriteAnimation->keyframes.size() != 5) // <-- very hacky way to find if player was running
 	{
 		spriteAnimation->Reset(model->currSpriteId, model->scale);
 
@@ -203,7 +204,17 @@ glm::vec3 cPlayerSprite::AnimateMovement(eDirection dir, bool run, eEntityMoveRe
 
 	lastDesiredDirection = dir;
 
-	return cCharacterSprite::AnimateMovement(dir, run, moveResult);
+	glm::vec3 newPosition = cCharacterSprite::AnimateMovement(dir, run, moveResult);
+	modelAnimation->callback = [this]() 
+	{
+		if (spriteAnimation->keyframes.size() != 5 || // not running
+			!(Manager::input.IsInputDown(IT_UP) || Manager::input.IsInputDown(IT_DOWN) || Manager::input.IsInputDown(IT_LEFT) || Manager::input.IsInputDown(IT_RIGHT)))
+		{
+			StopMovement();
+		}
+	};
+
+	return newPosition;
 }
 
 void cPlayerSprite::StopMovement()
@@ -217,4 +228,41 @@ void cPlayerSprite::StopMovement()
 	else if (lastDesiredDirection == DOWN) model->currSpriteId = 3;
 	else if (lastDesiredDirection == LEFT) model->currSpriteId = 6;
 	else if (lastDesiredDirection == RIGHT) model->currSpriteId = 9;
+}
+
+cBattleSprite::cBattleSprite(glm::vec3 pos)
+{
+	model = Manager::render.CreateSpriteModel(true);
+	model->meshName = "SpriteHolder.obj";
+	model->position = pos;
+	model->orientation.y = glm::radians(15.f);
+}
+
+cBattleSprite::~cBattleSprite()
+{
+	Manager::render.RemoveModel(model);
+
+	Manager::animation.RemoveAnimation(spriteAnimation);
+}
+
+void cBattleSprite::SetSpriteData(std::string textureName, float spriteHeightSize, float spriteAspectRatio, int spritesNum)
+{
+	model->scale.z = spriteHeightSize * spriteAspectRatio;
+	model->scale.y = spriteHeightSize;
+	model->textureName = textureName;
+
+	spriteAnimation = std::make_shared<cPeriodicSpriteAnimation>(model->currSpriteId, spritesNum);
+	spriteAnimation->isRepeat = true;
+
+	Manager::animation.AddAnimation(spriteAnimation);
+}
+
+void cBattleSprite::ClearSpriteData()
+{
+	model->scale.z = 1.f;
+	model->scale.y = 1.f;
+	model->textureName = "";
+
+	spriteAnimation->Reset();
+	Manager::animation.RemoveAnimation(spriteAnimation);
 }

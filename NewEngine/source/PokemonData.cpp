@@ -10,16 +10,25 @@
 
 namespace Pokemon
 {
-	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
+	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber);
+	void LoadFormData(rapidjson::Value& formObject, sForm& form);
+
+	std::string MakeDexNumberFolderName(const int nationalDexNumber)
 	{
-		// Isn't a valid national dex number
-		if (nationalDexNumber <= 0 || nationalDexNumber >= 1008) return;
-	
 		std::string dexNumberString = std::to_string(nationalDexNumber);
 		while (dexNumberString.length() < 4)
 		{
 			dexNumberString = "0" + dexNumberString;
 		}
+
+		return dexNumberString;
+	}
+
+	void SaveSpecieData(const int nationalDexNumber, const sSpeciesData& data)
+	{
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return;
+	
+		std::string dexNumberString = MakeDexNumberFolderName(nationalDexNumber);
 	
 		FILE* fp = 0;
 		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "wb");
@@ -101,36 +110,12 @@ namespace Pokemon
 	
 	void LoadSpecieData(const int nationalDexNumber, sSpeciesData& data)
 	{
-		if (nationalDexNumber == 0 || nationalDexNumber >= 1008)
-		{
-			// Isn't a valid national dex number
-			data.nationalDexNumber = 0;
-			return;
-		}
-	
-		std::string dexNumberString = std::to_string(nationalDexNumber);
-		while (dexNumberString.length() < 4)
-		{
-			dexNumberString = "0" + dexNumberString;
-		}
-	
-		FILE* fp = 0;
-		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "rb"); // non-Windows use "r"
-		if(fp == 0)
-		{
-			// File doesn't exists
-			data.nationalDexNumber = 0;
-			return;
-		}
-	
-		// OPTIMIZATION: best buffer size might be different
-		char readBuffer[4096];
-		rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-	
 		rapidjson::Document d;
-		d.ParseStream(is);
-	
-		fclose(fp);
+		if (!OpenPokemonDataFile(d, nationalDexNumber))
+		{
+			data.nationalDexNumber = 0;
+			return;
+		}
 
 		if (d["data_version"].GetInt() != JSON_DATA_VERSION)
 		{
@@ -147,61 +132,231 @@ namespace Pokemon
 		data.isFormGenderBased = d["isStatsGenderBased"].GetBool();
 		data.isSpriteGenderBased = d["isSpriteGenderBased"].GetBool();
 
-		data.defaultForm.type1 = static_cast<eType>(d["defaultForm"]["type1"].GetInt());
-		data.defaultForm.type2 = static_cast<eType>(d["defaultForm"]["type2"].GetInt());
-
-		data.defaultForm.baseStats.hp = d["defaultForm"]["baseHp"].GetInt();
-		data.defaultForm.baseStats.atk = d["defaultForm"]["baseAtk"].GetInt();
-		data.defaultForm.baseStats.spAtk = d["defaultForm"]["baseSpAtk"].GetInt();
-		data.defaultForm.baseStats.def = d["defaultForm"]["baseDef"].GetInt();
-		data.defaultForm.baseStats.spDef = d["defaultForm"]["baseSpDef"].GetInt();
-		data.defaultForm.baseStats.spd = d["defaultForm"]["baseSpd"].GetInt();
-
-		data.defaultForm.height = d["defaultForm"]["height"].GetFloat();
-		data.defaultForm.weight = d["defaultForm"]["weight"].GetFloat();
+		rapidjson::Value& defaultFormObject = d["defaultForm"];
+		LoadFormData(defaultFormObject, data.defaultForm);
 
 		rapidjson::Value& alternateForms = d["alternateForms"];
 		for (unsigned int i = 0; i < alternateForms.Size(); i++)
 		{
-			std::string formName = alternateForms[i]["name"].GetString();
+			rapidjson::Value& newFormObject = alternateForms[i];
 			sForm newForm;
+			LoadFormData(newFormObject, newForm);
 
-			newForm.type1 = static_cast<eType>(alternateForms[i]["type1"].GetInt());
-			newForm.type2 = static_cast<eType>(alternateForms[i]["type2"].GetInt());
-
-			newForm.baseStats.hp = alternateForms[i]["baseHp"].GetInt();
-			newForm.baseStats.atk = alternateForms[i]["baseAtk"].GetInt();
-			newForm.baseStats.spAtk = alternateForms[i]["baseSpAtk"].GetInt();
-			newForm.baseStats.def = alternateForms[i]["baseDef"].GetInt();
-			newForm.baseStats.spDef = alternateForms[i]["baseSpDef"].GetInt();
-			newForm.baseStats.spd = alternateForms[i]["baseSpd"].GetInt();
-
-			newForm.height = alternateForms[i]["height"].GetFloat();
-			newForm.weight = alternateForms[i]["weight"].GetFloat();
-
+			std::string formName = newFormObject["name"].GetString();
 			data.alternateForms.insert(std::pair<std::string, sForm>(formName, newForm));
 		}
 	}
 
-	const std::string sRoamingPokemonData::MakeTextureName(const bool isFormGenderBased, const bool isSpriteGenderBased)
+	sRoamingPokemonData GenerateRoamingPokemonData(const sSpawnData& spawnData)
 	{
-		std::string textureName = std::to_string(nationalDexNumber);
-		if (gender == FEMALE && (isSpriteGenderBased || isFormGenderBased))
+		sRoamingPokemonData newRoamingData;
+
+		newRoamingData.nationalDexNumber = spawnData.nationalDexNumber;
+		newRoamingData.formName = spawnData.formName;
+		newRoamingData.isFormGenderBased = spawnData.isFormGenderBased;
+		newRoamingData.isSpriteGenderBased = spawnData.isSpriteGenderBased;
+
+		// Determine level
+		newRoamingData.level = rand() % (spawnData.maxLevel - spawnData.minLevel + 1) + spawnData.minLevel;
+
+		// Determine gender
+		newRoamingData.gender = Pokemon::NO_GENDER;
+		if (spawnData.genderRatio >= 0) // not genderless
 		{
-			textureName = textureName + "_f";
-		}
-		else if (formName != "") // There is no case where both will be true
-		{
-			textureName = textureName + "_" + formName;
+			int genderRandom = (rand() % 100); // [0-99]
+
+			if (spawnData.genderRatio < genderRandom) newRoamingData.gender = Pokemon::MALE;
+			else newRoamingData.gender = Pokemon::FEMALE;
 		}
 
-		if (isShiny)
+		// Determine shiny
+		int shinyRandom = (rand() % 100); // [0-99]
+		if (shinyRandom < 50) newRoamingData.isShiny = true;
+
+		return newRoamingData;
+	}
+
+	// TODO: have a more versitile way to create battle ready pokemon & incorporate into entering wild encounters and spawn data
+	sIndividualData GenerateIndividualPokemonData(int nationalDexId)
+	{
+		//if (!IsNationalDexNumberValid(nationalDexId)) return;
+
+		return sIndividualData();
+	}
+
+	sBattleData GeneratePokemonBattleData(const sRoamingPokemonData& roamingData)
+	{
+		sBattleData newData;
+		newData.nationalDexNumber = roamingData.nationalDexNumber;
+		newData.formName = roamingData.formName;
+		newData.gender = roamingData.gender;
+		newData.level = roamingData.level;
+		newData.isShiny = roamingData.isShiny;
+		newData.isFormGenderBased = roamingData.isFormGenderBased;
+		newData.isSpriteGenderBased = roamingData.isSpriteGenderBased;
+
+		rapidjson::Document d;
+		OpenPokemonDataFile(d, roamingData.nationalDexNumber);
+
+		if (newData.isFormGenderBased && newData.gender == FEMALE) // load "female" form
 		{
-			textureName = textureName + "_s";
+			rapidjson::Value& alternateForms = d["alternateForms"];
+			for (unsigned int i = 0; i < alternateForms.Size(); i++)
+			{
+				if (alternateForms[i]["name"].GetString() == "female")
+				{
+					LoadFormData(alternateForms[i], newData.form);
+					break;
+				}
+			}
 		}
+		else if (newData.formName != "") // load custom form
+		{
+			rapidjson::Value& alternateForms = d["alternateForms"];
+			for (unsigned int i = 0; i < alternateForms.Size(); i++)
+			{
+				if (alternateForms[i]["name"].GetString() == newData.formName)
+				{
+					LoadFormData(alternateForms[i], newData.form);
+					break;
+				}
+			}
+		}
+		else // load default form
+		{
+			rapidjson::Value& defaultFormObject = d["defaultForm"];
+			LoadFormData(defaultFormObject, newData.form);
+		}
+
+		newData.name = d["name"].GetString();
+
+		newData.maxHealth = 100;
+		newData.currHealth = 100;
+
+		newData.expToNextLevel = 2000;
+		newData.currExp = 0;
+
+		newData.level = 29;
+
+		return newData;
+	}
+
+	const std::string sRoamingPokemonData::MakeRoamingTextureName()
+	{
+		std::string textureName = std::to_string(nationalDexNumber);
+
+		if (gender == FEMALE && (isSpriteGenderBased || isFormGenderBased))
+			textureName = textureName + "_f";
+		else if (formName != "") // There is no case where both will be true
+			textureName = textureName + "_" + formName;
+
+		if (isShiny)
+			textureName = textureName + "_s";
 
 		textureName = textureName + ".png";
 
 		return textureName;
+	}
+
+	const std::string sIndividualData::MakeIconTextureName()
+	{
+		std::string textureName = std::to_string(nationalDexNumber);
+
+		if (gender == FEMALE && isFormGenderBased)
+			textureName = textureName + "_f";
+		else if (formName != "") // There is no case where both will be true
+			textureName = textureName + "_" + formName;
+
+		textureName += "_ico";
+
+		if (isShiny)
+			textureName = textureName + "_s";
+
+		textureName = textureName + ".png";
+
+		return textureName;
+	}
+
+	const std::string sIndividualData::MakeBattleTextureName(bool isFront)
+	{
+		std::string textureName = std::to_string(nationalDexNumber);
+
+		if (gender == FEMALE && (isSpriteGenderBased || isFormGenderBased))
+			textureName = textureName + "_f";
+		else if (formName != "") // There is no case where both will be true
+			textureName = textureName + "_" + formName;
+
+		if (isFront)
+			textureName = textureName + "_bf";
+		else
+			textureName = textureName + "_bb";
+
+		if (isShiny)
+			textureName = textureName + "_s";
+
+		textureName = textureName + ".png";
+
+		return textureName;
+	}
+
+	void sIndividualData::LoadFormFromSpeciesData()
+	{
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return;
+
+		sSpeciesData speciesData;
+		LoadSpecieData(nationalDexNumber, speciesData);
+
+		if (speciesData.isFormGenderBased && gender == FEMALE)
+			form = speciesData.alternateForms["female"];
+		else if (formName != "")
+			form = speciesData.alternateForms[formName];
+		else
+			form = speciesData.defaultForm;
+
+		if (name == "")
+			name = speciesData.name;
+
+		isFormGenderBased = speciesData.isFormGenderBased;
+		isSpriteGenderBased = speciesData.isSpriteGenderBased;
+	}
+
+	bool OpenPokemonDataFile(rapidjson::Document& doc, const int nationalDexNumber)
+	{
+		if (!IsNationalDexNumberValid(nationalDexNumber)) return false;
+
+		std::string dexNumberString = MakeDexNumberFolderName(nationalDexNumber);
+
+		FILE* fp = 0;
+		fopen_s(&fp, ("assets/pokemon/" + dexNumberString + "/" + dexNumberString + ".json").c_str(), "rb"); // non-Windows use "r"
+		if (fp == 0) return false; // File doesn't exists
+
+		// OPTIMIZATION: best buffer size might be different
+		char readBuffer[4096];
+		rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+
+		doc.ParseStream(is);
+
+		fclose(fp);
+		return true;
+	}
+
+	void LoadFormData(rapidjson::Value& formObject, sForm& form)
+	{
+		form.type1 = static_cast<eType>(formObject["type1"].GetInt());
+		form.type2 = static_cast<eType>(formObject["type2"].GetInt());
+
+		form.baseStats.hp = formObject["baseHp"].GetInt();
+		form.baseStats.atk = formObject["baseAtk"].GetInt();
+		form.baseStats.spAtk = formObject["baseSpAtk"].GetInt();
+		form.baseStats.def = formObject["baseDef"].GetInt();
+		form.baseStats.spDef = formObject["baseSpDef"].GetInt();
+		form.baseStats.spd = formObject["baseSpd"].GetInt();
+
+		form.height = formObject["height"].GetFloat();
+		form.weight = formObject["weight"].GetFloat();
+
+		form.battleSpriteHeightSize = formObject["battleSpriteHeightSize"].GetFloat();
+		form.battleFrontSpriteFrameCount = formObject["battleFrontSpriteFrameCount"].GetInt();
+		form.battleBackSpriteFrameCount = formObject["battleBackSpriteFrameCount"].GetInt();
 	}
 }

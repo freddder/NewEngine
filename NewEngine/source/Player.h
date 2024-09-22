@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <memory>
 
 // This is where all player related info will be
 // - party
@@ -8,23 +9,23 @@
 // - map location
 
 class cPlayerEntity;
+class cTamedRoamingPokemon;
 
 namespace Pokemon
 {
-	struct sPokemonData;
+	struct sIndividualData;
 }
 
 namespace Player
 {
 	extern cPlayerEntity* playerChar;
-
-	extern Pokemon::sPokemonData partyMember1;
-	extern Pokemon::sPokemonData partyMember2;
-	extern Pokemon::sPokemonData partyMember3;
-	extern Pokemon::sPokemonData partyMember4;
-	extern Pokemon::sPokemonData partyMember5;
-	extern Pokemon::sPokemonData partyMember6;
+	extern std::shared_ptr<cTamedRoamingPokemon> playerPartner;
 
 	glm::vec3 GetPlayerPosition();
 	glm::vec3* GetPlayerPositionRef();
+
+	extern Pokemon::sIndividualData party[];
+
+	void AddPartyMember(const Pokemon::sIndividualData& newPartyMember);
+	void SwitchPartyMembers(const int member1, const int member2);
 }

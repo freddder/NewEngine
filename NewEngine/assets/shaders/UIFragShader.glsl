@@ -3,7 +3,9 @@ out vec4 FragColor;
 
 in vec2 textureCoords;
 
-uniform sampler2D texture_0;;
+uniform sampler2D texture_0;
+
+uniform vec3 colorFilter;
 
 void main()
 {
@@ -12,5 +14,5 @@ void main()
     if (color.a < 0.1)
 			discard;
 
-    FragColor = color; // orthographic
+    FragColor = color * vec4(colorFilter, 1.f); // orthographic
 }
