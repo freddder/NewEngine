@@ -1,0 +1,125 @@
+{
+    "mapModelFileName": "DemoTownEngine.obj",
+    "mapCollisionFileName": "DemoTownEngine.pdsmap",
+    "arenaDescFileName": "GrassRouteArenaDesc.json",
+    "walkableTiles": [52,53,54,55,56,57,58,59,92,93,94,95,100,101,103,107,109,245,246,247,248,249,250,251,252,253,254,255,256],
+    "correctionTiles": [
+        {
+            "tileId": [164,165,166,167,168,169],
+            "walkableTiles": [
+                { "x": 0, "y": 1, "z": 0 }
+            ],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 }
+            ]
+        },
+        {
+            "tileId": [0],
+            "walkableTiles": [],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 1 },
+                { "x": 1, "y": 0, "z": 0 },
+                { "x": 1, "y": 0, "z": 1 }
+            ]
+        },
+        {
+            "tileId": [259],
+            "walkableTiles": [],
+            "unwalkableTiles": [
+                { "x": 0, "y": 0, "z": 0 },
+                { "x": 0, "y": 0, "z": 1 },
+                { "x": 0, "y": 0, "z": 2 },
+                { "x": 0, "y": 0, "z": 3 },
+                { "x": 1, "y": 0, "z": 0 },
+                { "x": 2, "y": 0, "z": 0 },
+                { "x": 3, "y": 0, "z": 0 }
+            ]
+        }
+    ],
+    "instancedTiles": [
+        {
+            "tileId": 0,
+            "meshName": "r0_treePine.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 3
+        },
+        {
+            "tileId": 130,
+            "meshName": "sea_water2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 0
+        },
+        {
+            "tileId": 118,
+            "meshName": "Water_b2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 2
+        },
+        {
+            "tileId": 120,
+            "meshName": "Water_b2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
+            "meshYOrientation": 90, 
+            "animationType": 2
+        },
+        {
+            "tileId": 122,
+            "meshName": "Water_b2.obj",
+            "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": -90, 
+            "animationType": 2
+        },
+        {
+            "tileId": 124,
+            "meshName": "Water_b2.obj",
+            "meshOffset": { "x": 2.5, "y": 0, "z": 0.5 },
+            "meshYOrientation": 180, 
+            "animationType": 2
+        },
+        {
+            "tileId": 119,
+            "meshName": "Water_c2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 0, 
+            "animationType": 2
+        },
+        {
+            "tileId": 117,
+            "meshName": "Water_c2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
+            "meshYOrientation": 90, 
+            "animationType": 2
+        },
+        {
+            "tileId": 123,
+            "meshName": "Water_c2.obj",
+            "meshOffset": { "x": 2.5, "y": 0, "z": 2.5 },
+            "meshYOrientation": 180, 
+            "animationType": 2
+        },
+        {
+            "tileId": 125,
+            "meshName": "Water_c2.obj",
+            "meshOffset": { "x": 2.5, "y": 0, "z": -0.5 },
+            "meshYOrientation": 270, 
+            "animationType": 2
+        },
+        {
+            "tileId": 139,
+            "meshName": "Water_bl2.obj",
+            "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
+            "meshYOrientation": 90, 
+            "animationType": 2
+        }
+    ],
+    "wildSpawning": [
+        {
+            "spawnType": 0,
+            "spawnTileId": [107]
+        }
+    ]
+}

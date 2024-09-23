@@ -82,7 +82,7 @@ int main()
     Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
     Manager::render.LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
     Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-    Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
+    //Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
     Manager::render.LoadTexture("SnowFlake1.png");
     Manager::render.LoadTexture("SnowFlake2.png");
@@ -96,7 +96,8 @@ int main()
     //Manager::map.LoadMap("WaterTest3Desc.json");
     //Manager::map.LoadMap("SlopeTestDesc.json");
     //Manager::map.LoadMap("MultiTestDesc.json");
-    Manager::map.LoadScene("GrassRouteDemoDesc.json");
+    //Manager::map.LoadScene("GrassRouteDemoDesc.json");
+    Manager::map.LoadScene("DemoTownDesc.json");
     //Manager::map.LoadMap("CostalWinterDesc.json");
 
     Pokemon::sIndividualData partner;
@@ -112,14 +113,14 @@ int main()
     Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
 
     {
-        Player::playerChar = new cPlayerEntity(glm::vec3(23.f, 1.f, 25.f));
+        Player::playerChar = new cPlayerEntity(glm::vec3(28.f, 0.f, 30.f));
         Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
 
         Pokemon::sSpeciesData followerSpecieData;
         Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
         Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
 
-        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::party[0], glm::vec3(22.f, 1.f, 25.f));
+        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::party[0], glm::vec3(28.f, 0.f, 31.f));
         Player::playerChar->SetFollower(Player::playerPartner.get());
 
         // TODO: find a good place to seed the rand
