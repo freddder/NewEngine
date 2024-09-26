@@ -15,6 +15,7 @@
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cSceneManager.h"
+#include <iostream>
 
 const std::string MAPS_PATH = "assets/scenes/maps/";
 const std::string ARENAS_PATH = "assets/scenes/arenas/";
@@ -97,8 +98,16 @@ cMapManager::~cMapManager()
 	}
 }
 
+void cTransitionTrigger::WalkInteract()
+{
+	std::cout << "Transitioning..." << std::endl;
+}
+
 void cMapManager::Startup()
 {
+	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(1, 0, 0));
+	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(2, 0, 0));
+	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(3, 0, 0));
 }
 
 void cMapManager::Shutdown()
@@ -449,7 +458,7 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 
 					if (tileId == -1) continue;
 
-					sTile* currTile = newQuad.GetTileFromLocalPosition(glm::vec3(x, currHeight, z));
+					sTile* currTile = newQuad.GetTileFromLocalPosition(glm::ivec3(x, currHeight, z));
 
 					if (!currTile->isUnchangeable && walkableTiles.find(tileId) != walkableTiles.end()) // is walkable
 					{						
@@ -462,7 +471,7 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 							int correctionZ = z + walkableTiles[tileId].walkableOffsets[i].z;
 							int correctionHeight = currHeight + walkableTiles[tileId].walkableOffsets[i].y;
 
-							newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ))->isWalkable = true;
+							newQuad.GetTileFromLocalPosition(glm::ivec3(correctionX, correctionHeight, correctionZ))->isWalkable = true;
 						}
 
 						// Unwalkable correction tiles
@@ -507,6 +516,45 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 	// end here
 
 	pdsmap.close();
+
+	// Load transition tiles
+	rapidjson::Value& sceneTramsitionsData = d["sceneTransition"];
+	for (unsigned int i = 0; i < sceneTramsitionsData.Size(); i++)
+	{
+		rapidjson::Value& currTransitionTile = sceneTramsitionsData[i];
+
+		std::string transitionTo = currTransitionTile["transitionTo"].GetString();
+		int entranceNum = currTransitionTile["entranceNum"].GetInt();
+
+		triggers.emplace_back(transitionTo, entranceNum);
+		cTransitionTrigger& transitionTrigger = triggers.back();
+
+		int tileType = currTransitionTile["tileType"].GetInt();
+		int quadX = currTransitionTile["quadCoord"]["x"].GetInt();
+		int quadZ = currTransitionTile["quadCoord"]["z"].GetInt();
+
+		glm::ivec3 localPos = glm::ivec3(currTransitionTile["localQuadPos"]["x"].GetInt(),
+			currTransitionTile["localQuadPos"]["y"].GetInt(),
+			currTransitionTile["localQuadPos"]["z"].GetInt());
+
+		sQuadrant* quad = nullptr;
+		for (int q = 0; q < quads.size(); q++)
+		{
+			if (quads[q].posX == quadX && quads[q].posZ == quadZ)
+			{
+				quad = &quads[q];
+				break;
+			}
+		}
+		if (!quad) continue;
+
+		for (int j = 0; j < transitionTiles[(eTransitionTileTypes)tileType].size(); j++)
+		{
+			glm::ivec3 finalPos = localPos + transitionTiles[(eTransitionTileTypes)tileType][j];
+
+			quad->GetTileFromLocalPosition(finalPos)->entity = &transitionTrigger;
+		}
+	}
 
 	// Load tile specific animations
 	for (std::map<int, sInstancedTile>::iterator it = mapInstancedTiles.begin(); it != mapInstancedTiles.end(); it++)

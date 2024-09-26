@@ -445,6 +445,8 @@ namespace Engine
 
         Manager::render.Startup();
 
+        Manager::map.Startup();
+
         Manager::input.Startup();
 
         Manager::ui.Startup();

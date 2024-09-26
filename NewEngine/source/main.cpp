@@ -96,8 +96,8 @@ int main()
     //Manager::map.LoadMap("WaterTest3Desc.json");
     //Manager::map.LoadMap("SlopeTestDesc.json");
     //Manager::map.LoadMap("MultiTestDesc.json");
-    Manager::map.LoadScene("GrassRouteDemoDesc.json");
-    //Manager::map.LoadScene("DemoTownDesc.json");
+    //Manager::map.LoadScene("GrassRouteDemoDesc.json");
+    Manager::map.LoadScene("DemoTownDesc.json");
     //Manager::map.LoadMap("CostalWinterDesc.json");
 
     Pokemon::sIndividualData partner;

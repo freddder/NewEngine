@@ -2,6 +2,15 @@
     "mapModelFileName": "GrassRouteDemo.obj",
     "mapCollisionFileName": "GrassRouteDemo.pdsmap",
     "arenaDescFileName": "GrassRouteArenaDesc.json",
+    "sceneTransition": [
+        {
+            "tileType": 0,
+            "quadCoord": { "x": 0, "z": 0 },
+            "localQuadPos": { "x": 19, "y": 0, "z": 10 },
+            "transitionTo": "DemoTownDesc.json",
+            "entranceNum": 0
+        }
+    ],
     "walkableTiles": [52,53,54,55,56,57,58,59,92,93,94,95,100,101,107,109],
     "correctionTiles": [
         {

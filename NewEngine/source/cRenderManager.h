@@ -88,6 +88,7 @@ private:
     bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 public:
     bool LoadModel(std::string fileName, std::string programName);
+    void UnloadModels();
 
     // Render models
 private:

@@ -460,6 +460,25 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
     return true;
 }
 
+void cRenderManager::UnloadModels()
+{
+    for (auto itPrograms = programs.begin(); itPrograms != programs.end(); itPrograms++)
+    {
+        for (auto itModels = itPrograms->second.modelsLoaded.begin(); itModels != itPrograms->second.modelsLoaded.end(); itModels++)
+        {
+            for (int i = 0; i < itModels->second.allMeshesData.size(); i++)
+            {
+                glDeleteVertexArrays(1, &itModels->second.allMeshesData[i].VAO_ID);
+                glDeleteBuffers(1, &itModels->second.allMeshesData[i].VBO_ID);
+            }
+
+            itModels->second.allMeshesData.clear();
+        }
+
+        itPrograms->second.modelsLoaded.clear();
+    }
+}
+
 bool cRenderManager::FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo)
 {
     if (programs.find(programName) == programs.end()) return false; // Didn't find it

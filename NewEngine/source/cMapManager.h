@@ -64,6 +64,25 @@ enum eEntityMoveResult
 	SUCCESS_DOWN
 };
 
+enum eTransitionTileTypes
+{
+	HEDGE_LEFT = 0,
+	HEDGE_RIGHT
+};
+
+class cTransitionTrigger : public cEntity
+{
+	std::string sceneDescName;
+	int entranceNum;
+public:
+	cTransitionTrigger(std::string _sceneDescName, int _entranceNum) :
+		sceneDescName(_sceneDescName),
+		entranceNum(_entranceNum) {};
+	~cTransitionTrigger() {};
+
+	virtual void WalkInteract();
+};
+
 class cMapManager
 {
 public:
@@ -94,4 +113,8 @@ public:
 	
 	cBattleSprite* opponentSpriteModel;
 	cBattleSprite* playerSpriteModel;
+
+private:
+	std::vector<cTransitionTrigger> triggers;
+	std::map<eTransitionTileTypes, std::vector<glm::ivec3>> transitionTiles;
 };
