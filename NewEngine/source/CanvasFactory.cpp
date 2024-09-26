@@ -37,7 +37,7 @@ cOverworldCanvas::cOverworldCanvas()
     int imageHeight = 82;
 
     cUIWidget* menuBtnContainer = new cUIWidget();    
-    menuBtnContainer->anchor = BOTTOM_RIGHT;
+    menuBtnContainer->anchor = MIDDLE_RIGHT;
     menuBtnContainer->aspectRatio = (float)imageHeight * 5 / (float)imageWidth;
     menuBtnContainer->heightPercent = 3.f / 4.f; // change this for size
 

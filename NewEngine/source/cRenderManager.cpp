@@ -820,49 +820,6 @@ void cRenderManager::LoadRoamingPokemonFormSpriteSheet(const int nationalDexId, 
         spriteSheets.insert(std::pair<std::string, sSpriteSheet>(shinyTextureName, newShinySheet));
 }
 
-void cRenderManager::LoadPokemonIconTexture(const int nationalDexId, const std::string formTag)
-{
-    // OPTIMIZATION: might not need to load both shiny and non shiny version depending on what will be needed
-    std::string textureName = std::to_string(nationalDexId);
-    if (formTag != "")
-    {
-        textureName = textureName + "_" + formTag;
-    }
-    textureName = textureName + "_ico";
-    std::string shinyTextureName = textureName + "_s.png";
-    textureName = textureName + ".png";
-
-    // Check if not already loaded
-    if (textures.find(textureName) != textures.end()) return;
-
-    std::string dexIdString = std::to_string(nationalDexId);
-    while (dexIdString.length() < 4)
-    {
-        dexIdString = "0" + dexIdString;
-    }
-    std::string texturePath = PKM_DATA_PATH + dexIdString + "/";
-
-    // Create icon texture
-    sTexture newIcon;
-    std::string fullPath = texturePath + textureName;
-    int width, height;
-    newIcon.textureId = CreateTexture(fullPath, width, height);
-
-    if (newIcon.textureId != 0)
-        textures.insert(std::pair<std::string, sTexture>(textureName, newIcon));
-
-    // Check if shiny not already loaded
-    if (textures.find(shinyTextureName) != textures.end()) return;
-
-    // Create shiny icon texture
-    sTexture newShinyIcon;
-    std::string shinyFullPath = texturePath + shinyTextureName;
-    newShinyIcon.textureId = CreateTexture(shinyFullPath, width, height);
-
-    if (newShinyIcon.textureId != 0)
-        textures.insert(std::pair<std::string, sTexture>(shinyTextureName, newShinyIcon));
-}
-
 void cRenderManager::LoadSpriteSheet(const std::string spriteSheetName, unsigned int cols, unsigned int rows, bool sym, const std::string subdirectory)
 {
     if (spriteSheets.count(spriteSheetName)) return; // texture already created
@@ -884,15 +841,15 @@ void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesDat
 {
     // Load default form
     LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber);
-    LoadPokemonIconTexture(specieData.nationalDexNumber);
+    //LoadPokemonIconTexture(specieData.nationalDexNumber);
 
     // Load female varient if there is one
     if (specieData.isSpriteGenderBased || specieData.isFormGenderBased)
     {
         LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, "f");
 
-        if (specieData.isFormGenderBased)
-            LoadPokemonIconTexture(specieData.nationalDexNumber, "f");
+        //if (specieData.isFormGenderBased)
+            //LoadPokemonIconTexture(specieData.nationalDexNumber, "f");
     }
     else
     {
@@ -900,7 +857,7 @@ void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesDat
         for (std::map<std::string, Pokemon::sForm>::const_iterator it = specieData.alternateForms.cbegin(); it != specieData.alternateForms.cend(); it++)
         {
             LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, it->first);
-            LoadPokemonIconTexture(specieData.nationalDexNumber, it->first);
+            //LoadPokemonIconTexture(specieData.nationalDexNumber, it->first);
         }
     }
 }

@@ -72,7 +72,7 @@ glm::vec3 sQuadrant::TileIdToGlobalPosition(int tileId)
 void cTransitionTrigger::WalkInteract()
 {
 	std::cout << "Transitioning..." << std::endl;
-	Manager::map.ChangeScene(sceneDescName);
+	Manager::scene.ChangeScene(sceneDescName);
 }
 
 cMapManager::cMapManager()
@@ -115,7 +115,7 @@ void cMapManager::Startup()
 
 	arenaModel = Manager::render.CreateRenderModel(true);
 
-	LoadScene("DemoTownDesc.json");
+	LoadMap("DemoTownDesc.json");
 	//LoadScene("GrassRouteDemoDesc.json");
 }
 
@@ -302,7 +302,7 @@ void cMapManager::LoadArena(std::string arenaDescriptionFile)
 		playerSpriteModel = new cBattleSprite(glm::vec3(-4.f, 0.f, 1.f));
 }
 
-void cMapManager::LoadScene(const std::string mapDescriptionFile)
+void cMapManager::LoadMap(const std::string mapDescriptionFile)
 {
 	// TEMP: will find a more modular way to load necessary models
 	Manager::render.LoadModel("SpriteHolder.obj", "sprite");
@@ -425,6 +425,10 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 		}
 	}
 
+	// TEMP: loading specific wild encounters for all maps for now
+	Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
+	Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
+
 	// Load collision map
 	std::string collisionMapFileName = d["mapCollisionFileName"].GetString();
 	std::ifstream pdsmap(MAPS_PATH + collisionMapFileName);
@@ -546,41 +550,43 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 	pdsmap.close();
 
 	// Load transition tiles
-	rapidjson::Value& sceneTramsitionsData = d["sceneTransition"];
-	for (unsigned int i = 0; i < sceneTramsitionsData.Size(); i++)
+	if (d.HasMember("sceneTransitions"))
 	{
-		rapidjson::Value& currTransitionTile = sceneTramsitionsData[i];
-
-		std::string transitionTo = currTransitionTile["transitionTo"].GetString();
-		int entranceNum = currTransitionTile["entranceNum"].GetInt();
-
-		triggers.emplace_back(transitionTo, entranceNum);
-		cTransitionTrigger& transitionTrigger = triggers.back();
-
-		int tileType = currTransitionTile["tileType"].GetInt();
-		int quadX = currTransitionTile["quadCoord"]["x"].GetInt();
-		int quadZ = currTransitionTile["quadCoord"]["z"].GetInt();
-
-		glm::ivec3 localPos = glm::ivec3(currTransitionTile["localQuadPos"]["x"].GetInt(),
-			currTransitionTile["localQuadPos"]["y"].GetInt(),
-			currTransitionTile["localQuadPos"]["z"].GetInt());
-
-		sQuadrant* quad = nullptr;
-		for (int q = 0; q < quads.size(); q++)
+		rapidjson::Value& sceneTramsitionsData = d["sceneTransitions"];
+		for (unsigned int i = 0; i < sceneTramsitionsData.Size(); i++)
 		{
-			if (quads[q].posX == quadX && quads[q].posZ == quadZ)
+			rapidjson::Value& currTransitionTile = sceneTramsitionsData[i];
+
+			int quadX = currTransitionTile["quadCoord"]["x"].GetInt();
+			int quadZ = currTransitionTile["quadCoord"]["z"].GetInt();
+
+			sQuadrant* quad = nullptr;
+			for (int q = 0; q < quads.size(); q++)
 			{
-				quad = &quads[q];
-				break;
+				if (quads[q].posX == quadX && quads[q].posZ == quadZ)
+				{
+					quad = &quads[q];
+					break;
+				}
 			}
-		}
-		if (!quad) continue;
+			if (!quad) continue;
 
-		for (int j = 0; j < transitionTiles[(eTransitionTileTypes)tileType].size(); j++)
-		{
-			glm::ivec3 finalPos = localPos + transitionTiles[(eTransitionTileTypes)tileType][j];
+			std::string transitionTo = currTransitionTile["transitionTo"].GetString();
+			int entranceNum = currTransitionTile["entranceNum"].GetInt();
 
-			quad->GetTileFromLocalPosition(finalPos)->entity = &transitionTrigger;
+			triggers.emplace_back(transitionTo, entranceNum);
+			cTransitionTrigger& transitionTrigger = triggers.back();
+
+			int tileType = currTransitionTile["tileType"].GetInt();
+			glm::ivec3 localPos = glm::ivec3(currTransitionTile["localQuadPos"]["x"].GetInt(),
+				currTransitionTile["localQuadPos"]["y"].GetInt(),
+				currTransitionTile["localQuadPos"]["z"].GetInt());
+			for (int j = 0; j < transitionTiles[static_cast<eTransitionTileTypes>(tileType)].size(); j++)
+			{
+				glm::ivec3 finalPos = localPos + transitionTiles[(eTransitionTileTypes)tileType][j];
+
+				quad->GetTileFromLocalPosition(finalPos)->entity = &transitionTrigger;
+			}
 		}
 	}
 
@@ -602,7 +608,7 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 	LoadArena(arenaDescFileName);
 }
 
-void cMapManager::UnloadScene()
+void cMapManager::UnloadMap()
 {
 	for (std::map<int, sInstancedTile>::iterator it = mapInstancedTiles.begin(); it != mapInstancedTiles.end(); it++)
 	{
@@ -621,16 +627,13 @@ void cMapManager::UnloadScene()
 	quads.clear();
 	walkableTiles.clear();
 	triggers.clear();
-
-	Manager::render.UnloadModels();
-	Manager::render.UnloadTextures();
 }
 
-void cMapManager::ChangeScene(const std::string newSceneDescFile)
-{
-	UnloadScene();
-	LoadScene(newSceneDescFile);
-}
+//void cMapManager::ChangeScene(const std::string newSceneDescFile)
+//{
+//	UnloadMap();
+//	LoadMap(newSceneDescFile);
+//}
 
 sTile* cMapManager::GetTile(glm::ivec3 worldPosition)
 {

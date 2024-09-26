@@ -2,7 +2,7 @@
     "mapModelFileName": "DemoTownEngine.obj",
     "mapCollisionFileName": "DemoTownEngine.pdsmap",
     "arenaDescFileName": "GrassRouteArenaDesc.json",
-    "sceneTransition": [
+    "sceneTransitions": [
         {
             "tileType": 0,
             "quadCoord": { "x": 1, "z": 1 },

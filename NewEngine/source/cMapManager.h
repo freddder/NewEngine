@@ -101,10 +101,10 @@ private:
 	std::map<int, sInstancedTile> arenaInstancedTiles;
 	sQuadrant* GetQuad(int worldX, int worldZ);
 	void LoadArena(const std::string arenaDescriptionFile);
-	void LoadScene(const std::string mapDescriptionFile);
-	void UnloadScene();
 public:
-	void ChangeScene(const std::string newSceneDescFile);
+	void LoadMap(const std::string mapDescriptionFile);
+	void UnloadMap();
+	//void ChangeScene(const std::string newSceneDescFile);
 
 public:
 	sTile* GetTile(glm::ivec3 worldPosition);
@@ -117,6 +117,6 @@ public:
 	cBattleSprite* playerSpriteModel;
 
 private:
-	std::vector<cTransitionTrigger> triggers;
 	std::map<eTransitionTileTypes, std::vector<glm::ivec3>> transitionTiles;
+	std::vector<cTransitionTrigger> triggers;
 };
