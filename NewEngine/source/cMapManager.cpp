@@ -69,6 +69,11 @@ glm::vec3 sQuadrant::TileIdToGlobalPosition(int tileId)
 	return LocalPositionToGlobalPosition(glm::vec3(localX, localY, localZ));
 }
 
+void cTransitionTrigger::WalkInteract()
+{
+	std::cout << "Transitioning..." << std::endl;
+}
+
 cMapManager::cMapManager()
 {
 	//	^ x
@@ -98,20 +103,38 @@ cMapManager::~cMapManager()
 	}
 }
 
-void cTransitionTrigger::WalkInteract()
-{
-	std::cout << "Transitioning..." << std::endl;
-}
-
 void cMapManager::Startup()
 {
 	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(1, 0, 0));
 	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(2, 0, 0));
 	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(3, 0, 0));
+
+	mapModel = Manager::render.CreateRenderModel();
+	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
+
+	arenaModel = Manager::render.CreateRenderModel(true);
+
+	LoadScene("DemoTownDesc.json");
+	//LoadScene("GrassRouteDemoDesc.json");
 }
 
 void cMapManager::Shutdown()
 {
+	Manager::render.RemoveModel(mapModel);
+	Manager::render.RemoveModel(arenaModel);
+
+	for (std::map<int, sInstancedTile>::iterator it = mapInstancedTiles.begin(); it != mapInstancedTiles.end(); it++)
+	{
+		Manager::animation.RemoveAnimation(it->second.instancedModel.get()->animation);
+		Manager::render.RemoveModel(it->second.instancedModel);
+	}
+
+	for (std::map<int, sInstancedTile>::iterator it = arenaInstancedTiles.begin(); it != arenaInstancedTiles.end(); it++)
+	{
+		Manager::animation.RemoveAnimation(it->second.instancedModel.get()->animation);
+		Manager::render.RemoveModel(it->second.instancedModel);
+	}
+
 	delete opponentSpriteModel;
 	delete playerSpriteModel;
 }
@@ -152,13 +175,6 @@ void cMapManager::LoadArena(std::string arenaDescriptionFile)
 	// Load arena model
 	std::string mapModelName = d["arenaModelFileName"].GetString();
 	Manager::render.LoadModel(mapModelName, "scene");
-
-	// Create map model
-	if (!arenaModel)
-	{
-		arenaModel = Manager::render.CreateRenderModel(true);
-	}
-
 	arenaModel->meshName = mapModelName;
 
 	// Load tile animations
@@ -304,14 +320,6 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 	// Load new map
 	std::string mapModelName = d["mapModelFileName"].GetString();
 	Manager::render.LoadModel(mapModelName, "scene");
-
-	// Create map model
-	if (!mapModel)
-	{
-		mapModel = Manager::render.CreateRenderModel();
-		mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
-	}
-
 	mapModel->meshName = mapModelName;
 
 	// Load simple walkable tiles
@@ -572,6 +580,21 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 
 	std::string arenaDescFileName = d["arenaDescFileName"].GetString();
 	LoadArena(arenaDescFileName);
+}
+
+void cMapManager::UnloadScene()
+{
+	for (std::map<int, sInstancedTile>::iterator it = mapInstancedTiles.begin(); it != mapInstancedTiles.end(); it++)
+	{
+		Manager::animation.RemoveAnimation(it->second.instancedModel.get()->animation);
+		Manager::render.RemoveModel(it->second.instancedModel);
+	}
+
+	for (std::map<int, sInstancedTile>::iterator it = arenaInstancedTiles.begin(); it != arenaInstancedTiles.end(); it++)
+	{
+		Manager::animation.RemoveAnimation(it->second.instancedModel.get()->animation);
+		Manager::render.RemoveModel(it->second.instancedModel);
+	}
 }
 
 sTile* cMapManager::GetTile(glm::ivec3 worldPosition)

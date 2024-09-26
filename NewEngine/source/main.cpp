@@ -22,19 +22,6 @@ int main()
 
     Engine::StartUpManagers();
 
-    // Setup shader programs
-    Manager::render.CreateShadderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
-    Manager::render.CreateShadderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
-    Manager::render.CreateShadderProgram("sprite", "SpriteVertShader.glsl", "FragShader1.glsl");
-    Manager::render.CreateShadderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
-    Manager::render.CreateShadderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
-    Manager::render.CreateShadderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
-    Manager::render.CreateShadderProgram("tree", "TreeVertShader.glsl", "FragShader1.glsl");
-    Manager::render.CreateShadderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
-    Manager::render.CreateShadderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
-    Manager::render.CreateShadderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
-    Manager::render.CreateShadderProgram("text", "TextVertShader.glsl", "TextFragShader.glsl");
-
     // configure global opengl state
     glEnable(GL_DEPTH_TEST);
 
@@ -80,8 +67,8 @@ int main()
     Manager::render.LoadModel("r0_treePine.obj", "tree");
 
     Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
-    Manager::render.LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
-    Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
+    //Manager::render.LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
+    //Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
     //Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
     Manager::render.LoadTexture("SnowFlake1.png");
@@ -90,15 +77,15 @@ int main()
 
     //***************************************************************************
 
-    Manager::animation.InitializeAnimationsPresets();
-
     //Manager::map.LoadMap("WinterTestDesc.json");
     //Manager::map.LoadMap("WaterTest3Desc.json");
     //Manager::map.LoadMap("SlopeTestDesc.json");
     //Manager::map.LoadMap("MultiTestDesc.json");
     //Manager::map.LoadScene("GrassRouteDemoDesc.json");
-    Manager::map.LoadScene("DemoTownDesc.json");
+    //Manager::map.LoadScene("DemoTownDesc.json");
     //Manager::map.LoadMap("CostalWinterDesc.json");
+
+    Manager::animation.InitializeAnimationsPresets();
 
     Pokemon::sIndividualData partner;
     partner.nationalDexNumber = 445;

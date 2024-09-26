@@ -54,8 +54,8 @@ private:
     std::string currShader;
     std::map<std::string, sShaderProgram> programs;
     void checkCompileErrors(unsigned int shader, std::string type);
+    void CreateShaderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
 public:
-    void CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath);
     unsigned int GetCurrentShaderId();
     void use(std::string programName);
     void setBool(const std::string& name, bool value);

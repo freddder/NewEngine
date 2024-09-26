@@ -103,6 +103,7 @@ private:
 	void LoadArena(const std::string arenaDescriptionFile);
 public:
 	void LoadScene(const std::string mapDescriptionFile);
+	void UnloadScene();
 
 public:
 	sTile* GetTile(glm::ivec3 worldPosition);

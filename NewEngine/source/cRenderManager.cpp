@@ -166,6 +166,19 @@ void cRenderManager::Startup()
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
+
+    // Setup shader programs
+    CreateShaderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
+    CreateShaderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
+    CreateShaderProgram("sprite", "SpriteVertShader.glsl", "FragShader1.glsl");
+    CreateShaderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
+    CreateShaderProgram("ocean", "OceanVertShader.glsl", "OceanFragShader.glsl");
+    CreateShaderProgram("foam", "FoamVertShader.glsl", "FoamFragShader.glsl");
+    CreateShaderProgram("tree", "TreeVertShader.glsl", "FragShader1.glsl");
+    CreateShaderProgram("snow", "SnowVertShader.glsl", "SnowFragShader.glsl");
+    CreateShaderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
+    CreateShaderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
+    CreateShaderProgram("text", "TextVertShader.glsl", "TextFragShader.glsl");
 }
 
 void cRenderManager::Shutdown()
@@ -183,7 +196,7 @@ void cRenderManager::Shutdown()
     battleModels.clear();
 }
 
-void cRenderManager::CreateShadderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
+void cRenderManager::CreateShaderProgram(std::string programName, const char* vertexPath, const char* fragmentPath)
 {
     if (programs.count(programName) != 0) // it exists
     {

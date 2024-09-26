@@ -69,52 +69,10 @@
             "animationType": 2
         },
         {
-            "tileId": 120,
-            "meshName": "Water_b2.obj",
-            "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
-            "meshYOrientation": 90, 
-            "animationType": 2
-        },
-        {
-            "tileId": 122,
-            "meshName": "Water_b2.obj",
-            "meshOffset": { "x": 0.5, "y": 0, "z": -0.5 },
-            "meshYOrientation": -90, 
-            "animationType": 2
-        },
-        {
-            "tileId": 124,
-            "meshName": "Water_b2.obj",
-            "meshOffset": { "x": 2.5, "y": 0, "z": 0.5 },
-            "meshYOrientation": 180, 
-            "animationType": 2
-        },
-        {
-            "tileId": 119,
-            "meshName": "Water_c2.obj",
-            "meshOffset": { "x": -0.5, "y": 0, "z": -0.5 },
-            "meshYOrientation": 0, 
-            "animationType": 2
-        },
-        {
             "tileId": 117,
             "meshName": "Water_c2.obj",
             "meshOffset": { "x": -0.5, "y": 0, "z": 2.5 },
             "meshYOrientation": 90, 
-            "animationType": 2
-        },
-        {
-            "tileId": 123,
-            "meshName": "Water_c2.obj",
-            "meshOffset": { "x": 2.5, "y": 0, "z": 2.5 },
-            "meshYOrientation": 180, 
-            "animationType": 2
-        },
-        {
-            "tileId": 125,
-            "meshName": "Water_c2.obj",
-            "meshOffset": { "x": 2.5, "y": 0, "z": -0.5 },
-            "meshYOrientation": 270, 
             "animationType": 2
         },
         {
