@@ -17,8 +17,8 @@ struct sInstancedTile
 
 struct sCorrectionTiles
 {
-	std::vector<glm::vec3> walkableOffsets;
-	std::vector<glm::vec3> unwalkableOffsets;
+	std::vector<glm::ivec3> walkableOffsets;
+	std::vector<glm::ivec3> unwalkableOffsets;
 };
 
 struct sTile
@@ -49,10 +49,10 @@ struct sQuadrant
 	std::vector<int> localSpawnTiles;
 	sTile* GetRandomSpawnTile(glm::vec3& globalPos);
 	
-	static int GetTileIdFromPosition(glm::vec3 localPos);
-	sTile* GetTileFromLocalPosition(glm::vec3 localPos);
+	static int GetTileIdFromPosition(glm::ivec3 localPos);
+	sTile* GetTileFromLocalPosition(glm::ivec3 localPos);
 
-	glm::vec3 LocalPositionToGlobalPosition(glm::vec3 localPos);
+	glm::vec3 LocalPositionToGlobalPosition(glm::ivec3 localPos);
 	glm::vec3 TileIdToGlobalPosition(int tileId);
 };
 
@@ -86,9 +86,9 @@ public:
 	void LoadScene(const std::string mapDescriptionFile);
 
 public:
-	sTile* GetTile(glm::vec3 worldPosition);
+	sTile* GetTile(glm::ivec3 worldPosition);
 	sTile* GetRandomSpawnTile(glm::vec3& globalPositionOut);
-	void RemoveEntityFromTile(glm::vec3 worldPosition);
+	void RemoveEntityFromTile(glm::ivec3 worldPosition);
 
 	eEntityMoveResult TryMoveEntity(cEntity* entityToMove, eDirection direction);
 	

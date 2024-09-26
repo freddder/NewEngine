@@ -30,19 +30,19 @@ sTile* sQuadrant::GetRandomSpawnTile(glm::vec3& globalPos)
 	return spawnTile;
 }
 
-int sQuadrant::GetTileIdFromPosition(glm::vec3 localPos)
+int sQuadrant::GetTileIdFromPosition(glm::ivec3 localPos)
 {
 	if (localPos.x > 31 || localPos.x < 0 ||
 		localPos.z > 31 || localPos.z < 0 ||
 		localPos.y > 15 || localPos.y < -15) return -1;
 
-	int heightIndex = ((int)localPos.y + 15) * (32 * 32);
-	int layerIndex = 32 * (int)localPos.x + (int)localPos.z;
+	int heightIndex = (localPos.y + 15) * (32 * 32);
+	int layerIndex = 32 * localPos.x + localPos.z;
 
 	return heightIndex + layerIndex;
 }
 
-sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
+sTile* sQuadrant::GetTileFromLocalPosition(glm::ivec3 localPos)
 {
 	int localTileId = GetTileIdFromPosition(localPos);
 
@@ -51,7 +51,7 @@ sTile* sQuadrant::GetTileFromLocalPosition(glm::vec3 localPos)
 	return &data[localTileId];
 }
 
-glm::vec3 sQuadrant::LocalPositionToGlobalPosition(glm::vec3 localPos)
+glm::vec3 sQuadrant::LocalPositionToGlobalPosition(glm::ivec3 localPos)
 {
 	return glm::vec3(posX * 32 + localPos.x - 15, localPos.y, posZ * 32 + localPos.z - 15);
 }
@@ -316,26 +316,26 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 	rapidjson::Value& correctionTileData = d["correctionTiles"];
 	for (unsigned int i = 0; i < correctionTileData.Size(); i++)
 	{
-		std::vector<glm::vec3> newTileWalkableOffsets;
-		std::vector<glm::vec3> newTileUnwalkableOffsets;
+		std::vector<glm::ivec3> newTileWalkableOffsets;
+		std::vector<glm::ivec3> newTileUnwalkableOffsets;
 
 		rapidjson::Value& walkableData = correctionTileData[i]["walkableTiles"];
 		for (unsigned int j = 0; j < walkableData.Size(); j++)
 		{
-			glm::vec3 newWalkableOffset;
-			newWalkableOffset.x = walkableData[j]["x"].GetFloat();
-			newWalkableOffset.y = walkableData[j]["y"].GetFloat();
-			newWalkableOffset.z = walkableData[j]["z"].GetFloat();
+			glm::ivec3 newWalkableOffset;
+			newWalkableOffset.x = walkableData[j]["x"].GetInt();
+			newWalkableOffset.y = walkableData[j]["y"].GetInt();
+			newWalkableOffset.z = walkableData[j]["z"].GetInt();
 			newTileWalkableOffsets.push_back(newWalkableOffset);
 		}
 
 		rapidjson::Value& unwalkableData = correctionTileData[i]["unwalkableTiles"];
 		for (unsigned int j = 0; j < unwalkableData.Size(); j++)
 		{
-			glm::vec3 newUnwalkableOffset;
-			newUnwalkableOffset.x = unwalkableData[j]["x"].GetFloat();
-			newUnwalkableOffset.y = unwalkableData[j]["y"].GetFloat();
-			newUnwalkableOffset.z = unwalkableData[j]["z"].GetFloat();
+			glm::ivec3 newUnwalkableOffset;
+			newUnwalkableOffset.x = unwalkableData[j]["x"].GetInt();
+			newUnwalkableOffset.y = unwalkableData[j]["y"].GetInt();
+			newUnwalkableOffset.z = unwalkableData[j]["z"].GetInt();
 			newTileUnwalkableOffsets.push_back(newUnwalkableOffset);
 		}
 
@@ -458,9 +458,9 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 						// Walkable correction tiles
 						for (unsigned int i = 0; i < walkableTiles[tileId].walkableOffsets.size(); i++)
 						{
-							int correctionX = x + (int)walkableTiles[tileId].walkableOffsets[i].x;
-							int correctionZ = z + (int)walkableTiles[tileId].walkableOffsets[i].z;
-							int correctionHeight = currHeight + (int)walkableTiles[tileId].walkableOffsets[i].y;
+							int correctionX = x + walkableTiles[tileId].walkableOffsets[i].x;
+							int correctionZ = z + walkableTiles[tileId].walkableOffsets[i].z;
+							int correctionHeight = currHeight + walkableTiles[tileId].walkableOffsets[i].y;
 
 							newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ))->isWalkable = true;
 						}
@@ -468,9 +468,9 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 						// Unwalkable correction tiles
 						for (unsigned int i = 0; i < walkableTiles[tileId].unwalkableOffsets.size(); i++)
 						{
-							int correctionX = x + (int)walkableTiles[tileId].unwalkableOffsets[i].x;
-							int correctionZ = z + (int)walkableTiles[tileId].unwalkableOffsets[i].z;
-							int correctionHeight = currHeight + (int)walkableTiles[tileId].unwalkableOffsets[i].y;
+							int correctionX = x + walkableTiles[tileId].unwalkableOffsets[i].x;
+							int correctionZ = z + walkableTiles[tileId].unwalkableOffsets[i].z;
+							int correctionHeight = currHeight + walkableTiles[tileId].unwalkableOffsets[i].y;
 
 							sTile* tileToCorrect = newQuad.GetTileFromLocalPosition(glm::vec3(correctionX, correctionHeight, correctionZ));
 							tileToCorrect->isWalkable = false;
@@ -526,12 +526,12 @@ void cMapManager::LoadScene(const std::string mapDescriptionFile)
 	LoadArena(arenaDescFileName);
 }
 
-sTile* cMapManager::GetTile(glm::vec3 worldPosition)
+sTile* cMapManager::GetTile(glm::ivec3 worldPosition)
 {
-	if (sQuadrant* quad = GetQuad((int)worldPosition.x, (int)worldPosition.z))
+	if (sQuadrant* quad = GetQuad(worldPosition.x, worldPosition.z))
 	{
 		// TODO: probably a good idea to make a world to local function
-		glm::vec3 localPosition = worldPosition;
+		glm::ivec3 localPosition = worldPosition;
 		localPosition.x += 15 - 32 * quad->posX;
 		localPosition.z += 15 - 32 * quad->posZ;
 
@@ -574,7 +574,7 @@ sTile* cMapManager::GetRandomSpawnTile(glm::vec3& globalPositionOut)
 	return spawnTile;
 }
 
-void cMapManager::RemoveEntityFromTile(glm::vec3 worldPosition)
+void cMapManager::RemoveEntityFromTile(glm::ivec3 worldPosition)
 {
 	sTile* tile = GetTile(worldPosition);
 
