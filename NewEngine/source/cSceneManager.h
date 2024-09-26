@@ -69,7 +69,7 @@ public:
 private:
 	Pokemon::sBattleData enemyBattleData;
 public:
-	void ChangeScene(const std::string newSceneDescFile);
+	void ChangeScene(const std::string newSceneDescFile, const int entranceNumUsed);
 	void EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData, cWildRoamingPokemon* roamingEntity);
 	void CatchWildPokemon();
 	void ExitEncounter();

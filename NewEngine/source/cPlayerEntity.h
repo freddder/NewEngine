@@ -5,7 +5,7 @@
 class cPlayerEntity : public cCharacterEntity
 {
 public:
-	cPlayerEntity(glm::vec3 pos);
+	cPlayerEntity();
 	~cPlayerEntity();
 
 	glm::vec3 GetModelPosition();

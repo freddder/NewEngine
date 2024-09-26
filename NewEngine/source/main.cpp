@@ -85,12 +85,10 @@ int main()
     partner.LoadFormFromSpeciesData();
     Player::AddPartyMember(partner);
 
-    Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
-    Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
+    //Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
+    //Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
 
     {
-        Player::playerChar = new cPlayerEntity(glm::vec3(28.f, 0.f, 30.f));
-        Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
 
         Pokemon::sSpeciesData followerSpecieData;
         Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
@@ -111,8 +109,6 @@ int main()
     //Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
-
-    delete Player::playerChar;
 
     Engine::ShutdownManagers();
 

@@ -72,7 +72,7 @@ glm::vec3 sQuadrant::TileIdToGlobalPosition(int tileId)
 void cTransitionTrigger::WalkInteract()
 {
 	std::cout << "Transitioning..." << std::endl;
-	Manager::scene.ChangeScene(sceneDescName);
+	Manager::scene.ChangeScene(sceneDescName, entranceNum);
 }
 
 cMapManager::cMapManager()
@@ -115,7 +115,7 @@ void cMapManager::Startup()
 
 	arenaModel = Manager::render.CreateRenderModel(true);
 
-	LoadMap("DemoTownDesc.json");
+	LoadMap("DemoTownDesc.json", 0);
 	//LoadScene("GrassRouteDemoDesc.json");
 }
 
@@ -302,7 +302,7 @@ void cMapManager::LoadArena(std::string arenaDescriptionFile)
 		playerSpriteModel = new cBattleSprite(glm::vec3(-4.f, 0.f, 1.f));
 }
 
-void cMapManager::LoadMap(const std::string mapDescriptionFile)
+void cMapManager::LoadMap(const std::string mapDescriptionFile, const int entranceNumUsed)
 {
 	// TEMP: will find a more modular way to load necessary models
 	Manager::render.LoadModel("SpriteHolder.obj", "sprite");
@@ -572,20 +572,57 @@ void cMapManager::LoadMap(const std::string mapDescriptionFile)
 			if (!quad) continue;
 
 			std::string transitionTo = currTransitionTile["transitionTo"].GetString();
-			int entranceNum = currTransitionTile["entranceNum"].GetInt();
+			int entranceNum = currTransitionTile["newSceneEntranceId"].GetInt();
 
 			triggers.emplace_back(transitionTo, entranceNum);
 			cTransitionTrigger& transitionTrigger = triggers.back();
 
 			int tileType = currTransitionTile["tileType"].GetInt();
-			glm::ivec3 localPos = glm::ivec3(currTransitionTile["localQuadPos"]["x"].GetInt(),
-				currTransitionTile["localQuadPos"]["y"].GetInt(),
-				currTransitionTile["localQuadPos"]["z"].GetInt());
+			glm::ivec3 localPos;
+			localPos.x = currTransitionTile["localQuadPos"]["x"].GetInt();
+			localPos.y = currTransitionTile["localQuadPos"]["y"].GetInt();
+			localPos.z = currTransitionTile["localQuadPos"]["z"].GetInt();
 			for (int j = 0; j < transitionTiles[static_cast<eTransitionTileTypes>(tileType)].size(); j++)
 			{
 				glm::ivec3 finalPos = localPos + transitionTiles[(eTransitionTileTypes)tileType][j];
 
 				quad->GetTileFromLocalPosition(finalPos)->entity = &transitionTrigger;
+			}
+		}
+
+		// Set player position based on entrance used
+		if (entranceNumUsed >= 0 && entranceNumUsed < sceneTramsitionsData.Size())
+		{
+			rapidjson::Value& currTransitionTile = sceneTramsitionsData[entranceNumUsed];
+
+			int quadX = currTransitionTile["quadCoord"]["x"].GetInt();
+			int quadZ = currTransitionTile["quadCoord"]["z"].GetInt();
+
+			sQuadrant* entranceQuad = nullptr;
+			for (int q = 0; q < quads.size(); q++)
+			{
+				if (quads[q].posX == quadX && quads[q].posZ == quadZ)
+				{
+					entranceQuad = &quads[q];
+					break;
+				}
+			}
+
+			if (entranceQuad)
+			{
+				glm::ivec3 spawnOffset;
+				spawnOffset.x = currTransitionTile["playerSpawnOffset"]["x"].GetInt();
+				spawnOffset.y = currTransitionTile["playerSpawnOffset"]["y"].GetInt();
+				spawnOffset.z = currTransitionTile["playerSpawnOffset"]["z"].GetInt();
+
+				glm::ivec3 localPos;
+				localPos.x = currTransitionTile["localQuadPos"]["x"].GetInt();
+				localPos.y = currTransitionTile["localQuadPos"]["y"].GetInt();
+				localPos.z = currTransitionTile["localQuadPos"]["z"].GetInt();
+
+				glm::ivec3 finalPlayerPos = localPos + spawnOffset;
+				Player::playerChar->spriteModel->model.get()->position = entranceQuad->LocalPositionToGlobalPosition(finalPlayerPos);
+				entranceQuad->GetTileFromLocalPosition(finalPlayerPos)->entity = Player::playerChar;
 			}
 		}
 	}

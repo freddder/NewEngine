@@ -1,8 +1,8 @@
 #include "cPlayerEntity.h"
 
-cPlayerEntity::cPlayerEntity(glm::vec3 pos) : cCharacterEntity(pos)
+cPlayerEntity::cPlayerEntity() : cCharacterEntity(glm::vec3(0.f))
 {
-	spriteModel = new cPlayerSprite("Nate.png", pos);
+	spriteModel = new cPlayerSprite("Nate.png", glm::vec3(0.f));
 }
 
 cPlayerEntity::~cPlayerEntity()

@@ -841,15 +841,11 @@ void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesDat
 {
     // Load default form
     LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber);
-    //LoadPokemonIconTexture(specieData.nationalDexNumber);
 
     // Load female varient if there is one
     if (specieData.isSpriteGenderBased || specieData.isFormGenderBased)
     {
         LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, "f");
-
-        //if (specieData.isFormGenderBased)
-            //LoadPokemonIconTexture(specieData.nationalDexNumber, "f");
     }
     else
     {
@@ -857,7 +853,6 @@ void cRenderManager::LoadRoamingPokemonSpecieTextures(const Pokemon::sSpeciesDat
         for (std::map<std::string, Pokemon::sForm>::const_iterator it = specieData.alternateForms.cbegin(); it != specieData.alternateForms.cend(); it++)
         {
             LoadRoamingPokemonFormSpriteSheet(specieData.nationalDexNumber, it->first);
-            //LoadPokemonIconTexture(specieData.nationalDexNumber, it->first);
         }
     }
 }

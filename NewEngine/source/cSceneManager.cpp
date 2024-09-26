@@ -215,7 +215,7 @@ std::shared_ptr<cTamedRoamingPokemon> cSceneManager::SpawnTamedPokemon(Pokemon::
 	return newTamedPokemon;
 }
 
-void cSceneManager::ChangeScene(const std::string newSceneDescFile)
+void cSceneManager::ChangeScene(const std::string newSceneDescFile, const int entranceNumUsed)
 {
 	// Things this should do (not ordered):
 	// - unload current map model
@@ -226,12 +226,21 @@ void cSceneManager::ChangeScene(const std::string newSceneDescFile)
 	// - move player and follower to appropriate place
 	// - remove render objects from vector
 
+	// TODO: despawn all entities and remove all particle spawners
+
 	Manager::map.UnloadMap();
 
 	Manager::render.UnloadModels();
 	Manager::render.UnloadTextures();
 
-	Manager::map.LoadMap(newSceneDescFile);
+	loadedSpawnData.clear();
+
+	Manager::map.LoadMap(newSceneDescFile, entranceNumUsed);
+
+	// TEMP
+	Pokemon::sSpeciesData followerSpecieData;
+	Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
+	Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
 }
 
 void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData, cWildRoamingPokemon* roamingEntity)

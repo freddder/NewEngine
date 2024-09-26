@@ -445,6 +445,9 @@ namespace Engine
 
         Manager::render.Startup();
 
+        Player::playerChar = new cPlayerEntity();
+        Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
+
         Manager::map.Startup();
 
         Manager::input.Startup();
@@ -471,6 +474,8 @@ namespace Engine
         Manager::scene.Shutdown();
 
         Manager::ui.Shutdown();
+
+        delete Player::playerChar;
 
         // TODO: I think there is one sprite model not properly deleting. Investigate later
     }
