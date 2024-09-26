@@ -101,9 +101,10 @@ private:
 	std::map<int, sInstancedTile> arenaInstancedTiles;
 	sQuadrant* GetQuad(int worldX, int worldZ);
 	void LoadArena(const std::string arenaDescriptionFile);
-public:
 	void LoadScene(const std::string mapDescriptionFile);
 	void UnloadScene();
+public:
+	void ChangeScene(const std::string newSceneDescFile);
 
 public:
 	sTile* GetTile(glm::ivec3 worldPosition);

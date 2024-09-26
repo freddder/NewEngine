@@ -54,7 +54,7 @@ int main()
 
     //********************** Load models, textures and fonts ***************************
 
-    Manager::render.LoadModel("SpriteHolder.obj", "sprite");
+    /*Manager::render.LoadModel("SpriteHolder.obj", "sprite");
     Manager::render.LoadModel("SpriteHolder.obj", "snow");
     Manager::render.LoadModel("Water_c2.obj", "wave");
     Manager::render.LoadModel("Water_b2.obj", "wave");
@@ -67,23 +67,12 @@ int main()
     Manager::render.LoadModel("r0_treePine.obj", "tree");
 
     Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
-    //Manager::render.LoadSpriteSheet("SymetricNPC_1.png", 2, 4, true);
-    //Manager::render.LoadSpriteSheet("AsymetricalNPC_1.png", 3, 4, false);
-    //Manager::render.LoadSpriteSheet("722.png", 4, 4, false);
 
     Manager::render.LoadTexture("SnowFlake1.png");
     Manager::render.LoadTexture("SnowFlake2.png");
-    Manager::render.LoadTexture("SnowFlake3.png");
+    Manager::render.LoadTexture("SnowFlake3.png");*/
 
     //***************************************************************************
-
-    //Manager::map.LoadMap("WinterTestDesc.json");
-    //Manager::map.LoadMap("WaterTest3Desc.json");
-    //Manager::map.LoadMap("SlopeTestDesc.json");
-    //Manager::map.LoadMap("MultiTestDesc.json");
-    //Manager::map.LoadScene("GrassRouteDemoDesc.json");
-    //Manager::map.LoadScene("DemoTownDesc.json");
-    //Manager::map.LoadMap("CostalWinterDesc.json");
 
     Manager::animation.InitializeAnimationsPresets();
 

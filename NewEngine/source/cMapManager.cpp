@@ -72,6 +72,7 @@ glm::vec3 sQuadrant::TileIdToGlobalPosition(int tileId)
 void cTransitionTrigger::WalkInteract()
 {
 	std::cout << "Transitioning..." << std::endl;
+	Manager::map.ChangeScene(sceneDescName);
 }
 
 cMapManager::cMapManager()
@@ -303,6 +304,25 @@ void cMapManager::LoadArena(std::string arenaDescriptionFile)
 
 void cMapManager::LoadScene(const std::string mapDescriptionFile)
 {
+	// TEMP: will find a more modular way to load necessary models
+	Manager::render.LoadModel("SpriteHolder.obj", "sprite");
+	Manager::render.LoadModel("SpriteHolder.obj", "snow");
+	Manager::render.LoadModel("Water_c2.obj", "wave");
+	Manager::render.LoadModel("Water_b2.obj", "wave");
+	Manager::render.LoadModel("Water_bl2.obj", "wave");
+	Manager::render.LoadModel("sea_water2.obj", "ocean");
+	Manager::render.LoadModel("Foam_b2.obj", "foam");
+	Manager::render.LoadModel("Foam_bl2.obj", "foam");
+	Manager::render.LoadModel("Foam_c2.obj", "foam");
+	Manager::render.LoadModel("Foam_c2.obj", "foam");
+	Manager::render.LoadModel("r0_treePine.obj", "tree");
+
+	Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
+
+	Manager::render.LoadTexture("SnowFlake1.png");
+	Manager::render.LoadTexture("SnowFlake2.png");
+	Manager::render.LoadTexture("SnowFlake3.png");
+
 	// Load json info file with rapidjson
 	FILE* fp = 0;
 	fopen_s(&fp, (MAPS_PATH + mapDescriptionFile).c_str(), "rb"); // non-Windows use "r"
@@ -589,12 +609,27 @@ void cMapManager::UnloadScene()
 		Manager::animation.RemoveAnimation(it->second.instancedModel.get()->animation);
 		Manager::render.RemoveModel(it->second.instancedModel);
 	}
+	mapInstancedTiles.clear();
 
 	for (std::map<int, sInstancedTile>::iterator it = arenaInstancedTiles.begin(); it != arenaInstancedTiles.end(); it++)
 	{
 		Manager::animation.RemoveAnimation(it->second.instancedModel.get()->animation);
 		Manager::render.RemoveModel(it->second.instancedModel);
 	}
+	arenaInstancedTiles.clear();
+
+	quads.clear();
+	walkableTiles.clear();
+	triggers.clear();
+
+	Manager::render.UnloadModels();
+	Manager::render.UnloadTextures();
+}
+
+void cMapManager::ChangeScene(const std::string newSceneDescFile)
+{
+	UnloadScene();
+	LoadScene(newSceneDescFile);
 }
 
 sTile* cMapManager::GetTile(glm::ivec3 worldPosition)
