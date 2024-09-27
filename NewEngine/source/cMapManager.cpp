@@ -15,6 +15,8 @@
 #include "cRenderManager.h"
 #include "cAnimationManager.h"
 #include "cSceneManager.h"
+
+#include "cTamedRoamingPokemon.h"
 #include <iostream>
 
 const std::string MAPS_PATH = "assets/scenes/maps/";
@@ -119,8 +121,8 @@ void cMapManager::Startup()
 
 	arenaModel = Manager::render.CreateRenderModel(true);
 
-	//LoadMap("DemoTownDesc.json", 0);
-	LoadMap("GrassRouteDemoDesc.json", 0);
+	LoadMap("DemoTownDesc.json", 0);
+	//LoadMap("GrassRouteDemoDesc.json", 0);
 }
 
 void cMapManager::Shutdown()
@@ -597,10 +599,10 @@ void cMapManager::LoadMap(const std::string mapDescriptionFile, const int entran
 		// Set player position based on entrance used
 		if (entranceNumUsed >= 0 && entranceNumUsed < sceneTramsitionsData.Size())
 		{
-			rapidjson::Value& currTransitionTile = sceneTramsitionsData[entranceNumUsed];
+			rapidjson::Value& transitionTileUsed = sceneTramsitionsData[entranceNumUsed];
 
-			int quadX = currTransitionTile["quadCoord"]["x"].GetInt();
-			int quadZ = currTransitionTile["quadCoord"]["z"].GetInt();
+			int quadX = transitionTileUsed["quadCoord"]["x"].GetInt();
+			int quadZ = transitionTileUsed["quadCoord"]["z"].GetInt();
 
 			sQuadrant* entranceQuad = nullptr;
 			for (int q = 0; q < quads.size(); q++)
@@ -615,18 +617,41 @@ void cMapManager::LoadMap(const std::string mapDescriptionFile, const int entran
 			if (entranceQuad)
 			{
 				glm::ivec3 spawnOffset;
-				spawnOffset.x = currTransitionTile["playerSpawnOffset"]["x"].GetInt();
-				spawnOffset.y = currTransitionTile["playerSpawnOffset"]["y"].GetInt();
-				spawnOffset.z = currTransitionTile["playerSpawnOffset"]["z"].GetInt();
+				spawnOffset.x = transitionTileUsed["playerSpawnOffset"]["x"].GetInt();
+				spawnOffset.y = transitionTileUsed["playerSpawnOffset"]["y"].GetInt();
+				spawnOffset.z = transitionTileUsed["playerSpawnOffset"]["z"].GetInt();
 
 				glm::ivec3 localPos;
-				localPos.x = currTransitionTile["localQuadPos"]["x"].GetInt();
-				localPos.y = currTransitionTile["localQuadPos"]["y"].GetInt();
-				localPos.z = currTransitionTile["localQuadPos"]["z"].GetInt();
+				localPos.x = transitionTileUsed["localQuadPos"]["x"].GetInt();
+				localPos.y = transitionTileUsed["localQuadPos"]["y"].GetInt();
+				localPos.z = transitionTileUsed["localQuadPos"]["z"].GetInt();
 
-				glm::ivec3 finalPlayerPos = localPos + spawnOffset;
-				Player::playerChar->spriteModel->model.get()->position = entranceQuad->LocalPositionToGlobalPosition(finalPlayerPos);
-				entranceQuad->GetTileFromLocalPosition(finalPlayerPos)->entity = Player::playerChar;
+				glm::ivec3 finalPlayerLocalPos = localPos + spawnOffset;
+				glm::ivec3 finalPlayerPos = entranceQuad->LocalPositionToGlobalPosition(finalPlayerLocalPos);
+				Player::playerChar->spriteModel->model.get()->position = finalPlayerPos;
+				Player::playerChar->position = finalPlayerPos;
+				entranceQuad->GetTileFromLocalPosition(finalPlayerLocalPos)->entity = Player::playerChar;
+
+				glm::ivec3 partnerOffest = glm::ivec3(0);
+				switch (transitionTileUsed["tileType"].GetInt())
+				{
+				case eTransitionTileTypes::HEDGE_LEFT:
+					partnerOffest.z = 1;
+					//Player::playerPartner.get()->spriteModel->AnimateMovement(LEFT, false, FAILURE);
+					break;
+				case eTransitionTileTypes::HEDGE_RIGHT:
+					partnerOffest.z = -1;
+					//Player::playerPartner.get()->spriteModel->AnimateMovement(RIGHT, false, FAILURE);
+					break;
+				default:
+					break;
+				}
+
+				glm::ivec3 partnerLocalPos = finalPlayerLocalPos + partnerOffest;
+				glm::ivec3 partnerPos = entranceQuad->LocalPositionToGlobalPosition(partnerLocalPos);
+				Player::playerPartner.get()->spriteModel->model.get()->position = partnerPos;
+				Player::playerPartner.get()->position = partnerPos;
+				//entranceQuad->GetTileFromLocalPosition(partnerLocalPos)->entity = Player::playerPartner.get();
 			}
 		}
 	}

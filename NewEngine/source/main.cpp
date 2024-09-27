@@ -52,59 +52,7 @@ int main()
     lightColorAnim->isRepeat = true;
     //Manager::animation.AddAnimation(lightColorAnim);
 
-    //********************** Load models, textures and fonts ***************************
-
-    /*Manager::render.LoadModel("SpriteHolder.obj", "sprite");
-    Manager::render.LoadModel("SpriteHolder.obj", "snow");
-    Manager::render.LoadModel("Water_c2.obj", "wave");
-    Manager::render.LoadModel("Water_b2.obj", "wave");
-    Manager::render.LoadModel("Water_bl2.obj", "wave");
-    Manager::render.LoadModel("sea_water2.obj", "ocean");
-    Manager::render.LoadModel("Foam_b2.obj", "foam");
-    Manager::render.LoadModel("Foam_bl2.obj", "foam");
-    Manager::render.LoadModel("Foam_c2.obj", "foam");
-    Manager::render.LoadModel("Foam_c2.obj", "foam");
-    Manager::render.LoadModel("r0_treePine.obj", "tree");
-
-    Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
-
-    Manager::render.LoadTexture("SnowFlake1.png");
-    Manager::render.LoadTexture("SnowFlake2.png");
-    Manager::render.LoadTexture("SnowFlake3.png");*/
-
-    //***************************************************************************
-
     Manager::animation.InitializeAnimationsPresets();
-
-    Pokemon::sIndividualData partner;
-    partner.nationalDexNumber = 445;
-    partner.gender = Pokemon::FEMALE;
-    partner.isShiny = true;
-    partner.form.battleBackSpriteFrameCount = 48; // hard coded for now
-    partner.level = 98;
-    partner.LoadFormFromSpeciesData();
-    Player::AddPartyMember(partner);
-
-    //Manager::scene.LoadSpawnData(406, 0, 0, Pokemon::TALL_GRASS, 0, "");
-    //Manager::scene.LoadSpawnData(678, 0, 0, Pokemon::TALL_GRASS, 0, "");
-
-    {
-
-        Pokemon::sSpeciesData followerSpecieData;
-        Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
-        Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
-
-        Player::playerPartner = Manager::scene.SpawnTamedPokemon(Player::party[0], glm::vec3(28.f, 0.f, 31.f));
-        Player::playerChar->SetFollower(Player::playerPartner.get());
-
-        // TODO: find a good place to seed the rand
-        srand((int)time(0));
-        Manager::scene.SpawnRandomWildPokemon();
-        Manager::scene.SpawnRandomWildPokemon();
-        Manager::scene.SpawnRandomWildPokemon();
-        Manager::scene.SpawnRandomWildPokemon();
-        Manager::scene.SpawnRandomWildPokemon();
-    }
 
     //Manager::scene.SetWeather(SNOW);
 

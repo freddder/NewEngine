@@ -27,6 +27,7 @@
 
 #include "Player.h"
 #include "cPlayerEntity.h"
+#include "cTamedRoamingPokemon.h"
 
 GLFWwindow* window;
 float deltaTime = 0.f;
@@ -447,6 +448,23 @@ namespace Engine
 
         Player::playerChar = new cPlayerEntity();
         Manager::camera.targetPosRef = Player::GetPlayerPositionRef();
+
+        Pokemon::sIndividualData partner;
+        partner.nationalDexNumber = 445;
+        partner.gender = Pokemon::FEMALE;
+        partner.isShiny = true;
+        partner.form.battleBackSpriteFrameCount = 48; // hard coded for now
+        partner.level = 98;
+        partner.LoadFormFromSpeciesData();
+        Player::AddPartyMember(partner);
+
+        Pokemon::sSpeciesData followerSpecieData;
+        Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
+        Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
+
+        // Not being added to tamed roaming vector on scene manager
+        Player::playerPartner = std::make_shared<cTamedRoamingPokemon>(partner, glm::vec3(0));
+        Player::playerChar->SetFollower(Player::playerPartner.get());
 
         Manager::map.Startup();
 

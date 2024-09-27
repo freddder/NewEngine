@@ -47,7 +47,7 @@ glm::vec3 cCharacterSprite::AnimateMovement(eDirection dir, bool run, eEntityMov
 	if (moveResult == eEntityMoveResult::SUCCESS_UP) newPosition.y += 1.f;
 	else if (moveResult == eEntityMoveResult::SUCCESS_DOWN) newPosition.y -= 1.f;
 
-	if (!run || moveResult == 0) modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
+	if (!run || moveResult == eEntityMoveResult::FAILURE) modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.3f, newPosition));
 	else modelAnimation->AddPositionKeyFrame(sKeyFrameVec3(0.14f, newPosition));
 
 	return newPosition;

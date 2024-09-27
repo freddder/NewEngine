@@ -243,6 +243,15 @@ void cSceneManager::ChangeScene(const std::string newSceneDescFile, const int en
 	Pokemon::sSpeciesData followerSpecieData;
 	Pokemon::LoadSpecieData(Player::party[0].nationalDexNumber, followerSpecieData);
 	Manager::render.LoadRoamingPokemonSpecieTextures(followerSpecieData);
+
+	// TEMP
+	// TODO: find a good place to seed the rand
+	srand((int)time(0));
+	Manager::scene.SpawnRandomWildPokemon();
+	Manager::scene.SpawnRandomWildPokemon();
+	Manager::scene.SpawnRandomWildPokemon();
+	Manager::scene.SpawnRandomWildPokemon();
+	Manager::scene.SpawnRandomWildPokemon();
 }
 
 void cSceneManager::EnterWildEncounter(const Pokemon::sRoamingPokemonData& roamingPokemonData, cWildRoamingPokemon* roamingEntity)
