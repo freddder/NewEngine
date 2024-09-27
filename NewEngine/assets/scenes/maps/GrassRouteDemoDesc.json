@@ -4,7 +4,7 @@
     "arenaDescFileName": "GrassRouteArenaDesc.json",
     "sceneTransitions": [
         {
-            "tileType": 0,
+            "tileType": 1,
             "quadCoord": { "x": 0, "z": 0 },
             "localQuadPos": { "x": 19, "y": 0, "z": 10 },
             "transitionTo": "DemoTownDesc.json",

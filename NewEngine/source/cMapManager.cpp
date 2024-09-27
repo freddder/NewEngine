@@ -110,13 +110,17 @@ void cMapManager::Startup()
 	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(2, 0, 0));
 	transitionTiles[HEDGE_LEFT].push_back(glm::ivec3(3, 0, 0));
 
+	transitionTiles[HEDGE_RIGHT].push_back(glm::ivec3(1, 0, 2));
+	transitionTiles[HEDGE_RIGHT].push_back(glm::ivec3(2, 0, 2));
+	transitionTiles[HEDGE_RIGHT].push_back(glm::ivec3(3, 0, 2));
+
 	mapModel = Manager::render.CreateRenderModel();
 	mapModel->position = glm::vec3(0.5f, 0.f, 0.5f);
 
 	arenaModel = Manager::render.CreateRenderModel(true);
 
-	LoadMap("DemoTownDesc.json", 0);
-	//LoadScene("GrassRouteDemoDesc.json");
+	//LoadMap("DemoTownDesc.json", 0);
+	LoadMap("GrassRouteDemoDesc.json", 0);
 }
 
 void cMapManager::Shutdown()

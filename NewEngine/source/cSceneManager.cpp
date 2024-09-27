@@ -234,6 +234,8 @@ void cSceneManager::ChangeScene(const std::string newSceneDescFile, const int en
 	Manager::render.UnloadTextures();
 
 	loadedSpawnData.clear();
+	roamingWildPokemon.clear();
+	roamingTamedPokemon.clear();
 
 	Manager::map.LoadMap(newSceneDescFile, entranceNumUsed);
 
