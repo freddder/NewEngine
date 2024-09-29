@@ -54,7 +54,7 @@ int main()
 
     Manager::animation.InitializeAnimationsPresets();
 
-    //Manager::scene.SetWeather(SNOW);
+    Manager::scene.SetWeather(SNOW);
 
     Engine::GameLoop(true);
 

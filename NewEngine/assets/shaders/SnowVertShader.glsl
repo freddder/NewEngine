@@ -36,7 +36,7 @@ void main()
 	finalModelPosition.z += oOffset.z;
 
 	vec2 uv = finalModelPosition.zy / vec2(256);
-	uv.x += oOffset.w / 4.f;
+	uv.x += oOffset.w / 4.f; // w being the timer
     uv.y += oOffset.w / 2.f;
 	
 	float f = 0.0;

@@ -637,7 +637,7 @@ void cMapManager::LoadMap(const std::string mapDescriptionFile, const int entran
 				{
 				case eTransitionTileTypes::HEDGE_LEFT:
 					partnerOffest.z = 1;
-					//Player::playerPartner.get()->spriteModel->AnimateMovement(LEFT, false, FAILURE);
+					//Player::playerPartner.get()->spriteModel->AnimateMovement(LEFT, false, FAILURE); // investigate why this teleports partner to origin
 					break;
 				case eTransitionTileTypes::HEDGE_RIGHT:
 					partnerOffest.z = -1;

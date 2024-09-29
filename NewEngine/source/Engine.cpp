@@ -505,7 +505,7 @@ namespace Engine
         while (!glfwWindowShouldClose(window))
         {
             // per-frame time logic
-            float currentFrame = static_cast<float>(glfwGetTime());
+            float currentFrame = (float)glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 

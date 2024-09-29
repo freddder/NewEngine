@@ -40,7 +40,7 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, int 
 	lcgZ = cLinearCongruentialGenerator(init_seed);
 
 	// Create buffer for particle data (position + timer)
-	glGenBuffers(1, &(particleBufferId));
+	glGenBuffers(1, &particleBufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * _maxParticles, NULL, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -49,15 +49,19 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, int 
 cParticleSpawner::~cParticleSpawner()
 {
 	particles.clear();
+
+	glDeleteBuffers(1, &particleBufferId);
 }
 
 void cParticleSpawner::Update(float deltaTime)
 {
 	timer += deltaTime;
 
+	glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
+
+	// Add new particle
 	if (timer > spawnRate && particles.size() < particles.capacity())
 	{
-		// add new particle
 		double randomPosX;
 		double randomPosY;
 		double randomPosZ;
@@ -73,7 +77,7 @@ void cParticleSpawner::Update(float deltaTime)
 			(((float)randomPosZ * (maxPositionOffset.z - minPositionOffset.z)) / (1 - 0)) + minPositionOffset.z 
 		);
 
-		// add speed offset as well
+		// TODO: add speed offset as well
 
 		sParticle newParticle;
 		newParticle.position = newParticlePosOffset + spawnPosition;
@@ -102,12 +106,14 @@ void cParticleSpawner::Update(float deltaTime)
 			continue;
 		}
 
-		// update position
+		// Update position
 		particles[i].position += particles[i].speed * deltaTime;
 
-		// update speed for gravity stuff
+		// TODO: update speed for gravity stuff
 
 		// update buffer
 		glBufferSubData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * i, sizeof(glm::vec4), glm::value_ptr(glm::vec4(particles[i].position, particles[i].timer)));
 	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
