@@ -26,10 +26,9 @@ cSceneManager::~cSceneManager()
 
 void cSceneManager::Shutdown()
 {
-	for (int i = 0; i < particleSpawners.size(); i++)
-	{
-		delete particleSpawners[i];
-	}
+	if (weatherParticleSpawner)
+		delete weatherParticleSpawner;
+
 	particleSpawners.clear();
 
 	roamingWildPokemon.clear();
@@ -297,6 +296,14 @@ void cSceneManager::ExitEncounter()
 	Manager::map.playerSpriteModel->ClearSpriteData();
 
 	enemyBattleData = Pokemon::sBattleData();
+}
+
+std::shared_ptr<cParticleSpawner> cSceneManager::CreateParticleSpawner(glm::vec3 position, cRenderModel model, unsigned int maxParticles)
+{
+	std::shared_ptr<cParticleSpawner> newSpawner = std::make_shared<cParticleSpawner>(position, model, maxParticles);
+	particleSpawners.push_back(newSpawner);
+
+	return newSpawner;
 }
 
 void cSceneManager::Process(float deltaTime)

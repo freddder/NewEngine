@@ -9,17 +9,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, int _maxParticles)// : lcgX(0), lcgY(0), lcgZ(0)
+cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, unsigned int _maxParticles)
 {
 	spawnPosition = position;
-	minPositionOffset = glm::vec3(0.f);
-	maxPositionOffset = glm::vec3(0.f);
 	isPositionPlayerRelative = false;
-
-	spawnSpeed = glm::vec3(0.f, -1.f, 0.f);
-	minSpeedOffset = glm::vec3(0.f);
-	maxSpeedOffset = glm::vec3(0.f);
-	gravity = glm::vec3(0.f);
 
 	particles.reserve(_maxParticles);
 	maxParticles = _maxParticles; // if -1, no limit
@@ -31,13 +24,13 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, int 
 	// do the random
 	srand((int)time(0));
 	unsigned int init_seed = (rand() % 100) + 1;
-	lcgX = cLinearCongruentialGenerator(init_seed);
+	lcgPosX = cLinearCongruentialGenerator(init_seed);
 
 	init_seed = (rand() % 100) + 1;
-	lcgY = cLinearCongruentialGenerator(init_seed);
+	lcgPosY = cLinearCongruentialGenerator(init_seed);
 
 	init_seed = (rand() % 100) + 1;
-	lcgZ = cLinearCongruentialGenerator(init_seed);
+	lcgPosZ = cLinearCongruentialGenerator(init_seed);
 
 	// Create buffer for particle data (position + timer)
 	glGenBuffers(1, &particleBufferId);
@@ -53,46 +46,62 @@ cParticleSpawner::~cParticleSpawner()
 	glDeleteBuffers(1, &particleBufferId);
 }
 
+bool cParticleSpawner::SpawnParticle()
+{
+	if (particles.size() >= particles.capacity()) return false;
+
+	double randomPosX;
+	double randomPosY;
+	double randomPosZ;
+
+	lcgPosX.get_uniform_draw(randomPosX);
+	lcgPosY.get_uniform_draw(randomPosY);
+	lcgPosZ.get_uniform_draw(randomPosZ);
+
+	//NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
+	glm::vec3 newParticlePosOffset = glm::vec3(
+		(((float)randomPosX * (maxPositionOffset.x - minPositionOffset.x)) / (1 - 0)) + minPositionOffset.x,
+		(((float)randomPosY * (maxPositionOffset.y - minPositionOffset.y)) / (1 - 0)) + minPositionOffset.y,
+		(((float)randomPosZ * (maxPositionOffset.z - minPositionOffset.z)) / (1 - 0)) + minPositionOffset.z
+	);
+
+	// TODO: add speed offset as well
+
+	particles.emplace_back();
+	sParticle& newParticle = particles.back();
+	newParticle.position = newParticlePosOffset + spawnPosition;
+	newParticle.speed = spawnSpeed;
+	newParticle.timer = 0.f;
+
+	if (isPositionPlayerRelative)
+	{
+		newParticle.position += Player::GetPlayerPosition();
+	}
+
+	return true;
+}
+
+void cParticleSpawner::SpawnParticles(unsigned int numToSpawn)
+{
+	for (unsigned int i = 0; i < numToSpawn; i++)
+	{
+		SpawnParticle();
+	}
+}
+
 void cParticleSpawner::Update(float deltaTime)
 {
-	timer += deltaTime;
+	if (spawnRate > 0.f)
+	{
+		timer += deltaTime;
+
+		if (timer > spawnRate && SpawnParticle())
+		{
+			timer -= spawnRate;
+		}
+	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
-
-	// Add new particle
-	if (timer > spawnRate && particles.size() < particles.capacity())
-	{
-		double randomPosX;
-		double randomPosY;
-		double randomPosZ;
-
-		lcgX.get_uniform_draw(randomPosX);
-		lcgY.get_uniform_draw(randomPosY);
-		lcgZ.get_uniform_draw(randomPosZ);
-
-		//NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
-		glm::vec3 newParticlePosOffset = glm::vec3(
-			(((float)randomPosX * (maxPositionOffset.x - minPositionOffset.x)) / (1 - 0)) + minPositionOffset.x,
-			(((float)randomPosY * (maxPositionOffset.y - minPositionOffset.y)) / (1 - 0)) + minPositionOffset.y,
-			(((float)randomPosZ * (maxPositionOffset.z - minPositionOffset.z)) / (1 - 0)) + minPositionOffset.z 
-		);
-
-		// TODO: add speed offset as well
-
-		sParticle newParticle;
-		newParticle.position = newParticlePosOffset + spawnPosition;
-		newParticle.speed = spawnSpeed;
-		newParticle.timer = 0.f;
-
-		if (isPositionPlayerRelative)
-		{
-			newParticle.position += Player::GetPlayerPosition();
-		}
-
-		particles.push_back(newParticle);
-
-		timer -= spawnRate;
-	}
 
 	for (int i = 0; i < particles.size(); i++)
 	{

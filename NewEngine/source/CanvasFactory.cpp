@@ -220,7 +220,7 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
 
 void cPlayerBattleInfo::UpdatePlayerInfo()
 {
-    Player::party[0].currHealth /= 2.f;
+    Player::party[0].currHealth /= 2;
     float healthPercent = (float)Player::party[0].currHealth / (float)Player::party[0].maxHealth;
     playerHb->UpdateHealthBar(healthPercent);
 }

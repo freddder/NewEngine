@@ -1141,9 +1141,10 @@ void cRenderManager::DrawFrame()
         {
             DrawParticles(Manager::scene.weatherParticleSpawner);
         }
+
         for (int i = 0; i < Manager::scene.particleSpawners.size(); i++)
         {
-            DrawParticles(Manager::scene.particleSpawners[i]);
+            DrawParticles(Manager::scene.particleSpawners[i].get());
         }
     }
 

@@ -45,9 +45,8 @@ public:
 	// Envoirnment weather
 private:
 	eEnvironmentWeather currWeather;
-public:
-	std::vector<cParticleSpawner*> particleSpawners;
 	cParticleSpawner* weatherParticleSpawner;
+public:
 	float fogDensity;
 	float fogGradient;
 	glm::vec3 fogColor;
@@ -74,7 +73,13 @@ public:
 	void CatchWildPokemon();
 	void ExitEncounter();
 
+private:
+	std::vector<std::shared_ptr<cParticleSpawner>> particleSpawners;
+public:
+	std::shared_ptr<cParticleSpawner> CreateParticleSpawner(glm::vec3 position, cRenderModel model, unsigned int maxParticles);
+
 	void Process(float deltaTime);
 
+	friend class cRenderManager;
 	friend class cEnemyBattleInfo;
 };
