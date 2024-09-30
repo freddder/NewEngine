@@ -46,52 +46,55 @@ cOverworldCanvas::cOverworldCanvas()
     topBtnContainer->aspectRatio = (float)imageHeight * 2 / (float)imageWidth;
     topBtnContainer->heightPercent = 2.f / 5.f;
 
-    cMenuButtonWidget* menuBtn1 = new cMenuButtonWidget(this, "Pokedex", "pokedex.png");
-    menuBtn1->anchor = TOP_MIDDLE;
-    menuBtn1->heightPercent = 0.5f;
-    topBtnContainer->AddChild(menuBtn1);
+    pokedexButton = new cMenuButtonWidget(this, "Pokedex", "pokedex.png");
+    pokedexButton->anchor = TOP_MIDDLE;
+    pokedexButton->heightPercent = 0.5f;
+    topBtnContainer->AddChild(pokedexButton);
 
-    cMenuButtonWidget* menuBtn2 = new cMenuButtonWidget(this, "Pokemon", "party.png");
-    menuBtn2->anchor = BOTTOM_MIDDLE;
-    menuBtn2->heightPercent = 0.5f;
-    topBtnContainer->AddChild(menuBtn2);
+    pokemonButton = new cMenuButtonWidget(this, "Pokemon", "party.png");
+    pokemonButton->anchor = BOTTOM_MIDDLE;
+    pokemonButton->heightPercent = 0.5f;
+    topBtnContainer->AddChild(pokemonButton);
 
-    cMenuButtonWidget* menuBtn3 = new cMenuButtonWidget(this, "Bag", "bag.png");
-    menuBtn3->anchor = MIDDLE_MIDDLE;
-    menuBtn3->heightPercent = 1.f / 5.f;
-    menuBtnContainer->AddChild(menuBtn3);
+    bagButton = new cMenuButtonWidget(this, "Bag", "bag.png");
+    bagButton->anchor = MIDDLE_MIDDLE;
+    bagButton->heightPercent = 1.f / 5.f;
+    menuBtnContainer->AddChild(bagButton);
 
     cUIWidget* botBtnContainer = new cUIWidget();
     botBtnContainer->anchor = BOTTOM_MIDDLE;
     botBtnContainer->aspectRatio = 92.f / 126.f;
     botBtnContainer->heightPercent = 2.f / 5.f;
 
-    cMenuButtonWidget* menuBtn4 = new cMenuButtonWidget(this, "Options", "options.png");
-    menuBtn4->anchor = TOP_MIDDLE;
-    menuBtn4->heightPercent = 0.5f;
-    botBtnContainer->AddChild(menuBtn4);
+    optionsButton = new cMenuButtonWidget(this, "Options", "options.png");
+    optionsButton->anchor = TOP_MIDDLE;
+    optionsButton->heightPercent = 0.5f;
+    botBtnContainer->AddChild(optionsButton);
 
-    cMenuButtonWidget* menuBtn5 = new cMenuButtonWidget(this, "Save", "save.png");
-    menuBtn5->anchor = BOTTOM_MIDDLE;
-    menuBtn5->heightPercent = 0.5f;
-    botBtnContainer->AddChild(menuBtn5);
+    saveButton = new cMenuButtonWidget(this, "Save", "save.png");
+    saveButton->anchor = BOTTOM_MIDDLE;
+    saveButton->heightPercent = 0.5f;
+    botBtnContainer->AddChild(saveButton);
 
     menuBtnContainer->AddChild(topBtnContainer);
     menuBtnContainer->AddChild(botBtnContainer);
 
-    menuBtn1->SetMoveFocus(menuBtn2, DOWN, true);
-    menuBtn2->SetMoveFocus(menuBtn3, DOWN, true);
-    menuBtn3->SetMoveFocus(menuBtn4, DOWN, true);
-    menuBtn4->SetMoveFocus(menuBtn5, DOWN, true);
+    pokedexButton->SetMoveFocus(pokemonButton, DOWN, true);
+    pokemonButton->SetMoveFocus(bagButton, DOWN, true);
+    bagButton->SetMoveFocus(optionsButton, DOWN, true);
+    optionsButton->SetMoveFocus(saveButton, DOWN, true);
 
     anchoredWidgets.push_back(menuBtnContainer);
-    defaultFocus = menuBtn1;
+    defaultFocus = pokedexButton;
 }
 
 void cOverworldCanvas::ConfirmAction()
 {
-    Engine::currGameMode = eGameMode::MENU;
-    Manager::ui.AddCanvas(new cPartyCanvas());
+    if (currFocus == pokemonButton)
+    {
+        Engine::currGameMode = eGameMode::MENU;
+        Manager::ui.AddCanvas(new cPartyCanvas());
+    }
 }
 
 void cOverworldCanvas::CancelAction()
@@ -296,19 +299,20 @@ void cEnemyBattleInfo::UpdateEnemyInfo()
 {
 }
 
-const float MENU_BUTTON_RATIO = 46.f / 126.f;
+const float MENU_BUTTON_HEIGHT = 46.f;
+const float MENU_BUTTON_WIDTH = 126.f;
 
 cBattleCanvas::cBattleCanvas()
 {
     cUIWidget* menuBtnContainer = new cUIWidget();
     menuBtnContainer->anchor = BOTTOM_RIGHT;
-    menuBtnContainer->aspectRatio = MENU_BUTTON_RATIO;
+    menuBtnContainer->aspectRatio = MENU_BUTTON_HEIGHT / MENU_BUTTON_WIDTH;
     menuBtnContainer->heightPercent = 1.f / 4.f; // change this for size
 
     fightButton = new cUIImage();
     fightButton->anchor = TOP_LEFT;
     fightButton->heightPercent = 0.5f;
-    fightButton->aspectRatio = MENU_BUTTON_RATIO;
+    fightButton->aspectRatio = MENU_BUTTON_HEIGHT / MENU_BUTTON_WIDTH;
     fightButton->textureId = LoadUITexture("button.png");
     fightButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(fightButton);
@@ -323,7 +327,7 @@ cBattleCanvas::cBattleCanvas()
     pokemonButton = new cUIImage();
     pokemonButton->anchor = TOP_RIGHT;
     pokemonButton->heightPercent = 0.5f;
-    pokemonButton->aspectRatio = MENU_BUTTON_RATIO;
+    pokemonButton->aspectRatio = MENU_BUTTON_HEIGHT / MENU_BUTTON_WIDTH;
     pokemonButton->textureId = LoadUITexture("button.png");
     pokemonButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(pokemonButton);
@@ -338,7 +342,7 @@ cBattleCanvas::cBattleCanvas()
     bagButton = new cUIImage();
     bagButton->anchor = BOTTOM_LEFT;
     bagButton->heightPercent = 0.5f;
-    bagButton->aspectRatio = MENU_BUTTON_RATIO;
+    bagButton->aspectRatio = MENU_BUTTON_HEIGHT / MENU_BUTTON_WIDTH;
     bagButton->textureId = LoadUITexture("button.png");
     bagButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(bagButton);
@@ -353,7 +357,7 @@ cBattleCanvas::cBattleCanvas()
     runButton = new cUIImage();
     runButton->anchor = BOTTOM_RIGHT;
     runButton->heightPercent = 0.5f;
-    runButton->aspectRatio = MENU_BUTTON_RATIO;
+    runButton->aspectRatio = MENU_BUTTON_HEIGHT / MENU_BUTTON_WIDTH;
     runButton->textureId = LoadUITexture("button.png");
     runButton->hoveredTextureId = LoadUITexture("button2.png");
     menuBtnContainer->AddChild(runButton);
@@ -423,8 +427,8 @@ cPartyMemberButton::cPartyMemberButton(cUICanvas* canvas, int memberNum)
 
     textureId = canvas->LoadUITexture("button.png");
     hoveredTextureId = canvas->LoadUITexture("button2.png");
-    aspectRatio = MENU_BUTTON_RATIO;
-    heightPercent = 1.f / 3.f;
+    aspectRatio = MENU_BUTTON_HEIGHT / MENU_BUTTON_WIDTH;
+    heightPercent = 1.f / 3.5f;
 
     cUIText* memberText = new cUIText();
     memberText->fontName = "Truth And Ideals-Normal.ttf";
@@ -463,7 +467,7 @@ cPartyCanvas::cPartyCanvas()
     background->screenSpaceRatio = glm::vec2(30.f);
 
     cUIWidget* membersContainer = new cUIWidget();
-    membersContainer->aspectRatio = (46.f * 3.f) / (126.f * 2.f);
+    membersContainer->aspectRatio = (MENU_BUTTON_HEIGHT * 3.5f) / (MENU_BUTTON_WIDTH * 2.f);
     membersContainer->heightPercent = 0.9f;
 
     member1 = new cPartyMemberButton(this, 0);
@@ -473,7 +477,8 @@ cPartyCanvas::cPartyCanvas()
     if (Player::party[1].nationalDexNumber != 0)
     {
         member2 = new cPartyMemberButton(this, 1);
-        member2->anchor = TOP_RIGHT;
+        member2->anchor = BOTTOM_RIGHT;
+        member2->verticalTranslate = 2.f / 3.5f;
         member2->SetMoveFocus(member1, LEFT, true);
         membersContainer->AddChild(member2);
     }
@@ -481,7 +486,8 @@ cPartyCanvas::cPartyCanvas()
     if (Player::party[2].nationalDexNumber != 0)
     {
         member3 = new cPartyMemberButton(this, 2);
-        member3->anchor = MIDDLE_LEFT;
+        member3->anchor = TOP_LEFT;
+        member3->verticalTranslate = -1.f / 3.5f;
         member3->SetMoveFocus(member1, UP, true);
         membersContainer->AddChild(member3);
     }
@@ -489,7 +495,8 @@ cPartyCanvas::cPartyCanvas()
     if (Player::party[3].nationalDexNumber != 0)
     {
         member4 = new cPartyMemberButton(this, 3);
-        member4->anchor = MIDDLE_RIGHT;
+        member4->anchor = BOTTOM_RIGHT;
+        member4->verticalTranslate = 1.f / 3.5f;
         member4->SetMoveFocus(member3, LEFT, true);
         member4->SetMoveFocus(member2, UP, true);
         membersContainer->AddChild(member4);
@@ -498,7 +505,8 @@ cPartyCanvas::cPartyCanvas()
     if (Player::party[4].nationalDexNumber != 0)
     {
         member5 = new cPartyMemberButton(this, 4);
-        member5->anchor = BOTTOM_LEFT;
+        member5->anchor = TOP_LEFT;
+        member5->verticalTranslate = -2.f / 3.5f;
         member5->SetMoveFocus(member3, UP, true);
         membersContainer->AddChild(member5);
     }

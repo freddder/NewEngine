@@ -14,6 +14,12 @@ public:
 
 class cOverworldCanvas : public cUICanvas
 {
+	cMenuButtonWidget* pokedexButton;
+	cMenuButtonWidget* pokemonButton;
+	cMenuButtonWidget* bagButton;
+	cMenuButtonWidget* optionsButton;
+	cMenuButtonWidget* saveButton;
+
 public:
 	cOverworldCanvas();
 	virtual ~cOverworldCanvas() {};
