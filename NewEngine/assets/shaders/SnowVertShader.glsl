@@ -31,9 +31,7 @@ float noise (in vec2 st);
 void main()
 {
 	vec3 finalModelPosition = modelPosition;
-	finalModelPosition.x += oOffset.x;
-	finalModelPosition.y += oOffset.y;
-	finalModelPosition.z += oOffset.z;
+	finalModelPosition += oOffset.xyz;
 
 	vec2 uv = finalModelPosition.zy / vec2(256);
 	uv.x += oOffset.w / 4.f; // w being the timer

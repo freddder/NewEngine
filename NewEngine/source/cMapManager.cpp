@@ -326,9 +326,10 @@ void cMapManager::LoadMap(const std::string mapDescriptionFile, const int entran
 
 	Manager::render.LoadSpriteSheet("Nate.png", 3, 8, false);
 
-	Manager::render.LoadTexture("SnowFlake1.png");
-	Manager::render.LoadTexture("SnowFlake2.png");
+	//Manager::render.LoadTexture("SnowFlake1.png");
+	//Manager::render.LoadTexture("SnowFlake2.png");
 	Manager::render.LoadTexture("SnowFlake3.png");
+	Manager::render.LoadTexture("HitParticle.png");
 
 	// Load json info file with rapidjson
 	FILE* fp = 0;

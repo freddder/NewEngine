@@ -28,9 +28,7 @@ mat4 rotationZ( float angle );
 void main()
 {
 	vec3 finalModelPosition = modelPosition;
-	finalModelPosition.x += oOffset.x;
-	finalModelPosition.y += oOffset.y;
-	finalModelPosition.z += oOffset.z;
+	finalModelPosition += oOffset.xyz;
 
 	vec3 playerDir = finalModelPosition - cameraPosition;
 
