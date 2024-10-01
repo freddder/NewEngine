@@ -5,6 +5,7 @@
 #include "cSceneManager.h"
 #include "cCameraManager.h"
 #include "cAnimationManager.h"
+#include "cMapManager.h"
 
 #include "cAnimation.h"
 
@@ -297,6 +298,11 @@ cEnemyBattleInfo::cEnemyBattleInfo(cUICanvas* canvas)
 
 void cEnemyBattleInfo::UpdateEnemyInfo()
 {
+    Manager::scene.enemyBattleData.currHealth /= 2;
+    float healthPercent = (float)Manager::scene.enemyBattleData.currHealth / (float)Manager::scene.enemyBattleData.maxHealth;
+    enemyHb->UpdateHealthBar(healthPercent);
+
+    Manager::map.opponentSpriteModel->SpawnHitParticles();
 }
 
 const float MENU_BUTTON_HEIGHT = 46.f;
@@ -402,6 +408,7 @@ void cBattleCanvas::ConfirmAction()
     if (currFocus == fightButton)
     {
         pbi->UpdatePlayerInfo();
+        ebi->UpdateEnemyInfo();
     }
     else if (currFocus == pokemonButton)
     {

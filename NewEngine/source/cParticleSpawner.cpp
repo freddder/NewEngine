@@ -32,6 +32,15 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, unsi
 	init_seed = (rand() % 100) + 1;
 	lcgPosZ = cLinearCongruentialGenerator(init_seed);
 
+	init_seed = (rand() % 100) + 1;
+	lcgSpdX = cLinearCongruentialGenerator(init_seed);
+
+	init_seed = (rand() % 100) + 1;
+	lcgSpdY = cLinearCongruentialGenerator(init_seed);
+
+	init_seed = (rand() % 100) + 1;
+	lcgSpdZ = cLinearCongruentialGenerator(init_seed);
+
 	// Create buffer for particle data (position + timer)
 	glGenBuffers(1, &particleBufferId);
 	glBindBuffer(GL_ARRAY_BUFFER, particleBufferId);
@@ -54,9 +63,17 @@ bool cParticleSpawner::SpawnParticle()
 	double randomPosY;
 	double randomPosZ;
 
+	double randomSpdX;
+	double randomSpdY;
+	double randomSpdZ;
+
 	lcgPosX.get_uniform_draw(randomPosX);
 	lcgPosY.get_uniform_draw(randomPosY);
 	lcgPosZ.get_uniform_draw(randomPosZ);
+
+	lcgSpdX.get_uniform_draw(randomSpdX);
+	lcgSpdY.get_uniform_draw(randomSpdY);
+	lcgSpdZ.get_uniform_draw(randomSpdZ);
 
 	//NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
 	glm::vec3 newParticlePosOffset = glm::vec3(
@@ -65,12 +82,17 @@ bool cParticleSpawner::SpawnParticle()
 		(((float)randomPosZ * (maxPositionOffset.z - minPositionOffset.z)) / (1 - 0)) + minPositionOffset.z
 	);
 
-	// TODO: add speed offset as well
+	//NewValue = (((OldValue - OldMin) * (NewMax - NewMin)) / (OldMax - OldMin)) + NewMin
+	glm::vec3 newParticleSpdOffset = glm::vec3(
+		(((float)randomSpdX * (maxSpeedOffset.x - minSpeedOffset.x)) / (1 - 0)) + minSpeedOffset.x,
+		(((float)randomSpdY * (maxSpeedOffset.y - minSpeedOffset.y)) / (1 - 0)) + minSpeedOffset.y,
+		(((float)randomSpdZ * (maxSpeedOffset.z - minSpeedOffset.z)) / (1 - 0)) + minSpeedOffset.z
+	);
 
 	particles.emplace_back();
 	sParticle& newParticle = particles.back();
 	newParticle.position = newParticlePosOffset + spawnPosition;
-	newParticle.speed = spawnSpeed;
+	newParticle.speed = newParticleSpdOffset + spawnSpeed;
 	newParticle.timer = 0.f;
 
 	if (isPositionPlayerRelative)

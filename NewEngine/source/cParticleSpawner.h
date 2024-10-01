@@ -29,9 +29,9 @@ public:
 
 	// Spawn speed
 private:
-	//cLinearCongruentialGenerator lcgSpdX;
-	//cLinearCongruentialGenerator lcgSpdY;
-	//cLinearCongruentialGenerator lcgSpdZ;
+	cLinearCongruentialGenerator lcgSpdX;
+	cLinearCongruentialGenerator lcgSpdY;
+	cLinearCongruentialGenerator lcgSpdZ;
 public:
 	glm::vec3 spawnSpeed = glm::vec3(0.f);
 	glm::vec3 minSpeedOffset = glm::vec3(0.f);

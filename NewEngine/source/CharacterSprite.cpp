@@ -5,6 +5,7 @@
 #include "cAnimationManager.h"
 #include "cMapManager.h"
 #include "cInputManager.h"
+#include "cSceneManager.h"
 
 cCharacterSprite::cCharacterSprite(std::string textureName, glm::vec3 pos)
 {
@@ -236,6 +237,21 @@ cBattleSprite::cBattleSprite(glm::vec3 pos)
 	model->meshName = "SpriteHolder.obj";
 	model->position = pos;
 	model->orientation.y = glm::radians(15.f);
+
+	cRenderModel prtcl;
+	prtcl.meshName = "SpriteHolder.obj";
+	prtcl.shaderName = "particle";
+	prtcl.textureName = "SnowFlake3.png";
+	prtcl.scale = glm::vec3(0.3f);
+
+	glm::vec3 spawnerPos = pos;
+	spawnerPos.y += 0.5f;
+	hitParticleSpawner = Manager::scene.CreateParticleSpawner(spawnerPos, prtcl, 10);
+	hitParticleSpawner->particleLifeTime = 1.f;
+	hitParticleSpawner->spawnRate = 0.3f;
+	hitParticleSpawner->spawnSpeed = glm::vec3(0.f, 0.5f, 0.f);
+	hitParticleSpawner->minSpeedOffset = glm::vec3(0.f, 0.f, -1.f);
+	hitParticleSpawner->maxSpeedOffset = glm::vec3(0.f, 0.5f, 1.f);
 }
 
 cBattleSprite::~cBattleSprite()
@@ -265,4 +281,9 @@ void cBattleSprite::ClearSpriteData()
 
 	spriteAnimation->Reset();
 	Manager::animation.RemoveAnimation(spriteAnimation);
+}
+
+void cBattleSprite::SpawnHitParticles()
+{
+	hitParticleSpawner->SpawnParticles(10);
 }

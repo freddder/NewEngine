@@ -74,4 +74,9 @@ public:
 protected:
 	std::shared_ptr<cPeriodicSpriteAnimation> spriteAnimation;
 	std::shared_ptr<cSpriteModel> model;
+
+protected:
+	std::shared_ptr<class cParticleSpawner> hitParticleSpawner;
+public:
+	void SpawnHitParticles();
 };
