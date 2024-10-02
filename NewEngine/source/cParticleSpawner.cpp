@@ -16,7 +16,6 @@ cParticleSpawner::cParticleSpawner(glm::vec3 position, cRenderModel _model, unsi
 
 	particles.reserve(_maxParticles);
 	maxParticles = _maxParticles; // if -1, no limit
-	spawnRate = 0.1f; // particles spawned interval
 	timer = 0.f;
 
 	model = _model;
@@ -92,7 +91,7 @@ bool cParticleSpawner::SpawnParticle()
 	particles.emplace_back();
 	sParticle& newParticle = particles.back();
 	newParticle.position = newParticlePosOffset + spawnPosition;
-	newParticle.speed = newParticleSpdOffset + spawnSpeed;
+	newParticle.velocity = newParticleSpdOffset + spawnSpeed;
 	newParticle.timer = 0.f;
 
 	if (isPositionPlayerRelative)
@@ -138,11 +137,12 @@ void cParticleSpawner::Update(float deltaTime)
 		}
 
 		// Update position
-		particles[i].position += particles[i].speed * deltaTime;
+		particles[i].position += particles[i].velocity * deltaTime;
 
-		// TODO: update speed for gravity stuff
+		// Upadte velocity
+		particles[i].velocity += gravity * deltaTime;
 
-		// update buffer
+		// Update buffer
 		glBufferSubData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * i, sizeof(glm::vec4), glm::value_ptr(glm::vec4(particles[i].position, particles[i].timer)));
 	}
 

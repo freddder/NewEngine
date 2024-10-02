@@ -15,8 +15,7 @@ layout (std140) uniform Matrices
 
 uniform vec3 cameraPosition;
 uniform vec3 modelPosition;
-//uniform mat4 modelScale;
-uniform vec3 modelScale3;
+uniform vec3 modelScale;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -33,8 +32,8 @@ void main()
 
 	vec3 finalVertPos = 
 		finalModelPosition
-		+ cameraRight * vPosition.x * modelScale3.x
-		+ cameraUp * vPosition.y * modelScale3.y;
+		+ cameraRight * vPosition.x * modelScale.x
+		+ cameraUp * vPosition.y * modelScale.y;
 
 	mat4 VP = projection * view;
 

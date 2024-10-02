@@ -997,8 +997,7 @@ void cRenderManager::DrawParticles(cParticleSpawner* spawner)
     
     use(spawner->model.shaderName);
     setVec3("cameraPosition", Manager::camera.position);
-    setMat4("modelScale", glm::scale(glm::mat4(1.0f), spawner->model.scale));
-    setVec3("modelScale3", spawner->model.scale);
+    setVec3("modelScale", spawner->model.scale);
     setBool("useWholeColor", spawner->model.useWholeColor);
     setVec4("wholeColor", spawner->model.wholeColor);
     

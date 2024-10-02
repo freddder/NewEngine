@@ -6,7 +6,7 @@
 struct sParticle
 {
 	glm::vec3 position;
-	glm::vec3 speed;
+	glm::vec3 velocity;
 	float timer;
 };
 

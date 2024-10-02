@@ -104,7 +104,7 @@ void cOverworldCanvas::CancelAction()
 	Manager::input.ChangeInputState(OVERWORLD_MOVEMENT);
 }
 
-cHealthBar::cHealthBar(cUICanvas* canvas)
+cHealthBar::cHealthBar(cUICanvas* canvas, float initialRatio)
 {
     aspectRatio = 0.1f;
     textureId = canvas->LoadUITexture("HealthBarBackground.png");
@@ -115,7 +115,7 @@ cHealthBar::cHealthBar(cUICanvas* canvas)
     fillable->anchor = MIDDLE_MIDDLE;
 
     hbContent = new cUIImage();
-    hbContent->aspectRatio = 0.0625f; //* 2.f; // this being half (just inverse the health percentage lol)
+    hbContent->aspectRatio = 0.0625f * (1.f / initialRatio); // Inverse the health percentage
     hbContent->anchor = MIDDLE_LEFT;
     hbContent->textureId = canvas->LoadUITexture("HealthBar.png");
     hbContent->colorFilter = glm::vec3(0.f, 1.f, 0.f);
@@ -150,7 +150,8 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
     bg->anchor = BOTTOM_MIDDLE;
     bg->textureId = canvas->LoadUITexture("BattlePlayerBackground.png");
 
-    playerHb = new cHealthBar(canvas);
+    float ratio = (float)Player::party[0].currHealth / (float)Player::party[0].maxHealth;
+    playerHb = new cHealthBar(canvas, ratio);
     playerHb->heightPercent = 5.f / 28.f;
     playerHb->anchor = TOP_RIGHT;
     playerHb->verticalTranslate = -11.f / 28.f;
@@ -221,7 +222,7 @@ cPlayerBattleInfo::cPlayerBattleInfo(cUICanvas* canvas)
 
 void cPlayerBattleInfo::UpdatePlayerInfo()
 {
-    Player::party[0].currHealth /= 2;
+    Player::party[0].currHealth /= 1.3;
     float healthPercent = (float)Player::party[0].currHealth / (float)Player::party[0].maxHealth;
     playerHb->UpdateHealthBar(healthPercent);
 }
@@ -236,7 +237,8 @@ cEnemyBattleInfo::cEnemyBattleInfo(cUICanvas* canvas)
     bg->anchor = BOTTOM_MIDDLE;
     bg->textureId = canvas->LoadUITexture("BattlePlayerBackground.png");
 
-    enemyHb = new cHealthBar(canvas);
+    float ratio = (float)Manager::scene.enemyBattleData.currHealth / (float)Manager::scene.enemyBattleData.maxHealth;
+    enemyHb = new cHealthBar(canvas, ratio);
     enemyHb->heightPercent = 5.f / 20.f;
     enemyHb->anchor = TOP_RIGHT;
     enemyHb->verticalTranslate = -11.f / 20.f;

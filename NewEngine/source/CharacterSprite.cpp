@@ -246,12 +246,12 @@ cBattleSprite::cBattleSprite(glm::vec3 pos)
 
 	glm::vec3 spawnerPos = pos;
 	spawnerPos.y += 0.5f;
-	hitParticleSpawner = Manager::scene.CreateParticleSpawner(spawnerPos, prtcl, 10);
-	hitParticleSpawner->particleLifeTime = 1.f;
-	hitParticleSpawner->spawnRate = .3f;
-	hitParticleSpawner->spawnSpeed = glm::vec3(0.f, 0.5f, 0.f);
-	hitParticleSpawner->minSpeedOffset = glm::vec3(0.f, 0.f, -1.f);
-	hitParticleSpawner->maxSpeedOffset = glm::vec3(0.f, 0.5f, 1.f);
+	hitParticleSpawner = Manager::scene.CreateParticleSpawner(spawnerPos, prtcl, 30);
+	hitParticleSpawner->particleLifeTime = 0.5f;
+	hitParticleSpawner->spawnSpeed = glm::vec3(0.f, 5.f, 0.f);
+	hitParticleSpawner->minSpeedOffset = glm::vec3(0.f, -2.f, -2.f);
+	hitParticleSpawner->maxSpeedOffset = glm::vec3(0.f, 2.f, 2.f);
+	hitParticleSpawner->gravity = glm::vec3(0.f, -20.f, 0.f);
 }
 
 cBattleSprite::~cBattleSprite()

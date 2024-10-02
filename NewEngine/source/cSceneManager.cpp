@@ -77,10 +77,10 @@ void cSceneManager::SetWeather(eEnvironmentWeather newWeather)
 			fogColor = glm::vec3(0.89f, 0.89f, 0.89f);
 
 			cRenderModel prtcl;
-			prtcl.meshName = "SpriteHolder.obj";
+			prtcl.meshName = "ParticleHolder.obj";
 			prtcl.shaderName = "snow";
 			prtcl.textureName = "SnowFlake3.png";
-			prtcl.scale = glm::vec3(0.3f);
+			prtcl.scale = glm::vec3(0.6f);
 
 			weatherParticleSpawner = new cParticleSpawner(glm::vec3(0.f, 13.f, 0.f), prtcl, 500);
 			weatherParticleSpawner->minPositionOffset = glm::vec3(-20.f, 0.f, -20.f);

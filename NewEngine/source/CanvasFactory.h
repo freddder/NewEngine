@@ -32,7 +32,7 @@ class cHealthBar : public cUIImage
 {
 	cUIImage* hbContent;
 public:
-	cHealthBar(cUICanvas* canvas);
+	cHealthBar(cUICanvas* canvas, float initialRatio);
 	virtual ~cHealthBar() {};
 
 	void UpdateHealthBar(float healthPercent);

@@ -15,7 +15,7 @@ layout (std140) uniform Matrices
 
 uniform vec3 cameraPosition;
 uniform vec3 modelPosition;
-uniform mat4 modelScale;
+uniform vec3 modelScale;
 
 out vec4 fUVx2;
 out vec3 fNormal;
@@ -47,25 +47,24 @@ void main()
 
 	finalModelPosition.z += f * 7.f;
 
-	vec3 cameraDir = finalModelPosition - cameraPosition;
+	vec3 cameraRight = vec3(view[0][0], view[1][0], view[2][0]);
+	vec3 cameraUp = vec3(view[0][1], view[1][1], view[2][1]);
 
-	float distance2D = sqrt(cameraDir.x * cameraDir.x + cameraDir.y * cameraDir.y);
-	float theta = atan(cameraDir.y, cameraDir.x);
-	float phi = atan(-cameraDir.z, distance2D);
+	vec3 finalVertPos = 
+		finalModelPosition
+		+ cameraRight * vPosition.x * modelScale.x
+		+ cameraUp * vPosition.y * modelScale.y;
 
-	mat4 model = mat4(1.f);
-	model[3] = vec4(finalModelPosition, 1.f);
-	model = model * rotationZ(-theta) * rotationY(-phi);
-	model = model * modelScale;
+	mat4 VP = projection * view;
 
-	mat4 MVP = projection * view * model;
+	gl_Position = VP * vec4(finalVertPos, 1.f);
 
-	gl_Position = MVP * vPosition;
-
-	fVertWorldPosition = model * vPosition;
+	fVertWorldPosition = vec4(finalVertPos, 1);
 	fUVx2 = vUVx2;
 
-	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	// TODO: figure out how to get the correct normal without a model matrix
+	//fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	fNormal = vec3(1);
 	fVertPosLightSpace = lightSpace * fVertWorldPosition;
 }
 
