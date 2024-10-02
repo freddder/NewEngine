@@ -15,55 +15,37 @@ layout (std140) uniform Matrices
 
 uniform vec3 cameraPosition;
 uniform vec3 modelPosition;
-uniform mat4 modelScale;
+//uniform mat4 modelScale;
+uniform vec3 modelScale3;
 
 out vec4 fUVx2;
 out vec3 fNormal;
 out vec4 fVertPosLightSpace;
 out vec4 fVertWorldPosition;
 
-mat4 rotationY( float angle );
-mat4 rotationZ( float angle );
-
 void main()
 {
 	vec3 finalModelPosition = modelPosition;
 	finalModelPosition += oOffset.xyz;
 
-	vec3 playerDir = finalModelPosition - cameraPosition;
+	vec3 cameraRight = vec3(view[0][0], view[1][0], view[2][0]);
+	vec3 cameraUp = vec3(view[0][1], view[1][1], view[2][1]);
 
-	float distance2D = sqrt(playerDir.x * playerDir.x + playerDir.y * playerDir.y);
-	float theta = atan(playerDir.y, playerDir.x);
-	float phi = atan(-playerDir.z, distance2D);
+	vec3 finalVertPos = 
+		finalModelPosition
+		+ cameraRight * vPosition.x * modelScale3.x
+		+ cameraUp * vPosition.y * modelScale3.y;
 
-	mat4 model = mat4(1.f);
-	model[3] = vec4(finalModelPosition, 1.f);
-	model = model * rotationZ(-theta) * rotationY(-phi);
-	model = model * modelScale;
+	mat4 VP = projection * view;
 
-	mat4 MVP = projection * view * model;
+	gl_Position = VP * vec4(finalVertPos, 1.f);
 
-	gl_Position = MVP * vPosition;
+	fVertWorldPosition = vec4(finalVertPos, 1);
 
-	fVertWorldPosition = model * vPosition;
 	fUVx2 = vUVx2;
 
-	fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	// TODO: figure out how to get the correct normal without a model matrix
+	//fNormal = mat3(transpose(inverse(model))) * vNormal.xyz;
+	fNormal = vec3(1);
 	fVertPosLightSpace = lightSpace * fVertWorldPosition;
-}
-
-mat4 rotationY( float angle ) 
-{
-	return mat4(	cos(angle),		0,		sin(angle),	0,
-			 				0,		1.0,			 0,	0,
-					-sin(angle),	0,		cos(angle),	0,
-							0, 		0,				0,	1);
-}
-
-mat4 rotationZ( float angle ) 
-{
-	return mat4(	cos(angle),		-sin(angle),	0,	0,
-			 		sin(angle),		cos(angle),		0,	0,
-							0,				0,		1,	0,
-							0,				0,		0,	1);
 }

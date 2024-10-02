@@ -313,7 +313,7 @@ void cMapManager::LoadMap(const std::string mapDescriptionFile, const int entran
 	// TEMP: will find a more modular way to load necessary models
 	Manager::render.LoadModel("SpriteHolder.obj", "sprite");
 	Manager::render.LoadModel("SpriteHolder.obj", "snow");
-	Manager::render.LoadModel("SpriteHolder.obj", "particle");
+	Manager::render.LoadModel("ParticleHolder.obj", "particle");
 	Manager::render.LoadModel("Water_c2.obj", "wave");
 	Manager::render.LoadModel("Water_b2.obj", "wave");
 	Manager::render.LoadModel("Water_bl2.obj", "wave");

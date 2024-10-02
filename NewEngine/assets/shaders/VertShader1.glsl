@@ -27,9 +27,7 @@ out vec4 fVertWorldPosition;
 void main()
 {
 	vec4 finalModelPosition = vec4(modelPosition, 1.0);
-	finalModelPosition.x += oOffset.x;
-	finalModelPosition.y += oOffset.y;
-	finalModelPosition.z += oOffset.z;
+	finalModelPosition.xyz += oOffset.xyz;
 
 	mat4 translateMatrix;
 	translateMatrix[0] = vec4(1,0,0,0);

@@ -239,7 +239,7 @@ cBattleSprite::cBattleSprite(glm::vec3 pos)
 	model->orientation.y = glm::radians(15.f);
 
 	cRenderModel prtcl;
-	prtcl.meshName = "SpriteHolder.obj";
+	prtcl.meshName = "ParticleHolder.obj";
 	prtcl.shaderName = "particle";
 	prtcl.textureName = "HitParticle.png";
 	prtcl.scale = glm::vec3(0.3f);
@@ -248,7 +248,7 @@ cBattleSprite::cBattleSprite(glm::vec3 pos)
 	spawnerPos.y += 0.5f;
 	hitParticleSpawner = Manager::scene.CreateParticleSpawner(spawnerPos, prtcl, 10);
 	hitParticleSpawner->particleLifeTime = 1.f;
-	hitParticleSpawner->spawnRate = -1.f;
+	hitParticleSpawner->spawnRate = .3f;
 	hitParticleSpawner->spawnSpeed = glm::vec3(0.f, 0.5f, 0.f);
 	hitParticleSpawner->minSpeedOffset = glm::vec3(0.f, 0.f, -1.f);
 	hitParticleSpawner->maxSpeedOffset = glm::vec3(0.f, 0.5f, 1.f);
