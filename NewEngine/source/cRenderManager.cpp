@@ -15,6 +15,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
+#include <tracy/tracy/Tracy.hpp>
+
 #include "Engine.h"
 #include "cSceneManager.h"
 #include "cLightManager.h"
@@ -1166,5 +1168,7 @@ void cRenderManager::DrawFrame()
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTextureID);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    glDepthFunc(GL_LESS); // set depth function back to default      
+    glDepthFunc(GL_LESS); // set depth function back to default
+
+    FrameMark;
 }

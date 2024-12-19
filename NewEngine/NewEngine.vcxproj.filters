@@ -158,6 +158,9 @@
     <ClCompile Include="source\CanvasFactory.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="include\tracy\TracyClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\cRenderModel.h">
