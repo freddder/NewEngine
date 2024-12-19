@@ -1,4 +1,5 @@
 #pragma once
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <set>
 #include <map>
@@ -127,6 +128,17 @@ private:
     void DrawShadowPass(glm::mat4& outLightSpaceMatrix);
 public:
     void DrawFrame();
+
+    // Tracy
+private:
+    unsigned int m_fiTexture[4];
+    unsigned int m_fiFramebuffer[4];
+    unsigned int m_fiPbo[4];
+    GLsync m_fiFence[4];
+    int m_fiIdx = 0;
+    std::vector<int> m_fiQueue;
+public:
+    void SendTracyScreenshot();
 
     friend class cUICanvas;
 };

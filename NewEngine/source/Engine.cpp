@@ -509,7 +509,6 @@ namespace Engine
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 
-            // input
             Manager::input.Process(deltaTime);
 
             Manager::animation.Process(deltaTime);
@@ -519,6 +518,8 @@ namespace Engine
             Manager::render.DrawFrame();
 
             if (renderDebugInfo) RenderImgui();
+
+            Manager::render.SendTracyScreenshot();
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             glfwSwapBuffers(window);

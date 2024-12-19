@@ -1,6 +1,5 @@
 #include "cRenderManager.h"
 
-#include <glad/glad.h>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -181,6 +180,22 @@ void cRenderManager::Startup()
     CreateShaderProgram("particle", "3DParticleVertShader.glsl", "FragShader1.glsl");
     CreateShaderProgram("ui", "UIVertShader.glsl", "UIFragShader.glsl");
     CreateShaderProgram("text", "TextVertShader.glsl", "TextFragShader.glsl");
+
+    // Tracy screenshot setup
+    glGenTextures(4, m_fiTexture);
+    glGenFramebuffers(4, m_fiFramebuffer);
+    glGenBuffers(4, m_fiPbo);
+    for (int i = 0; i < 4; i++)
+    {
+        glBindTexture(GL_TEXTURE_2D, m_fiTexture[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 180, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_fiFramebuffer[i]);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_fiTexture[i], 0);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, m_fiPbo[i]);
+        glBufferData(GL_PIXEL_PACK_BUFFER, 320 * 180 * 4, nullptr, GL_STREAM_READ);
+    }
 }
 
 void cRenderManager::Shutdown()
@@ -1086,8 +1101,37 @@ void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void cRenderManager::SendTracyScreenshot()
+{
+    while (!m_fiQueue.empty())
+    {
+        const auto fiIdx = m_fiQueue.front();
+        if (glClientWaitSync(m_fiFence[fiIdx], 0, 0) == GL_TIMEOUT_EXPIRED) break;
+        glDeleteSync(m_fiFence[fiIdx]);
+        glBindBuffer(GL_PIXEL_PACK_BUFFER, m_fiPbo[fiIdx]);
+        auto ptr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 320 * 180 * 4, GL_MAP_READ_BIT);
+        FrameImage(ptr, 320, 180, m_fiQueue.size(), true);
+        glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+        m_fiQueue.erase(m_fiQueue.begin());
+    }
+
+    assert(m_fiQueue.empty() || m_fiQueue.front() != m_fiIdx); // check for buffer overrun
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fiFramebuffer[m_fiIdx]);
+    glBlitFramebuffer(0, 0, Manager::camera.SCR_WIDTH, Manager::camera.SCR_HEIGHT, 0, 0, 320, 180, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fiFramebuffer[m_fiIdx]);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, m_fiPbo[m_fiIdx]);
+    glReadPixels(0, 0, 320, 180, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+    m_fiFence[m_fiIdx] = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    m_fiQueue.emplace_back(m_fiIdx);
+    m_fiIdx = (m_fiIdx + 1) % 4;
+}
+
 void cRenderManager::DrawFrame()
 {
+    ZoneScoped;
+
     //Shadow pass
     glm::mat4 lightSpaceMatrix;
     DrawShadowPass(lightSpaceMatrix);

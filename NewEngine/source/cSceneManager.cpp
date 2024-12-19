@@ -11,6 +11,8 @@
 #include "cInputManager.h"
 #include "CanvasFactory.h"
 
+#include <tracy/tracy/Tracy.hpp>
+
 cSceneManager::cSceneManager()
 {
 	currWeather = NONE;
@@ -308,6 +310,8 @@ std::shared_ptr<cParticleSpawner> cSceneManager::CreateParticleSpawner(glm::vec3
 
 void cSceneManager::Process(float deltaTime)
 {
+	ZoneScoped;
+
 	if (weatherParticleSpawner)
 	{
 		weatherParticleSpawner->Update(deltaTime);

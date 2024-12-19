@@ -7,6 +7,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include <tracy/tracy/Tracy.hpp>
+
 #include "Engine.h"
 #include "cRenderManager.h"
 #include "cInputManager.h"
@@ -371,6 +373,8 @@ void cUIManager::ExecuteInputAction(eInputType inputType)
 }
 void cUIManager::DrawUI()
 {
+    ZoneScoped;
+
 	const cUICanvas* canvasToDraw = canvases.top();
 	for (int i = 0; i < canvasToDraw->anchoredWidgets.size(); i++)
 	{

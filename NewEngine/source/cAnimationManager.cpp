@@ -1,6 +1,8 @@
 #include "cAnimationManager.h"
 #include <vector>
 
+#include <tracy/tracy/Tracy.hpp>
+
 cAnimationManager::cAnimationManager()
 {
 }
@@ -11,6 +13,8 @@ cAnimationManager::~cAnimationManager()
 
 void cAnimationManager::Process(float deltaTime)
 {
+	ZoneScoped;
+
 	for (int i = animations.size() - 1; i >= 0; i--)
 	{
 		animations[i]->Process(deltaTime);
