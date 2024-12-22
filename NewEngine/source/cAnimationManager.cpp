@@ -13,7 +13,7 @@ cAnimationManager::~cAnimationManager()
 
 void cAnimationManager::Process(float deltaTime)
 {
-	ZoneScoped;
+	ZoneScopedN("AnimationProcess");
 
 	for (int i = animations.size() - 1; i >= 0; i--)
 	{

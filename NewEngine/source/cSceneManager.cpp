@@ -310,7 +310,7 @@ std::shared_ptr<cParticleSpawner> cSceneManager::CreateParticleSpawner(glm::vec3
 
 void cSceneManager::Process(float deltaTime)
 {
-	ZoneScoped;
+	ZoneScopedN("SceneProcess");
 
 	if (weatherParticleSpawner)
 	{

@@ -86,6 +86,7 @@ private:
     // Models loading
 private:
     unsigned int notInstancedOffsetBufferId;
+    int offsetAttributeLocation;
     bool FindModelByName(std::string fileName, std::string programName, sModelDrawInfo& modelInfo);
 public:
     bool LoadModel(std::string fileName, std::string programName);

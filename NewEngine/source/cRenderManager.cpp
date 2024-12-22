@@ -445,25 +445,22 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
         // Set vertex ins for shader
 
         // Position
-        GLint vPos_location = glGetAttribLocation(shaderID, "vPosition");
-        glEnableVertexAttribArray(vPos_location);
-        glVertexAttribPointer(vPos_location, 4,
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 4,
             GL_FLOAT, GL_FALSE,
             sizeof(sVertexData),
             (void*)offsetof(sVertexData, x));
 
         // Normal
-        GLint vNormal_location = glGetAttribLocation(shaderID, "vNormal");
-        glEnableVertexAttribArray(vNormal_location);
-        glVertexAttribPointer(vNormal_location, 4,
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 4,
             GL_FLOAT, GL_FALSE,
             sizeof(sVertexData),
             (void*)offsetof(sVertexData, nx));
 
         // UVs
-        GLint vUVx2_location = glGetAttribLocation(shaderID, "vUVx2");
-        glEnableVertexAttribArray(vUVx2_location);
-        glVertexAttribPointer(vUVx2_location, 4,
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 4,
             GL_FLOAT, GL_FALSE,
             sizeof(sVertexData),
             (void*)offsetof(sVertexData, u1));
@@ -473,9 +470,9 @@ bool cRenderManager::LoadModel(std::string fileName, std::string programName)
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        glDisableVertexAttribArray(vPos_location);
-        glDisableVertexAttribArray(vNormal_location);
-        glDisableVertexAttribArray(vUVx2_location);
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
 
 #pragma endregion VAO_Creation
 
@@ -938,6 +935,8 @@ void cRenderManager::SetupTexture(const std::string textureToSetup, const unsign
 
 void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
 {
+    ZoneScopedN("DrawObject");
+
     sModelDrawInfo drawInfo;
     if (!FindModelByName(model->meshName, model->shaderName, drawInfo)) return;
 
@@ -958,6 +957,9 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
     glBindTexture(GL_TEXTURE_2D, depthMapID);
     setInt("shadowMap", 1);
 
+    TracyMessageL(model->meshName.c_str());
+    TracyMessageL(model->textureName.c_str());
+
     for (unsigned int i = 0; i < drawInfo.allMeshesData.size(); i++)
     {
         if (model->textureName == "") SetupTexture(drawInfo.allMeshesData[i].textureName);
@@ -971,13 +973,12 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
             glBindBuffer(GL_ARRAY_BUFFER, model->instanceOffsetsBufferId);
 
             // OPTMIZATION: maybe figure out a way to not have to setup all these data every frame
-            GLint offset_location = glGetAttribLocation(programs[currShader].ID, "oOffset");
-            glEnableVertexAttribArray(offset_location);
-            glVertexAttribPointer(offset_location, 4,
+            glEnableVertexAttribArray(3);
+            glVertexAttribPointer(3, 4,
                 GL_FLOAT, GL_FALSE,
                 sizeof(glm::vec4),
                 (void*)0);
-            glVertexAttribDivisor(offset_location, 1);
+            glVertexAttribDivisor(3, 1);
 
             glDrawElementsInstanced(GL_TRIANGLES,
                 drawInfo.allMeshesData[i].numberOfIndices,
@@ -989,14 +990,13 @@ void cRenderManager::DrawObject(std::shared_ptr<cRenderModel> model)
         {
             glBindBuffer(GL_ARRAY_BUFFER, notInstancedOffsetBufferId);
 
-            GLint offset_location = glGetAttribLocation(programs[currShader].ID, "oOffset");
-            glEnableVertexAttribArray(offset_location);
-            glVertexAttribPointer(offset_location, 4,
+            glEnableVertexAttribArray(3);
+            glVertexAttribPointer(3, 4,
                 GL_FLOAT, GL_FALSE,
                 sizeof(glm::vec4),
                 (void*)0);
-            glVertexAttribDivisor(offset_location, 1);
-
+            glVertexAttribDivisor(3, 1);
+            
             glDrawElements(GL_TRIANGLES,
                 drawInfo.allMeshesData[i].numberOfIndices,
                 GL_UNSIGNED_INT,
@@ -1034,10 +1034,9 @@ void cRenderManager::DrawParticles(cParticleSpawner* spawner)
     
         glBindBuffer(GL_ARRAY_BUFFER, spawner->particleBufferId);
     
-        GLint offset_location = glGetAttribLocation(GetCurrentShaderId(), "oOffset");
-        glEnableVertexAttribArray(offset_location);
-        glVertexAttribPointer(offset_location, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
-        glVertexAttribDivisor(offset_location, 1);
+        glEnableVertexAttribArray(3);
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+        glVertexAttribDivisor(3, 1);
     
         glDrawElementsInstanced(GL_TRIANGLES,
             drawInfo.allMeshesData[i].numberOfIndices,
@@ -1051,6 +1050,8 @@ void cRenderManager::DrawParticles(cParticleSpawner* spawner)
 
 void cRenderManager::DrawShadowPass(glm::mat4& outLightSpaceMatrix)
 {
+    ZoneScopedN("ShadowPass");
+
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
     glClear(GL_DEPTH_BUFFER_BIT);
@@ -1130,7 +1131,7 @@ void cRenderManager::SendTracyScreenshot()
 
 void cRenderManager::DrawFrame()
 {
-    ZoneScoped;
+    ZoneScopedN("Draw Frame");
 
     //Shadow pass
     glm::mat4 lightSpaceMatrix;
@@ -1163,6 +1164,8 @@ void cRenderManager::DrawFrame()
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4), sizeof(float), &Manager::scene.fogDensity);
     glBufferSubData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::vec4) + sizeof(float), sizeof(float), &Manager::scene.fogGradient);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+    ZoneNamedN(finalDraw, "Final Draw", true);
 
     // Draw scene
     if (Engine::currGameMode == eGameMode::MAP)

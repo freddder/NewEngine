@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include <tracy/tracy/Tracy.hpp>
+
 #include "Player.h"
 #include "cPlayerEntity.h"
 
@@ -146,6 +148,8 @@ void cInputManager::UpdateInput(int key, int action)
 
 void cInputManager::Process(float deltaTime)
 {
+	ZoneScopedN("InputProcess");
+
 	eInputState state = currInputState;
 	for (std::map<eInputType, sInputAction>::iterator it = inputActions[state].begin(); it != inputActions[state].end(); it++)
 	{
