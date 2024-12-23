@@ -8,7 +8,7 @@
 class cMenuButtonWidget : public cUIImage
 {
 public:
-	cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName);
+	cMenuButtonWidget(cUICanvas* canvas, const std::string& text, const std::string& iconFileName);
 	virtual ~cMenuButtonWidget() {};
 };
 

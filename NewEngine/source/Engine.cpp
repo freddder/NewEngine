@@ -119,6 +119,8 @@ void RenderFormData(Pokemon::sForm& form)
 
 void RenderImgui()
 {
+    ZoneScopedN("Imgui");
+
     // Imgui
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
@@ -512,6 +514,9 @@ namespace Engine
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
 
+            // Do this as close to input reading as possible
+            glfwPollEvents();
+            
             Manager::input.Process(deltaTime);
 
             Manager::animation.Process(deltaTime);
@@ -526,7 +531,7 @@ namespace Engine
 
             // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
             glfwSwapBuffers(window);
-            glfwPollEvents();
+            FrameMark;
         }
 
         if (renderDebugInfo) ShutdownImgui();

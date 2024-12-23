@@ -11,7 +11,7 @@
 
 #include "Player.h"
 
-cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::string iconFileName)
+cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, const std::string& text, const std::string& iconFileName)
 {
     textureId = canvas->LoadUITexture("panel.png");
     hoveredTextureId = canvas->LoadUITexture("panel2.png");
@@ -19,7 +19,7 @@ cMenuButtonWidget::cMenuButtonWidget(cUICanvas* canvas, std::string text, std::s
 
     cUIImage* icon = new cUIImage();
     icon->anchor = MIDDLE_LEFT;
-    icon->aspectRatio = 1.f;;
+    icon->aspectRatio = 1.f;
     icon->heightPercent = 3.f / 4.f;
     icon->textureId = canvas->LoadUITexture(iconFileName);
     AddChild(icon);

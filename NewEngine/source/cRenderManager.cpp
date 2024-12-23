@@ -169,7 +169,7 @@ void cRenderManager::Startup()
     glBindBufferRange(GL_UNIFORM_BUFFER, 2, uboFogID, 0, 2 * sizeof(glm::vec4) + 2 * sizeof(float));
 
     // Setup shader programs
-    CreateShaderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");
+    CreateShaderProgram("scene", "VertShader1.glsl", "FragShader1.glsl");  
     CreateShaderProgram("skybox", "SkyboxVertShader.glsl", "SkyboxFragShader.glsl");
     CreateShaderProgram("sprite", "SpriteVertShader.glsl", "FragShader1.glsl");
     CreateShaderProgram("wave", "WaveVertShader.glsl", "WaveFragShader.glsl");
@@ -1183,6 +1183,8 @@ void cRenderManager::DrawFrame()
         }
     }
 
+    ZoneNamedN(particlesDraw, "Particles Draw", true);
+
     // Draw particles
     if (Engine::currGameMode != eGameMode::MENU)
     {
@@ -1216,6 +1218,4 @@ void cRenderManager::DrawFrame()
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS); // set depth function back to default
-
-    FrameMark;
 }
